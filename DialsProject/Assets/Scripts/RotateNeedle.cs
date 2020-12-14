@@ -43,9 +43,9 @@ public class RotateNeedle : MonoBehaviour
     void Update()
     {
 
-        CheckForBaseAddresses();
+      //  CheckForBaseAddresses();
 
-        ReadValuesFromMemory();
+      //  ReadValuesFromMemory();
 
         RotateNeedles();
 
