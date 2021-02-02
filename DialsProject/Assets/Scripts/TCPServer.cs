@@ -14,6 +14,7 @@ public class TCPServer : MonoBehaviour {
 	public ReadGameData iL2GameDataServer;
 	//user can change this in settings - to be implemented
 	public int portNumber = 11200;
+	
 	#region private members 	
 	/// <summary> 	
 	/// TCPListener to listen for incomming TCP connection 	

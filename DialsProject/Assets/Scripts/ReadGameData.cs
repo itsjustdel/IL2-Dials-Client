@@ -29,10 +29,18 @@ public class ReadGameData : MonoBehaviour
     private VAMemory vam;
     private Process[] processes;
 
+    public BuildControl buildControl;
     // Start is called before the first frame update
+
+    private void Awake()
+    {
+        //only server stuff in this script
+        if (buildControl.isClient)
+            enabled = false;
+    }
     void Start()
     {
-        vam = new VAMemory("Il-2");
+        vam = new VAMemory("Il-2");        
         processes = Process.GetProcessesByName("Il-2");
     }
 

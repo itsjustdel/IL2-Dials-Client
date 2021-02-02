@@ -767,6 +767,7 @@ MonoBehaviour:
   altitude: 0
   mmhg: 0
   airspeed: 0
+  buildControl: {fileID: 1413319309}
 --- !u!4 &1370128204
 Transform:
   m_ObjectHideFlags: 0
@@ -810,8 +811,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aa99af10fe15734f88400cb25f20fc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isServer: 1
-  isClient: 0
+  isServer: 0
+  isClient: 1
 --- !u!4 &1413319310
 Transform:
   m_ObjectHideFlags: 0
