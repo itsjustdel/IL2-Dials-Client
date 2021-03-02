@@ -14,6 +14,10 @@ public class TCPClient : MonoBehaviour {
 	public BuildControl buildControl;
 	public ReadGameData iL2GameDataClient;
 	//user settings	
+	
+	public bool autoScan = false;
+	public bool hostFound;
+
 	public int portNumber = 11200;
 	public bool waitingOnResponse;
 	#region private members 	
@@ -23,6 +27,10 @@ public class TCPClient : MonoBehaviour {
 	public string hostName;
 	public int ip4;
 	public int ip3;
+
+	const int socketTimeoutTime = 5;
+	float timer = socketTimeoutTime;
+
 	#endregion
 	// Use this for initialization 	
 
@@ -57,34 +65,39 @@ public class TCPClient : MonoBehaviour {
     private void ConnectToTcpServer () { 		
 		try {
 			Debug.Log("Looking for server");
-			//check if anything  on socket
-			//socketConnection = new TcpClient("192.168.1.76", 11200);
 
-			//clientReceiveThread = new Thread (new ThreadStart(ListenForData)); 			
-			//clientReceiveThread.IsBackground = true; 			
-			//clientReceiveThread.Start();  	
-			
-			//search for standard ip(16 bit). Support for 20bit or 24 bit needed?
-
-			hostName = "192.168." + ip3.ToString() + "." + ip4.ToString();
-			Thread thread = new Thread(() => ListenForData(hostName));
-			thread.IsBackground = true;
-			thread.Start();
-
-			//push to 255 and move ip3 up
-			ip4 ++;
-			if (ip4 > 255)
+			if (autoScan && !hostFound)
 			{
-				ip3++;
-				ip4 = 0;
+				//check if anything  on socket
+
+				hostName = "192.168." + ip3.ToString() + "." + ip4.ToString();
+				Thread thread = new Thread(() => ListenForData(hostName));
+				thread.IsBackground = true;
+				thread.Start();//does this close automatically?
+
+				//push to 255 and move ip3 up
+				ip4++;
+				if (ip4 > 255)
+				{
+					ip3++;
+					ip4 = 0;
+				}
+
+				if (ip3 > 255)
+				{
+					Debug.Log("Did not find server");
+
+					enabled = false;
+				}
 			}
 
-			if(ip3> 255)
+			else
             {
-				Debug.Log("Did not find server");
-
-				enabled = false;
-            }
+				//use value entered by user in hostName
+				Thread thread = new Thread(() => ListenForData(hostName));
+				thread.IsBackground = true;
+				thread.Start();//does this close automatically?
+			}
 
 
 		} 		
@@ -100,49 +113,58 @@ public class TCPClient : MonoBehaviour {
 			socketConnection = new TcpClient(hostName, portNumber);
 			//array to read stream in to
 			Byte[] bytes = new Byte[1024];             
-			//while (true) { //while true is replaced by unity update loop
-				// Get a stream object for reading 				
-				using (NetworkStream stream = socketConnection.GetStream()) { 					
-					int length; 					
-					// Read incomming stream into byte arrary. 					
-					while ((length = stream.Read(bytes, 0, bytes.Length)) != 0) {
+					
+			using (NetworkStream stream = socketConnection.GetStream()) 
+			{
+				//is we have a network stream, save this hostname
+				hostFound = true;
 
-						Debug.Log("Reading received data");
+				int length; 					
+				// Read incomming stream into byte arrary. 					
+				while ((length = stream.Read(bytes, 0, bytes.Length)) != 0) {
 
-						float[] floats= GetFloats(bytes);
+					Debug.Log("Reading received data");
 
-						//set Il2 game data for client
-						iL2GameDataClient.altitude = floats[0];
-						iL2GameDataClient.mmhg = floats[1];
-						iL2GameDataClient.airspeed = floats[2];
+					float[] floats= GetFloats(bytes);
 
-						Debug.Log("altitude = " + floats[0]);
-						Debug.Log("mmhg = " + floats[1]);
-						Debug.Log("airspeed = " + floats[2]);
+					//set Il2 game data for client
+					iL2GameDataClient.altitude = floats[0];
+					iL2GameDataClient.mmhg = floats[1];
+					iL2GameDataClient.airspeed = floats[2];
+
+					Debug.Log("altitude = " + floats[0]);
+					Debug.Log("mmhg = " + floats[1]);
+					Debug.Log("airspeed = " + floats[2]);
 
 						
 
-					}
-
-					
-				} 			
-			//}         
+				}		
+			}
 		}         
 		catch (Exception ex) {
-			//socketConnection = null;
+			socketConnection = null;
 			//clientReceiveThread.Abort();
 			Debug.Log("couldn't read");
-			Debug.Log("Socket exception: " + ex);         
+			Debug.Log("Socket exception: " + ex);
+			//ConnectToTcpServer();
 		}     
 	}  	
 	/// <summary> 	
 	/// Send message to server using socket connection. 	
 	/// </summary> 	
 	public void SendMessage() {
-		Debug.Log("send client");
+		//Debug.Log("send client");
 		if (socketConnection == null || !socketConnection.Connected) 
 		{
-			ConnectToTcpServer();
+			if (timer > socketTimeoutTime)//timer value of timeout socket setting on server
+			{
+				Debug.Log("Attempting to connect to server");
+				timer = 0f;
+				ConnectToTcpServer();
+			}
+			else 
+				timer += Time.deltaTime;
+
 			return;
 		}		  		
 		try 
