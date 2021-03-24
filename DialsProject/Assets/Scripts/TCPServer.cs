@@ -12,6 +12,7 @@ public class TCPServer : MonoBehaviour {
 
 	public BuildControl buildControl;
 	public ReadGameData iL2GameDataServer;
+	
 	//user can change this in settings - to be implemented
 	public int portNumber = 11200;
 	

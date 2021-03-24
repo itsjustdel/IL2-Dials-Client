@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TCPClient : MonoBehaviour {
 
@@ -13,23 +14,28 @@ public class TCPClient : MonoBehaviour {
 	
 	public BuildControl buildControl;
 	public ReadGameData iL2GameDataClient;
+	public MenuHandler menuHandler;
 	//user settings	
-	
+
 	public bool autoScan = false;
 	public bool hostFound;
 
+	//user can insert from menu, if empty, autoscan happens
+	public string userIP;
+	//user can overwrite this
 	public int portNumber = 11200;
 	public bool waitingOnResponse;
 	#region private members 	
 	private TcpClient socketConnection; 	
-	private Thread clientReceiveThread;
+	
 
 	public string hostName;
 	public int ip4;
 	public int ip3;
 
-	const int socketTimeoutTime = 5;
-	float timer = socketTimeoutTime;
+	public int socketTimeoutTime = 5;
+	private float timerOfLastReceived=0f;
+	private float timer = 5f;
 
 	#endregion
 	// Use this for initialization 	
@@ -42,38 +48,52 @@ public class TCPClient : MonoBehaviour {
 			enabled = false;
         }		
     }
-	void Start () {
-		//	ConnectToTcpServer();     
-		//SendMessage();
-	}  	
-	// Update is called once per frame
-	void Update () {         
-		if (Input.GetKeyDown(KeyCode.Space)) {             
-			SendMessage();         
-		}     
-	}
 
     private void FixedUpdate()
-    {
-	//	if(!waitingOnResponse)
-		//if(socketConnection.Connected)
-			SendMessage();
+	{
+		
+		//check if we should autoscan
+		//if ipaddress is empty, then we should
+		if (string.IsNullOrEmpty( userIP))
+		{
+			autoScan = true;
+			//if we are autoscanning, we don't need to use socket timeout time
+			//socketTimeoutTime = 5;
+		}
+		else
+		{
+			autoScan = false;
+			//if we are not autoscanning, set the the timeout time to 5 so we don't bombard the server
+		//	socketTimeoutTime = 5;
+			//remove autoscan debug text field
+			menuHandler.scanDebug.GetComponent<Text>().text = null;
+
+		}
+		
+
+		SendMessage();
 	}
     /// <summary> 	
     /// Setup socket connection. 	
     /// </summary> 	
-    private void ConnectToTcpServer () { 		
+    private void ConnectToTcpServer () 
+	{ 		
 		try {
-			Debug.Log("Looking for server");
+			
 
 			if (autoScan && !hostFound)
 			{
+				Debug.Log("Looking for server");
 				//check if anything  on socket
 
 				hostName = "192.168." + ip3.ToString() + "." + ip4.ToString();
 				Thread thread = new Thread(() => ListenForData(hostName));
 				thread.IsBackground = true;
 				thread.Start();//does this close automatically?
+
+				//let user know we are scanning	
+				if(autoScan)
+					menuHandler.scanDebug.GetComponent<Text>().text = "Scanning IP: " + hostName.ToString(); ;
 
 				//push to 255 and move ip3 up
 				ip4++;
@@ -109,7 +129,8 @@ public class TCPClient : MonoBehaviour {
 	/// Runs in background clientReceiveThread; Listens for incomming data. 	
 	/// </summary>     
 	private void ListenForData(string hostName) { 		
-		try { 			
+		try {
+			
 			socketConnection = new TcpClient(hostName, portNumber);
 			//array to read stream in to
 			Byte[] bytes = new Byte[1024];             
@@ -119,11 +140,17 @@ public class TCPClient : MonoBehaviour {
 				//is we have a network stream, save this hostname
 				hostFound = true;
 
+				//update user on scan result
+				//let user know we are scanning				
+				
+				//menuHandler.scanDebug.GetComponent<Text>().text = "IP Found : " + hostName.ToString(); //causes exception
+
+
 				int length; 					
 				// Read incomming stream into byte arrary. 					
 				while ((length = stream.Read(bytes, 0, bytes.Length)) != 0) {
 
-					Debug.Log("Reading received data");
+					//Debug.Log("Reading received data");
 
 					float[] floats= GetFloats(bytes);
 
@@ -132,17 +159,23 @@ public class TCPClient : MonoBehaviour {
 					iL2GameDataClient.mmhg = floats[1];
 					iL2GameDataClient.airspeed = floats[2];
 
-					Debug.Log("altitude = " + floats[0]);
-					Debug.Log("mmhg = " + floats[1]);
-					Debug.Log("airspeed = " + floats[2]);
+					//Debug.Log("altitude = " + floats[0]);
+					//Debug.Log("mmhg = " + floats[1]);
+					//Debug.Log("airspeed = " + floats[2]);
 
-						
 
-				}		
+					//keep a track of last receieved time
+					timerOfLastReceived = 0f;
+
+				}	
+				
 			}
 		}         
 		catch (Exception ex) {
-			socketConnection = null;
+
+			//no stream, server might not be sending anything
+
+			//socketConnection = null;
 			//clientReceiveThread.Abort();
 			Debug.Log("couldn't read");
 			Debug.Log("Socket exception: " + ex);
@@ -156,20 +189,68 @@ public class TCPClient : MonoBehaviour {
 		//Debug.Log("send client");
 		if (socketConnection == null || !socketConnection.Connected) 
 		{
-			if (timer > socketTimeoutTime)//timer value of timeout socket setting on server
+			if (autoScan)
 			{
-				Debug.Log("Attempting to connect to server");
-				timer = 0f;
-				ConnectToTcpServer();
-			}
-			else 
-				timer += Time.deltaTime;
+				//if we are scanning, don't set a timeout, we ping one request per ip address so we won't overload the socket
+				int thisTimer = 0;
+				if (hostFound)
+					//if we already found the host and are looking to reconnect, we need to be careful and use the timeout
+					thisTimer = socketTimeoutTime;
 
-			return;
+				if (timer >= thisTimer)//timer value of timeout socket setting on server
+				{
+					Debug.Log("Sending to server - autoscan");
+					timer = 0f;
+					ConnectToTcpServer();
+				}
+				else
+					timer += Time.fixedDeltaTime;
+
+				return;
+			}
+			else
+			{
+				//use timer so we don't overload server socket - if not connected
+				int thisTimer = 0;
+				if (!hostFound)
+					thisTimer = socketTimeoutTime;
+
+				if (timer >= thisTimer)//timer value of timeout socket setting on server
+				{
+					Debug.Log("Sending to server");
+					timer = 0f;
+					ConnectToTcpServer();
+				}
+				else
+					timer += Time.fixedDeltaTime;
+
+				return;
+			}
 		}		  		
 		try 
 		{
-			
+			if(timerOfLastReceived >= socketTimeoutTime)
+            {
+				Debug.Log("last received time out, resetting");
+				//stop sending requests to server, and start to look for another server socket. server may have reset
+				socketConnection = null;
+				
+				if(autoScan)
+                {
+					//restart? or keep last found host
+					//ip3 = 0;
+					//ip4 =0;
+                }
+				else
+                {
+					//set this so reconnecting to server doesn't spam the socket
+					hostFound = false;
+				}
+
+				
+				return;
+            }
+
 			// Get a stream object for writing. 			
 			NetworkStream stream = socketConnection.GetStream(); 			
 			if (stream.CanWrite) {
@@ -181,6 +262,8 @@ public class TCPClient : MonoBehaviour {
 				// Write byte array to socketConnection stream.                 
 				stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);                 
 				Debug.Log("Client sent his message - should be received by server");
+
+				timerOfLastReceived += Time.fixedDeltaTime;
 
 				waitingOnResponse = true;
 			}         
