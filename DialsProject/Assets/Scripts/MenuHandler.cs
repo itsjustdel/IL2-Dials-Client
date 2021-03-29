@@ -43,6 +43,10 @@ public class MenuHandler : MonoBehaviour
             portTextField.GetComponentInParent<InputField>(true).text = tcpClient.portNumber.ToString();
         }
 
+        
+
+
+
     }
 
     public void MenuButtonClicked()
