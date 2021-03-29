@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class MenuHandler : MonoBehaviour
 {
+    public bool deletePrefs = false;
     public GameObject blurPanel;
     public GameObject menuPanel;
     public GameObject ipTextField;
@@ -14,22 +15,31 @@ public class MenuHandler : MonoBehaviour
 
     public void Start()
     {
-       
+        if (deletePrefs)
+        {
+            PlayerPrefs.DeleteAll();
+        }
 
         //load preferences
         tcpClient.userIP = PlayerPrefs.GetString("IPAddress");
-        tcpClient.portNumber= PlayerPrefs.GetInt("PortNumber");
+        tcpClient.portNumber = PlayerPrefs.GetInt("PortNumber");
+        if (tcpClient.portNumber == 0)
+            tcpClient.portNumber = 11200;
+        
         //apply to UI
         //inlcude inactive with bool flag
         ipTextField.GetComponentInParent<InputField>(true).text = tcpClient.userIP;
 
-        if (tcpClient.portNumber == 11200)
+        Debug.Log(tcpClient.portNumber);
+        if (tcpClient.portNumber == 11200 || tcpClient.portNumber == 0)
         {
             //set default port number text field to null so unity shows the greyed out placeholder text
+            Debug.Log("0");
             portTextField.GetComponentInParent<InputField>(true).text = null;
         }
         else
         {
+            Debug.Log("1");
             portTextField.GetComponentInParent<InputField>(true).text = tcpClient.portNumber.ToString();
         }
 
@@ -55,6 +65,9 @@ public class MenuHandler : MonoBehaviour
             //save to player prefs for next load
             PlayerPrefs.SetString("IPAddress", ipAddressText);
             PlayerPrefs.Save();
+
+
+            Debug.Log("2");
         }
         else
         {
@@ -66,6 +79,8 @@ public class MenuHandler : MonoBehaviour
             //save
             PlayerPrefs.SetString("IPAddress", ipAddressText);
             PlayerPrefs.Save();
+
+            Debug.Log("3");
 
         }
     }
@@ -82,6 +97,8 @@ public class MenuHandler : MonoBehaviour
             
             //save to player prefs for next load
             PlayerPrefs.SetInt("PortNumber", 11200);
+
+            Debug.Log("4");
         }
         else
         {
@@ -91,27 +108,8 @@ public class MenuHandler : MonoBehaviour
             //save
             PlayerPrefs.SetInt("PortNumber", parsed);
 
+            Debug.Log("6");
+
         }
     }
-
-
-    /*
-     *  PlayerPrefs.SetInt("score",5);
-     PlayerPrefs.SetFloat("volume",0.6f);
-     PlayerPrefs.SetString("username","John Doe");
-     PlayerPrefs.Save();
- 
-    // If you need boolean value:
-
-     bool val = true;
-     PlayerPrefs.SetInt("PropName", val ? 1 : 0);
-     PlayerPrefs.Save();
-    Reading:
-
-     int score = PlayerPrefs.GetInt("score");
-     float volume = PlayerPrefs.GetFloat("volume");
-     string player = PlayerPrefs.GetString("username");
- 
-     bool val = PlayerPrefs.GetInt("PropName") == 1 ? true : false;
-    */
 }

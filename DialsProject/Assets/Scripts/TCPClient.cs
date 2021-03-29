@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.Android;
 public class TCPClient : MonoBehaviour {
 
 	//class which reads memory and sets values
@@ -15,6 +15,7 @@ public class TCPClient : MonoBehaviour {
 	public BuildControl buildControl;
 	public ReadGameData iL2GameDataClient;
 	public MenuHandler menuHandler;
+	public RotateNeedle rN;
 	//user settings	
 
 	public bool autoScan = false;
@@ -25,6 +26,11 @@ public class TCPClient : MonoBehaviour {
 	//user can overwrite this
 	public int portNumber = 11200;
 	public bool waitingOnResponse;
+
+
+	public float timerOfLastReceived = 0f;
+	
+
 	#region private members 	
 	private TcpClient socketConnection; 	
 	
@@ -33,16 +39,14 @@ public class TCPClient : MonoBehaviour {
 	public int ip4;
 	public int ip3;
 
-	public int socketTimeoutTime = 5;
-	private float timerOfLastReceived=0f;
+	public int socketTimeoutTime = 5;	
 	private float timer = 5f;
 
 	#endregion
-	// Use this for initialization 	
 
 	void Awake()
     {
-		if(buildControl.isServer)
+		if (buildControl.isServer)
         {
 			//disable client script
 			enabled = false;
@@ -83,7 +87,7 @@ public class TCPClient : MonoBehaviour {
 
 			if (autoScan && !hostFound)
 			{
-				Debug.Log("Looking for server");
+				//Debug.Log("Looking for server");
 				//check if anything  on socket
 
 				hostName = "192.168." + ip3.ToString() + "." + ip4.ToString();
@@ -113,6 +117,7 @@ public class TCPClient : MonoBehaviour {
 
 			else
             {
+				Debug.Log("Starting new thread");
 				//use value entered by user in hostName
 				Thread thread = new Thread(() => ListenForData(hostName));
 				thread.IsBackground = true;
@@ -163,6 +168,9 @@ public class TCPClient : MonoBehaviour {
 					//Debug.Log("mmhg = " + floats[1]);
 					//Debug.Log("airspeed = " + floats[2]);
 
+					//save rotation of needles				
+					if(!rN.testPrediction)
+						rN.tcpReceived = true; 
 
 					//keep a track of last receieved time
 					timerOfLastReceived = 0f;
@@ -177,8 +185,8 @@ public class TCPClient : MonoBehaviour {
 
 			//socketConnection = null;
 			//clientReceiveThread.Abort();
-			Debug.Log("couldn't read");
-			Debug.Log("Socket exception: " + ex);
+			//Debug.Log("couldn't read");
+			//Debug.Log("Socket exception: " + ex);
 			//ConnectToTcpServer();
 		}     
 	}  	
@@ -191,15 +199,16 @@ public class TCPClient : MonoBehaviour {
 		{
 			if (autoScan)
 			{
-				//if we are scanning, don't set a timeout, we ping one request per ip address so we won't overload the socket
-				int thisTimer = 0;
+				//if we are scanning, set a small timeout (using fixed step time - if fixed step time is too low for android, we could add a time here)
+				//we ping one request per ip address so we won't overload the socket
+				float thisTimer = 0f; //.1f;
 				if (hostFound)
 					//if we already found the host and are looking to reconnect, we need to be careful and use the timeout
 					thisTimer = socketTimeoutTime;
 
 				if (timer >= thisTimer)//timer value of timeout socket setting on server
 				{
-					Debug.Log("Sending to server - autoscan");
+					//Debug.Log("Sending to server - autoscan");
 					timer = 0f;
 					ConnectToTcpServer();
 				}
@@ -211,7 +220,7 @@ public class TCPClient : MonoBehaviour {
 			else
 			{
 				//use timer so we don't overload server socket - if not connected
-				int thisTimer = 0;
+				float thisTimer = 0;
 				if (!hostFound)
 					thisTimer = socketTimeoutTime;
 
@@ -261,7 +270,7 @@ public class TCPClient : MonoBehaviour {
 				byte[] clientMessageAsByteArray = new byte[1]{ 0x01 };// Encoding.ASCII.GetBytes(clientMessage); 				
 				// Write byte array to socketConnection stream.                 
 				stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);                 
-				Debug.Log("Client sent his message - should be received by server");
+				//Debug.Log("Client sent his message - should be received by server");
 
 				timerOfLastReceived += Time.fixedDeltaTime;
 
