@@ -40,7 +40,7 @@ public class TCPClient : MonoBehaviour {
 	public int ip3;
 
 	public int socketTimeoutTime = 5;	
-	private float timer = 5f;
+	public float timer = 5f;
 
 	#endregion
 
@@ -55,7 +55,21 @@ public class TCPClient : MonoBehaviour {
 
     private void FixedUpdate()
 	{
-		
+		if(hostFound)
+        {
+			if(!autoScan)
+				menuHandler.scanDebug.GetComponent<Text>().text = "Connected: " + userIP.ToString(); //causes exception - because of async?
+			else
+				menuHandler.scanDebug.GetComponent<Text>().text = "Connected: " + hostName.ToString(); //causes exception
+		}
+
+		if (menuHandler.textFieldOpen)
+        {
+			//wait til input is finished if scanning. cpu high 
+			//Debug.Log("waiting on ip input");
+			return;
+        }
+
 		//check if we should autoscan
 		//if ipaddress is empty, then we should
 		if (string.IsNullOrEmpty( userIP))
@@ -70,7 +84,7 @@ public class TCPClient : MonoBehaviour {
 			//if we are not autoscanning, set the the timeout time to 5 so we don't bombard the server
 		//	socketTimeoutTime = 5;
 			//remove autoscan debug text field
-			menuHandler.scanDebug.GetComponent<Text>().text = null;
+			//menuHandler.scanDebug.GetComponent<Text>().text = null;
 
 		}
 		
@@ -111,13 +125,19 @@ public class TCPClient : MonoBehaviour {
 				{
 					Debug.Log("Did not find server");
 
-					enabled = false;
+
+					//restart -if people have strange ips they probably know about it and can use direct connection option
+					ip3 = 0;
+					ip4 = 0;
+					
 				}
 			}
 
 			else
             {
 				Debug.Log("Starting new thread");
+
+
 				//use value entered by user in hostName
 				Thread thread = new Thread(() => ListenForData(hostName));
 				thread.IsBackground = true;
@@ -148,7 +168,7 @@ public class TCPClient : MonoBehaviour {
 				//update user on scan result
 				//let user know we are scanning				
 				
-				//menuHandler.scanDebug.GetComponent<Text>().text = "IP Found : " + hostName.ToString(); //causes exception
+				
 
 
 				int length; 					

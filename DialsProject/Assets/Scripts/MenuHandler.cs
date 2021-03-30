@@ -11,10 +11,12 @@ public class MenuHandler : MonoBehaviour
     public GameObject ipTextField;
     public GameObject portTextField;
     public GameObject scanDebug;
-    public TCPClient tcpClient;
-
+    public TCPClient tcpClient;    
+    public bool textFieldOpen;
     public void Start()
     {
+
+
         if (deletePrefs)
         {
             PlayerPrefs.DeleteAll();
@@ -43,10 +45,19 @@ public class MenuHandler : MonoBehaviour
             portTextField.GetComponentInParent<InputField>(true).text = tcpClient.portNumber.ToString();
         }
 
+
+        //force this false to start with, above code flags this as true because we changed a value
+        textFieldOpen = false;
+
+
+    }
+
+    public void InputFieldOpen()
+    {
+       // Debug.Log("ip open");
+        //pause the game if autosearching, makes input smoother because scan is cpu heavy for mobile device
+        textFieldOpen = true;
         
-
-
-
     }
 
     public void MenuButtonClicked()
@@ -70,6 +81,7 @@ public class MenuHandler : MonoBehaviour
             PlayerPrefs.SetString("IPAddress", ipAddressText);
             PlayerPrefs.Save();
 
+           
 
             Debug.Log("2");
         }
@@ -84,9 +96,27 @@ public class MenuHandler : MonoBehaviour
             PlayerPrefs.SetString("IPAddress", ipAddressText);
             PlayerPrefs.Save();
 
+
+            //let user know what's happening
+            scanDebug.GetComponent<Text>().text = "Attempting Connection: " + tcpClient.hostName.ToString(); ;
+
             Debug.Log("3");
 
         }
+
+        //reset autoscan variables
+        tcpClient.ip3 = 0;
+        tcpClient.ip4 = 4;
+
+        //flag for autoscan pause
+        textFieldOpen = false;
+
+        tcpClient.hostFound = false;
+        
+        
+
+
+
     }
 
     public void PortChanged()
@@ -115,5 +145,13 @@ public class MenuHandler : MonoBehaviour
             Debug.Log("6");
 
         }
+
+        tcpClient.ip3 = 0;
+        tcpClient.ip4 = 4;
+
+        //flag for autoscan pause
+        textFieldOpen = false;
+
+        tcpClient.hostFound = false;
     }
 }
