@@ -98,7 +98,7 @@ public class MenuHandler : MonoBehaviour
 
 
             //let user know what's happening
-            scanDebug.GetComponent<Text>().text = "Attempting Connection: " + tcpClient.hostName.ToString(); ;
+//            scanDebug.GetComponent<Text>().text = "Attempting Connection: " + tcpClient.hostName.ToString(); ;
 
             Debug.Log("3");
 

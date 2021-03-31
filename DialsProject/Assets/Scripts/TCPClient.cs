@@ -137,7 +137,7 @@ public class TCPClient : MonoBehaviour {
             {
 				Debug.Log("Starting new thread");
 
-
+				menuHandler.scanDebug.GetComponent<Text>().text = "Attempting Connection: " + userIP.ToString(); ;
 				//use value entered by user in hostName
 				Thread thread = new Thread(() => ListenForData(hostName));
 				thread.IsBackground = true;
