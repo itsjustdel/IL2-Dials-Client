@@ -184,12 +184,16 @@ public class TCPClient : MonoBehaviour {
 					iL2GameDataClient.mmhg = floats[1];
 					iL2GameDataClient.airspeed = floats[2];
 
+					//stopping glitching and setting rest position off centre
+					if (iL2GameDataClient.airspeed < 50 || float.IsNaN( iL2GameDataClient.airspeed ))
+						iL2GameDataClient.airspeed = 50;
+
 					//Debug.Log("altitude = " + floats[0]);
 					//Debug.Log("mmhg = " + floats[1]);
 					//Debug.Log("airspeed = " + floats[2]);
 
-					//save rotation of needles				
-					if(!rN.testPrediction)
+						//save rotation of needles				
+					if (!rN.testPrediction)
 						rN.tcpReceived = true; 
 
 					//keep a track of last receieved time
