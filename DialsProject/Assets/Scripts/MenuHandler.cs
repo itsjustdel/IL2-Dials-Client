@@ -11,8 +11,9 @@ public class MenuHandler : MonoBehaviour
     public GameObject ipTextField;
     public GameObject portTextField;
     public GameObject scanDebug;
-    public TCPClient tcpClient;    
-    public bool textFieldOpen;
+    public TCPClient tcpClient;
+    public bool ipFieldOpen;
+    public bool portFieldOpen;
     public void Start()
     {
 
@@ -21,9 +22,10 @@ public class MenuHandler : MonoBehaviour
         {
             PlayerPrefs.DeleteAll();
         }
-
+        
         //load preferences
         tcpClient.userIP = PlayerPrefs.GetString("IPAddress");
+        tcpClient.hostName = PlayerPrefs.GetString("IPAddress");//flaw in design, why host name and user ip
         tcpClient.portNumber = PlayerPrefs.GetInt("PortNumber");
         if (tcpClient.portNumber == 0)
             tcpClient.portNumber = 11200;
@@ -47,16 +49,17 @@ public class MenuHandler : MonoBehaviour
 
 
         //force this false to start with, above code flags this as true because we changed a value
-        textFieldOpen = false;
-
+        ipFieldOpen = false;
+        portFieldOpen = false;
+        
 
     }
 
-    public void InputFieldOpen()
+    public void InputFieldOpen11()
     {
        // Debug.Log("ip open");
         //pause the game if autosearching, makes input smoother because scan is cpu heavy for mobile device
-        textFieldOpen = true;
+        ipFieldOpen = true;
         
     }
 
@@ -109,12 +112,12 @@ public class MenuHandler : MonoBehaviour
         tcpClient.ip4 = 4;
 
         //flag for autoscan pause
-        textFieldOpen = false;
+        ipFieldOpen= false;
 
         tcpClient.hostFound = false;
-        
-        
 
+
+        tcpClient.timer = tcpClient.socketTimeoutTime;
 
 
     }
@@ -150,8 +153,10 @@ public class MenuHandler : MonoBehaviour
         tcpClient.ip4 = 4;
 
         //flag for autoscan pause
-        textFieldOpen = false;
+        portFieldOpen = false;
 
         tcpClient.hostFound = false;
+
+        tcpClient.timer = tcpClient.socketTimeoutTime;
     }
 }

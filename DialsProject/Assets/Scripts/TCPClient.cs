@@ -1,12 +1,12 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+//using System.Collections;
+//using System.Collections.Generic;
 using System.Net.Sockets;
-using System.Text;
+//using System.Text;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Android;
+//using UnityEngine.Android;
 public class TCPClient : MonoBehaviour {
 
 	//class which reads memory and sets values
@@ -18,6 +18,7 @@ public class TCPClient : MonoBehaviour {
 	public RotateNeedle rN;
 	//user settings	
 
+	public bool connected = false;
 	public bool autoScan = false;
 	public bool hostFound;
 
@@ -41,10 +42,13 @@ public class TCPClient : MonoBehaviour {
 
 	public int socketTimeoutTime = 5;	
 	public float timer = 5f;
+	public float connectionTimer = 0f;
 
-	#endregion
+    #endregion
 
-	void Awake()
+    
+
+    void Awake()
     {
 		if (buildControl.isServer)
         {
@@ -53,17 +57,17 @@ public class TCPClient : MonoBehaviour {
         }		
     }
 
-    private void FixedUpdate()
+    public void FixedUpdate()
 	{
 		if(hostFound)
         {
 			if(!autoScan)
-				menuHandler.scanDebug.GetComponent<Text>().text = "Connected: " + userIP.ToString(); //causes exception - because of async?
+				menuHandler.scanDebug.GetComponent<Text>().text = "Connected: " + userIP.ToString() + " : " + portNumber; //causes exception - because of async?
 			else
-				menuHandler.scanDebug.GetComponent<Text>().text = "Connected: " + hostName.ToString(); //causes exception
+				menuHandler.scanDebug.GetComponent<Text>().text = "Connected: " + hostName.ToString() + " : " + portNumber; //causes exception
 		}
 
-		if (menuHandler.textFieldOpen)
+		if (menuHandler.ipFieldOpen || menuHandler.portFieldOpen)
         {
 			//wait til input is finished if scanning. cpu high 
 			//Debug.Log("waiting on ip input");
@@ -137,7 +141,7 @@ public class TCPClient : MonoBehaviour {
             {
 				Debug.Log("Starting new thread");
 
-				menuHandler.scanDebug.GetComponent<Text>().text = "Attempting Connection: " + userIP.ToString(); ;
+				menuHandler.scanDebug.GetComponent<Text>().text = "Attempting Connection: " + userIP.ToString() +" : " + portNumber ;
 				//use value entered by user in hostName
 				Thread thread = new Thread(() => ListenForData(hostName));
 				thread.IsBackground = true;
@@ -199,14 +203,19 @@ public class TCPClient : MonoBehaviour {
 					//keep a track of last receieved time
 					timerOfLastReceived = 0f;
 
+					connected = true;
+					connectionTimer = 0f;
 				}	
 				
 			}
 		}         
 		catch (Exception ex) {
 
+			
+			if(connectionTimer >= socketTimeoutTime)
+				connected = false;
 			//no stream, server might not be sending anything
-
+			//hostFound = false;
 			//socketConnection = null;
 			//clientReceiveThread.Abort();
 			//Debug.Log("couldn't read");
@@ -221,14 +230,17 @@ public class TCPClient : MonoBehaviour {
 		//Debug.Log("send client");
 		if (socketConnection == null || !socketConnection.Connected) 
 		{
+			connectionTimer += Time.fixedDeltaTime;
+
 			if (autoScan)
 			{
-				//if we are scanning, set a small timeout (using fixed step time - if fixed step time is too low for android, we could add a time here)
-				//we ping one request per ip address so we won't overload the socket
+				//this creates a small timer for autoscanning
 				float thisTimer = 0f; //.1f;
 				if (hostFound)
 					//if we already found the host and are looking to reconnect, we need to be careful and use the timeout
 					thisTimer = socketTimeoutTime;
+
+				
 
 				if (timer >= thisTimer)//timer value of timeout socket setting on server
 				{
@@ -273,7 +285,8 @@ public class TCPClient : MonoBehaviour {
 					//restart? or keep last found host
 					//ip3 = 0;
 					//ip4 =0;
-                }
+					hostFound = false;
+				}
 				else
                 {
 					//set this so reconnecting to server doesn't spam the socket
