@@ -6,12 +6,15 @@ using UnityEngine.UI;
 public class MenuHandler : MonoBehaviour
 {
     public bool deletePrefs = false;
+    public GameObject welcomePanel;
     public GameObject blurPanel;
     public GameObject menuPanel;
     public GameObject ipTextField;
     public GameObject portTextField;
     public GameObject scanDebug;
     public TCPClient tcpClient;
+    public bool dontShowAgain;
+    public Toggle dontShowAgainToggle;
     public bool ipFieldOpen;
     public bool portFieldOpen;
     public void Start()
@@ -22,14 +25,26 @@ public class MenuHandler : MonoBehaviour
         {
             PlayerPrefs.DeleteAll();
         }
-        
+
         //load preferences
         tcpClient.userIP = PlayerPrefs.GetString("IPAddress");
         tcpClient.hostName = PlayerPrefs.GetString("IPAddress");//flaw in design, why host name and user ip
         tcpClient.portNumber = PlayerPrefs.GetInt("PortNumber");
+
+        //toggle 
+        dontShowAgain = PlayerPrefs.GetInt("dontshowagain") == 1 ? true : false;
+        dontShowAgainToggle.isOn = dontShowAgain;
+
+        if (!dontShowAgain)
+        {
+            //enable blur
+        }
+
+
+
         if (tcpClient.portNumber == 0)
             tcpClient.portNumber = 11200;
-        
+
         //apply to UI
         //inlcude inactive with bool flag
         ipTextField.GetComponentInParent<InputField>(true).text = tcpClient.userIP;
@@ -51,16 +66,16 @@ public class MenuHandler : MonoBehaviour
         //force this false to start with, above code flags this as true because we changed a value
         ipFieldOpen = false;
         portFieldOpen = false;
-        
+
 
     }
 
     public void InputFieldOpen11()
     {
-       // Debug.Log("ip open");
+        // Debug.Log("ip open");
         //pause the game if autosearching, makes input smoother because scan is cpu heavy for mobile device
         ipFieldOpen = true;
-        
+
     }
 
     public void MenuButtonClicked()
@@ -84,7 +99,7 @@ public class MenuHandler : MonoBehaviour
             PlayerPrefs.SetString("IPAddress", ipAddressText);
             PlayerPrefs.Save();
 
-           
+
 
             Debug.Log("2");
         }
@@ -101,7 +116,7 @@ public class MenuHandler : MonoBehaviour
 
 
             //let user know what's happening
-//            scanDebug.GetComponent<Text>().text = "Attempting Connection: " + tcpClient.hostName.ToString(); ;
+            //            scanDebug.GetComponent<Text>().text = "Attempting Connection: " + tcpClient.hostName.ToString(); ;
 
             Debug.Log("3");
 
@@ -112,7 +127,7 @@ public class MenuHandler : MonoBehaviour
         tcpClient.ip4 = 4;
 
         //flag for autoscan pause
-        ipFieldOpen= false;
+        ipFieldOpen = false;
 
         tcpClient.hostFound = false;
 
@@ -131,7 +146,7 @@ public class MenuHandler : MonoBehaviour
         {
             //set to default port
             tcpClient.portNumber = 11200;
-            
+
             //save to player prefs for next load
             PlayerPrefs.SetInt("PortNumber", 11200);
 
@@ -141,7 +156,7 @@ public class MenuHandler : MonoBehaviour
         {
             //set port to user input
             int parsed = int.Parse(portText);
-            tcpClient.portNumber= parsed;
+            tcpClient.portNumber = parsed;
             //save
             PlayerPrefs.SetInt("PortNumber", parsed);
 
@@ -158,5 +173,22 @@ public class MenuHandler : MonoBehaviour
         tcpClient.hostFound = false;
 
         tcpClient.timer = tcpClient.socketTimeoutTime;
+    }
+
+    public void WelcomeClosed()
+    {
+        
+    }
+
+    public void DontShowAgainToggle()
+    {
+        dontShowAgain = !dontShowAgain;
+        
+        //not saving to player prefs
+
+        //set pref - ternary to set integer (no bool value in prefs)
+        PlayerPrefs.SetInt("dontshowagain", dontShowAgain ? 1 : 0);
+        PlayerPrefs.Save();
+
     }
 }

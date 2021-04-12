@@ -55,11 +55,6 @@ public class RotateNeedle : MonoBehaviour
         
     }
 
-    private void FixedUpdate()
-    {
-      
-        //rotate all needles
-    }
 
     // Update is called once per frame
     void Update()
@@ -73,31 +68,39 @@ public class RotateNeedle : MonoBehaviour
         }
 
 
-        if (tcpReceived)
+        if (!tcpClient.connected)
         {
-
-            //flag set by tcp client in async thread
-
-            lastMessageReceivedTime = Time.time;
-            SetRotationTargets();
-
-            tcpReceived = false;
-
-
+            //if we have completely lost connection reset needles, there is a 5 second grace period where prediction takes over            
+            iL2GameDataClient.altitude = 0f;
+            iL2GameDataClient.mmhg = 0f;
+            iL2GameDataClient.airspeed = 0f;
         }
-
-        //check to see if we need to predict or if we received a new update recently
-        else if (Time.time - lastMessageReceivedTime > Time.fixedDeltaTime)//we send and receive on fixed time step
+        else //we are connected
         {
-            tcpReceived = false;
+            if (tcpReceived)
+            {
 
-         //   Debug.Log("0");
-            lastMessageReceivedTime += Time.fixedDeltaTime;
+                //flag set by tcp client in async thread
 
-          //  SavePreviousRotations(); -- don't save roation,s we will just use the last one to continue with until real update occurs
-            PredictRotations();
-            
+                lastMessageReceivedTime = Time.time;
+                SetRotationTargets();
 
+                tcpReceived = false;
+
+
+            }
+
+            //check to see if we need to predict or if we received a new update recently
+            else if (Time.time - lastMessageReceivedTime > Time.fixedDeltaTime)//we send and receive on fixed time step
+            {
+                tcpReceived = false;
+
+                //   Debug.Log("0");
+                lastMessageReceivedTime += Time.fixedDeltaTime;
+
+                //  SavePreviousRotations(); -- don't save roation,s we will just use the last one to continue with until real update occurs
+                PredictRotations();
+            }
         }
 
 

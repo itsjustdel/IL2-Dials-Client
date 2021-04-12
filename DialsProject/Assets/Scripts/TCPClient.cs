@@ -211,9 +211,15 @@ public class TCPClient : MonoBehaviour {
 		}         
 		catch (Exception ex) {
 
-			
-			if(connectionTimer >= socketTimeoutTime)
+
+			if (connectionTimer >= socketTimeoutTime)
+			{
+				
+
 				connected = false;
+
+
+			}
 			//no stream, server might not be sending anything
 			//hostFound = false;
 			//socketConnection = null;
