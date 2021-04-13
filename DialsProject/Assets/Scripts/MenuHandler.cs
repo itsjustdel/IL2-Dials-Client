@@ -9,6 +9,8 @@ public class MenuHandler : MonoBehaviour
     public GameObject welcomePanel;
     public GameObject blurPanel;
     public GameObject menuPanel;
+    public GameObject menuButton;
+    public GameObject ledParent;
     public GameObject ipTextField;
     public GameObject portTextField;
     public GameObject scanDebug;
@@ -17,6 +19,9 @@ public class MenuHandler : MonoBehaviour
     public Toggle dontShowAgainToggle;
     public bool ipFieldOpen;
     public bool portFieldOpen;
+
+    //override UI toggle fire on first frame
+    private bool dontFire;
     public void Start()
     {
 
@@ -31,15 +36,34 @@ public class MenuHandler : MonoBehaviour
         tcpClient.hostName = PlayerPrefs.GetString("IPAddress");//flaw in design, why host name and user ip
         tcpClient.portNumber = PlayerPrefs.GetInt("PortNumber");
 
-        //toggle 
+
+
+        //toggle         
+        //first frame, don't fire event, just set bool value
+        dontFire = true;
         dontShowAgain = PlayerPrefs.GetInt("dontshowagain") == 1 ? true : false;
-        dontShowAgainToggle.isOn = dontShowAgain;
+        dontShowAgainToggle.isOn = dontShowAgain;//this would fire the toggle function
+        dontFire = false;
 
-        if (!dontShowAgain)
+
+        if (dontShowAgain)
         {
+            welcomePanel.SetActive(false);
             //enable blur
+            blurPanel.SetActive(false);
+            //buttons and leds
+            ledParent.SetActive(true);
+            menuButton.SetActive(true);
         }
-
+        else
+        {
+            welcomePanel.SetActive(true);
+            //straight to unblurred dials
+            blurPanel.SetActive(true);
+            //buttons and leds
+            ledParent.SetActive(false);
+            menuButton.SetActive(false);
+        }
 
 
         if (tcpClient.portNumber == 0)
@@ -177,13 +201,21 @@ public class MenuHandler : MonoBehaviour
 
     public void WelcomeClosed()
     {
-        
+        welcomePanel.SetActive(false);
+        blurPanel.SetActive(false);
+
+        //turn the leds and menu button on
+        ledParent.SetActive(true);
+        menuButton.SetActive(true);
     }
 
     public void DontShowAgainToggle()
     {
-        dontShowAgain = !dontShowAgain;
-        
+        //first frame
+        if (dontFire)
+            return;
+
+        dontShowAgain = !dontShowAgain;        
         //not saving to player prefs
 
         //set pref - ternary to set integer (no bool value in prefs)
