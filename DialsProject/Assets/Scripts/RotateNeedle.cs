@@ -15,10 +15,14 @@ public class RotateNeedle : MonoBehaviour
     public GameObject mmhgDial;
     public GameObject airspeedNeedle;
     public GameObject airspeedNeedleTest;
+    public GameObject turnTrack;
+    public GameObject turnPlane;
     public bool tcpReceived = false;
     public float lastMessageReceivedTime;//two ways of doing the same thing
     public float maxSpin =1f;
-
+    public float turnAndBankPitchMultiplier = 5f;
+    public float turnAndBankRollMultiplier = 5f;
+    public float turnAndBankPlaneXrotation = 5f;
 
 
     //previous frame positions for client prediction
@@ -256,7 +260,7 @@ public class RotateNeedle : MonoBehaviour
         AirspeedNeedleRotation();
         AltitudeNeedleRotations();
         MmhgNeedleRotation();
-            
+        TurnAndBank();
     }
 
     void AirspeedNeedleRotation()
@@ -282,6 +286,22 @@ public class RotateNeedle : MonoBehaviour
     void MmhgNeedleRotation()
     {
         mmhgDial.transform.rotation = Quaternion.Slerp(mmhgStart, mmhgTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
+    }
+
+    void TurnAndBank()
+    {
+        //rotate plane
+        //clamp roll , in game cockpit stop rotation at just under 90 degrees - this happens when roll rate is ~1.7
+        float tempRoll = -iL2GameDataClient.rollRate;
+        Mathf.Clamp(tempRoll, -1.7f, 1.7f);
+        Quaternion t = Quaternion.Euler(0, 0, tempRoll*turnAndBankRollMultiplier);
+        turnPlane.transform.rotation = t;
+
+        //for x rotatin we need to rotate around global x after z rot
+        turnPlane.transform.rotation *= Quaternion.Euler(iL2GameDataClient.climbRate * turnAndBankPlaneXrotation, 0, 0);
+
+        //move plane up and down
+        turnPlane.transform.localPosition = new Vector3(0, iL2GameDataClient.climbRate*turnAndBankPitchMultiplier, 0);
     }
    
 }

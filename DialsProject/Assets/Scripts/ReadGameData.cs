@@ -13,6 +13,8 @@ public class ReadGameData : MonoBehaviour
     public float altitude;
     public float mmhg;
     public float airspeed;
+    public float climbRate;
+    public float rollRate;
 
     //program memory address (IL-2.exe)
     IntPtr baseAddressIL2 = IntPtr.Zero;

@@ -187,6 +187,8 @@ public class TCPClient : MonoBehaviour {
 					iL2GameDataClient.altitude = floats[0];
 					iL2GameDataClient.mmhg = floats[1];
 					iL2GameDataClient.airspeed = floats[2];
+					iL2GameDataClient.climbRate = floats[3];
+					iL2GameDataClient.rollRate = floats[4];
 
 					//stopping glitching and setting rest position off centre
 					if (iL2GameDataClient.airspeed < 50 || float.IsNaN( iL2GameDataClient.airspeed ))
