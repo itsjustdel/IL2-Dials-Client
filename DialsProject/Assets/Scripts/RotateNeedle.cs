@@ -7,8 +7,8 @@ using UnityEngine;
 
 public class RotateNeedle : MonoBehaviour
 {
-    
-    public ReadGameData iL2GameDataClient;
+    public BuildControl buildControl;
+    public AirplaneData iL2GameDataClient;
     public TCPClient tcpClient;
     public GameObject altitudeNeedleSmall;
     public GameObject altitudeNeedleLarge;
@@ -41,7 +41,7 @@ public class RotateNeedle : MonoBehaviour
     private Quaternion mmhgTarget;
 
     public bool testPrediction = false;
-
+    public bool testValues = true;
 
 
 
@@ -63,12 +63,16 @@ public class RotateNeedle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        bool test = false;
-        if (test)
+
+        if(testValues)
         {
-            iL2GameDataClient.airspeed -= 10;
-            iL2GameDataClient.altitude += 10;
-            iL2GameDataClient.mmhg += 10;
+            //this makes the network code think we received a message on the last frame
+            //note- need seperate mmhg test
+            lastMessageReceivedTime = -Time.deltaTime;
+            SetRotationTargets();
+            NeedleRotations();
+
+            return;
         }
 
 
@@ -186,19 +190,51 @@ public class RotateNeedle : MonoBehaviour
         //called when tcp client receives update
         SavePreviousRotations();
 
+        //set where we rotate from
         AirspeedStart();
-        AirspeedTarget();
+        //find where we are rotating to
+        airspeedTarget = AirspeedTarget(iL2GameDataClient.country, iL2GameDataClient.airspeed);
 
+        //set where we rotate from
         AltitudeStarts();
-        AltitudeTargets();
+        //find where we are rotating to for each needle
+        altitudeSmallTarget = RussianDials.AltitudeTargetSmall(iL2GameDataClient.altitude);
+        altitudeLargeTarget = RussianDials.AltitudeTargetLarge(iL2GameDataClient.altitude);
 
+        //set where we rotate from
         MmhgStart();
-        MmhgTarget();
+        //set where we are rotating to
+        RussianDials.MmhgTarget(iL2GameDataClient.mmhg);
+
      
     }
     void AirspeedStart()
     {
         airspeedStart = quaternionsAirspeed[0];
+    }
+
+    static Quaternion AirspeedTarget(AirplaneData.Country country, float airspeed)
+    {
+        Quaternion airspeedTarget = Quaternion.identity;
+
+        //each country has slightly different dials, we need to work out rotations individually for each
+        switch (country)
+        {
+            case AirplaneData.Country.RU:
+                airspeedTarget = RussianDials.AirspeedTarget(airspeed);
+                break;
+
+            case AirplaneData.Country.GER:
+                airspeedTarget = GermanDials.AirspeedTarget(airspeed);
+                break;
+
+            case AirplaneData.Country.US:
+                airspeedTarget = GermanDials.AirspeedTarget(airspeed);
+                break;
+        }
+         
+
+        return airspeedTarget;
     }
     void AltitudeStarts()
     {
@@ -211,48 +247,7 @@ public class RotateNeedle : MonoBehaviour
         mmhgStart = quaternionsMmhg[0];
     }
 
-    void AirspeedTarget()
-    {
-        //airspeed dial has three gears
-        //below 100
-        Quaternion target;// = Quaternion.identity;
-        if (iL2GameDataClient.airspeed < 100)
-            //if 0 -> 0
-            //if 50 -> 15
-            //if 100 -> 30
-            target = Quaternion.Euler(0, 0, -((iL2GameDataClient.airspeed / 50f) * 15f));
 
-        //below 300
-        else if (iL2GameDataClient.airspeed < 300)
-            //for every 5 kmh, move 30 degrees            
-            //if 100 -> 30
-            //if 150 -> 60
-            //if 200 -> 90
-            target = Quaternion.Euler(0, 0, -((iL2GameDataClient.airspeed / 50f) * 30f) + 30f);
-        else
-            //over 300
-            //for evry 10, move 40, but starts at 300 (150degrees)
-            //if 600 -> 270
-            //if 700 -> 310            
-            target = Quaternion.Euler(0, 0, -((iL2GameDataClient.airspeed / 10f) * 4) - 30);
-
-        airspeedTarget = target;
-    }
-
-    void AltitudeTargets()
-    {
-
-        altitudeSmallTarget = Quaternion.Euler(0, 0, -(iL2GameDataClient.altitude / 10000f) * 360);
-
-        altitudeLargeTarget = Quaternion.Euler(0, 0, -(iL2GameDataClient.altitude / 1000f) * 360);
-
-
-    }
-
-    void MmhgTarget()
-    {
-        mmhgTarget = Quaternion.Euler(0, 0, ((760f - iL2GameDataClient.mmhg) / 100f) * 300);
-    }
 
     void NeedleRotations()
     {
@@ -260,13 +255,15 @@ public class RotateNeedle : MonoBehaviour
         AirspeedNeedleRotation();
         AltitudeNeedleRotations();
         MmhgNeedleRotation();
-        TurnAndBank();
+
+        if (!buildControl.freeVersion)
+        {
+            TurnAndBank();
+        }
     }
 
     void AirspeedNeedleRotation()
     {
-        
-
         //float d = Mathf.Abs( airspeedTarget.eulerAngles.z - quaternionsAirspeed[0].eulerAngles.z);
        // Debug.Log("air needle");
 

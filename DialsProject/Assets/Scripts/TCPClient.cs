@@ -13,7 +13,7 @@ public class TCPClient : MonoBehaviour {
 	//have seperate for server and clietn so i can test on same pc
 	
 	public BuildControl buildControl;
-	public ReadGameData iL2GameDataClient;
+	public AirplaneData iL2GameDataClient;
 	public MenuHandler menuHandler;
 	public RotateNeedle rN;
 	//user settings	

@@ -6,7 +6,7 @@ public class BuildControl : MonoBehaviour
 {
     public bool isServer = false;
     public bool isClient = false;
-
+    public bool freeVersion;
     public void Awake()
     {
         if(isServer)
