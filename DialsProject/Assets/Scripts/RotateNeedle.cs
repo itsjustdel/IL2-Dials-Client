@@ -131,7 +131,11 @@ public class RotateNeedle : MonoBehaviour
 
         AddRotationToList(quaternionsAirspeed, airspeedNeedle.transform.rotation);
         AddRotationToList(quaternionsAltitudeSmall, altitudeNeedleSmall.transform.rotation);
-        AddRotationToList(quaternionsAltitudeSmallest, altitudeNeedleSmallest.transform.rotation);
+
+        //only UK has the smallest needle
+        if(iL2GameDataClient.country == AirplaneData.Country.UK)
+            AddRotationToList(quaternionsAltitudeSmallest, altitudeNeedleSmallest.transform.rotation);
+
         AddRotationToList(quaternionsAltitudeLarge, altitudeNeedleLarge.transform.rotation);
         AddRotationToList(quaternionsMmhg, mmhgDial.transform.rotation);
 
@@ -183,14 +187,18 @@ public class RotateNeedle : MonoBehaviour
         altitudeSmallTarget = altitudeNeedleSmall.transform.rotation * Quaternion.Euler(0, 0, difference); ;
 
 
-        //smallest altutude
-        difference = quaternionsAltitudeSmallest[0].eulerAngles.z - quaternionsAltitudeSmallest[1].eulerAngles.z;
-        //keep moving at client send rate at previous known step        
-        //set start point
-        altitudeSmallestStart = altitudeNeedleSmallest.transform.rotation;
-        //and end point
-        altitudeSmallestTarget = altitudeNeedleSmallest.transform.rotation * Quaternion.Euler(0, 0, difference); ;
+        //smallest altutude (if UK)
 
+        if (iL2GameDataClient.country == AirplaneData.Country.UK)
+        {
+            difference = quaternionsAltitudeSmallest[0].eulerAngles.z - quaternionsAltitudeSmallest[1].eulerAngles.z;
+            //keep moving at client send rate at previous known step        
+            //set start point
+            altitudeSmallestStart = altitudeNeedleSmallest.transform.rotation;
+            //and end point
+            altitudeSmallestTarget = altitudeNeedleSmallest.transform.rotation * Quaternion.Euler(0, 0, difference); ;
+
+        }
 
 
         difference = quaternionsMmhg[0].eulerAngles.z - quaternionsMmhg[1].eulerAngles.z;
@@ -214,8 +222,12 @@ public class RotateNeedle : MonoBehaviour
         //set where we rotate from
         AltitudeStarts();
         //find where we are rotating to for each needle
+
+        //only UK has this
+        if (iL2GameDataClient.country == AirplaneData.Country.UK)
+            altitudeSmallestTarget = AltitudeTargetSmallest(iL2GameDataClient.country, iL2GameDataClient.altitude);
+
         altitudeSmallTarget = AltitudeTargetSmall(iL2GameDataClient.country, iL2GameDataClient.altitude);
-        altitudeSmallestTarget = AltitudeTargetSmallest(iL2GameDataClient.country, iL2GameDataClient.altitude);
         altitudeLargeTarget = AltitudeTargetLarge(iL2GameDataClient.country, iL2GameDataClient.altitude);
 
         //set where we rotate from
@@ -252,6 +264,10 @@ public class RotateNeedle : MonoBehaviour
             case AirplaneData.Country.UK:
                 airspeedTarget = UKDials.AirspeedTarget(airspeed);
                 break;
+
+            case AirplaneData.Country.ITA:
+                airspeedTarget = ITADials.AirspeedTarget(airspeed);
+                break;
         }
          
 
@@ -280,6 +296,10 @@ public class RotateNeedle : MonoBehaviour
 
             case AirplaneData.Country.UK:
                 target = UKDials.AltitudeTargetLarge(altitude);
+                break;
+
+            case AirplaneData.Country.ITA:
+                target = ITADials.AltitudeTargetLarge(altitude);
                 break;
         }
 
@@ -310,6 +330,10 @@ public class RotateNeedle : MonoBehaviour
             case AirplaneData.Country.UK:
                 target = UKDials.AltitudeTargetSmall(altitude);
                 break;
+
+            case AirplaneData.Country.ITA:
+                target = ITADials.AltitudeTargetSmall(altitude);
+                break;
         }
 
 
@@ -339,7 +363,12 @@ public class RotateNeedle : MonoBehaviour
     void AltitudeStarts()
     {
         altitudeSmallStart = quaternionsAltitudeSmall[0];
-        altitudeSmallestStart = quaternionsAltitudeSmallest[0];
+
+        //UK has small needle
+        if (iL2GameDataClient.country == AirplaneData.Country.UK)        
+            altitudeSmallestStart = quaternionsAltitudeSmallest[0];       
+
+
         altitudeLargeStart = quaternionsAltitudeLarge[0];
     }
 
@@ -377,8 +406,11 @@ public class RotateNeedle : MonoBehaviour
 
     void AltitudeNeedleRotations()
     {
+        //only UK has the smallest needle
+        if (iL2GameDataClient.country == AirplaneData.Country.UK)
+            altitudeNeedleSmallest.transform.rotation = Quaternion.Slerp(altitudeSmallestStart, altitudeSmallestTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
 
-        altitudeNeedleSmallest.transform.rotation = Quaternion.Slerp(altitudeSmallestStart, altitudeSmallestTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
+
         altitudeNeedleSmall.transform.rotation = Quaternion.Slerp(altitudeSmallStart, altitudeSmallTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
         altitudeNeedleLarge.transform.rotation = Quaternion.Slerp(altitudeLargeStart, altitudeLargeTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
     }
