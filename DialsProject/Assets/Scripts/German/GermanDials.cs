@@ -31,7 +31,7 @@ public class GermanDials : MonoBehaviour
 
     public static Quaternion AltitudeTargetLarge(float altitude)
     {
-        Quaternion altitudeLargeTarget = Quaternion.Euler(0, 0, -(altitude / 1000f) * 360);
+        Quaternion altitudeLargeTarget = Quaternion.Euler(0, 0, -((altitude / 1000f) * 360) + 180);
         return altitudeLargeTarget;
 
     }

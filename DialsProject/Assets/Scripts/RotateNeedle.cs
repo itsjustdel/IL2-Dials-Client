@@ -11,6 +11,7 @@ public class RotateNeedle : MonoBehaviour
     public AirplaneData iL2GameDataClient;
     public TCPClient tcpClient;
     public GameObject altitudeNeedleSmall;
+    public GameObject altitudeNeedleSmallest;//UK
     public GameObject altitudeNeedleLarge;
     public GameObject mmhgDial;
     public GameObject airspeedNeedle;
@@ -28,6 +29,7 @@ public class RotateNeedle : MonoBehaviour
     //previous frame positions for client prediction
     private List<Quaternion> quaternionsAltitudeLarge = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     private List<Quaternion> quaternionsAltitudeSmall = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
+    private List<Quaternion> quaternionsAltitudeSmallest = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     public List<Quaternion> quaternionsAirspeed = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     private List<Quaternion> quaternionsMmhg = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
   //  private bool saveForPredictions;
@@ -37,6 +39,8 @@ public class RotateNeedle : MonoBehaviour
     private Quaternion altitudeLargeTarget;
     private Quaternion altitudeSmallStart;
     private Quaternion altitudeSmallTarget;
+    private Quaternion altitudeSmallestStart;
+    private Quaternion altitudeSmallestTarget;
     private Quaternion mmhgStart;
     private Quaternion mmhgTarget;
 
@@ -127,6 +131,7 @@ public class RotateNeedle : MonoBehaviour
 
         AddRotationToList(quaternionsAirspeed, airspeedNeedle.transform.rotation);
         AddRotationToList(quaternionsAltitudeSmall, altitudeNeedleSmall.transform.rotation);
+        AddRotationToList(quaternionsAltitudeSmallest, altitudeNeedleSmallest.transform.rotation);
         AddRotationToList(quaternionsAltitudeLarge, altitudeNeedleLarge.transform.rotation);
         AddRotationToList(quaternionsMmhg, mmhgDial.transform.rotation);
 
@@ -177,6 +182,17 @@ public class RotateNeedle : MonoBehaviour
         //and end point
         altitudeSmallTarget = altitudeNeedleSmall.transform.rotation * Quaternion.Euler(0, 0, difference); ;
 
+
+        //smallest altutude
+        difference = quaternionsAltitudeSmallest[0].eulerAngles.z - quaternionsAltitudeSmallest[1].eulerAngles.z;
+        //keep moving at client send rate at previous known step        
+        //set start point
+        altitudeSmallestStart = altitudeNeedleSmallest.transform.rotation;
+        //and end point
+        altitudeSmallestTarget = altitudeNeedleSmallest.transform.rotation * Quaternion.Euler(0, 0, difference); ;
+
+
+
         difference = quaternionsMmhg[0].eulerAngles.z - quaternionsMmhg[1].eulerAngles.z;
         //keep moving at client send rate at previous known step        
         //set start point
@@ -198,8 +214,9 @@ public class RotateNeedle : MonoBehaviour
         //set where we rotate from
         AltitudeStarts();
         //find where we are rotating to for each needle
-        altitudeSmallTarget = RussianDials.AltitudeTargetSmall(iL2GameDataClient.altitude);
-        altitudeLargeTarget = RussianDials.AltitudeTargetLarge(iL2GameDataClient.altitude);
+        altitudeSmallTarget = AltitudeTargetSmall(iL2GameDataClient.country, iL2GameDataClient.altitude);
+        altitudeSmallestTarget = AltitudeTargetSmallest(iL2GameDataClient.country, iL2GameDataClient.altitude);
+        altitudeLargeTarget = AltitudeTargetLarge(iL2GameDataClient.country, iL2GameDataClient.altitude);
 
         //set where we rotate from
         MmhgStart();
@@ -229,16 +246,100 @@ public class RotateNeedle : MonoBehaviour
                 break;
 
             case AirplaneData.Country.US:
-                airspeedTarget = GermanDials.AirspeedTarget(airspeed);
+                airspeedTarget = USDials.AirspeedTarget(airspeed);
+                break;
+
+            case AirplaneData.Country.UK:
+                airspeedTarget = UKDials.AirspeedTarget(airspeed);
                 break;
         }
          
 
         return airspeedTarget;
     }
+
+    static Quaternion AltitudeTargetLarge(AirplaneData.Country country, float altitude)
+    {
+        Quaternion target = Quaternion.identity;
+
+        //each country has slightly different dials, we need to work out rotations individually for each
+        switch (country)
+        {
+            case AirplaneData.Country.RU:
+                
+                target = RussianDials.AltitudeTargetLarge(altitude);
+                break;
+
+            case AirplaneData.Country.GER:
+                target = GermanDials.AltitudeTargetLarge(altitude);
+                break;
+
+            case AirplaneData.Country.US:
+                target= USDials.AltitudeTargetLarge(altitude);
+                break;
+
+            case AirplaneData.Country.UK:
+                target = UKDials.AltitudeTargetLarge(altitude);
+                break;
+        }
+
+
+        return target;
+    }
+
+    static Quaternion AltitudeTargetSmall(AirplaneData.Country country, float altitude)
+    {
+        Quaternion target = Quaternion.identity;
+
+        //each country has slightly different dials, we need to work out rotations individually for each
+        switch (country)
+        {
+            case AirplaneData.Country.RU:
+
+                target = RussianDials.AltitudeTargetSmall(altitude);
+                break;
+
+            case AirplaneData.Country.GER:
+                target = GermanDials.AltitudeTargetSmall(altitude);
+                break;
+
+            case AirplaneData.Country.US:
+                target = USDials.AltitudeTargetSmall(altitude);
+                break;
+
+            case AirplaneData.Country.UK:
+                target = UKDials.AltitudeTargetSmall(altitude);
+                break;
+        }
+
+
+        return target;
+    }
+
+    static Quaternion AltitudeTargetSmallest(AirplaneData.Country country, float altitude)
+    {
+        Quaternion target = Quaternion.identity;
+
+        //each country has slightly different dials, we need to work out rotations individually for each
+        switch (country)
+        {
+            //only UK has smallest dial
+
+            case AirplaneData.Country.UK:
+                target = UKDials.AltitudeTargetSmallest(altitude);
+                break;
+        }
+
+
+        return target;
+    }
+
+
+
     void AltitudeStarts()
     {
         altitudeSmallStart = quaternionsAltitudeSmall[0];
+        altitudeSmallestStart = quaternionsAltitudeSmallest[0];
         altitudeLargeStart = quaternionsAltitudeLarge[0];
     }
 
@@ -276,6 +377,8 @@ public class RotateNeedle : MonoBehaviour
 
     void AltitudeNeedleRotations()
     {
+
+        altitudeNeedleSmallest.transform.rotation = Quaternion.Slerp(altitudeSmallestStart, altitudeSmallestTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
         altitudeNeedleSmall.transform.rotation = Quaternion.Slerp(altitudeSmallStart, altitudeSmallTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
         altitudeNeedleLarge.transform.rotation = Quaternion.Slerp(altitudeLargeStart, altitudeLargeTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
     }
