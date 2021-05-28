@@ -17,7 +17,7 @@ public class AirplaneData : MonoBehaviour
         UK,
         ITA
     }
-
+    public string planeType;
     public Country country = Country.RU;
     public float altitude;
     public float mmhg;

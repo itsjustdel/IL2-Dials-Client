@@ -169,29 +169,46 @@ public class TCPClient : MonoBehaviour {
 				//is we have a network stream, save this hostname
 				hostFound = true;
 
-				//update user on scan result
-				//let user know we are scanning				
-				
-				
-
+				//unpack received stream
+				//program version float
+				//planetype string size
+				//planetype string data size
+				//float array containing instrument/dial values
 
 				int length; 					
-				// Read incomming stream into byte arrary. 					
-				while ((length = stream.Read(bytes, 0, bytes.Length)) != 0) {
+				// Read incoming stream into byte arrary. 					
+				while ((length = stream.Read(bytes, 0, bytes.Length)) != 0) 
+				{
 
+					int p = 0;
+					
 					//Debug.Log("Reading received data");
+					//version number
+					
+					float versionNumber = BitConverter.ToSingle(bytes, 0);
+					Debug.Log("Version Number = " + versionNumber);
+					p += sizeof(float);
 
-					float[] floats= GetFloats(bytes);
+					//plane type string size
+					uint stringSize = BitConverter.ToUInt32(bytes,p);
+					p += sizeof(uint);
+					//plane type string
+					string planeType = System.Text.Encoding.UTF8.GetString(bytes, p, (int)stringSize);
+					iL2GameDataClient.planeType = planeType;
+					p += 64;//chosen max string size (by me)
+					
+					//float array
+					float[] floats = GetFloats(bytes, p);
 
 					//set Il2 game data for client
 					iL2GameDataClient.altitude = floats[0];
 					iL2GameDataClient.mmhg = floats[1];
 					iL2GameDataClient.airspeed = floats[2];
-					iL2GameDataClient.climbRate = floats[3];
-					iL2GameDataClient.rollRate = floats[4];
+					//iL2GameDataClient.climbRate = floats[3];
+					//iL2GameDataClient.rollRate = floats[4];
 
-					//stopping glitching and setting rest position off centre
-					if (iL2GameDataClient.airspeed < 50 || float.IsNaN( iL2GameDataClient.airspeed ))
+					//stopping glitching and setting rest position off centre - move this
+					if (iL2GameDataClient.airspeed < 50 || float.IsNaN( iL2GameDataClient.airspeed )) //do we even want this? why not have needle at 0?
 						iL2GameDataClient.airspeed = 50;
 
 					//Debug.Log("altitude = " + floats[0]);
@@ -207,7 +224,11 @@ public class TCPClient : MonoBehaviour {
 
 					connected = true;
 					connectionTimer = 0f;
-				}	
+
+					Debug.Log("Stream Length = " + length);
+				}
+
+				
 				
 			}
 		}         
@@ -330,10 +351,21 @@ public class TCPClient : MonoBehaviour {
 		}     
 	}
 
-	static float[] GetFloats(byte[] bytes)
+	static float[] GetFloats(byte[] bytes, int offset)
 	{
-		var result = new float[bytes.Length / sizeof(float)];
-		Buffer.BlockCopy(bytes, 0, result, 0, bytes.Length);
-		return result;
+		try
+		{
+			var result = new float[bytes.Length / sizeof(float)];
+			Buffer.BlockCopy(bytes, offset, result, 0,12);
+
+			return result;
+
+		}
+		catch(Exception ex)
+        {
+			return null;
+        }
+	
 	}
+
 }

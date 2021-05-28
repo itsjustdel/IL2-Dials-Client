@@ -50,7 +50,7 @@ public class USDials : MonoBehaviour
 
     public static Quaternion MmhgTarget(float mmhg)
     {
-        Quaternion mmhgTarget = Quaternion.Euler(0, 0, ((760f - mmhg) / 100f) * 300);
+        Quaternion mmhgTarget = Quaternion.Euler(0, 0, ((mmhg) * 150f)); //zero degree at 29.9 , need to add 0.21 //92.921f = sea level
 
         return mmhgTarget;
     }

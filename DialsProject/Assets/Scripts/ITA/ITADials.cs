@@ -21,7 +21,6 @@ public class ITADials : MonoBehaviour
             target = Quaternion.Euler(0, 0, -((airspeed - 300) * 0.4f) - 90);//
         }
 
-        
 
         return target;
     }
@@ -44,7 +43,7 @@ public class ITADials : MonoBehaviour
 
     public static Quaternion MmhgTarget(float mmhg)
     {
-        Quaternion mmhgTarget = Quaternion.Euler(0, 0, ((760f - mmhg) / 100f) * 300);
+        Quaternion mmhgTarget = Quaternion.Euler(0, 0, -((1013.25f - mmhg) * 1f) + 13.25f); // 0 is 1013.25 mbar //0 degrees // bit more confusing because of asset rotation
 
         return mmhgTarget;
     }

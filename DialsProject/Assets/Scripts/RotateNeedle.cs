@@ -214,11 +214,14 @@ public class RotateNeedle : MonoBehaviour
         //called when tcp client receives update
         SavePreviousRotations();
 
+        // Airspeed
         //set where we rotate from
         AirspeedStart();
         //find where we are rotating to
         airspeedTarget = AirspeedTarget(iL2GameDataClient.country, iL2GameDataClient.airspeed);
 
+
+        //Altitude
         //set where we rotate from
         AltitudeStarts();
         //find where we are rotating to for each needle
@@ -230,16 +233,56 @@ public class RotateNeedle : MonoBehaviour
         altitudeSmallTarget = AltitudeTargetSmall(iL2GameDataClient.country, iL2GameDataClient.altitude);
         altitudeLargeTarget = AltitudeTargetLarge(iL2GameDataClient.country, iL2GameDataClient.altitude);
 
+
+
+        //Pressure //mmhg
+
         //set where we rotate from
         MmhgStart();
+
+
         //set where we are rotating to
-        RussianDials.MmhgTarget(iL2GameDataClient.mmhg);
+        mmhgTarget = AtmosphericPressure(iL2GameDataClient.country, iL2GameDataClient.mmhg);
+
+
 
      
     }
     void AirspeedStart()
     {
         airspeedStart = quaternionsAirspeed[0];
+    }
+
+    static Quaternion AtmosphericPressure(AirplaneData.Country country, float unit)
+    {
+        Quaternion target = Quaternion.identity;
+
+        //each country has slightly different dials, we need to work out rotations individually for each
+        switch (country)
+        {
+            case AirplaneData.Country.RU:
+                target = RussianDials.MmhgTarget(unit);
+                break;
+
+            case AirplaneData.Country.GER:
+                target = GermanDials.MmhgTarget(unit);
+                break;
+
+            case AirplaneData.Country.US:
+                target = USDials.MmhgTarget(unit);
+                break;
+
+            case AirplaneData.Country.UK:
+                target = UKDials.MmhgTarget(unit);
+                break;
+
+            case AirplaneData.Country.ITA:
+                target = ITADials.MmhgTarget(unit);
+                break;
+        }
+
+        return target;
+
     }
 
     static Quaternion AirspeedTarget(AirplaneData.Country country, float airspeed)
