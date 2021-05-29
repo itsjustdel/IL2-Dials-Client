@@ -15,9 +15,12 @@ public class AirplaneData : MonoBehaviour
         GER,
         US,
         UK,
-        ITA
+        ITA,
+        UNDEFINED
+
     }
     public string planeType;
+    public string planeTypePrevious;
     public Country country = Country.RU;
     public float altitude;
     public float mmhg;
@@ -30,25 +33,27 @@ public class AirplaneData : MonoBehaviour
 
     public BuildControl buildControl;
 
-    // Update is called once per frame
-    void Update()
+    //fixed update is enough for checking status
+    void FixedUpdate()
     {
-        CheckForCountryChange();
+        CheckForPlaneChange();
       
     }
 
-    void CheckForCountryChange()
+    void CheckForPlaneChange()
     {
-        
-        if(country != previousCountry)
-            //a change has been detected
-            SetCountry();
+        if(planeType != planeTypePrevious)
+        {
+            country = PlaneCountryFromName.AsignCountryFromName(planeType);
 
+            //enable and disable dials depending on plane/country
+            SwitchDialsFromCountry();
+        }
 
-        previousCountry = country;
+        planeTypePrevious = planeType;
     }
 
-    void SetCountry()
+    void SwitchDialsFromCountry()
     {
         //change dials depending on what value we received from the networking component
         
@@ -79,4 +84,6 @@ public class AirplaneData : MonoBehaviour
         }
 
     }
+
+   
 }

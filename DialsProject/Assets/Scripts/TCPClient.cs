@@ -186,7 +186,7 @@ public class TCPClient : MonoBehaviour {
 					//version number
 					
 					float versionNumber = BitConverter.ToSingle(bytes, 0);
-					Debug.Log("Version Number = " + versionNumber);
+					//Debug.Log("Version Number = " + versionNumber);
 					p += sizeof(float);
 
 					//plane type string size
@@ -225,7 +225,7 @@ public class TCPClient : MonoBehaviour {
 					connected = true;
 					connectionTimer = 0f;
 
-					Debug.Log("Stream Length = " + length);
+				//	Debug.Log("Stream Length = " + length);
 				}
 
 				
