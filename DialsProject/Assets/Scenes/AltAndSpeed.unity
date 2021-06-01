@@ -3179,7 +3179,6 @@ MonoBehaviour:
   airspeedNeedleTest: {fileID: 1495629228}
   turnTrack: {fileID: 0}
   turnPlane: {fileID: 0}
-  tcpReceived: 0
   lastMessageReceivedTime: 0
   maxSpin: 1
   turnAndBankPitchMultiplier: 5
@@ -3190,8 +3189,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0, w: 1}
   airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
-  testPrediction: 0
-  testValues: 1
+  testValues: 0
 --- !u!4 &1012752637
 Transform:
   m_ObjectHideFlags: 0
@@ -4088,7 +4086,6 @@ MonoBehaviour:
   airspeedNeedleTest: {fileID: 2070599389}
   turnTrack: {fileID: 0}
   turnPlane: {fileID: 0}
-  tcpReceived: 0
   lastMessageReceivedTime: 0
   maxSpin: 1
   turnAndBankPitchMultiplier: 5
@@ -4099,8 +4096,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0, w: 1}
   airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
-  testPrediction: 0
-  testValues: 1
+  testValues: 0
 --- !u!1 &1265264635
 GameObject:
   m_ObjectHideFlags: 0
@@ -4239,7 +4235,6 @@ MonoBehaviour:
   airspeedNeedleTest: {fileID: 1017844298}
   turnTrack: {fileID: 0}
   turnPlane: {fileID: 0}
-  tcpReceived: 0
   lastMessageReceivedTime: 0
   maxSpin: 1
   turnAndBankPitchMultiplier: 5
@@ -4250,8 +4245,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0, w: 1}
   airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
-  testPrediction: 0
-  testValues: 1
+  testValues: 0
 --- !u!1 &1341059999
 GameObject:
   m_ObjectHideFlags: 0
@@ -4364,7 +4358,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   planeType: 
-  country: 0
+  planeTypePrevious: 
+  country: 5
   altitude: 0
   mmhg: 0
   airspeed: 0
@@ -5183,7 +5178,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1559884705
 Transform:
   m_ObjectHideFlags: 0
@@ -5223,7 +5218,6 @@ MonoBehaviour:
   airspeedNeedleTest: {fileID: 1113018769}
   turnTrack: {fileID: 0}
   turnPlane: {fileID: 0}
-  tcpReceived: 0
   lastMessageReceivedTime: 0
   maxSpin: 1
   turnAndBankPitchMultiplier: 5
@@ -5234,7 +5228,6 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0, w: 1}
   airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
-  testPrediction: 0
   testValues: 0
 --- !u!1 &1668890709
 GameObject:
@@ -6013,10 +6006,12 @@ MonoBehaviour:
   connected: 0
   autoScan: 0
   hostFound: 0
+  tcpReceived: 0
   userIP: 
   portNumber: 11200
   waitingOnResponse: 0
   timerOfLastReceived: 0
+  testPrediction: 0
   hostName: 
   ip4: 0
   ip3: 0
@@ -6467,7 +6462,6 @@ MonoBehaviour:
   airspeedNeedleTest: {fileID: 660929628}
   turnTrack: {fileID: 0}
   turnPlane: {fileID: 0}
-  tcpReceived: 0
   lastMessageReceivedTime: 0
   maxSpin: 1
   turnAndBankPitchMultiplier: 5
@@ -6478,8 +6472,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0, w: 1}
   airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
-  testPrediction: 0
-  testValues: 1
+  testValues: 0
 --- !u!1 &1973298410
 GameObject:
   m_ObjectHideFlags: 0

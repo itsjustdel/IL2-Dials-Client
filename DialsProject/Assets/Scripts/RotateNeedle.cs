@@ -18,7 +18,7 @@ public class RotateNeedle : MonoBehaviour
     public GameObject airspeedNeedleTest;
     public GameObject turnTrack;
     public GameObject turnPlane;
-    public bool tcpReceived = false;
+    //public bool tcpReceived = false; //moved to tcpClient, multiple instances of Rotate Needle for each country, only single instance of tcpclient
     public float lastMessageReceivedTime;//two ways of doing the same thing
     public float maxSpin =1f;
     public float turnAndBankPitchMultiplier = 5f;
@@ -44,7 +44,7 @@ public class RotateNeedle : MonoBehaviour
     private Quaternion mmhgStart;
     private Quaternion mmhgTarget;
 
-    public bool testPrediction = false;
+    //public bool testPrediction = false;//moved to tcp client
     public bool testValues = true;
 
 
@@ -89,7 +89,7 @@ public class RotateNeedle : MonoBehaviour
         }
         else //we are connected
         {
-            if (tcpReceived)
+            if (tcpClient.tcpReceived)
             {
 
                 //flag set by tcp client in async thread
@@ -97,7 +97,7 @@ public class RotateNeedle : MonoBehaviour
                 lastMessageReceivedTime = Time.time;
                 SetRotationTargets();
 
-                tcpReceived = false;
+                tcpClient.tcpReceived = false;
 
 
             }
@@ -105,7 +105,7 @@ public class RotateNeedle : MonoBehaviour
             //check to see if we need to predict or if we received a new update recently
             else if (Time.time - lastMessageReceivedTime > Time.fixedDeltaTime)//we send and receive on fixed time step
             {
-                tcpReceived = false;
+                tcpClient.tcpReceived = false;
 
                 //   Debug.Log("0");
                 lastMessageReceivedTime += Time.fixedDeltaTime;

@@ -8,7 +8,11 @@ public class USDials : MonoBehaviour
     {
         //airspeed dial has two gears
         Quaternion target = Quaternion.identity;
-		if (airspeed <= 50)
+
+        //convert mph
+        airspeed /= 1.609f;
+
+        if (airspeed <= 50)
 		{
 			target = Quaternion.Euler(0, 0, -((airspeed) * Easing.Exponential.In(.825f))); 
 		}
@@ -34,7 +38,8 @@ public class USDials : MonoBehaviour
 
     public static Quaternion AltitudeTargetSmall(float altitude)
     {
-
+        //convert to feet
+        altitude *= 3.281f;
         Quaternion altitudeSmallTarget = Quaternion.Euler(0, 0, -(altitude *.018f));
 
         return altitudeSmallTarget;
@@ -43,6 +48,9 @@ public class USDials : MonoBehaviour
 
     public static Quaternion AltitudeTargetLarge(float altitude)
     {
+        //convert to feet
+        altitude *= 3.281f;
+
         Quaternion altitudeLargeTarget = Quaternion.Euler(0, 0, -(altitude / 1000f) * 360);
         return altitudeLargeTarget;
 
@@ -50,7 +58,12 @@ public class USDials : MonoBehaviour
 
     public static Quaternion MmhgTarget(float mmhg)
     {
-        Quaternion mmhgTarget = Quaternion.Euler(0, 0, ((mmhg) * 150f)); //zero degree at 29.9 , need to add 0.21 //92.921f = sea level
+        //mmhg to inches of mercury
+        float input = mmhg / 25.4f;
+        float seaLevelInHg = 760f / 25.4f;//29.921
+        Quaternion mmhgTarget = Quaternion.Euler(0, 0, ((input - seaLevelInHg) * 148f) + 3f); //zero degree at 29.921 (slight ofset in asset rotation 3 degrees on blender)
+
+       // Debug.Log("inches of merc = " + input);
 
         return mmhgTarget;
     }

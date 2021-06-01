@@ -21,6 +21,7 @@ public class TCPClient : MonoBehaviour {
 	public bool connected = false;
 	public bool autoScan = false;
 	public bool hostFound;
+	public bool tcpReceived = false;
 
 	//user can insert from menu, if empty, autoscan happens
 	public string userIP;
@@ -30,7 +31,9 @@ public class TCPClient : MonoBehaviour {
 
 
 	public float timerOfLastReceived = 0f;
-	
+
+
+	public bool testPrediction = false;
 
 	#region private members 	
 	private TcpClient socketConnection; 	
@@ -44,11 +47,14 @@ public class TCPClient : MonoBehaviour {
 	public float timer = 5f;
 	public float connectionTimer = 0f;
 
-    #endregion
 
-    
+	
 
-    void Awake()
+	#endregion
+
+
+
+	void Awake()
     {
 		if (buildControl.isServer)
         {
@@ -208,16 +214,18 @@ public class TCPClient : MonoBehaviour {
 					//iL2GameDataClient.rollRate = floats[4];
 
 					//stopping glitching and setting rest position off centre - move this
-					if (iL2GameDataClient.airspeed < 50 || float.IsNaN( iL2GameDataClient.airspeed )) //do we even want this? why not have needle at 0?
-						iL2GameDataClient.airspeed = 50;
+					//if (iL2GameDataClient.airspeed < 50 || float.IsNaN( iL2GameDataClient.airspeed )) //do we even want this? why not have needle at 0?
+					//iL2GameDataClient.airspeed = 50;
+					if (float.IsNaN(iL2GameDataClient.airspeed))
+						iL2GameDataClient.airspeed = 0f;
 
 					//Debug.Log("altitude = " + floats[0]);
 					//Debug.Log("mmhg = " + floats[1]);
 					//Debug.Log("airspeed = " + floats[2]);
 
 						//save rotation of needles				
-					if (!rN.testPrediction)
-						rN.tcpReceived = true; 
+					if (!testPrediction)
+						tcpReceived = true; 
 
 					//keep a track of last receieved time
 					timerOfLastReceived = 0f;

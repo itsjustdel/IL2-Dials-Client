@@ -38,7 +38,11 @@ public class GermanDials : MonoBehaviour
 
     public static Quaternion MmhgTarget(float mmhg)
     {
-        Quaternion mmhgTarget = Quaternion.Euler(0, 0, ((1013.25f -mmhg) *1f) - 3.25f); // 0 is 1013.25 mbar //0 degrees // bit more confusing because of asset rotation
+        
+
+        //mmhg to mbar
+        float input = mmhg * 1.333f;        
+        Quaternion mmhgTarget = Quaternion.Euler(0, 0, ((1013.25f -input) *1f) - 3.25f); // 0 is 1013.25 mbar //0 degrees // bit more confusing because of asset rotation
 
         return mmhgTarget;
     }

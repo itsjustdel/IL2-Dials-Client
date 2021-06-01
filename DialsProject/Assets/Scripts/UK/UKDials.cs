@@ -8,25 +8,17 @@ public class UKDials : MonoBehaviour
     {
         //airspeed dial has two gears
         Quaternion target = Quaternion.identity;
-        if (airspeed <= 50)
+
+        //convert mph
+        airspeed /= 1.609f;
+
+        if (airspeed < 60)
         {
-            target = Quaternion.Euler(0, 0, -((airspeed) * Easing.Exponential.In(.825f)));
-        }
-        else if (airspeed >= 50 && airspeed < 100)
-        {
-            target = Quaternion.Euler(0, 0, -((airspeed - 50) * Easing.Exponential.In(.985f)) - 15); //Jesus Christi
-        }
-        else if (airspeed >= 100 && airspeed < 300)
-        {
-            //100 = 60*
-            //150 = 100*            
-            //200 = 140*
-            //250 = 180
-            target = Quaternion.Euler(0, 0, -((airspeed - 100) * .8f) - 60);//60* is at 100
+            target = Quaternion.Euler(0, 0, -(airspeed) * .333f + 180);//60 at 220
         }
         else
         {
-            target = Quaternion.Euler(0, 0, -((airspeed - 300) * .3f) + 140);//140* is at 300
+            target = Quaternion.Euler(0, 0, (60f - airspeed) * 1.4f + 160);//60 at 220
         }
 
         return target;
@@ -34,7 +26,8 @@ public class UKDials : MonoBehaviour
 
     public static Quaternion AltitudeTargetSmall(float altitude)
     {
-
+        //convert to feet
+        altitude *= 3.281f;
         Quaternion altitudeSmallTarget = Quaternion.Euler(0, 0, -(altitude * .036f));
 
         return altitudeSmallTarget;
@@ -43,7 +36,8 @@ public class UKDials : MonoBehaviour
 
     public static Quaternion AltitudeTargetSmallest(float altitude)
     {
-
+        //convert to feet
+        altitude *= 3.281f;
         Quaternion altitudeSmallTarget = Quaternion.Euler(0, 0, -(altitude * .0036f));
 
         return altitudeSmallTarget;
@@ -52,6 +46,9 @@ public class UKDials : MonoBehaviour
 
     public static Quaternion AltitudeTargetLarge(float altitude)
     {
+        //convert to feet
+        altitude *= 3.281f;
+
         Quaternion altitudeLargeTarget = Quaternion.Euler(0, 0, -(altitude / 1000f) * 360);
         return altitudeLargeTarget;
 
@@ -59,8 +56,11 @@ public class UKDials : MonoBehaviour
 
     public static Quaternion MmhgTarget(float mmhg)
     {
-        //Quaternion mmhgTarget = Quaternion.Euler(0, 0, ((1000f - mmhg) *0.72f) - 13.25f);
-        Quaternion mmhgTarget = Quaternion.Euler(0, 0, ((1013.25f - mmhg) * 1f) - 13.25f); // 0 is 1013.25 mbar //0 degrees // bit more confusing because of asset rotation
+        float input = mmhg * 1.333f;
+        Quaternion mmhgTarget = Quaternion.Euler(0, 0, ((1013.25f - input) * 1f) - 13.25f);
+
+
+
 
         return mmhgTarget;
     }
