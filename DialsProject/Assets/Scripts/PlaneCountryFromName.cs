@@ -282,6 +282,11 @@ public class PlaneCountryFromName : AirplaneData
                 country = Country.GER;
                 break;
 
+            //RSE.RSE::CCockpitInstruments::simulation+589A - 48 8D 15 DF201000     - lea rdx,[RSE.RSE::CAeroplane_Typhoon_Mk_Ib::`vftable'+310] { ("Typhoon Mk.Ib") }
+            case "Typhoon Mk.Ib":
+                country = Country.UK;
+                break;
+
             default:
                 country = Country.UNDEFINED;
                 break;
