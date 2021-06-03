@@ -14,6 +14,9 @@ public class TCPClient : MonoBehaviour {
 	
 	public BuildControl buildControl;
 	public AirplaneData iL2GameDataClient;
+	
+
+	
 	public MenuHandler menuHandler;
 	public RotateNeedle rN;
 	//user settings	
@@ -65,6 +68,11 @@ public class TCPClient : MonoBehaviour {
 
     public void FixedUpdate()
 	{
+		//wait for as econd before scanning
+		if (menuHandler.stopwatch.ElapsedMilliseconds < 5000)
+			return;
+
+
 		if(hostFound)
         {
 			if(!autoScan)
@@ -190,8 +198,11 @@ public class TCPClient : MonoBehaviour {
 					
 					//Debug.Log("Reading received data");
 					//version number
+					//receiving server version from stream (server -> client)
+					iL2GameDataClient.serverVersion = BitConverter.ToSingle(bytes, 0);
 					
-					float versionNumber = BitConverter.ToSingle(bytes, 0);
+
+
 					//Debug.Log("Version Number = " + versionNumber);
 					p += sizeof(float);
 
@@ -375,5 +386,7 @@ public class TCPClient : MonoBehaviour {
         }
 	
 	}
+
+
 
 }

@@ -8,7 +8,9 @@ using UnityEngine;
 
 public class AirplaneData : MonoBehaviour
 {
-   
+    public float clientVersion = 0.2f; //manually update this
+    public float serverVersion;
+
     public enum Country
     {
         RU,
@@ -32,13 +34,59 @@ public class AirplaneData : MonoBehaviour
     private Country previousCountry;
 
     public BuildControl buildControl;
-
+    public MenuHandler menuHandler;
+    public TCPClient tcpClient;
     //fixed update is enough for checking status
     void FixedUpdate()
     {
+        //check client version against incoming server message
+        CheckVersion();
+
+        RemoveTitle();
+
         CheckForPlaneChange();
+
+        if (country != Country.UNDEFINED )
+            RemoveTitle();
+        else 
+            EnableTitle();
       
     }
+
+    void CheckVersion()
+    {
+        //checks version and shows message if mismatch (if connected)
+        if (tcpClient.connected)
+        {
+            if (serverVersion != clientVersion)
+            {
+                //show server message
+                menuHandler.ServerMessageOpen();
+            }
+            else
+            {
+                //all good
+                menuHandler.ServerMessageClosed();
+            }
+        }
+        else
+        {
+            //we are not connected to anything we don't know anything about version numbersd
+            menuHandler.ServerMessageClosed();
+        }
+    }
+
+    void RemoveTitle()
+    {
+        menuHandler.title.SetActive(false);
+        menuHandler.missionStart.SetActive(false);
+    }
+    void EnableTitle()
+    {
+        menuHandler.title.SetActive(true);
+        menuHandler.missionStart.SetActive(true);
+    }
+
 
     void CheckForPlaneChange()
     {

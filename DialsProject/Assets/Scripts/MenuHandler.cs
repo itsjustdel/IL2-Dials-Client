@@ -3,10 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class MenuHandler : MonoBehaviour
 {
+
+    
     public bool deletePrefs = false;
+    public GameObject title;
+    public GameObject titleMask;
+    public GameObject missionStart;
     public GameObject welcomePanel;
+    public GameObject serverMessagePanel;
     public GameObject blurPanel;
     public GameObject menuPanel;
     public GameObject menuButton;
@@ -22,9 +29,21 @@ public class MenuHandler : MonoBehaviour
 
     //override UI toggle fire on first frame
     private bool dontFire;
+
+
+    //opening animations
+    public float slideSpeed = 1f;    
+    private Color missionStartColor;
+    private Color titleColor;
+    private bool glowDirection;
+    public float missionGlowSpeed = 1f;
+    public float titleFadeSpeed = 1f;
+    public float startLEDFade = 1f;
+    public float startMissionGlowFade = 1f;
+    public bool fadeLeds = false;
+    public System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
     public void Start()
     {
-
 
         if (deletePrefs)
         {
@@ -92,7 +111,94 @@ public class MenuHandler : MonoBehaviour
         portFieldOpen = false;
 
 
+        //set alhpa in mission glow and title to 0 - this way we can see it in the editor before we press play
+        missionStartColor = missionStart.GetComponent<Text>().color;
+        missionStartColor.a = 0;
+        missionStart.GetComponent<Text>().color = missionStartColor;
+
+
+        titleColor = title.GetComponent<Image>().color;
+        titleColor.a = 0;
+        title.GetComponent<Image>().color = titleColor;
+        
+
+
     }
+
+    public void Update()
+    {
+        //SlideMask();
+
+        if (!welcomePanel.activeInHierarchy)
+        {
+            if (!stopwatch.IsRunning)
+                stopwatch.Start();
+
+            TitleFade();
+
+            MissionStartGlow();
+        }
+    }
+
+    void TitleFade()
+    {
+        
+
+        if (titleColor.a < 1f)
+        {
+          
+            //alpha starts at 0 in hierarchy so it fades in to view
+
+            titleColor.a += Time.deltaTime * titleFadeSpeed;
+            title.GetComponent<Image>().color = titleColor;
+        }
+        else
+        {
+
+            if(stopwatch.ElapsedMilliseconds > startLEDFade*1000)
+            {
+                fadeLeds = true;
+            }
+        }
+
+        
+        
+    }
+
+    public void MissionStartGlow()
+    {
+
+        //wait until slide is finished
+        if (stopwatch.ElapsedMilliseconds < startMissionGlowFade*1000)
+            return;
+
+        //missionStartColor = missionStart.GetComponent<Image>().color;
+
+        //alpha starts at 0 in hierarchy so it fades in to view
+        if (!glowDirection)
+        {
+            missionStartColor.a += Time.deltaTime * missionGlowSpeed;
+        }
+        else
+        {
+            missionStartColor.a -= Time.deltaTime * missionGlowSpeed;
+        }
+
+        missionStart.GetComponent<Text>().color = missionStartColor; 
+
+        if(missionStartColor.a < 0f)
+        {
+            missionStartColor.a = 0f;
+            glowDirection = !glowDirection;
+        }
+        else if(missionStartColor.a > 1f)
+        {
+            missionStartColor.a = 1f;
+            glowDirection = !glowDirection;
+        }
+    }
+
+    
 
     public void InputFieldOpen11()
     {
@@ -207,6 +313,16 @@ public class MenuHandler : MonoBehaviour
         //turn the leds and menu button on
         ledParent.SetActive(true);
         menuButton.SetActive(true);
+    }
+
+    public void ServerMessageOpen()
+    {
+        serverMessagePanel.SetActive(true);
+    }
+
+    public void ServerMessageClosed()
+    {
+        serverMessagePanel.SetActive(false);
     }
 
     public void DontShowAgainToggle()
