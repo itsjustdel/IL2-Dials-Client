@@ -318,6 +318,8 @@ public class MenuHandler : MonoBehaviour
     public void ServerMessageOpen()
     {
         serverMessagePanel.SetActive(true);
+        blurPanel.SetActive(true);
+        menuButton.SetActive(false);
     }
 
     public void ServerMessageClosed()

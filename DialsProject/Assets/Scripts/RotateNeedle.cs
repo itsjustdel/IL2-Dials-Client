@@ -53,13 +53,7 @@ public class RotateNeedle : MonoBehaviour
     void Start()
     {
 
-        Application.targetFrameRate = 60;
-
-        //stop screen from turnign off
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            Screen.sleepTimeout = SleepTimeout.NeverSleep;
-        }
+     
         
     }
 

@@ -10,7 +10,18 @@ public class BuildControl : MonoBehaviour
     public bool freeVersion;
     public void Awake()
     {
-        if(isServer)
+
+        Application.targetFrameRate = 60;
+
+        //stop screen from turnign off
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            Screen.sleepTimeout = SleepTimeout.NeverSleep;
+        }
+
+
+
+        if (isServer)
             Debug.Log("This is the server");
         
         if(isClient)
