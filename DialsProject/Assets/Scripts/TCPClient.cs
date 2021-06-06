@@ -51,7 +51,7 @@ public class TCPClient : MonoBehaviour {
 	public float connectionTimer = 0f;
 
 
-	
+	bool localScanAttempted = false;//127.0.0.1 internal loopback scan
 
 	#endregion
 
@@ -122,7 +122,16 @@ public class TCPClient : MonoBehaviour {
 				//Debug.Log("Looking for server");
 				//check if anything  on socket
 
-				hostName = "192.168." + ip3.ToString() + "." + ip4.ToString();
+				//look for local connection before going to wifi
+				if (!localScanAttempted)
+				{
+					hostName = "127.0.0.1";
+				}
+				else
+				{
+					hostName = "192.168." + ip3.ToString() + "." + ip4.ToString();
+				}
+
 				Thread thread = new Thread(() => ListenForData(hostName));
 				thread.IsBackground = true;
 				thread.Start();//does this close automatically?
@@ -131,24 +140,31 @@ public class TCPClient : MonoBehaviour {
 				if(autoScan)
 					menuHandler.scanDebug.GetComponent<Text>().text = "Scanning IP: " + hostName.ToString(); ;
 
-				//push to 255 and move ip3 up
-				ip4++;
-				if (ip4 > 255)
+				if (localScanAttempted)
 				{
-					ip3++;
-					ip4 = 0;
+					//push to 255 and move ip3 up
+					ip4++;
+					if (ip4 > 255)
+					{
+						ip3++;
+						ip4 = 0;
+					}
+
+					if (ip3 > 255)
+					{
+						Debug.Log("Did not find server");
+
+
+						//restart -if people have strange ips they probably know about it and can use direct connection option
+						ip3 = 0;
+						ip4 = 0;
+
+					}
 				}
 
-				if (ip3 > 255)
-				{
-					Debug.Log("Did not find server");
+				//first frame we attempt local scan, then on to wifi
+				localScanAttempted = true;
 
-
-					//restart -if people have strange ips they probably know about it and can use direct connection option
-					ip3 = 0;
-					ip4 = 0;
-					
-				}
 			}
 
 			else
@@ -195,11 +211,22 @@ public class TCPClient : MonoBehaviour {
 				{
 
 					int p = 0;
-					
+
+					//float array
+					float[] floats = GetFloats(bytes, p);
+
+					//set Il2 game data for client
+					iL2GameDataClient.altitude = floats[0];
+					iL2GameDataClient.mmhg = floats[1];
+					iL2GameDataClient.airspeed = floats[2];
+					//iL2GameDataClient.climbRate = floats[3];
+					//iL2GameDataClient.rollRate = floats[4];
+					p += 12;
+
 					//Debug.Log("Reading received data");
 					//version number
 					//receiving server version from stream (server -> client)
-					iL2GameDataClient.serverVersion = BitConverter.ToSingle(bytes, 0);
+					iL2GameDataClient.serverVersion = BitConverter.ToSingle(bytes,p);
 					
 
 
@@ -214,15 +241,7 @@ public class TCPClient : MonoBehaviour {
 					iL2GameDataClient.planeType = planeType;
 					p += 64;//chosen max string size (by me)
 					
-					//float array
-					float[] floats = GetFloats(bytes, p);
-
-					//set Il2 game data for client
-					iL2GameDataClient.altitude = floats[0];
-					iL2GameDataClient.mmhg = floats[1];
-					iL2GameDataClient.airspeed = floats[2];
-					//iL2GameDataClient.climbRate = floats[3];
-					//iL2GameDataClient.rollRate = floats[4];
+					
 
 					//stopping glitching and setting rest position off centre - move this
 					//if (iL2GameDataClient.airspeed < 50 || float.IsNaN( iL2GameDataClient.airspeed )) //do we even want this? why not have needle at 0?
