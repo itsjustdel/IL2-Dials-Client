@@ -18,6 +18,9 @@ public class RotateNeedle : MonoBehaviour
     public GameObject airspeedNeedleTest;
     public GameObject turnTrack;
     public GameObject turnPlane;
+    public GameObject headingIndicator;
+    public GameObject turnCoordinatorNeedle;
+    public GameObject turnCoordinatorBall;
     //public bool tcpReceived = false; //moved to tcpClient, multiple instances of Rotate Needle for each country, only single instance of tcpclient
     public float lastMessageReceivedTime;//two ways of doing the same thing
     public float maxSpin =1f;
@@ -32,7 +35,10 @@ public class RotateNeedle : MonoBehaviour
     private List<Quaternion> quaternionsAltitudeSmallest = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     public List<Quaternion> quaternionsAirspeed = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     private List<Quaternion> quaternionsMmhg = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
-  //  private bool saveForPredictions;
+    private List<Quaternion> quaternionsHeading = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
+    private List<Quaternion> quaternionsTurnCoordinatorNeedle = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
+    private List<Quaternion> quaternionsTurnCoordinatorBall = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
+    //  private bool saveForPredictions;
     public Quaternion airspeedStart;
     public  Quaternion airspeedTarget;
     private Quaternion altitudeLargeStart;
@@ -43,6 +49,13 @@ public class RotateNeedle : MonoBehaviour
     private Quaternion altitudeSmallestTarget;
     private Quaternion mmhgStart;
     private Quaternion mmhgTarget;
+    //heading is on a track, we move along the x, we don't rotate
+    private Vector3 headingStart;
+    private Vector3 headingTarget;
+    private Quaternion turnCoordinatorNeedleStart;
+    private Quaternion turnCoordinatorNeedleTarget;
+    private Quaternion turnCoordinatorBallStart;
+    private Quaternion turnCoordinatorBallTarget;
 
     //public bool testPrediction = false;//moved to tcp client
     public bool testValues = true;
@@ -123,19 +136,29 @@ public class RotateNeedle : MonoBehaviour
     {
         //used for prediction - save previous position
 
+        //airspeed
         AddRotationToList(quaternionsAirspeed, airspeedNeedle.transform.rotation);
+
+        //altimeter
         AddRotationToList(quaternionsAltitudeSmall, altitudeNeedleSmall.transform.rotation);
-
         //only UK has the smallest needle
-        if(iL2GameDataClient.country == AirplaneData.Country.UK)
-            AddRotationToList(quaternionsAltitudeSmallest, altitudeNeedleSmallest.transform.rotation);
-
+        if (iL2GameDataClient.country == AirplaneData.Country.UK)
+            AddRotationToList(quaternionsAltitudeSmallest, altitudeNeedleSmallest.transform.rotation);        
         AddRotationToList(quaternionsAltitudeLarge, altitudeNeedleLarge.transform.rotation);
         AddRotationToList(quaternionsMmhg, mmhgDial.transform.rotation);
+
+        //heading
+        AddRotationToList(quaternionsHeading, headingIndicator.transform.rotation);
+
+        //turn co-ord
+        AddRotationToList(quaternionsTurnCoordinatorNeedle, turnCoordinatorNeedle.transform.rotation);
+        AddRotationToList(quaternionsTurnCoordinatorBall, turnCoordinatorBall.transform.rotation);
 
     }
     List<Quaternion> AddRotationToList(List<Quaternion> qList, Quaternion toAdd)
     {
+        //method to insert quatenions in to a list of size 2
+
         //add at start
         qList.Insert(0, toAdd);
         //and cap length, we only need to do simple prediction
@@ -201,6 +224,13 @@ public class RotateNeedle : MonoBehaviour
         mmhgStart = mmhgDial.transform.rotation;
         //and end point
         mmhgTarget = mmhgDial.transform.rotation * Quaternion.Euler(0, 0, difference);
+
+
+        //TODO 
+
+        //heading
+
+        //turn coordinator
     }
 
     public void SetRotationTargets()
@@ -208,13 +238,38 @@ public class RotateNeedle : MonoBehaviour
         //called when tcp client receives update
         SavePreviousRotations();
 
-        // Airspeed
-        //set where we rotate from
-        AirspeedStart();
-        //find where we are rotating to
-        airspeedTarget = AirspeedTarget(iL2GameDataClient.country, iL2GameDataClient.airspeed);
+        AirspeedTarget();
+
+        AltimeterTargets();
+
+        HeadingTarget();
+
+        TurnCoordinatorTarget();
+       
+
+        
+    }
+
+    void TurnCoordinatorTarget()
+    {
+        //RU
+        //pendulum needle
+        turnCoordinatorNeedleTarget = RussianDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.heading,lastMessageReceivedTime);
 
 
+        //ball indicator
+        Vector3 velocity = Vector3.zero;// to get
+        turnCoordinatorBallTarget = RussianDials.TurnCoordinatorBallTarget(iL2GameDataClient.heading, velocity);
+    }
+
+    void HeadingTarget()
+    {
+        //RU
+        headingTarget = RussianDials.HeadingIndicatorPosition(iL2GameDataClient.heading);
+    }
+
+    void AltimeterTargets()
+    {  
         //Altitude
         //set where we rotate from
         AltitudeStarts();
@@ -227,21 +282,29 @@ public class RotateNeedle : MonoBehaviour
         altitudeSmallTarget = AltitudeTargetSmall(iL2GameDataClient.country, iL2GameDataClient.altitude);
         altitudeLargeTarget = AltitudeTargetLarge(iL2GameDataClient.country, iL2GameDataClient.altitude);
 
+        PressureReferenceTargets();
+    }
 
-
-        //Pressure //mmhg
+    void PressureReferenceTargets()
+    {   //Pressure //mmhg
 
         //set where we rotate from
         MmhgStart();
 
-
         //set where we are rotating to
         mmhgTarget = AtmosphericPressure(iL2GameDataClient.country, iL2GameDataClient.mmhg);
 
-
-
-     
     }
+
+    void AirspeedTarget()
+    {
+        // Airspeed
+        //set where we rotate from
+        AirspeedStart();
+        //find where we are rotating to
+        airspeedTarget = AirspeedTarget(iL2GameDataClient.country, iL2GameDataClient.airspeed);
+    }
+
     void AirspeedStart()
     {
         airspeedStart = quaternionsAirspeed[0];
@@ -352,7 +415,6 @@ public class RotateNeedle : MonoBehaviour
         switch (country)
         {
             case AirplaneData.Country.RU:
-
                 target = RussianDials.AltitudeTargetSmall(altitude);
                 break;
 
@@ -395,8 +457,6 @@ public class RotateNeedle : MonoBehaviour
         return target;
     }
 
-
-
     void AltitudeStarts()
     {
         altitudeSmallStart = quaternionsAltitudeSmall[0];
@@ -414,19 +474,24 @@ public class RotateNeedle : MonoBehaviour
         mmhgStart = quaternionsMmhg[0];
     }
 
-
-
     void NeedleRotations()
     {
       //  Debug.Log("rotating needles");
-        AirspeedNeedleRotation();
-        AltitudeNeedleRotations();
-        MmhgNeedleRotation();
 
-        if (!buildControl.freeVersion)
-        {
-            TurnAndBank();
-        }
+
+        //TODO - don't calculate if dial not present // opto
+
+        AirspeedNeedleRotation();
+
+        AltitudeNeedleRotations();
+
+        MmhgNeedleRotation();
+        
+        HeadingIndicatorRotation();
+        
+        TurnAndBank();    
+
+        TurnCoordinatorRotation();
     }
 
     void AirspeedNeedleRotation()
@@ -455,6 +520,30 @@ public class RotateNeedle : MonoBehaviour
     void MmhgNeedleRotation()
     {
         mmhgDial.transform.rotation = Quaternion.Slerp(mmhgStart, mmhgTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
+    }
+
+    void TurnCoordinatorRotation()
+    {
+        //Needle
+        turnCoordinatorNeedle.transform.rotation = Quaternion.Slerp(turnCoordinatorNeedleStart, turnCoordinatorNeedleTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
+
+
+        //Ball
+        //turnCoordinatorBall.transform.rotation = Quaternion.Slerp(turnCoordinatorBallStart, turnCoordinatorBallTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
+
+    }
+
+    void HeadingIndicatorRotation()
+    {
+        Vector3 position = RussianDials.HeadingIndicatorPosition(iL2GameDataClient.heading);
+        //adjust for scale of render/model
+        position *= 0.916f;//arbitry due to blender camera settings etc
+
+
+        //keep z values for depth
+        Vector3 oldPos = headingIndicator.transform.position;
+        headingIndicator.transform.position = new Vector3(position.x,oldPos.y,oldPos.z);
+
     }
 
     void TurnAndBank()

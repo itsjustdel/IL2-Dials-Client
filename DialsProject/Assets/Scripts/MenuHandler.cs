@@ -52,7 +52,7 @@ public class MenuHandler : MonoBehaviour
 
         //load preferences
         tcpClient.userIP = PlayerPrefs.GetString("IPAddress");
-        tcpClient.hostName = PlayerPrefs.GetString("IPAddress");//flaw in design, why host name and user ip
+        tcpClient.hostName = PlayerPrefs.GetString("IPAddress");//flaw in design, why host name and user ip?
         tcpClient.portNumber = PlayerPrefs.GetInt("PortNumber");
 
 

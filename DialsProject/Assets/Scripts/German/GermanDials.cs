@@ -6,6 +6,9 @@ public class GermanDials : MonoBehaviour
 {
     public static Quaternion AirspeedTarget(float airspeed)
     {
+        if (airspeed == 0)
+            return Quaternion.Euler(0, 0, 180);
+
         //airspeed dial has two gears
         Quaternion target = Quaternion.identity;
         if(airspeed<100)

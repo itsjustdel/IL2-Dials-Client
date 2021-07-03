@@ -6,6 +6,9 @@ public class RussianDials : MonoBehaviour
 {
    public static Quaternion AirspeedTarget(float airspeed)
     {
+        if (airspeed == 0)
+            return Quaternion.identity;
+
         //airspeed dial has three gears
         //below 100
         Quaternion target;// = Quaternion.identity;
@@ -52,5 +55,31 @@ public class RussianDials : MonoBehaviour
         Quaternion mmhgTarget = Quaternion.Euler(0, 0, ((760f - mmhg) / 100f) * 300);
 
         return mmhgTarget;
+    }
+
+    public static Vector3 HeadingIndicatorPosition(float heading)
+    {
+        Vector3 pos = Vector3.right*heading;
+
+        return pos;
+    }
+
+    public static Quaternion TurnCoordinatorNeedleTarget(float heading, float lastMessageReceivedTime)
+    {
+        float delta = Time.time - lastMessageReceivedTime;//?
+        //indicates the rate of turn, or the rate of change in the aircraft's heading;
+
+        Quaternion target = Quaternion.identity;
+
+        return target;
+    }
+
+    public static Quaternion TurnCoordinatorBallTarget(float heading, Vector3 velocity)//?
+    {
+        //indicates whether the aircraft is in coordinated flight, showing the slip or skid of the turn. 
+
+        Quaternion target = Quaternion.identity;
+
+        return target;
     }
 }

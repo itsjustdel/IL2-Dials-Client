@@ -6,6 +6,9 @@ public class UKDials : MonoBehaviour
 {
     public static Quaternion AirspeedTarget(float airspeed)
     {
+        if (airspeed == 0)
+            return Quaternion.identity;
+
         //airspeed dial has two gears
         Quaternion target = Quaternion.identity;
 
@@ -27,7 +30,7 @@ public class UKDials : MonoBehaviour
     public static Quaternion AltitudeTargetSmall(float altitude)
     {
         //convert to feet
-        altitude *= 3.281f;
+        altitude *= 3.2808f;
         Quaternion altitudeSmallTarget = Quaternion.Euler(0, 0, -(altitude * .036f));
 
         return altitudeSmallTarget;
@@ -37,8 +40,8 @@ public class UKDials : MonoBehaviour
     public static Quaternion AltitudeTargetSmallest(float altitude)
     {
         //convert to feet
-        altitude *= 3.281f;
-        Quaternion altitudeSmallTarget = Quaternion.Euler(0, 0, -(altitude * .0036f));
+        altitude *= 3.2808f;
+        Quaternion altitudeSmallTarget = Quaternion.Euler(0, 0, -(altitude * .0018f));
 
         return altitudeSmallTarget;
 
@@ -47,7 +50,7 @@ public class UKDials : MonoBehaviour
     public static Quaternion AltitudeTargetLarge(float altitude)
     {
         //convert to feet
-        altitude *= 3.281f;
+        altitude *= 3.2808f;
 
         Quaternion altitudeLargeTarget = Quaternion.Euler(0, 0, -(altitude / 1000f) * 360);
         return altitudeLargeTarget;

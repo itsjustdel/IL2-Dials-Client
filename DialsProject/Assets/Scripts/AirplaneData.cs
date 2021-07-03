@@ -29,6 +29,7 @@ public class AirplaneData : MonoBehaviour
     public float airspeed;
     public float climbRate;
     public float rollRate;
+    public float heading;
 
     public List<GameObject> countryDials = new List<GameObject>();
     private Country previousCountry;
