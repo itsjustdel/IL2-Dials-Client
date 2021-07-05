@@ -14,9 +14,7 @@ public class TCPClient : MonoBehaviour {
 	
 	public BuildControl buildControl;
 	public AirplaneData iL2GameDataClient;
-	
 
-	
 	public MenuHandler menuHandler;
 	public RotateNeedle rN;
 	//user settings	
@@ -32,10 +30,8 @@ public class TCPClient : MonoBehaviour {
 	public int portNumber = 11200;
 	public bool waitingOnResponse;
 
-
+	
 	public float timerOfLastReceived = 0f;
-
-
 	public bool testPrediction = false;
 
 	#region private members 	

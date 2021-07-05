@@ -7,6 +7,9 @@ using UnityEngine;
 
 public class RotateNeedle : MonoBehaviour
 {
+    public bool testValues;
+   
+
     public BuildControl buildControl;
     public AirplaneData iL2GameDataClient;
     public TCPClient tcpClient;
@@ -16,29 +19,34 @@ public class RotateNeedle : MonoBehaviour
     public GameObject mmhgDial;
     public GameObject airspeedNeedle;
     public GameObject airspeedNeedleTest;
-    public GameObject turnTrack;
-    public GameObject turnPlane;
+    public GameObject turnAndBankNumberTrack;
+    public GameObject turnAndBankPlane;
     public GameObject headingIndicator;
     public GameObject turnCoordinatorNeedle;
     public GameObject turnCoordinatorBall;
     //public bool tcpReceived = false; //moved to tcpClient, multiple instances of Rotate Needle for each country, only single instance of tcpclient
     public float lastMessageReceivedTime;//two ways of doing the same thing
+    public float previousMessageTime;
     public float maxSpin =1f;
     public float turnAndBankPitchMultiplier = 5f;
     public float turnAndBankRollMultiplier = 5f;
-    public float turnAndBankPlaneXrotation = 5f;
+    public float turnAndBankPlaneXMultiplier = 5f;
 
-
-    //previous frame positions for client prediction
+    //previous frame positions for client prediction -- rotations
     private List<Quaternion> quaternionsAltitudeLarge = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     private List<Quaternion> quaternionsAltitudeSmall = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     private List<Quaternion> quaternionsAltitudeSmallest = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     public List<Quaternion> quaternionsAirspeed = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     private List<Quaternion> quaternionsMmhg = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
-    private List<Quaternion> quaternionsHeading = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
+    private List<Quaternion> quaternionsTurnAndBankPlane = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     private List<Quaternion> quaternionsTurnCoordinatorNeedle = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     private List<Quaternion> quaternionsTurnCoordinatorBall = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
-    //  private bool saveForPredictions;
+    // -- positions
+    private List<Vector3> positionsHeading = new List<Vector3>() { Vector3.zero, Vector3.zero };
+    private List<Vector3> positionsTurnAndBankPlane = new List<Vector3>() { Vector3.zero, Vector3.zero };
+    private List<Vector3> positionsTurnAndBankNumberTrack = new List<Vector3>() { Vector3.zero, Vector3.zero };
+
+    //  private bool saveForPredictions -- rotations
     public Quaternion airspeedStart;
     public  Quaternion airspeedTarget;
     private Quaternion altitudeLargeStart;
@@ -49,16 +57,24 @@ public class RotateNeedle : MonoBehaviour
     private Quaternion altitudeSmallestTarget;
     private Quaternion mmhgStart;
     private Quaternion mmhgTarget;
-    //heading is on a track, we move along the x, we don't rotate
-    private Vector3 headingStart;
-    private Vector3 headingTarget;
+    private Quaternion turnAndBankPlaneRotationStart;
+    private Quaternion turnAndBankPlaneRotationTarget;
     private Quaternion turnCoordinatorNeedleStart;
     private Quaternion turnCoordinatorNeedleTarget;
     private Quaternion turnCoordinatorBallStart;
     private Quaternion turnCoordinatorBallTarget;
 
+    // -- positions
+    //heading is on a track, we move along the x, we don't rotate
+    private Vector3 headingIndicatorStart;
+    private Vector3 headingIndicatorTarget;
+    private Vector3 turnAndBankPlanePositionStart;
+    private Vector3 turnAndBankPlanePositionTarget;
+    private Vector3 turnAndBankNumberTrackStart;
+    private Vector3 turnAndBankNumberTrackTarget;
+
     //public bool testPrediction = false;//moved to tcp client
-    public bool testValues = true;
+
 
 
 
@@ -79,7 +95,9 @@ public class RotateNeedle : MonoBehaviour
         {
             //this makes the network code think we received a message on the last frame
             //note- need seperate mmhg test
+            previousMessageTime = lastMessageReceivedTime;
             lastMessageReceivedTime = -Time.deltaTime;
+
             SetRotationTargets();
             NeedleRotations();
 
@@ -148,11 +166,20 @@ public class RotateNeedle : MonoBehaviour
         AddRotationToList(quaternionsMmhg, mmhgDial.transform.rotation);
 
         //heading
-        AddRotationToList(quaternionsHeading, headingIndicator.transform.rotation);
+        AddPositionToList(positionsHeading, headingIndicator.transform.localPosition);
+
+        //turn and bank
+        //plane position
+        AddPositionToList(positionsTurnAndBankPlane, turnAndBankPlane.transform.localPosition);
+        //plane rotations
+        AddRotationToList(quaternionsTurnAndBankPlane, turnAndBankPlane.transform.rotation);
+        //number track
+        AddPositionToList(positionsTurnAndBankNumberTrack, turnAndBankNumberTrack.transform.localPosition);
+
 
         //turn co-ord
         AddRotationToList(quaternionsTurnCoordinatorNeedle, turnCoordinatorNeedle.transform.rotation);
-        AddRotationToList(quaternionsTurnCoordinatorBall, turnCoordinatorBall.transform.rotation);
+        //AddRotationToList(quaternionsTurnCoordinatorBall, turnCoordinatorBall.transform.rotation);
 
     }
     List<Quaternion> AddRotationToList(List<Quaternion> qList, Quaternion toAdd)
@@ -167,10 +194,21 @@ public class RotateNeedle : MonoBehaviour
 
         return qList;
     }
+    List<Vector3> AddPositionToList(List<Vector3> v3List, Vector3 toAdd)
+    {
+        //method to insert quatenions in to a list of size 2
+
+        //add at start
+        v3List.Insert(0, toAdd);
+        //and cap length, we only need to do simple prediction
+        if (v3List.Count > 2)
+            v3List.RemoveAt(2);
+
+        return v3List;
+    }
 
     void PredictRotations()
     {
-
         //simulate a tcp event
 
         if (quaternionsAirspeed.Count < 2)
@@ -217,7 +255,6 @@ public class RotateNeedle : MonoBehaviour
 
         }
 
-
         difference = quaternionsMmhg[0].eulerAngles.z - quaternionsMmhg[1].eulerAngles.z;
         //keep moving at client send rate at previous known step        
         //set start point
@@ -225,12 +262,36 @@ public class RotateNeedle : MonoBehaviour
         //and end point
         mmhgTarget = mmhgDial.transform.rotation * Quaternion.Euler(0, 0, difference);
 
-
-        //TODO 
-
         //heading
+        Vector3 differenceV3 = positionsHeading[0] - positionsHeading[1];
+        headingIndicatorStart = headingIndicator.transform.localPosition;
+        headingIndicatorTarget = headingIndicator.transform.localPosition + differenceV3;
 
-        //turn coordinator
+        //turn and bank
+        // - plane position
+        differenceV3 = positionsTurnAndBankPlane[0] - positionsTurnAndBankPlane[1];
+        turnAndBankPlanePositionStart = turnAndBankPlane.transform.localPosition;
+        turnAndBankPlanePositionTarget = turnAndBankPlane.transform.localPosition + differenceV3;
+        // - plane rotation
+        difference = quaternionsTurnAndBankPlane[0].z - quaternionsTurnAndBankPlane[1].z;
+        turnAndBankPlaneRotationStart = turnAndBankPlane.transform.rotation;
+        turnAndBankPlaneRotationTarget = turnAndBankPlane.transform.rotation * Quaternion.Euler(0, 0, difference);
+        // - number track
+        differenceV3 = positionsTurnAndBankNumberTrack[0] - positionsTurnAndBankNumberTrack[1];
+        turnAndBankNumberTrackStart = turnAndBankNumberTrack.transform.localPosition;
+        turnAndBankNumberTrackTarget = turnAndBankNumberTrack.transform.localPosition + differenceV3;
+
+        //turn co-ordinator
+        // - needle
+        difference = quaternionsTurnCoordinatorNeedle[0].z - quaternionsTurnCoordinatorNeedle[1].z;
+        turnCoordinatorNeedleStart = turnCoordinatorNeedle.transform.rotation;
+        turnCoordinatorNeedleTarget = turnCoordinatorNeedle.transform.rotation * Quaternion.Euler(0, 0, difference);
+        // - ball
+        difference = quaternionsTurnCoordinatorBall[0].z - quaternionsTurnCoordinatorBall[1].z;
+        turnCoordinatorBallStart = turnCoordinatorBall.transform.rotation;
+        turnCoordinatorBallTarget = turnCoordinatorBall.transform.rotation * Quaternion.Euler(0, 0, difference);
+
+        //TODO VSI
     }
 
     public void SetRotationTargets()
@@ -244,28 +305,39 @@ public class RotateNeedle : MonoBehaviour
 
         HeadingTarget();
 
-        TurnCoordinatorTarget();
-       
+        TurnAndBankTargets();
 
-        
+        TurnCoordinatorTarget();               
     }
 
+    
     void TurnCoordinatorTarget()
     {
         //RU
         //pendulum needle
-        turnCoordinatorNeedleTarget = RussianDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.heading,lastMessageReceivedTime);
-
+        turnCoordinatorNeedleTarget = RussianDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.heading, iL2GameDataClient.headingPrevious, lastMessageReceivedTime,previousMessageTime);
 
         //ball indicator
         Vector3 velocity = Vector3.zero;// to get
         turnCoordinatorBallTarget = RussianDials.TurnCoordinatorBallTarget(iL2GameDataClient.heading, velocity);
     }
 
+    void TurnAndBankTargets()
+    {
+        //plane pos
+        turnAndBankPlanePositionTarget = RussianDials.TurnAndBankPlanePosition(iL2GameDataClient.climbRate, turnAndBankPitchMultiplier);
+
+        //plane rotation
+        turnAndBankPlaneRotationTarget = RussianDials.TurnAndBankPlaneRotation(iL2GameDataClient.rollRate, iL2GameDataClient.climbRate, turnAndBankRollMultiplier, turnAndBankPitchMultiplier);
+
+        //number track
+        turnAndBankNumberTrackTarget = RussianDials.TurnAndBankNumberTrackPosition(iL2GameDataClient.climbRate, turnAndBankPitchMultiplier);
+    }
+
     void HeadingTarget()
     {
         //RU
-        headingTarget = RussianDials.HeadingIndicatorPosition(iL2GameDataClient.heading);
+        headingIndicatorTarget = RussianDials.HeadingIndicatorPosition(iL2GameDataClient.heading);
     }
 
     void AltimeterTargets()
@@ -489,7 +561,7 @@ public class RotateNeedle : MonoBehaviour
         
         HeadingIndicatorRotation();
         
-        TurnAndBank();    
+        TurnAndBankRotations();    
 
         TurnCoordinatorRotation();
     }
@@ -524,8 +596,8 @@ public class RotateNeedle : MonoBehaviour
 
     void TurnCoordinatorRotation()
     {
-        //Needle
-        turnCoordinatorNeedle.transform.rotation = Quaternion.Slerp(turnCoordinatorNeedleStart, turnCoordinatorNeedleTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
+        //Needle        
+        turnCoordinatorNeedle.transform.rotation =  Quaternion.Slerp(turnCoordinatorNeedleStart, turnCoordinatorNeedleTarget, (Time.time - lastMessageReceivedTime) / (Time.deltaTime));
 
 
         //Ball
@@ -535,31 +607,19 @@ public class RotateNeedle : MonoBehaviour
 
     void HeadingIndicatorRotation()
     {
-        Vector3 position = RussianDials.HeadingIndicatorPosition(iL2GameDataClient.heading);
-        //adjust for scale of render/model
-        position *= 0.916f;//arbitry due to blender camera settings etc
-
-
-        //keep z values for depth
-        Vector3 oldPos = headingIndicator.transform.position;
-        headingIndicator.transform.position = new Vector3(position.x,oldPos.y,oldPos.z);
-
+        headingIndicator.transform.localPosition = Vector3.Lerp(headingIndicatorStart, headingIndicatorTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
     }
 
-    void TurnAndBank()
+    void TurnAndBankRotations()
     {
-        //rotate plane
-        //clamp roll , in game cockpit stop rotation at just under 90 degrees - this happens when roll rate is ~1.7
-        float tempRoll = -iL2GameDataClient.rollRate;
-        Mathf.Clamp(tempRoll, -1.7f, 1.7f);
-        Quaternion t = Quaternion.Euler(0, 0, tempRoll*turnAndBankRollMultiplier);
-        turnPlane.transform.rotation = t;
-
         //for x rotatin we need to rotate around global x after z rot
-        turnPlane.transform.rotation *= Quaternion.Euler(iL2GameDataClient.climbRate * turnAndBankPlaneXrotation, 0, 0);
+        turnAndBankPlane.transform.rotation = Quaternion.Slerp(turnAndBankPlaneRotationStart, turnAndBankPlaneRotationTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
 
         //move plane up and down
-        turnPlane.transform.localPosition = new Vector3(0, iL2GameDataClient.climbRate*turnAndBankPitchMultiplier, 0);
+        turnAndBankPlane.transform.localPosition = Vector3.Lerp(turnAndBankPlanePositionStart, turnAndBankPlanePositionTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
+
+        //number track
+        turnAndBankNumberTrack.transform.localPosition = Vector3.Lerp(turnAndBankNumberTrackStart, turnAndBankNumberTrackTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
     }
    
 }

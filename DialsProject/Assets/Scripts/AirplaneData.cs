@@ -8,9 +8,11 @@ using UnityEngine;
 
 public class AirplaneData : MonoBehaviour
 {
+    public bool useTestPlane;
+    public GameObject testPlane;
+
     public float clientVersion = 0.2f; //manually update this
     public float serverVersion;
-
     public enum Country
     {
         RU,
@@ -30,6 +32,7 @@ public class AirplaneData : MonoBehaviour
     public float climbRate;
     public float rollRate;
     public float heading;
+    public float headingPrevious;
 
     public List<GameObject> countryDials = new List<GameObject>();
     private Country previousCountry;
@@ -51,11 +54,44 @@ public class AirplaneData : MonoBehaviour
             RemoveTitle();
         else 
             EnableTitle();
-      
+
+    }
+
+    private void Update()
+    {
+        testPlane.transform.Rotate(Vector3.up, 10f*Time.deltaTime);
+
+        if (useTestPlane)
+            PlaneTest();
+
+    }
+
+    void PlaneTest()
+    {
+
+        headingPrevious = heading;
+
+        //object in scene to simulate game
+        Vector3 planeDir = testPlane.transform.forward;
+        planeDir.y = 0;
+        heading = Vector3.Angle(planeDir, Vector3.forward);
+
+
+        rollRate = -testPlane.transform.localEulerAngles.z*.2f;//wrong
+
+        //UnityEngine.Debug.Log(testPlane.transform.localEulerAngles.x);
+        float x = testPlane.transform.localEulerAngles.x;
+        if (x > 180)
+            x -= 360;
+        climbRate = -x * .02f;
+        
+
+        
     }
 
     void CheckVersion()
     {
+        
         //checks version and shows message if mismatch (if connected)
         if (tcpClient.connected)
         {

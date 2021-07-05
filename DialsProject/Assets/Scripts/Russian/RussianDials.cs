@@ -60,16 +60,57 @@ public class RussianDials : MonoBehaviour
     public static Vector3 HeadingIndicatorPosition(float heading)
     {
         Vector3 pos = Vector3.right*heading;
+        //arbitry multiplier due to blender camera settings for render
+        pos *= 0.916f;
 
         return pos;
     }
 
-    public static Quaternion TurnCoordinatorNeedleTarget(float heading, float lastMessageReceivedTime)
+    public static Quaternion TurnAndBankPlaneRotation(float roll,float climb, float rollMultiplier, float climbMultiplier)
+    {        
+        //rotate plane
+        //clamp roll , in game cockpit stop rotation at just under 90 degrees - this happens when roll rate is ~1.7
+        float tempRoll = -roll;
+        Mathf.Clamp(tempRoll, -1.7f, 1.7f);
+        Quaternion t = Quaternion.Euler(0, 0, tempRoll * rollMultiplier);
+        Quaternion r = t;
+
+        //for x rotatin we need to rotate around global x after z rot
+        r *= Quaternion.Euler(climb * climbMultiplier, 0, 0);
+
+        return r;
+    }
+
+    public static Vector3 TurnAndBankPlanePosition(float climb, float pitchMultiplier)
     {
-        float delta = Time.time - lastMessageReceivedTime;//?
+        //move plane up and down
+        return new Vector3(0, climb * pitchMultiplier, 0);
+    }
+
+    public static Vector3 TurnAndBankNumberTrackPosition(float climb, float pitchMultiplier)
+    {
+        //number track
+        return new Vector3(0, climb * pitchMultiplier, 0);
+    }
+
+    public static Quaternion TurnCoordinatorNeedleTarget(float  currentHeading, float previousHeading, float lastMessageReceivedTime, float previousMessageTime)
+    {
         //indicates the rate of turn, or the rate of change in the aircraft's heading;
 
-        Quaternion target = Quaternion.identity;
+        //time diff
+        float delta = lastMessageReceivedTime - previousMessageTime; //?
+
+        //heading diff between last two frames
+        float diff = currentHeading - previousHeading;
+
+        diff *= delta;
+        diff *= 100;
+        
+        Debug.Log("dif =" + diff);
+        Debug.Log("delta =" + delta);
+
+
+        Quaternion target = Quaternion.Euler(0,0,diff);
 
         return target;
     }
