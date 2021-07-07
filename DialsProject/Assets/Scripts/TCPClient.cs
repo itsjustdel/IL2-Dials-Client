@@ -217,6 +217,8 @@ public class TCPClient : MonoBehaviour {
 					iL2GameDataClient.altitude = floats[0];
 					iL2GameDataClient.mmhg = floats[1];
 					iL2GameDataClient.airspeed = floats[2];
+					//save previous heading before asigning new heading - needed for turn co-ordinator needle
+					iL2GameDataClient.headingPrevious = iL2GameDataClient.heading;
 					iL2GameDataClient.heading = floats[3];
 					iL2GameDataClient.pitch = floats[4];
 					iL2GameDataClient.roll = floats[5];

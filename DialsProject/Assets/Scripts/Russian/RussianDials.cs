@@ -111,7 +111,14 @@ public class RussianDials : MonoBehaviour
 
     public static Quaternion TurnCoordinatorNeedleTarget(float  currentHeading, float previousHeading, float lastMessageReceivedTime, float previousMessageTime)
     {
+        //stop heasding crossing over 0
+        currentHeading += 100;
+        previousHeading += 100;
+        
+        
         //indicates the rate of turn, or the rate of change in the aircraft's heading;
+
+
 
         //time diff
         float delta = lastMessageReceivedTime - previousMessageTime; //?
@@ -120,26 +127,27 @@ public class RussianDials : MonoBehaviour
         float diff = currentHeading - previousHeading;
 
         diff /= delta;
-        
 
-        /*
+        diff *= -200;
+
+        
         Debug.Log("curr heading = " + currentHeading);
         Debug.Log("prev heading = " + previousHeading);
 
         Debug.Log("dif =" + diff);
         Debug.Log("delta =" + delta);
-        */
-
+        
+        
         Quaternion target = Quaternion.Euler(0,0,diff);
 
         return target;
     }
 
-    public static Quaternion TurnCoordinatorBallTarget(float heading, Vector3 velocity)//?
+    public static Quaternion TurnCoordinatorBallTarget(float ball)//?
     {
         //indicates whether the aircraft is in coordinated flight, showing the slip or skid of the turn. 
 
-        Quaternion target = Quaternion.identity;
+        Quaternion target = Quaternion.Euler(0, 0, ball* 5);
 
         return target;
     }

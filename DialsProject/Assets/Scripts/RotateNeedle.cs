@@ -77,10 +77,6 @@ public class RotateNeedle : MonoBehaviour
 
     //public bool testPrediction = false;//moved to tcp client
 
-
-    public float heading;
-    public float prevHeading;
-
     public float trackLength = -15.64f;
 
 
@@ -109,9 +105,9 @@ public class RotateNeedle : MonoBehaviour
             lastMessageReceivedTime = Time.time -Time.deltaTime;
 
 
-            prevHeading = heading;
+            iL2GameDataClient.headingPrevious= iL2GameDataClient.heading;
             iL2GameDataClient.headingPrevious = iL2GameDataClient.heading;
-            heading = iL2GameDataClient.heading;
+            //iL2GameDataClient.heading = iL2GameDataClient.heading;
 
             if (iL2GameDataClient.heading > Mathf.PI*2)
                 iL2GameDataClient.heading = 0;
@@ -150,7 +146,8 @@ public class RotateNeedle : MonoBehaviour
             {
 
                 //flag set by tcp client in async thread
-
+                //save two steps of time
+                previousMessageTime = lastMessageReceivedTime;
                 lastMessageReceivedTime = Time.time;
                 SetRotationTargets();
 
@@ -215,7 +212,7 @@ public class RotateNeedle : MonoBehaviour
 
         //turn co-ord
         AddRotationToList(quaternionsTurnCoordinatorNeedle, turnCoordinatorNeedle.transform.rotation);
-        //AddRotationToList(quaternionsTurnCoordinatorBall, turnCoordinatorBall.transform.rotation);
+        AddRotationToList(quaternionsTurnCoordinatorBall, turnCoordinatorBall.transform.rotation);
 
     }
 
@@ -327,9 +324,9 @@ public class RotateNeedle : MonoBehaviour
         turnCoordinatorNeedleStart = turnCoordinatorNeedle.transform.rotation;
         turnCoordinatorNeedleTarget = turnCoordinatorNeedle.transform.rotation * Quaternion.Euler(0, 0, difference);
         // - ball
-      //  difference = quaternionsTurnCoordinatorBall[0].z - quaternionsTurnCoordinatorBall[1].z;
-       // turnCoordinatorBallStart = turnCoordinatorBall.transform.rotation;
-       // turnCoordinatorBallTarget = turnCoordinatorBall.transform.rotation * Quaternion.Euler(0, 0, difference);
+        difference = quaternionsTurnCoordinatorBall[0].z - quaternionsTurnCoordinatorBall[1].z;
+        turnCoordinatorBallStart = turnCoordinatorBall.transform.rotation;
+        turnCoordinatorBallTarget = turnCoordinatorBall.transform.rotation * Quaternion.Euler(0, 0, difference);
 
         //TODO VSI
     }
@@ -355,11 +352,11 @@ public class RotateNeedle : MonoBehaviour
     {
         //RU
         //pendulum needle
-        turnCoordinatorNeedleTarget = RussianDials.TurnCoordinatorNeedleTarget(heading, prevHeading, lastMessageReceivedTime, previousMessageTime);
+        turnCoordinatorNeedleTarget = RussianDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.heading, iL2GameDataClient.headingPrevious, lastMessageReceivedTime, previousMessageTime);
 
         //ball indicator
-        Vector3 velocity = Vector3.zero;// to get
-        turnCoordinatorBallTarget = RussianDials.TurnCoordinatorBallTarget(iL2GameDataClient.heading, velocity);
+        Vector3 velocity = Vector3.zero;// to get??
+        turnCoordinatorBallTarget = RussianDials.TurnCoordinatorBallTarget(iL2GameDataClient.turnCoordinatorBall);
     }
 
     void TurnAndBankTargets()
@@ -637,11 +634,11 @@ public class RotateNeedle : MonoBehaviour
     void TurnCoordinatorRotation()
     {
         //Needle        
-        turnCoordinatorNeedle.transform.rotation = Quaternion.Slerp(turnCoordinatorNeedle.transform.rotation, turnCoordinatorNeedleTarget, (Time.deltaTime - lastMessageReceivedTime));
+        turnCoordinatorNeedle.transform.rotation = Quaternion.Slerp(turnCoordinatorNeedle.transform.rotation, turnCoordinatorNeedleTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
 
 
         //Ball
-        //turnCoordinatorBall.transform.rotation = Quaternion.Slerp(turnCoordinatorBallStart, turnCoordinatorBallTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
+        turnCoordinatorBall.transform.rotation = Quaternion.Slerp(turnCoordinatorBall.transform.rotation, turnCoordinatorBallTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
 
     }
 
