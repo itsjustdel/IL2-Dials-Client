@@ -19,9 +19,11 @@ public class RotateNeedle : MonoBehaviour
     public GameObject mmhgDial;
     public GameObject airspeedNeedle;
     public GameObject airspeedNeedleTest;
-    public GameObject turnAndBankNumberTrack;
+    public GameObject turnAndBankNumberTrack;    
     public GameObject turnAndBankPlane;
     public GameObject headingIndicator;
+    public GameObject headingIndicatorChild0;
+    private GameObject headingIndicatorActive;
     public GameObject turnCoordinatorNeedle;
     public GameObject turnCoordinatorBall;
     //public bool tcpReceived = false; //moved to tcpClient, multiple instances of Rotate Needle for each country, only single instance of tcpclient
@@ -47,7 +49,7 @@ public class RotateNeedle : MonoBehaviour
     private List<Vector3> positionsTurnAndBankNumberTrack = new List<Vector3>() { Vector3.zero, Vector3.zero };
 
     //  private bool saveForPredictions -- rotations
-    public Quaternion airspeedStart;
+    public Quaternion airspeedStart; // -- "Start" needed, just use object transform loation/rotation
     public  Quaternion airspeedTarget;
     private Quaternion altitudeLargeStart;
     private Quaternion altitudeLargeTarget;
@@ -76,11 +78,17 @@ public class RotateNeedle : MonoBehaviour
     //public bool testPrediction = false;//moved to tcp client
 
 
+    public float heading;
+    public float prevHeading;
+
+    public float trackLength = -15.64f;
 
 
     // Start is called before the first frame update
     void Start()
     {
+
+        headingIndicatorActive = headingIndicator;
 
      
         
@@ -95,11 +103,35 @@ public class RotateNeedle : MonoBehaviour
         {
             //this makes the network code think we received a message on the last frame
             //note- need seperate mmhg test
-            previousMessageTime = lastMessageReceivedTime;
-            lastMessageReceivedTime = -Time.deltaTime;
 
+
+            previousMessageTime = lastMessageReceivedTime;//using?
+            lastMessageReceivedTime = Time.time -Time.deltaTime;
+
+
+            prevHeading = heading;
+            iL2GameDataClient.headingPrevious = iL2GameDataClient.heading;
+            heading = iL2GameDataClient.heading;
+
+            if (iL2GameDataClient.heading > Mathf.PI*2)
+                iL2GameDataClient.heading = 0;
+
+            if (iL2GameDataClient.heading < 0)
+                iL2GameDataClient.heading = Mathf.PI * 2;
+
+            ////////////
+
+
+
+            //////////
+
+            //PredictRotations();
             SetRotationTargets();
+            
             NeedleRotations();
+
+            
+            
 
             return;
         }
@@ -145,6 +177,10 @@ public class RotateNeedle : MonoBehaviour
         //Debug.Log(difference);
 
 
+        //best place to put this?
+        //flicks between different 2d number tracks to create smooth wrap around
+        HeadingIndicatorSwitch();
+
         NeedleRotations();
 
 
@@ -182,6 +218,8 @@ public class RotateNeedle : MonoBehaviour
         //AddRotationToList(quaternionsTurnCoordinatorBall, turnCoordinatorBall.transform.rotation);
 
     }
+
+
     List<Quaternion> AddRotationToList(List<Quaternion> qList, Quaternion toAdd)
     {
         //method to insert quatenions in to a list of size 2
@@ -213,8 +251,10 @@ public class RotateNeedle : MonoBehaviour
 
         if (quaternionsAirspeed.Count < 2)
             return;
+
+
         
-       // Debug.Log("predicting");
+        Debug.Log("predicting");
         //airspeed - prediction doesn't take in to account gearing on speedometer
         //last known difference
         float difference = quaternionsAirspeed[0].eulerAngles.z - quaternionsAirspeed[1].eulerAngles.z;        
@@ -287,9 +327,9 @@ public class RotateNeedle : MonoBehaviour
         turnCoordinatorNeedleStart = turnCoordinatorNeedle.transform.rotation;
         turnCoordinatorNeedleTarget = turnCoordinatorNeedle.transform.rotation * Quaternion.Euler(0, 0, difference);
         // - ball
-        difference = quaternionsTurnCoordinatorBall[0].z - quaternionsTurnCoordinatorBall[1].z;
-        turnCoordinatorBallStart = turnCoordinatorBall.transform.rotation;
-        turnCoordinatorBallTarget = turnCoordinatorBall.transform.rotation * Quaternion.Euler(0, 0, difference);
+      //  difference = quaternionsTurnCoordinatorBall[0].z - quaternionsTurnCoordinatorBall[1].z;
+       // turnCoordinatorBallStart = turnCoordinatorBall.transform.rotation;
+       // turnCoordinatorBallTarget = turnCoordinatorBall.transform.rotation * Quaternion.Euler(0, 0, difference);
 
         //TODO VSI
     }
@@ -315,7 +355,7 @@ public class RotateNeedle : MonoBehaviour
     {
         //RU
         //pendulum needle
-        turnCoordinatorNeedleTarget = RussianDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.heading, iL2GameDataClient.headingPrevious, lastMessageReceivedTime,previousMessageTime);
+        turnCoordinatorNeedleTarget = RussianDials.TurnCoordinatorNeedleTarget(heading, prevHeading, lastMessageReceivedTime, previousMessageTime);
 
         //ball indicator
         Vector3 velocity = Vector3.zero;// to get
@@ -325,13 +365,13 @@ public class RotateNeedle : MonoBehaviour
     void TurnAndBankTargets()
     {
         //plane pos
-        turnAndBankPlanePositionTarget = RussianDials.TurnAndBankPlanePosition(iL2GameDataClient.climbRate, turnAndBankPitchMultiplier);
+        turnAndBankPlanePositionTarget = RussianDials.TurnAndBankPlanePosition(iL2GameDataClient.pitch, turnAndBankPitchMultiplier);
 
         //plane rotation
-        turnAndBankPlaneRotationTarget = RussianDials.TurnAndBankPlaneRotation(iL2GameDataClient.rollRate, iL2GameDataClient.climbRate, turnAndBankRollMultiplier, turnAndBankPitchMultiplier);
+        turnAndBankPlaneRotationTarget = RussianDials.TurnAndBankPlaneRotation(iL2GameDataClient.roll, iL2GameDataClient.pitch, turnAndBankRollMultiplier, turnAndBankPitchMultiplier);
 
         //number track
-        turnAndBankNumberTrackTarget = RussianDials.TurnAndBankNumberTrackPosition(iL2GameDataClient.climbRate, turnAndBankPitchMultiplier);
+        turnAndBankNumberTrackTarget = RussianDials.TurnAndBankNumberTrackPosition(iL2GameDataClient.pitch, turnAndBankPitchMultiplier);
     }
 
     void HeadingTarget()
@@ -571,7 +611,7 @@ public class RotateNeedle : MonoBehaviour
         //float d = Mathf.Abs( airspeedTarget.eulerAngles.z - quaternionsAirspeed[0].eulerAngles.z);
        // Debug.Log("air needle");
 
-        airspeedNeedle.transform.rotation = Quaternion.Slerp(airspeedStart, airspeedTarget, (Time.time - lastMessageReceivedTime)/(Time.fixedDeltaTime));
+        airspeedNeedle.transform.rotation = Quaternion.Slerp(airspeedStart, airspeedTarget, (Time.time - lastMessageReceivedTime)/(Time.fixedDeltaTime)); //fixed delta is step time for receiving messages - works well
         
         //test needle
         airspeedNeedleTest.transform.rotation = airspeedTarget;
@@ -597,7 +637,7 @@ public class RotateNeedle : MonoBehaviour
     void TurnCoordinatorRotation()
     {
         //Needle        
-        turnCoordinatorNeedle.transform.rotation =  Quaternion.Slerp(turnCoordinatorNeedleStart, turnCoordinatorNeedleTarget, (Time.time - lastMessageReceivedTime) / (Time.deltaTime));
+        turnCoordinatorNeedle.transform.rotation = Quaternion.Slerp(turnCoordinatorNeedle.transform.rotation, turnCoordinatorNeedleTarget, (Time.deltaTime - lastMessageReceivedTime));
 
 
         //Ball
@@ -605,21 +645,78 @@ public class RotateNeedle : MonoBehaviour
 
     }
 
+    void HeadingIndicatorSwitch()
+    {
+        //We have two number tracks and we flick between them when heading crosses over 0. Heading range is 0 to pi * 2, but is cyclictic, so, after 6.24, it goes to 0
+        if (iL2GameDataClient.headingPrevious > Mathf.PI && iL2GameDataClient.heading < Math.PI)
+        {
+            //switch
+            if (headingIndicator.activeInHierarchy)
+            {
+                headingIndicator.SetActive(false);
+                headingIndicatorChild0.SetActive(true);
+
+                headingIndicatorActive = headingIndicatorChild0;
+
+
+                headingIndicatorChild0.transform.localPosition = trackLength * Vector3.right;
+            }
+            else
+            {
+                headingIndicator.SetActive(true);
+                headingIndicatorChild0.SetActive(false);
+
+                headingIndicatorActive = headingIndicator;
+
+                headingIndicator.transform.localPosition = trackLength * Vector3.right;
+            }
+        }
+
+        if (iL2GameDataClient.headingPrevious < Mathf.PI && iL2GameDataClient.heading > Math.PI)
+        {
+            //switch
+            if (!headingIndicator.activeInHierarchy)
+            {
+                headingIndicator.SetActive(false);
+                headingIndicatorChild0.SetActive(true);
+
+                headingIndicatorActive = headingIndicatorChild0;
+
+                headingIndicatorChild0.transform.localPosition = -trackLength * Vector3.right;
+            }
+            else
+            {
+                headingIndicator.SetActive(true);
+                headingIndicatorChild0.SetActive(false);
+
+                headingIndicatorActive = headingIndicator;
+
+                headingIndicator.transform.localPosition = -trackLength * Vector3.right;
+            }
+        }
+    }
+
     void HeadingIndicatorRotation()
     {
-        headingIndicator.transform.localPosition = Vector3.Lerp(headingIndicatorStart, headingIndicatorTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
+        HeadingIndicatorSwitch();
+
+        //add half a compass (centred on South) but we rotate over North
+        Vector3 mod = (trackLength * Vector3.right);
+        headingIndicatorActive.transform.localPosition = Vector3.Lerp(headingIndicatorActive.transform.localPosition , headingIndicatorTarget + mod, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
+        
+
     }
 
     void TurnAndBankRotations()
     {
         //for x rotatin we need to rotate around global x after z rot
-        turnAndBankPlane.transform.rotation = Quaternion.Slerp(turnAndBankPlaneRotationStart, turnAndBankPlaneRotationTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
+        turnAndBankPlane.transform.rotation = Quaternion.Slerp(turnAndBankPlane.transform.rotation, turnAndBankPlaneRotationTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
 
         //move plane up and down
-        turnAndBankPlane.transform.localPosition = Vector3.Lerp(turnAndBankPlanePositionStart, turnAndBankPlanePositionTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
+        turnAndBankPlane.transform.localPosition = Vector3.Lerp(turnAndBankPlane.transform.localPosition, turnAndBankPlanePositionTarget, (Time.time - lastMessageReceivedTime)/Time.fixedDeltaTime);
 
         //number track
-        turnAndBankNumberTrack.transform.localPosition = Vector3.Lerp(turnAndBankNumberTrackStart, turnAndBankNumberTrackTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
+        turnAndBankNumberTrack.transform.localPosition = Vector3.Lerp(turnAndBankNumberTrack.transform.localPosition, turnAndBankNumberTrackTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
     }
    
 }

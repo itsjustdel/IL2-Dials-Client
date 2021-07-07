@@ -29,8 +29,10 @@ public class AirplaneData : MonoBehaviour
     public float altitude;
     public float mmhg;
     public float airspeed;
-    public float climbRate;
-    public float rollRate;
+    public float pitch;
+    public float roll;
+    public float verticalSpeed;
+    public float turnCoordinatorBall;
     public float heading;
     public float headingPrevious;
 
@@ -59,7 +61,10 @@ public class AirplaneData : MonoBehaviour
 
     private void Update()
     {
-        testPlane.transform.Rotate(Vector3.up, 10f*Time.deltaTime);
+        testPlane.transform.Rotate(Vector3.up, 3f*Time.deltaTime);
+
+        
+        
 
         if (useTestPlane)
             PlaneTest();
@@ -69,21 +74,21 @@ public class AirplaneData : MonoBehaviour
     void PlaneTest()
     {
 
-        headingPrevious = heading;
+        
 
         //object in scene to simulate game
         Vector3 planeDir = testPlane.transform.forward;
         planeDir.y = 0;
-        heading = Vector3.Angle(planeDir, Vector3.forward);
+        heading = Vector3.Angle(planeDir, Vector3.forward) / 18;
 
 
-        rollRate = -testPlane.transform.localEulerAngles.z*.2f;//wrong
+        roll = -testPlane.transform.localEulerAngles.z*.2f;//wrong
 
         //UnityEngine.Debug.Log(testPlane.transform.localEulerAngles.x);
         float x = testPlane.transform.localEulerAngles.x;
         if (x > 180)
             x -= 360;
-        climbRate = -x * .02f;
+        pitch = -x * .02f;
         
 
         

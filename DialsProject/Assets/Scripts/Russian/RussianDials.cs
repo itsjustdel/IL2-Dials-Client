@@ -59,9 +59,25 @@ public class RussianDials : MonoBehaviour
 
     public static Vector3 HeadingIndicatorPosition(float heading)
     {
-        Vector3 pos = Vector3.right*heading;
+        
+
+
+       // heading -= Mathf.PI;
+
+        //check for Nan
+        if (float.IsNaN(heading) || heading == 0f)
+            return Vector3.zero;
+
+        //range is 0 to pi*2
+        float ratio = Mathf.PI * heading;
+        //adjust for arbitry render camera position
+        ratio *= 1.5855f;
+
+        Vector3 pos = Vector3.right*ratio;
         //arbitry multiplier due to blender camera settings for render
-        pos *= 0.916f;
+        //pos *= 0.916f;
+
+        //pos *= .66666f;
 
         return pos;
     }
@@ -90,7 +106,7 @@ public class RussianDials : MonoBehaviour
     public static Vector3 TurnAndBankNumberTrackPosition(float climb, float pitchMultiplier)
     {
         //number track
-        return new Vector3(0, climb * pitchMultiplier, 0);
+        return new Vector3(0, climb * pitchMultiplier, 1.5f);
     }
 
     public static Quaternion TurnCoordinatorNeedleTarget(float  currentHeading, float previousHeading, float lastMessageReceivedTime, float previousMessageTime)
@@ -103,12 +119,16 @@ public class RussianDials : MonoBehaviour
         //heading diff between last two frames
         float diff = currentHeading - previousHeading;
 
-        diff *= delta;
-        diff *= 100;
+        diff /= delta;
         
+
+        /*
+        Debug.Log("curr heading = " + currentHeading);
+        Debug.Log("prev heading = " + previousHeading);
+
         Debug.Log("dif =" + diff);
         Debug.Log("delta =" + delta);
-
+        */
 
         Quaternion target = Quaternion.Euler(0,0,diff);
 

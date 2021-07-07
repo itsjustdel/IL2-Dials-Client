@@ -208,16 +208,21 @@ public class TCPClient : MonoBehaviour {
 
 					int p = 0;
 
+					//set length sent from server
+					int floatArrayLength = 4 * 8;
 					//float array
-					float[] floats = GetFloats(bytes, p);
+					float[] floats = GetFloats(bytes, p, floatArrayLength);
 
 					//set Il2 game data for client
 					iL2GameDataClient.altitude = floats[0];
 					iL2GameDataClient.mmhg = floats[1];
 					iL2GameDataClient.airspeed = floats[2];
-					//iL2GameDataClient.climbRate = floats[3];
-					//iL2GameDataClient.rollRate = floats[4];
-					p += 12;
+					iL2GameDataClient.heading = floats[3];
+					iL2GameDataClient.pitch = floats[4];
+					iL2GameDataClient.roll = floats[5];
+					iL2GameDataClient.verticalSpeed = floats[6];
+					iL2GameDataClient.turnCoordinatorBall = floats[7];
+					p += floatArrayLength;
 
 					//Debug.Log("Reading received data");
 					//version number
@@ -385,12 +390,12 @@ public class TCPClient : MonoBehaviour {
 		}     
 	}
 
-	static float[] GetFloats(byte[] bytes, int offset)
+	static float[] GetFloats(byte[] bytes, int offset, int floatArrayLength)
 	{
 		try
 		{
 			var result = new float[bytes.Length / sizeof(float)];
-			Buffer.BlockCopy(bytes, offset, result, 0,12);
+			Buffer.BlockCopy(bytes, offset, result, 0, floatArrayLength);
 
 			return result;
 
