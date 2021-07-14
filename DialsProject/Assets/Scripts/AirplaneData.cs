@@ -31,10 +31,14 @@ public class AirplaneData : MonoBehaviour
     public float airspeed;
     public float pitch;
     public float roll;
+    public float rollPrev;
     public float verticalSpeed;
     public float turnCoordinatorBall;
+    public float turnCoordinatorNeedle;
     public float heading;
     public float headingPrevious;
+    public float headingPreviousPrevious;
+
 
     public List<GameObject> countryDials = new List<GameObject>();
     private Country previousCountry;

@@ -208,8 +208,9 @@ public class TCPClient : MonoBehaviour {
 
 					int p = 0;
 
-					//set length sent from server
-					int floatArrayLength = 4 * 8;
+					//set length sent from server	
+					int floatArrayLength = 9;
+					int floatArrayLengthBytes = 4 * floatArrayLength; //4 bytes for float * array length
 					//float array
 					float[] floats = GetFloats(bytes, p, floatArrayLength);
 
@@ -218,13 +219,16 @@ public class TCPClient : MonoBehaviour {
 					iL2GameDataClient.mmhg = floats[1];
 					iL2GameDataClient.airspeed = floats[2];
 					//save previous heading before asigning new heading - needed for turn co-ordinator needle
+					iL2GameDataClient.headingPreviousPrevious = iL2GameDataClient.headingPrevious;
 					iL2GameDataClient.headingPrevious = iL2GameDataClient.heading;
 					iL2GameDataClient.heading = floats[3];
 					iL2GameDataClient.pitch = floats[4];
+					iL2GameDataClient.rollPrev = iL2GameDataClient.roll;
 					iL2GameDataClient.roll = floats[5];
 					iL2GameDataClient.verticalSpeed = floats[6];
 					iL2GameDataClient.turnCoordinatorBall = floats[7];
-					p += floatArrayLength;
+					iL2GameDataClient.turnCoordinatorNeedle = floats[8];
+					p += floatArrayLengthBytes;
 
 					//Debug.Log("Reading received data");
 					//version number
@@ -396,8 +400,8 @@ public class TCPClient : MonoBehaviour {
 	{
 		try
 		{
-			var result = new float[bytes.Length / sizeof(float)];
-			Buffer.BlockCopy(bytes, offset, result, 0, floatArrayLength);
+			var result = new float[floatArrayLength];
+			Buffer.BlockCopy(bytes, offset, result, 0, floatArrayLength *4); //* 4 for 4byte floats
 
 			return result;
 

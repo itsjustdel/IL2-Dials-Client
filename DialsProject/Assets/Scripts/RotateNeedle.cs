@@ -26,6 +26,7 @@ public class RotateNeedle : MonoBehaviour
     private GameObject headingIndicatorActive;
     public GameObject turnCoordinatorNeedle;
     public GameObject turnCoordinatorBall;
+    public GameObject vsiNeedle;
     //public bool tcpReceived = false; //moved to tcpClient, multiple instances of Rotate Needle for each country, only single instance of tcpclient
     public float lastMessageReceivedTime;//two ways of doing the same thing
     public float previousMessageTime;
@@ -43,6 +44,7 @@ public class RotateNeedle : MonoBehaviour
     private List<Quaternion> quaternionsTurnAndBankPlane = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     private List<Quaternion> quaternionsTurnCoordinatorNeedle = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     private List<Quaternion> quaternionsTurnCoordinatorBall = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
+    private List<Quaternion> quaternionsVSI = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     // -- positions
     private List<Vector3> positionsHeading = new List<Vector3>() { Vector3.zero, Vector3.zero };
     private List<Vector3> positionsTurnAndBankPlane = new List<Vector3>() { Vector3.zero, Vector3.zero };
@@ -65,6 +67,7 @@ public class RotateNeedle : MonoBehaviour
     private Quaternion turnCoordinatorNeedleTarget;
     private Quaternion turnCoordinatorBallStart;
     private Quaternion turnCoordinatorBallTarget;
+    private Quaternion vsiNeedleTarget;
 
     // -- positions
     //heading is on a track, we move along the x, we don't rotate
@@ -78,6 +81,12 @@ public class RotateNeedle : MonoBehaviour
     //public bool testPrediction = false;//moved to tcp client
 
     public float trackLength = -15.64f;
+    public float turnCoordinatorNeedleVelocity = 0;
+    public float turnCoordinaterSpring = 1f;
+    public float turnCoordinaterDamp = 1f;
+    public float turnCoordinaterRollMod = 1f;
+    public float turnCoordinaterMultiplier = 20f;
+
 
 
     // Start is called before the first frame update
@@ -147,6 +156,7 @@ public class RotateNeedle : MonoBehaviour
 
                 //flag set by tcp client in async thread
                 //save two steps of time
+                
                 previousMessageTime = lastMessageReceivedTime;
                 lastMessageReceivedTime = Time.time;
                 SetRotationTargets();
@@ -209,10 +219,12 @@ public class RotateNeedle : MonoBehaviour
         //number track
         AddPositionToList(positionsTurnAndBankNumberTrack, turnAndBankNumberTrack.transform.localPosition);
 
-
         //turn co-ord
         AddRotationToList(quaternionsTurnCoordinatorNeedle, turnCoordinatorNeedle.transform.rotation);
         AddRotationToList(quaternionsTurnCoordinatorBall, turnCoordinatorBall.transform.rotation);
+
+        //vsi
+        AddRotationToList(quaternionsVSI, vsiNeedle.transform.rotation);
 
     }
 
@@ -328,7 +340,9 @@ public class RotateNeedle : MonoBehaviour
         turnCoordinatorBallStart = turnCoordinatorBall.transform.rotation;
         turnCoordinatorBallTarget = turnCoordinatorBall.transform.rotation * Quaternion.Euler(0, 0, difference);
 
-        //TODO VSI
+        //VSI
+        difference = quaternionsVSI[0].z - quaternionsVSI[1].z;        
+        vsiNeedleTarget = turnCoordinatorBall.transform.rotation * Quaternion.Euler(0, 0, difference);
     }
 
     public void SetRotationTargets()
@@ -344,15 +358,22 @@ public class RotateNeedle : MonoBehaviour
 
         TurnAndBankTargets();
 
-        TurnCoordinatorTarget();               
+        TurnCoordinatorTarget();
+
+        VSITarget();
     }
 
     
+    void VSITarget()
+    {
+        vsiNeedleTarget = RussianDials.VerticalSpeedTarget(iL2GameDataClient.verticalSpeed); 
+    }
+
     void TurnCoordinatorTarget()
     {
         //RU
         //pendulum needle
-        turnCoordinatorNeedleTarget = RussianDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.heading, iL2GameDataClient.headingPrevious, lastMessageReceivedTime, previousMessageTime);
+        turnCoordinatorNeedleTarget = RussianDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.turnCoordinatorNeedle);
 
         //ball indicator
         Vector3 velocity = Vector3.zero;// to get??
@@ -601,6 +622,8 @@ public class RotateNeedle : MonoBehaviour
         TurnAndBankRotations();    
 
         TurnCoordinatorRotation();
+
+        VSIRotation();
     }
 
     void AirspeedNeedleRotation()
@@ -634,12 +657,11 @@ public class RotateNeedle : MonoBehaviour
     void TurnCoordinatorRotation()
     {
         //Needle        
-        turnCoordinatorNeedle.transform.rotation = Quaternion.Slerp(turnCoordinatorNeedle.transform.rotation, turnCoordinatorNeedleTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
+        turnCoordinatorNeedle.transform.rotation = Quaternion.Slerp(turnCoordinatorNeedle.transform.rotation, turnCoordinatorNeedleTarget, Time.fixedDeltaTime);//already used time difference in calculation
 
 
         //Ball
-        turnCoordinatorBall.transform.rotation = Quaternion.Slerp(turnCoordinatorBall.transform.rotation, turnCoordinatorBallTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
-
+        turnCoordinatorBall.transform.rotation = Quaternion.Slerp(turnCoordinatorBall.transform.rotation, turnCoordinatorBallTarget,  (Time.fixedDeltaTime)); //smoother without time.time - last message time
     }
 
     void HeadingIndicatorSwitch()
@@ -714,6 +736,11 @@ public class RotateNeedle : MonoBehaviour
 
         //number track
         turnAndBankNumberTrack.transform.localPosition = Vector3.Lerp(turnAndBankNumberTrack.transform.localPosition, turnAndBankNumberTrackTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
+    }
+
+    void VSIRotation()
+    {
+        vsiNeedle.transform.rotation = Quaternion.Slerp(vsiNeedle.transform.rotation, vsiNeedleTarget,  Time.fixedDeltaTime);
     }
    
 }

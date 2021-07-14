@@ -74,10 +74,7 @@ public class RussianDials : MonoBehaviour
         ratio *= 1.5855f;
 
         Vector3 pos = Vector3.right*ratio;
-        //arbitry multiplier due to blender camera settings for render
-        //pos *= 0.916f;
-
-        //pos *= .66666f;
+        
 
         return pos;
     }
@@ -109,45 +106,165 @@ public class RussianDials : MonoBehaviour
         return new Vector3(0, climb * pitchMultiplier, 1.5f);
     }
 
-    public static Quaternion TurnCoordinatorNeedleTarget(float  currentHeading, float previousHeading, float lastMessageReceivedTime, float previousMessageTime)
+    public static Quaternion RateOfTurn (float airspeed, float roll)//not correct
     {
-        //stop heasding crossing over 0
-        currentHeading += 100;
-        previousHeading += 100;
+
+
+        /*
+         calculate "rate of turn"
+
+        rate of turn = 1091*tan(angle of bank)/ True Airspeed.(knots?)
+    
+        km/h to knots = divide the speed value by 1.852
+ 
+
+        angle of bank is roll from il2gameclient
+        */
+        if (airspeed == 0)
+            return Quaternion.identity;
+
+        float knots = airspeed * 1.852f;
+        float rateOfTurn = (1091f * Mathf.Tan(roll)) / knots;
+
+        Debug.Log("rate of turn = " + rateOfTurn);
+
+        return Quaternion.Euler(0, 0, -rateOfTurn); //add spring?
+    }
+
+
+    public static Quaternion TurnCoordinatorNeedleTargetzzz(float currentHeading, float targetHeading, float lastMessageReceivedTime, float previousMessageTime, float multiplier, float roll, float rollMod)
+    {
+
+        //find rate of change on local y rotation
+
+        //we know
+        //roll
+        //pitch
+        //heading
+        //velocity
+
+
         
+        Quaternion target = Quaternion.Euler(0, 0, 0);
+
+
+
+        return target;
+    }
+
+    public static Quaternion TurnCoordinatorNeedleTarget(float v)
+    {
+        Quaternion target = Quaternion.Euler(0, 0, v);
+
+        return target;
+    }
+
+    public static Quaternion TurnCoordinatorNeedleTargetSpring(out float outVelocity, float previousHeading, float currentHeading, float targetHeading, float lastMessageReceivedTime, float previousMessageTime, float currentVelocity, float stiffness, float damping, float multiplier,float roll, float rollMod)
+    {
+        //catch where heading goes from pi*2 to 0
+        if (Mathf.Abs(currentHeading - previousHeading) > Mathf.PI)
+        {
+            //current heading ~6.24, previous heading is ~ 0.01
+            //bring current heading down to previous heading - we only need to find out the difference
+            if (currentHeading - previousHeading < 0)
+                currentHeading += Mathf.PI * 2;
+            else
+                currentHeading -= Mathf.PI * 2;
+        }
+
         
-        //indicates the rate of turn, or the rate of change in the aircraft's heading;
-
-
-
-        //time diff
-        float delta = lastMessageReceivedTime - previousMessageTime; //?
 
         //heading diff between last two frames
         float diff = currentHeading - previousHeading;
 
-        diff /= delta;
+        //time diff
+        float delta =  lastMessageReceivedTime - previousMessageTime; //?
 
-        diff *= -200;
 
-        
-        Debug.Log("curr heading = " + currentHeading);
-        Debug.Log("prev heading = " + previousHeading);
+        //limit how fast it moves- needed?
+        float clamp = .02f;
+        float diffClamped = Mathf.Clamp(diff, -clamp, clamp);
 
-        Debug.Log("dif =" + diff);
-        Debug.Log("delta =" + delta);
-        
-        
-        Quaternion target = Quaternion.Euler(0,0,diff);
 
+
+        //////////
+        //float prevValue = currentHeading - previousHeading;
+        float currentValue = currentHeading - previousHeading;
+        //float _currentVelocity = currentVelocity;
+        float targetValue = targetHeading - currentHeading;
+        //float stiffness = 0.01f;// .0000011f; // value highly dependent on use case
+        //float damping = 0.1f; // 0 is no damping, 1 is a lot, I think
+        float valueThreshold = 0.01f;
+        float velocityThreshold = 0.01f;
+
+        float dampingFactor = Mathf.Max(0, 1 - damping * delta);
+        float acceleration = (targetValue - currentValue) * stiffness * delta;
+        currentVelocity = currentVelocity * dampingFactor + acceleration;
+        currentValue += currentVelocity * delta;
+
+        if (Mathf.Abs(currentValue - targetValue) < valueThreshold && Mathf.Abs(currentVelocity) < velocityThreshold)
+        {
+            currentValue = targetValue;
+            currentVelocity = 0f;
+        }
+
+        ///
+
+        currentValue *= -multiplier;
+
+        //diff /= delta;
+        //
+        // diff *= -200;
+
+        currentValue *= 1f + ((roll * Mathf.PI) * rollMod);
+
+        //Debug.Log("curr heading = " + currentHeading);
+        //Debug.Log("prev heading = " + previousHeading);
+
+        //Debug.Log("dif =" + diff);
+        //Debug.Log("delta =" + delta);
+        Debug.Log("currentValue =" + currentValue);
+        Debug.Log("currentVelocity =" + currentVelocity);
+
+        // diff = Mathf.SmoothDamp(previousHeading, currentHeading, ref velocity, .1f);
+        //limit max degrees
+        clamp = 20f;
+        currentValue = Mathf.Clamp(currentValue, -clamp, clamp);
+
+
+
+        Quaternion target = Quaternion.Euler(0, 0, currentValue);
+
+
+
+        outVelocity = currentVelocity;
         return target;
     }
+
 
     public static Quaternion TurnCoordinatorBallTarget(float ball)//?
     {
         //indicates whether the aircraft is in coordinated flight, showing the slip or skid of the turn. 
 
-        Quaternion target = Quaternion.Euler(0, 0, ball* 5);
+
+        float t = ball*3;
+        float clamp = 12f;
+        t = Mathf.Clamp(t, -clamp, clamp);
+
+        Quaternion target = Quaternion.Euler(0, 0, t);
+
+        return target;
+    }
+
+    public static Quaternion VerticalSpeedTarget(float verticalSpeed)//?
+    {
+        //vsi
+        //start at 9 o'clock
+        verticalSpeed = 90f - verticalSpeed * 18f;
+        //clamp to "10"
+        verticalSpeed = Mathf.Clamp(verticalSpeed, -90, 270);
+
+        Quaternion target = Quaternion.Euler(0, 0,  verticalSpeed);
 
         return target;
     }
