@@ -17,6 +17,12 @@ public class MenuHandler : MonoBehaviour
     public GameObject blurPanel;
     public GameObject menuPanel;
     public GameObject menuButton;
+    public GameObject connectionPanel;
+    public GameObject background;
+    public GameObject layoutButton;
+    public GameObject trayParent;
+    public List<GameObject> dialsInTray;
+    public GameObject connectionsButton;
     public GameObject ledParent;
     public GameObject ipTextField;
     public GameObject portTextField;
@@ -341,4 +347,58 @@ public class MenuHandler : MonoBehaviour
         PlayerPrefs.Save();
 
     }
+
+    public void OpenLayoutClick()
+    {
+        Debug.Log("Layout Click");
+        //hide buttons
+        layoutButton.SetActive(false);
+        connectionsButton.SetActive(false);
+
+        //remove metal panel
+        background.SetActive(false);
+
+        //show dial controls for each dial
+        //TurnHandlersOn(); -- need to check if in tray
+
+        //show add dial button
+
+    }
+
+ 
+    
+
+    public void OpenConnectionsClick()
+    {
+        Debug.Log("Connections Click");
+        //hide buttons
+        layoutButton.SetActive(false);
+        connectionsButton.SetActive(false);
+    
+        //show copnnection panel - IP address, port etc
+        connectionPanel.SetActive(true);
+    }
+
+    //private
+
+    //icons for moving dials
+    private void TurnHandlersOn()
+    { //all "UIHandlers" are tagged in hierarchy
+        GameObject[] uiHandlers = GameObject.FindGameObjectsWithTag("UIHandler");
+        //now just turn these objects on to show in scene
+        foreach (GameObject g in uiHandlers)
+            g.SetActive(true);
+    }
+
+    private void TurnHandlersff()
+    { //all "UIHandlers" are tagged in hierarchy
+        GameObject[] uiHandlers = GameObject.FindGameObjectsWithTag("UIHandler");
+        //now just turn these objects on to hide in scene
+        foreach (GameObject g in uiHandlers)
+            g.SetActive(false);
+    }
+
+   
+
+  
 }
