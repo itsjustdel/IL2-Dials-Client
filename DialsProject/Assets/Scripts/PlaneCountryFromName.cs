@@ -11,6 +11,24 @@ public class PlaneCountryFromName : AirplaneData
 
         switch (name)
         {
+            //tests
+            case "RU A":
+                country = Country.RU;
+                break;
+
+            case "RU B":
+                country = Country.RU;
+                break;
+
+            case "GER A":
+                country = Country.GER;
+                break;
+
+            case "GER B":
+                country = Country.GER;
+                break;
+
+            //main
 
             //RSE.RSE::CCockpitInstruments::simulation+1117 - 48 8D 15 DA7A1200     - lea rdx,[RSE.RSE::CAeroplane_LaGG_3_ser_29::`vftable'+210] { ("LaGG-3 ser.29") }
             case "LaGG-3 ser.29":

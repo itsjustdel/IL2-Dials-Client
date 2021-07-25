@@ -6,11 +6,10 @@ using UnityEngine.UI;
 
 public class MenuHandler : MonoBehaviour
 {
-
+    public AirplaneData airplaneData;
     
     public bool deletePrefs = false;
-    public GameObject title;
-    public GameObject titleMask;
+    public GameObject title;    
     public GameObject missionStart;
     public GameObject welcomePanel;
     public GameObject serverMessagePanel;
@@ -18,10 +17,14 @@ public class MenuHandler : MonoBehaviour
     public GameObject menuPanel;
     public GameObject menuButton;
     public GameObject connectionPanel;
-    public GameObject background;
+    public GameObject layoutPanel;
     public GameObject layoutButton;
+
     public GameObject trayParent;
+    public bool trayOpen;
+    public List<GameObject> trayObjects;
     public List<GameObject> dialsInTray;
+    public List<GameObject> dialsOnBoard;
     public GameObject connectionsButton;
     public GameObject ledParent;
     public GameObject ipTextField;
@@ -32,6 +35,9 @@ public class MenuHandler : MonoBehaviour
     public Toggle dontShowAgainToggle;
     public bool ipFieldOpen;
     public bool portFieldOpen;
+
+    //messages
+    public GameObject layoutWarningMessage;
 
     //override UI toggle fire on first frame
     private bool dontFire;
@@ -48,6 +54,9 @@ public class MenuHandler : MonoBehaviour
     public float startMissionGlowFade = 1f;
     public bool fadeLeds = false;
     public System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+
+
+    public  bool layoutOpen;
     public void Start()
     {
 
@@ -135,6 +144,15 @@ public class MenuHandler : MonoBehaviour
     {
         //SlideMask();
 
+        RemoveTitle();
+                
+
+        if (airplaneData.country != AirplaneData.Country.UNDEFINED)
+            RemoveTitle();
+        else
+            EnableTitle();
+
+
         if (!welcomePanel.activeInHierarchy)
         {
             if (!stopwatch.IsRunning)
@@ -145,7 +163,19 @@ public class MenuHandler : MonoBehaviour
             MissionStartGlow();
         }
     }
+    void RemoveTitle()
+    {
+        title.SetActive(false);
+        missionStart.SetActive(false);
+    }
+    void EnableTitle()
+    {
+        title.SetActive(true);
+        missionStart.SetActive(true);
+    }
 
+
+   
     void TitleFade()
     {
         
@@ -216,11 +246,49 @@ public class MenuHandler : MonoBehaviour
 
     public void MenuButtonClicked()
     {
-        Debug.Log("Menu Clicked");
+        
 
-        //set to opposite
-        blurPanel.SetActive(!blurPanel.activeSelf);
-        menuPanel.SetActive(!menuPanel.activeSelf);
+        
+
+        //
+        if(connectionPanel.activeInHierarchy)
+        {
+            Debug.Log("Menu Clicked 0");
+            connectionPanel.SetActive(false);
+            menuPanel.SetActive(false);
+        }
+
+        else if (!menuPanel.activeInHierarchy)
+        {
+            if(layoutOpen)
+            {
+                //leaving layout screen
+                Debug.Log("Closing menu from layout");
+                
+
+                //point to accept layout function - we can close this page from menu button or accept button
+                AcceptLayoutClick();
+
+                
+                
+            }
+            else
+            {
+                Debug.Log("Opening menu from closed");
+                menuPanel.SetActive(true);
+            }
+
+
+        }
+        else if (menuPanel.activeInHierarchy)
+        {
+            Debug.Log("Menu Clicked 2");
+            menuPanel.SetActive(false);
+        }
+            
+        //blurPanel.SetActive(!blurPanel.activeSelf);
+        //menuPanel.SetActive(!menuPanel.activeSelf);
+        //connectionPanel.SetActive(false);
     }
 
     public void IPAddressChanged()
@@ -351,54 +419,258 @@ public class MenuHandler : MonoBehaviour
     public void OpenLayoutClick()
     {
         Debug.Log("Layout Click");
-        //hide buttons
-        layoutButton.SetActive(false);
-        connectionsButton.SetActive(false);
+        layoutOpen = true;
+        
+        //check for plane - can only organise if plane loaded
+        if(airplaneData.country == AirplaneData.Country.UNDEFINED)
+        {
+            layoutWarningMessage.SetActive(true);
+            Debug.Log("Layout Warning message");
+            return;
+        }
+        else
+            layoutWarningMessage.SetActive(false);
 
         //remove metal panel
-        background.SetActive(false);
+        menuPanel.SetActive(false);
+
+        //hide Leds and Menu button
+       // menuButton.SetActive(false);
+        ledParent.SetActive(false);
+
+        
+
+        //turn blur off so we can see what we are doing with the dials
+        blurPanel.SetActive(false);
+        //turn our new menu on
+        layoutPanel.SetActive(true);
+        //work out how it should look
+        UpdateLayoutPanel();
+
 
         //show dial controls for each dial
-        //TurnHandlersOn(); -- need to check if in tray
+        TurnHandlersOn(); 
+
+
 
         //show add dial button
 
     }
 
- 
-    
+    public void AcceptLayoutClick()
+    {
+        //go back to main page
+        layoutPanel.SetActive(false);
+        //turn icon handlers off 
+        TurnHandlersOff();
+
+        //tunr menu button and leds back on
+        menuButton.SetActive(true);
+        ledParent.SetActive(true);
+
+        layoutOpen = false;
+
+        SaveLayout();
+
+    }
+
+    public void AddLayouButtonClick()
+    {
+        Debug.Log("Add layout click");
+        trayOpen = !trayOpen;
+        UpdateLayoutPanel();
+    }
 
     public void OpenConnectionsClick()
     {
         Debug.Log("Connections Click");
-        //hide buttons
-        layoutButton.SetActive(false);
-        connectionsButton.SetActive(false);
+        menuPanel.SetActive(false);
     
         //show copnnection panel - IP address, port etc
         connectionPanel.SetActive(true);
     }
 
-    //private
 
-    //icons for moving dials
-    private void TurnHandlersOn()
-    { //all "UIHandlers" are tagged in hierarchy
-        GameObject[] uiHandlers = GameObject.FindGameObjectsWithTag("UIHandler");
-        //now just turn these objects on to show in scene
-        foreach (GameObject g in uiHandlers)
-            g.SetActive(true);
+
+    public void UpdateLayoutPanel()
+    {
+        //only show how many blank tray space we need to
+        for (int i = 0; i < trayObjects.Count; i++)
+        {
+          //  Debug.Log(trayObjects[i].transform.childCount);
+            if(trayObjects[i].transform.childCount != 0)            
+                trayObjects[i].SetActive(true);
+            
+            else
+                trayObjects[i].SetActive(false);
+        }
     }
-
-    private void TurnHandlersff()
-    { //all "UIHandlers" are tagged in hierarchy
-        GameObject[] uiHandlers = GameObject.FindGameObjectsWithTag("UIHandler");
-        //now just turn these objects on to hide in scene
-        foreach (GameObject g in uiHandlers)
-            g.SetActive(false);
-    }
-
    
+    private void TurnHandlersOn()
+    {
+        //check if in tray?
 
-  
+        
+        GameObject[] UIhandlers = GameObject.FindGameObjectsWithTag("UIHandler");
+
+        
+
+
+        for (int i = 0; i < UIhandlers.Length; i++)
+        {
+            //turn image off, not gameobject, find with tag can't find find inactive objects
+
+            //if in tray, don't do this
+            if(!dialsInTray.Contains( UIhandlers[i].transform.parent.parent.gameObject))
+                UIhandlers[i].GetComponent<Image>().enabled = true;
+        }
+    }
+
+    private void TurnHandlersOff()
+    {
+        GameObject[] UIhandlers = GameObject.FindGameObjectsWithTag("UIHandler");
+        for (int i = 0; i < UIhandlers.Length; i++)
+        {
+            UIhandlers[i].GetComponent<Image>().enabled = false;
+        }
+    }
+        
+
+    public void SaveLayout()
+    {
+        //use class to write with json // https://forum.unity.com/threads/how-would-i-do-the-following-in-playerprefs.397516/#post-2595609
+        Layout layout = new Layout();
+        layout.planeType = airplaneData.planeType;
+
+        //get position in hierarchy
+        //int countryIndex = AirplaneData.CountryIndexFromEnum(airplaneData.country);      
+
+        //use location of current Rotate Needle script to get dials positions
+
+        //look for dial on dashboard - original parent
+        try
+        {
+            GameObject speedometer = airplaneData.countryDialBoard.transform.Find("Speedometer").gameObject;
+
+            layout.speedoPos = airplaneData.countryDialBoard.transform.Find("Speedometer").GetComponent<RectTransform>().anchoredPosition;
+            layout.speedoScale = airplaneData.countryDialBoard.transform.Find("Speedometer").GetComponent<RectTransform>().localScale.x;
+        }
+        catch
+        {
+            //if we don't find it, look for it in the tray
+            DialInTray("Speedometer", layout);
+        }
+        
+        try
+        {
+            GameObject altimeter = airplaneData.countryDialBoard.transform.Find("Altimeter").gameObject;
+            layout.altPos = airplaneData.countryDialBoard.transform.Find("Altimeter").GetComponent<RectTransform>().anchoredPosition;
+            layout.altScale = airplaneData.countryDialBoard.transform.Find("Altimeter").GetComponent<RectTransform>().localScale.x;
+        }
+        catch
+        {
+            DialInTray("Altimeter", layout);
+        }
+
+        try
+        {
+            GameObject headingIndicator = airplaneData.countryDialBoard.transform.Find("Heading Indicator").gameObject;
+            layout.headingPos = airplaneData.countryDialBoard.transform.Find("Heading Indicator").GetComponent<RectTransform>().anchoredPosition;
+            layout.headingScale = airplaneData.countryDialBoard.transform.Find("Heading Indicator").GetComponent<RectTransform>().localScale.x;
+        }
+        catch
+        {
+            DialInTray("Heading Indicator", layout);
+        }
+
+        try
+        {
+            GameObject turnAndBank = airplaneData.countryDialBoard.transform.Find("Turn And Bank").gameObject;
+            layout.turnAndBankPos = airplaneData.countryDialBoard.transform.Find("Turn And Bank").GetComponent<RectTransform>().anchoredPosition;
+            layout.turnAndBankScale = airplaneData.countryDialBoard.transform.Find("Turn And Bank").GetComponent<RectTransform>().localScale.x;
+        }
+        catch
+        {
+            DialInTray("Turn And Bank", layout);
+        }
+
+        try
+        {
+            GameObject turnIndicator = airplaneData.countryDialBoard.transform.Find("Turn Coordinator").gameObject;
+            layout.turnIndicatorPos = airplaneData.countryDialBoard.transform.Find("Turn Coordinator").GetComponent<RectTransform>().anchoredPosition;
+            layout.turnIndicatorScale = airplaneData.countryDialBoard.transform.Find("Turn Coordinator").GetComponent<RectTransform>().localScale.x;
+        }
+        catch 
+        {
+            DialInTray("Turn Coordinator", layout);
+        }
+
+        try
+        {
+            GameObject vsi = airplaneData.countryDialBoard.transform.Find("VSI").gameObject;
+            layout.vsiPos = airplaneData.countryDialBoard.transform.Find("VSI").GetComponent<RectTransform>().anchoredPosition;
+            layout.vsiScale = airplaneData.countryDialBoard.transform.Find("VSI").GetComponent<RectTransform>().localScale.x;
+
+        }
+        catch
+        {
+            DialInTray("VSI", layout);            
+        }
+               
+
+        string jsonFoo = JsonUtility.ToJson(layout);
+
+        PlayerPrefs.SetString(airplaneData.planeType, jsonFoo);
+        PlayerPrefs.Save();
+
+    }
+
+    void DialInTray(string name, Layout layout)
+    {
+        
+        for (int i = 0; i < dialsInTray.Count; i++)
+        {
+        
+
+            switch (name)
+            {
+                case "Speedometer":
+                    layout.speedoPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
+                    layout.speedoScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
+                    layout.speedoInTray = true;
+                    break;
+
+                case "Altimeter":
+                    layout.altPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
+                    layout.altScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
+                    layout.altimeterInTray = true;
+                    break;
+
+                case "Heading Indicator":
+                    layout.headingPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
+                    layout.headingScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
+                    layout.headingIndicatorInTray = true;
+                    break;
+
+                case "Turn And Bank":
+                    layout.turnAndBankPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
+                    layout.turnAndBankScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
+                    layout.turnAndBankInTray = true;
+                    break;
+
+                case "Turn Coordinator":
+                    layout.turnIndicatorPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
+                    layout.turnIndicatorScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
+                    layout.turnIndicatorInTray = true;
+                    break;
+
+                case "VSI":
+                    layout.vsiPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
+                    layout.vsiScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
+                    layout.vsiInTray = true;
+                    break;
+            }
+        }
+    }
+
 }

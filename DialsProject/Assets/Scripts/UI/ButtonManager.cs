@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 using UnityEngine.EventSystems;
 
-public class ButtonManager : MonoBehaviour,  IPointerDownHandler , IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
+public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
 
     public MenuHandler menuHandler;
@@ -14,13 +16,15 @@ public class ButtonManager : MonoBehaviour,  IPointerDownHandler , IPointerClick
     public bool remove;
 
 
-    public GameObject originalParent;
+  //  public GameObject originalParent;
     
     public Canvas canvas;
     private RectTransform rectTransform;
     private void Awake()
     {
-        originalParent = transform.parent.parent.parent.gameObject;
+        canvas = GameObject.FindGameObjectWithTag("Canvas").transform.GetComponent<Canvas>();
+        menuHandler = GameObject.Find("Menu").GetComponent<MenuHandler>();
+      //  originalParent = transform.parent.parent.parent.gameObject;
         rectTransform = transform.parent.parent.GetComponent<RectTransform>();
     }
 
@@ -28,38 +32,52 @@ public class ButtonManager : MonoBehaviour,  IPointerDownHandler , IPointerClick
     {
         if (remove)
         {
-            DialInTray();
+            //parent from button press is first parameter
+            PutDialInTray(transform.parent.parent.gameObject, menuHandler);
             Debug.Log("Remove Dial Click");
-            
+
+            menuHandler.SaveLayout();
+
+
+
         }
+
+      
     }
+
+
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log("OnBeginDrag");
-        
-        if(move)
+        if (move)
         {
             //check the dial is attached to the original parent (not in tray)
 
             //was it in tray?
-            if(transform.parent.parent.parent.gameObject != originalParent)
+            if(menuHandler.dialsInTray.Contains(transform.parent.parent.gameObject))
+            //if (transform.parent.parent.parent.gameObject != originalParent)
             {
                 //it is in the tray
-                //put it back
-                transform.parent.parent.parent = originalParent.transform;
+                //put it back to orignal parent
+                transform.parent.parent.gameObject.transform.parent = menuHandler.tcpClient.rN.transform;
                 //reset scale
                 rectTransform.localScale = new Vector3(0.5f, .5f, 1f);
 
                 //remove from tray list
                 menuHandler.dialsInTray.Remove(rectTransform.gameObject);
-                
+
+                //turn on/off empty trays
+                menuHandler.UpdateLayoutPanel();
+
             }
             else
             {
 
             }
         }
+        Debug.Log("OnBeginDrag");
+        
+       
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -101,9 +119,9 @@ public class ButtonManager : MonoBehaviour,  IPointerDownHandler , IPointerClick
 
 
         //check if user dragged dial on to tray        
-        if(IsOverTray())
+       // if(IsOverTray())
         {
-            
+            //Debug.Log("over tray");
         }
 
         //snap 
@@ -123,16 +141,12 @@ public class ButtonManager : MonoBehaviour,  IPointerDownHandler , IPointerClick
             d2.y = Mathf.Clamp(d2.y, Screen.height * -.5f - rectTransform.rect.height, rectTransform.rect.height * canvas.scaleFactor);//bottom, top
             rectTransform.anchoredPosition = d2;
 
-
             //trap in screen
             ScreenTrap(d2);
 
+            //make sure icons are 
+            IconsOn(transform.parent.parent.gameObject);
 
-         //   if (moveTray)
-            {
-                //make sure icons are on
-                IconsOffOrOn(transform.parent.parent.gameObject, true);
-            }
         }
 
         if (scale)
@@ -156,19 +170,42 @@ public class ButtonManager : MonoBehaviour,  IPointerDownHandler , IPointerClick
 
 
         }
+
+
+        menuHandler.SaveLayout();
+        
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
         Debug.Log("OnPointerDown");
+        //is it in tray? - make scale larger to  preview dial
+        //if (transform.parent.parent.parent.gameObject != originalParent)
+        if (menuHandler.dialsInTray.Contains(transform.parent.parent.gameObject))
+        {
+            rectTransform.localScale = new Vector3(5f, 5f, 1f);
+        }
 
-        
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        Debug.Log("OnPointerUp");
+        //is it in tray? - put it to small scale (happens after a prewiew click when in tray)
+        //if (transform.parent.parent.parent.gameObject != originalParent)
+        if (menuHandler.dialsInTray.Contains(transform.parent.parent.gameObject))
+        {
+            rectTransform.localScale = new Vector3(0.5f, 0.5f, 1f);
+        }
+
     }
 
     public void ScreenTrap(  Vector2 d2 )
     {
         //use canvas height, dial panel size and dial panel scale to find edge of screen
         float bottom = canvas.GetComponent<RectTransform>().rect.height * -.5f + rectTransform.rect.height * .5f * rectTransform.localScale.y;
+        //addspace for menu button/leds?
+        //bottom += 50;
         float top = canvas.GetComponent<RectTransform>().rect.height * .5f - rectTransform.rect.height * .5f * rectTransform.localScale.x;
         d2.y = Mathf.Clamp(d2.y, bottom, top);
 
@@ -186,10 +223,8 @@ public class ButtonManager : MonoBehaviour,  IPointerDownHandler , IPointerClick
 
 
     //put dial in tray
-    private void DialInTray()
+    public static void PutDialInTray(GameObject dialParent, MenuHandler menuHandler)
     {
-        //get parent from "romove" button pressed
-        GameObject dialParent = transform.parent.parent.gameObject;
 
         //find empty tray in children of trayParent
 
@@ -207,11 +242,11 @@ public class ButtonManager : MonoBehaviour,  IPointerDownHandler , IPointerClick
 
                 menuHandler.dialsInTray.Add(dialParent);
 
-                //false = off
-                IconsOffOrOn(dialParent,false);
+                //turn image off for icons
+                IconsOff(dialParent);
 
-                //set draggable button on
-
+                //turn on/off empty trays
+                menuHandler.UpdateLayoutPanel();
 
                 return;
 
@@ -220,7 +255,29 @@ public class ButtonManager : MonoBehaviour,  IPointerDownHandler , IPointerClick
         }
     }
 
-    private void IconsOffOrOn(GameObject dialParent,bool toggle)
+    //put dial in tray
+    public static void EmptyTrays( MenuHandler menuHandler)
+    {
+
+        //empty list
+        menuHandler.dialsInTray.Clear();
+
+        //remove dials in tray hierarchy
+
+        for (int i = 0; i < menuHandler.trayParent.transform.childCount; i++)
+        {
+            if (menuHandler.trayParent.transform.GetChild(i).childCount != 0)
+            {
+                //should only be one child/dial ever
+                //destroy happens on next frame but there is aparent check before this so let's just null the parent until destroyed
+                Destroy(menuHandler.trayParent.gameObject.transform.GetChild(i).GetChild(0).gameObject);
+                menuHandler.trayParent.gameObject.transform.GetChild(i).GetChild(0).transform.parent = null;
+                
+            }
+        }
+    }
+
+    private static void IconsOn(GameObject dialParent)
     {
         //turn off icons (UI Handlers should be first child)
         for (int j = 0; j < dialParent.transform.GetChild(0).transform.childCount; j++)
@@ -228,7 +285,24 @@ public class ButtonManager : MonoBehaviour,  IPointerDownHandler , IPointerClick
             Transform child = dialParent.transform.GetChild(0).transform.GetChild(j);
             if (child.tag == "UIHandler")
             {
-                child.gameObject.SetActive(toggle);
+                //only turn on dial icons if not in tray
+
+                //child.gameObject.SetActive(toggle);
+                child.gameObject.GetComponent<UnityEngine.UI.Image>().enabled = true;
+            }
+        }
+    }
+
+    private static void IconsOff(GameObject dialParent)
+    {
+        //turn off icons (UI Handlers should be first child)
+        for (int j = 0; j < dialParent.transform.GetChild(0).transform.childCount; j++)
+        {
+            Transform child = dialParent.transform.GetChild(0).transform.GetChild(j);
+            if (child.tag == "UIHandler")
+            {
+                //child.gameObject.SetActive(toggle);
+                child.gameObject.GetComponent<UnityEngine.UI.Image>().enabled = false;
             }
         }
     }

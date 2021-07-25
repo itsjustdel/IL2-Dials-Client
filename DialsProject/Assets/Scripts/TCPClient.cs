@@ -165,7 +165,7 @@ public class TCPClient : MonoBehaviour {
 
 			else
             {
-				Debug.Log("Starting new thread");
+				//Debug.Log("Starting new thread");
 
 				menuHandler.scanDebug.GetComponent<Text>().text = "Attempting Connection: " + userIP.ToString() +" : " + portNumber ;
 				//use value entered by user in hostName
@@ -336,7 +336,7 @@ public class TCPClient : MonoBehaviour {
 
 				if (timer >= thisTimer)//timer value of timeout socket setting on server
 				{
-					Debug.Log("Sending to server");
+					//Debug.Log("Sending to server");
 					timer = 0f;
 					ConnectToTcpServer();
 				}

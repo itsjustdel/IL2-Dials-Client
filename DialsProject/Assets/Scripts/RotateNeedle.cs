@@ -17,8 +17,7 @@ public class RotateNeedle : MonoBehaviour
     public GameObject altitudeNeedleSmallest;//UK
     public GameObject altitudeNeedleLarge;
     public GameObject mmhgDial;
-    public GameObject airspeedNeedle;
-    public GameObject airspeedNeedleTest;
+    public GameObject airspeedNeedle; 
     public GameObject turnAndBankNumberTrack;    
     public GameObject turnAndBankPlane;
     public GameObject headingIndicator;
@@ -633,8 +632,7 @@ public class RotateNeedle : MonoBehaviour
 
         airspeedNeedle.transform.rotation = Quaternion.Slerp(airspeedStart, airspeedTarget, (Time.time - lastMessageReceivedTime)/(Time.fixedDeltaTime)); //fixed delta is step time for receiving messages - works well
         
-        //test needle
-        airspeedNeedleTest.transform.rotation = airspeedTarget;
+      
 
     }
 
