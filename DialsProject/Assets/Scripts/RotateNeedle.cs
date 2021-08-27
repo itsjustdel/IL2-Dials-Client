@@ -215,8 +215,10 @@ public class RotateNeedle : MonoBehaviour
         AddPositionToList(positionsTurnAndBankPlane, turnAndBankPlane.transform.localPosition);
         //plane rotations
         AddRotationToList(quaternionsTurnAndBankPlane, turnAndBankPlane.transform.rotation);
+
         //number track
-        AddPositionToList(positionsTurnAndBankNumberTrack, turnAndBankNumberTrack.transform.localPosition);
+        if(turnAndBankNumberTrack != null)
+            AddPositionToList(positionsTurnAndBankNumberTrack, turnAndBankNumberTrack.transform.localPosition);
 
         //turn co-ord
         AddRotationToList(quaternionsTurnCoordinatorNeedle, turnCoordinatorNeedle.transform.rotation);
@@ -353,30 +355,72 @@ public class RotateNeedle : MonoBehaviour
 
         AltimeterTargets();
 
-        HeadingTarget();
+        HeadingTarget(iL2GameDataClient.country);
 
         TurnAndBankTargets();
 
-        TurnCoordinatorTarget();
+        TurnCoordinatorTarget(iL2GameDataClient.country);
 
-        VSITarget();
+        VSITarget(iL2GameDataClient.country);
+
+        RepeaterCompassTarget(iL2GameDataClient.country);
     }
 
+    void RepeaterCompassTarget(AirplaneData.Country country)
+    {
+        if (country != AirplaneData.Country.GER)
+            return;
+
+        //TO DO - create variable and prediction variables, lists etc
+
+
+    }
     
-    void VSITarget()
+    void VSITarget(AirplaneData.Country country)
     {
-        vsiNeedleTarget = RussianDials.VerticalSpeedTarget(iL2GameDataClient.verticalSpeed); 
+        switch (country)
+        {
+            case (AirplaneData.Country.RU):
+                vsiNeedleTarget = RussianDials.VerticalSpeedTarget(iL2GameDataClient.verticalSpeed);
+                break;
+
+            case (AirplaneData.Country.GER):
+                //choose plane (need to asign correct needle)
+                bool vsi15 = false;
+
+                if(vsi15)
+                    vsiNeedleTarget = GermanDials.VerticalSpeedTarget15(iL2GameDataClient.verticalSpeed);
+                else
+                    vsiNeedleTarget = GermanDials.VerticalSpeedTarget30(iL2GameDataClient.verticalSpeed);
+
+                break;
+        }
     }
 
-    void TurnCoordinatorTarget()
+    void TurnCoordinatorTarget(AirplaneData.Country country)
     {
-        //RU
-        //pendulum needle
-        turnCoordinatorNeedleTarget = RussianDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.turnCoordinatorNeedle);
 
-        //ball indicator
-        Vector3 velocity = Vector3.zero;// to get??
-        turnCoordinatorBallTarget = RussianDials.TurnCoordinatorBallTarget(iL2GameDataClient.turnCoordinatorBall);
+        switch (country)
+        {
+            case (AirplaneData.Country.RU):
+                //RU
+                //pendulum needle
+                turnCoordinatorNeedleTarget = RussianDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.turnCoordinatorNeedle);
+
+                //ball indicator                
+                turnCoordinatorBallTarget = RussianDials.TurnCoordinatorBallTarget(iL2GameDataClient.turnCoordinatorBall);
+                break;
+
+            case (AirplaneData.Country.GER):
+                //RU
+                //pendulum needle
+                turnCoordinatorNeedleTarget = GermanDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.turnCoordinatorNeedle);
+
+                //ball indicator                
+                turnCoordinatorBallTarget = GermanDials.TurnCoordinatorBallTarget(iL2GameDataClient.turnCoordinatorBall);
+                break;
+        }
+       
     }
 
     void TurnAndBankTargets()
@@ -391,10 +435,20 @@ public class RotateNeedle : MonoBehaviour
         turnAndBankNumberTrackTarget = RussianDials.TurnAndBankNumberTrackPosition(iL2GameDataClient.pitch, turnAndBankPitchMultiplier);
     }
 
-    void HeadingTarget()
+    void HeadingTarget(AirplaneData.Country country)
     {
         //RU
-        headingIndicatorTarget = RussianDials.HeadingIndicatorPosition(iL2GameDataClient.heading);
+        switch (country)
+        {
+            case (AirplaneData.Country.RU):
+                headingIndicatorTarget = RussianDials.HeadingIndicatorPosition(iL2GameDataClient.heading);
+                break;
+
+            case (AirplaneData.Country.GER):
+                headingIndicatorTarget = GermanDials.HeadingIndicatorPosition(iL2GameDataClient.heading);
+                break;
+        }
+        
     }
 
     void AltimeterTargets()
@@ -732,8 +786,9 @@ public class RotateNeedle : MonoBehaviour
         //move plane up and down
         turnAndBankPlane.transform.localPosition = Vector3.Lerp(turnAndBankPlane.transform.localPosition, turnAndBankPlanePositionTarget, (Time.time - lastMessageReceivedTime)/Time.fixedDeltaTime);
 
-        //number track
-        turnAndBankNumberTrack.transform.localPosition = Vector3.Lerp(turnAndBankNumberTrack.transform.localPosition, turnAndBankNumberTrackTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
+        //number track - only russian
+        if(turnAndBankNumberTrack != null)
+            turnAndBankNumberTrack.transform.localPosition = Vector3.Lerp(turnAndBankNumberTrack.transform.localPosition, turnAndBankNumberTrackTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
     }
 
     void VSIRotation()
