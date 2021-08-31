@@ -67,4 +67,21 @@ public class UKDials : MonoBehaviour
 
         return mmhgTarget;
     }
+
+    public static Vector3 HeadingIndicatorPosition(float heading)
+    {
+        //check for Nan
+        if (float.IsNaN(heading) || heading == 0f)
+            return Vector3.zero;
+
+        //range is 0 to pi*2
+        float ratio = Mathf.PI * heading;
+        //adjust for arbitry render camera position
+        ratio *= 16.66f;
+
+        Vector3 pos = Vector3.right * ratio;
+
+
+        return pos;
+    }
 }

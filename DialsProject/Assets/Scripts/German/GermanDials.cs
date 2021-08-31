@@ -80,6 +80,31 @@ public class GermanDials : MonoBehaviour
         return target;
     }
 
+
+    //turn and bank
+    public static Quaternion TurnAndBankPlaneRotation(float roll, float climb, float rollMultiplier, float climbMultiplier)
+    {
+        //rotate plane
+        //clamp roll , in game cockpit stop rotation at just under 90 degrees - this happens when roll rate is ~1.7
+        float tempRoll = -roll;
+        Mathf.Clamp(tempRoll, -1.7f, 1.7f);
+        Quaternion t = Quaternion.Euler(0, 0, tempRoll * rollMultiplier);
+        Quaternion r = t;
+
+        //for x rotatin we need to rotate around global x after z rot
+        //r *= Quaternion.Euler(climb * climbMultiplier, 0, 0);
+
+        return r;
+    }
+
+    public static Vector3 TurnAndBankPlanePosition(float climb, float pitchMultiplier)
+    {
+        //move plane up and down
+        return new Vector3(0, climb * pitchMultiplier, 0);
+    }
+
+    //turn co
+
     public static Quaternion TurnCoordinatorNeedleTarget(float v)
     {
         Quaternion target = Quaternion.Euler(0, 0, v);
@@ -95,18 +120,19 @@ public class GermanDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion TurnAndBankBallTarget(float ball)
+    public static Quaternion TurnAndBankBallTarget(float ball,float multiplier)
     {
         //indicates whether the aircraft is in coordinated flight, showing the slip or skid of the turn. 
-        Quaternion target = Quaternion.Euler(0, 0, ball );
+        Quaternion target = Quaternion.Euler(0, 0, ball * multiplier);
 
         return target;
     }
 
 
-    public static Quaternion RepeaterCompassTarger(float heading)
+    public static Quaternion RepeaterCompassTarget(float heading)
     {
-        Quaternion target = Quaternion.Euler(0, 0, Mathf.PI * heading);
+        //number passed is rotation in rads, pi = 180 degrees
+        Quaternion target = Quaternion.Euler(0, 0, heading * Mathf.Rad2Deg);
 
         return target;
     }
@@ -140,4 +166,24 @@ public class GermanDials : MonoBehaviour
 
         return target;
     }
+
+    public static Quaternion ArtificialHorizon(float roll, float rollMultiplier)
+    {
+        //rotate horizon        
+        
+        Quaternion t = Quaternion.Euler(0, 0, roll * rollMultiplier);
+        
+        //for x rotation we need to rotate around global x after z rot
+        //t *= Quaternion.Euler(climb * climbMultiplier, 0, 0);
+
+        return t;
+    }
+
+    public static Vector3 ArtificialHorizonPosition(float climb, float pitchMultiplier)
+    {
+        //move plane up and down
+        return new Vector3(0, climb * pitchMultiplier, 0);
+    }
+
+
 }

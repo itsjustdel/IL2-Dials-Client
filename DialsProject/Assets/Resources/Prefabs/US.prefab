@@ -779,14 +779,14 @@ RectTransform:
   m_GameObject: {fileID: 1653186128508224320}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.3475094, y: 0.30431905, z: 0.30431905}
+  m_LocalScale: {x: 4.2382817, y: 0.38529834, z: 0.38529837}
   m_Children: []
-  m_Father: {fileID: 6309896378832117312}
-  m_RootOrder: 1
+  m_Father: {fileID: 7710339728836222854}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 13.1}
+  m_AnchoredPosition: {x: 0, y: 13}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4975540351350015670
@@ -854,14 +854,14 @@ RectTransform:
   m_GameObject: {fileID: 1689203569065144039}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.3475094, y: 0.30431905, z: 0.30431905}
+  m_LocalScale: {x: 4.2382817, y: 0.38529834, z: 0.38529837}
   m_Children: []
-  m_Father: {fileID: 6309896378832117312}
+  m_Father: {fileID: 2980329111330118250}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 13.099996}
+  m_AnchoredPosition: {x: 0, y: 13}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5226259091233283333
@@ -2106,11 +2106,15 @@ MonoBehaviour:
   airspeedNeedle: {fileID: 3098119525163601841}
   turnAndBankNumberTrack: {fileID: 7991813429221070089}
   turnAndBankPlane: {fileID: 0}
-  headingIndicator: {fileID: 1689203569065144039}
-  headingIndicatorChild0: {fileID: 0}
-  turnCoordinatorNeedle: {fileID: 5769385640292115015}
+  headingIndicator: {fileID: 7161694296331035551}
+  headingIndicatorChild0: {fileID: 6147165592465642872}
+  turnCoordinatorNeedle: {fileID: 2834607471676500523}
   turnCoordinatorBall: {fileID: 5416793681454305509}
   vsiNeedle: {fileID: 4331680301476070572}
+  repeaterCompassFace: {fileID: 8433101601571174630}
+  artificialHorizonBackground: {fileID: 3839813110190815007}
+  artificialHorizonChevron: {fileID: 2664084186924016596}
+  turnAndBankBall: {fileID: 0}
   lastMessageReceivedTime: 0
   previousMessageTime: 0
   maxSpin: 1
@@ -2122,12 +2126,84 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0, w: 1}
   airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
-  trackLength: -97.74
+  trackLength: -176.11
   turnCoordinatorNeedleVelocity: 0
   turnCoordinaterSpring: 10
   turnCoordinaterDamp: 0.1
   turnCoordinaterRollMod: 0.1
   turnCoordinaterMultiplier: 200
+  artificialHorizonBomberRollMod: 1
+  artificialHorizonBomberMultiplier: 20
+  turnAndBankBallMultiplier: 1
+  animationCurveVSI:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.24488069
+      value: 0.45869142
+      inSlope: 1.5212731
+      outSlope: 1.5212731
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.42086762
+      value: 0.5554585
+      inSlope: 0.14160311
+      outSlope: 0.14160311
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.3844645
+      outWeight: 0.113195516
+    - serializedVersion: 3
+      time: 0.5845236
+      value: 0.8793619
+      inSlope: 0.780902
+      outSlope: 0.780902
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.121430844
+    - serializedVersion: 3
+      time: 0.73939866
+      value: 0.7394336
+      inSlope: 0.006011074
+      outSlope: 0.006011074
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.2537155
+    - serializedVersion: 3
+      time: 0.8439999
+      value: 0.9217373
+      inSlope: 0.93886626
+      outSlope: 0.93886626
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.5235555
+      outWeight: 0.3346561
+    - serializedVersion: 3
+      time: 0.995754
+      value: 0.97833145
+      inSlope: 0.019197375
+      outSlope: 0.019197375
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.46552482
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &2944114640883497285
 GameObject:
   m_ObjectHideFlags: 0
@@ -3961,6 +4037,42 @@ MonoBehaviour:
   scale: 1
   remove: 0
   canvas: {fileID: 0}
+--- !u!1 &6147165592465642872
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7710339728836222854}
+  m_Layer: 5
+  m_Name: parent1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &7710339728836222854
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6147165592465642872}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 7516706571559640207}
+  m_Father: {fileID: 6309896378832117312}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6235765888413959179
 GameObject:
   m_ObjectHideFlags: 0
@@ -4468,6 +4580,42 @@ MonoBehaviour:
   scale: 0
   remove: 0
   canvas: {fileID: 0}
+--- !u!1 &7161694296331035551
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2980329111330118250}
+  m_Layer: 5
+  m_Name: parent0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2980329111330118250
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7161694296331035551}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 431050448743714521}
+  m_Father: {fileID: 6309896378832117312}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7305682690526093434
 GameObject:
   m_ObjectHideFlags: 0
@@ -5134,8 +5282,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 6.69336, y: 6.69336, z: 6.69336}
   m_Children:
-  - {fileID: 431050448743714521}
-  - {fileID: 7516706571559640207}
+  - {fileID: 2980329111330118250}
+  - {fileID: 7710339728836222854}
   m_Father: {fileID: 4039437101052915996}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5430,7 +5578,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9052391446735883613}
   m_Layer: 5
-  m_Name: Turn And Bank
+  m_Name: Artificial Horizon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

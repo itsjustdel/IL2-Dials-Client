@@ -26,6 +26,10 @@ public class RotateNeedle : MonoBehaviour
     public GameObject turnCoordinatorNeedle;
     public GameObject turnCoordinatorBall;
     public GameObject vsiNeedle;
+    public GameObject repeaterCompassFace;
+    public GameObject artificialHorizonBackground;
+    public GameObject artificialHorizonChevron;
+    public GameObject turnAndBankBall;
     //public bool tcpReceived = false; //moved to tcpClient, multiple instances of Rotate Needle for each country, only single instance of tcpclient
     public float lastMessageReceivedTime;//two ways of doing the same thing
     public float previousMessageTime;
@@ -44,10 +48,16 @@ public class RotateNeedle : MonoBehaviour
     private List<Quaternion> quaternionsTurnCoordinatorNeedle = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     private List<Quaternion> quaternionsTurnCoordinatorBall = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     private List<Quaternion> quaternionsVSI = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
+    private List<Quaternion> quaternionsRepeaterCompass = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };    
+    private List<Quaternion> quaternionsArtificialHorizon = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
+    private List<Quaternion> quaternionsArtificialHorizonChevron = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
+    private List<Quaternion> quaternionsTurnAndBankBall = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
+    
     // -- positions
     private List<Vector3> positionsHeading = new List<Vector3>() { Vector3.zero, Vector3.zero };
     private List<Vector3> positionsTurnAndBankPlane = new List<Vector3>() { Vector3.zero, Vector3.zero };
     private List<Vector3> positionsTurnAndBankNumberTrack = new List<Vector3>() { Vector3.zero, Vector3.zero };
+    private List<Vector3> positionsArtificialHorizonBomber = new List<Vector3>() { Vector3.zero, Vector3.zero };
 
     //  private bool saveForPredictions -- rotations
     public Quaternion airspeedStart; // -- "Start" needed, just use object transform loation/rotation
@@ -67,6 +77,10 @@ public class RotateNeedle : MonoBehaviour
     private Quaternion turnCoordinatorBallStart;
     private Quaternion turnCoordinatorBallTarget;
     private Quaternion vsiNeedleTarget;
+    private Quaternion repeaterCompassTarget;
+    private Quaternion artificialHorizonRotationTarget;
+    private Quaternion artificialHorizonChevronTarget;
+    private Quaternion turnAndBankBallTarget;
 
     // -- positions
     //heading is on a track, we move along the x, we don't rotate
@@ -76,16 +90,20 @@ public class RotateNeedle : MonoBehaviour
     private Vector3 turnAndBankPlanePositionTarget;
     private Vector3 turnAndBankNumberTrackStart;
     private Vector3 turnAndBankNumberTrackTarget;
+    private Vector3 artificialHorizonPositionTarget;
 
-    //public bool testPrediction = false;//moved to tcp client
-
+    // -- modifiers
     public float trackLength = -15.64f;
     public float turnCoordinatorNeedleVelocity = 0;
     public float turnCoordinaterSpring = 1f;
     public float turnCoordinaterDamp = 1f;
     public float turnCoordinaterRollMod = 1f;
     public float turnCoordinaterMultiplier = 20f;
+    public float artificialHorizonBomberRollMod = 1f;
+    public float artificialHorizonBomberMultiplier = 20f;
+    public float turnAndBankBallMultiplier = 1f;
 
+    public AnimationCurve animationCurveVSI;
 
 
     // Start is called before the first frame update
@@ -192,7 +210,7 @@ public class RotateNeedle : MonoBehaviour
 
     }
 
-    void SavePreviousRotations()
+    void SavePreviousRotationsAndPositions()
     {
         //used for prediction - save previous position
 
@@ -203,7 +221,8 @@ public class RotateNeedle : MonoBehaviour
         AddRotationToList(quaternionsAltitudeSmall, altitudeNeedleSmall.transform.rotation);
         //only UK has the smallest needle
         if (iL2GameDataClient.country == AirplaneData.Country.UK)
-            AddRotationToList(quaternionsAltitudeSmallest, altitudeNeedleSmallest.transform.rotation);        
+            AddRotationToList(quaternionsAltitudeSmallest, altitudeNeedleSmallest.transform.rotation);
+
         AddRotationToList(quaternionsAltitudeLarge, altitudeNeedleLarge.transform.rotation);
         AddRotationToList(quaternionsMmhg, mmhgDial.transform.rotation);
 
@@ -211,10 +230,14 @@ public class RotateNeedle : MonoBehaviour
         AddPositionToList(positionsHeading, headingIndicator.transform.localPosition);
 
         //turn and bank
-        //plane position
-        AddPositionToList(positionsTurnAndBankPlane, turnAndBankPlane.transform.localPosition);
-        //plane rotations
-        AddRotationToList(quaternionsTurnAndBankPlane, turnAndBankPlane.transform.rotation);
+        if (turnAndBankPlane != null)
+        {
+            //plane position
+            AddPositionToList(positionsTurnAndBankPlane, turnAndBankPlane.transform.localPosition);
+
+            //plane rotations
+            AddRotationToList(quaternionsTurnAndBankPlane, turnAndBankPlane.transform.rotation);
+        }
 
         //number track
         if(turnAndBankNumberTrack != null)
@@ -226,6 +249,19 @@ public class RotateNeedle : MonoBehaviour
 
         //vsi
         AddRotationToList(quaternionsVSI, vsiNeedle.transform.rotation);
+
+        //ger repeater compass
+        if (iL2GameDataClient.country == AirplaneData.Country.GER)
+            AddRotationToList(quaternionsRepeaterCompass, repeaterCompassFace.transform.rotation);
+
+        //ger bomber horizon
+        if (iL2GameDataClient.country == AirplaneData.Country.GER)
+            AddRotationToList(quaternionsArtificialHorizon, artificialHorizonBackground.transform.rotation);
+
+        //ger turn and bank ball
+        if (iL2GameDataClient.country == AirplaneData.Country.GER)
+            AddRotationToList(quaternionsTurnAndBankBall, turnAndBankBall.transform.rotation);
+
 
     }
 
@@ -344,12 +380,37 @@ public class RotateNeedle : MonoBehaviour
         //VSI
         difference = quaternionsVSI[0].z - quaternionsVSI[1].z;        
         vsiNeedleTarget = turnCoordinatorBall.transform.rotation * Quaternion.Euler(0, 0, difference);
+
+        //ger repeater
+        if (iL2GameDataClient.country == AirplaneData.Country.GER)
+        {
+            difference = quaternionsRepeaterCompass[0].z - quaternionsRepeaterCompass[1].z;
+            vsiNeedleTarget = repeaterCompassFace.transform.rotation * Quaternion.Euler(0, 0, difference);
+        }
+
+        //artificial horizon
+        //background        
+        //rotation
+        difference = quaternionsArtificialHorizon[0].z - quaternionsArtificialHorizon[1].z;
+        artificialHorizonRotationTarget = artificialHorizonChevron.transform.rotation * Quaternion.Euler(0, 0, difference);
+        //pos
+        differenceV3 = positionsArtificialHorizonBomber[0] - positionsArtificialHorizonBomber[1];
+        artificialHorizonPositionTarget = artificialHorizonChevron.transform.localPosition + differenceV3;
+        //chevron
+        difference = quaternionsArtificialHorizonChevron[0].z - quaternionsArtificialHorizonChevron[1].z;
+        artificialHorizonChevronTarget = artificialHorizonChevron.transform.rotation * Quaternion.Euler(0, 0, difference);
+
+        //ger turn and bank ball         --only do these if not null? -- opto
+        difference = quaternionsTurnAndBankBall[0].z - quaternionsTurnAndBankBall[1].z;
+        turnAndBankBallTarget = turnAndBankBall.transform.rotation * Quaternion.Euler(0, 0, difference);
+
+     
     }
 
     public void SetRotationTargets()
     {
         //called when tcp client receives update
-        SavePreviousRotations();
+        SavePreviousRotationsAndPositions();
 
         AirspeedTarget();
 
@@ -357,21 +418,71 @@ public class RotateNeedle : MonoBehaviour
 
         HeadingTarget(iL2GameDataClient.country);
 
-        TurnAndBankTargets();
+        TurnAndBankTargets(iL2GameDataClient.country);
 
         TurnCoordinatorTarget(iL2GameDataClient.country);
 
         VSITarget(iL2GameDataClient.country);
 
         RepeaterCompassTarget(iL2GameDataClient.country);
+
+        ArtificialHorizonTargets(iL2GameDataClient.country);
+    }
+
+
+
+
+    void ArtificialHorizonTargets(AirplaneData.Country country)
+    {
+        switch (country)
+        {
+            //no RU
+
+            //GER
+            case (AirplaneData.Country.GER):
+                //rotation // roll
+                artificialHorizonRotationTarget = GermanDials.ArtificialHorizon(iL2GameDataClient.roll, artificialHorizonBomberRollMod);
+
+                //position  
+                artificialHorizonPositionTarget = GermanDials.ArtificialHorizonPosition(iL2GameDataClient.pitch, artificialHorizonBomberMultiplier);
+
+                break;
+
+
+            //US
+            case (AirplaneData.Country.US):
+                //rotation // roll
+                artificialHorizonRotationTarget = USDials.ArtificialHorizonRotation(iL2GameDataClient.roll, artificialHorizonBomberRollMod);
+
+                //position  
+                artificialHorizonPositionTarget = USDials.ArtificialHorizonPosition(iL2GameDataClient.pitch, artificialHorizonBomberMultiplier);
+                //chevron
+                artificialHorizonChevronTarget = USDials.ArtificialHorizonChevronRotation(iL2GameDataClient.roll, artificialHorizonBomberRollMod);
+
+                break;
+
+        }
+
+        
+
+
+
+        
+        
+
+
+
+
     }
 
     void RepeaterCompassTarget(AirplaneData.Country country)
     {
-        if (country != AirplaneData.Country.GER)
-            return;
+        
+        if (country == AirplaneData.Country.GER)
+            repeaterCompassTarget = GermanDials.RepeaterCompassTarget(iL2GameDataClient.heading);
 
-        //TO DO - create variable and prediction variables, lists etc
+        else if (country == AirplaneData.Country.US)
+            repeaterCompassTarget = USDials.RepeaterCompassTarget(iL2GameDataClient.heading);
 
 
     }
@@ -392,8 +503,12 @@ public class RotateNeedle : MonoBehaviour
                     vsiNeedleTarget = GermanDials.VerticalSpeedTarget15(iL2GameDataClient.verticalSpeed);
                 else
                     vsiNeedleTarget = GermanDials.VerticalSpeedTarget30(iL2GameDataClient.verticalSpeed);
-
                 break;
+
+            case (AirplaneData.Country.US):
+                vsiNeedleTarget = USDials.VerticalSpeedTarget(iL2GameDataClient.verticalSpeed,animationCurveVSI);
+                break;
+
         }
     }
 
@@ -419,20 +534,59 @@ public class RotateNeedle : MonoBehaviour
                 //ball indicator                
                 turnCoordinatorBallTarget = GermanDials.TurnCoordinatorBallTarget(iL2GameDataClient.turnCoordinatorBall);
                 break;
+
+            case (AirplaneData.Country.US):
+
+                turnCoordinatorNeedleTarget = USDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.turnCoordinatorNeedle);
+
+                //ball indicator                
+                turnCoordinatorBallTarget = USDials.TurnCoordinatorBallTarget(iL2GameDataClient.turnCoordinatorBall, 1f);
+
+                break;
+
         }
        
     }
 
-    void TurnAndBankTargets()
+    //turn and bank is dial with artifical horizon and slip together
+    void TurnAndBankTargets(AirplaneData.Country country)
     {
-        //plane pos
-        turnAndBankPlanePositionTarget = RussianDials.TurnAndBankPlanePosition(iL2GameDataClient.pitch, turnAndBankPitchMultiplier);
+        //plane or background pos
 
-        //plane rotation
-        turnAndBankPlaneRotationTarget = RussianDials.TurnAndBankPlaneRotation(iL2GameDataClient.roll, iL2GameDataClient.pitch, turnAndBankRollMultiplier, turnAndBankPitchMultiplier);
+        switch (country)
+        {
+            case (AirplaneData.Country.RU): 
+                //note russian is quite different - more like an artifical horizon with plane moving instead of horizon
+                turnAndBankPlanePositionTarget = RussianDials.TurnAndBankPlanePosition(iL2GameDataClient.pitch, turnAndBankPitchMultiplier);
 
-        //number track
-        turnAndBankNumberTrackTarget = RussianDials.TurnAndBankNumberTrackPosition(iL2GameDataClient.pitch, turnAndBankPitchMultiplier);
+                //plane or background rotation
+                turnAndBankPlaneRotationTarget = RussianDials.TurnAndBankPlaneRotation(iL2GameDataClient.roll, iL2GameDataClient.pitch, turnAndBankRollMultiplier, turnAndBankRollMultiplier);
+
+                turnAndBankNumberTrackTarget = RussianDials.TurnAndBankNumberTrackPosition(iL2GameDataClient.pitch, turnAndBankPitchMultiplier);
+
+                break;
+
+
+            case (AirplaneData.Country.GER):
+                turnAndBankPlanePositionTarget = GermanDials.TurnAndBankPlanePosition(iL2GameDataClient.pitch, turnAndBankPitchMultiplier);
+
+                turnAndBankPlaneRotationTarget = GermanDials.TurnAndBankPlaneRotation(iL2GameDataClient.roll, iL2GameDataClient.pitch, turnAndBankRollMultiplier, turnAndBankRollMultiplier);
+
+                turnAndBankBallTarget = GermanDials.TurnAndBankBallTarget(iL2GameDataClient.turnCoordinatorBall, turnAndBankBallMultiplier);
+
+                break;
+
+                //moved to artifical horizon
+         //   case (AirplaneData.Country.US):
+           //     turnAndBankPlanePositionTarget = USDials.TurnAndBankPlanePosition(iL2GameDataClient.pitch, turnAndBankPitchMultiplier);
+
+             //   turnAndBankPlaneRotationTarget = USDials.TurnAndBankPlaneRotation(iL2GameDataClient.roll, iL2GameDataClient.pitch, turnAndBankRollMultiplier, turnAndBankRollMultiplier);
+
+               // break;
+        }
+
+
+        
     }
 
     void HeadingTarget(AirplaneData.Country country)
@@ -446,6 +600,14 @@ public class RotateNeedle : MonoBehaviour
 
             case (AirplaneData.Country.GER):
                 headingIndicatorTarget = GermanDials.HeadingIndicatorPosition(iL2GameDataClient.heading);
+                break;
+
+            case (AirplaneData.Country.US):
+                headingIndicatorTarget = USDials.HeadingIndicatorPosition(iL2GameDataClient.heading);
+                break;
+
+            case (AirplaneData.Country.UK):
+                headingIndicatorTarget = UKDials.HeadingIndicatorPosition(iL2GameDataClient.heading);
                 break;
         }
         
@@ -677,7 +839,13 @@ public class RotateNeedle : MonoBehaviour
         TurnCoordinatorRotation();
 
         VSIRotation();
+
+        RepeaterCompassRotation();
+
+        ArtificialHorizonTranslations();
     }
+
+
 
     void AirspeedNeedleRotation()
     {
@@ -686,8 +854,6 @@ public class RotateNeedle : MonoBehaviour
 
         airspeedNeedle.transform.rotation = Quaternion.Slerp(airspeedStart, airspeedTarget, (Time.time - lastMessageReceivedTime)/(Time.fixedDeltaTime)); //fixed delta is step time for receiving messages - works well
         
-      
-
     }
 
     void AltitudeNeedleRotations()
@@ -773,27 +939,68 @@ public class RotateNeedle : MonoBehaviour
 
         //add half a compass (centred on South) but we rotate over North
         Vector3 mod = (trackLength * Vector3.right);
-        headingIndicatorActive.transform.localPosition = Vector3.Lerp(headingIndicatorActive.transform.localPosition , headingIndicatorTarget + mod, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
-        
-
+        //headingIndicatorActive.transform.localPosition = Vector3.Lerp(headingIndicatorActive.transform.localPosition , headingIndicatorTarget + mod, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
+        headingIndicatorActive.transform.localPosition = Vector3.Lerp(headingIndicatorActive.transform.localPosition, headingIndicatorTarget + mod, Time.fixedDeltaTime);
     }
 
     void TurnAndBankRotations()
     {
-        //for x rotatin we need to rotate around global x after z rot
-        turnAndBankPlane.transform.rotation = Quaternion.Slerp(turnAndBankPlane.transform.rotation, turnAndBankPlaneRotationTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
+        if (turnAndBankPlane != null)
+            {
+        
+            //for x rotatin we need to rotate around global x after z rot
+            turnAndBankPlane.transform.rotation = Quaternion.Slerp(turnAndBankPlane.transform.rotation, turnAndBankPlaneRotationTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
 
-        //move plane up and down
-        turnAndBankPlane.transform.localPosition = Vector3.Lerp(turnAndBankPlane.transform.localPosition, turnAndBankPlanePositionTarget, (Time.time - lastMessageReceivedTime)/Time.fixedDeltaTime);
+            //move plane up and down
+            turnAndBankPlane.transform.localPosition = Vector3.Lerp(turnAndBankPlane.transform.localPosition, turnAndBankPlanePositionTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
+
+        }
 
         //number track - only russian
         if(turnAndBankNumberTrack != null)
             turnAndBankNumberTrack.transform.localPosition = Vector3.Lerp(turnAndBankNumberTrack.transform.localPosition, turnAndBankNumberTrackTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
+
+        //ball -- only german
+        if(turnAndBankBall != null)
+        {
+            turnAndBankBall.transform.rotation = Quaternion.Slerp(turnAndBankBall.transform.rotation, turnAndBankBallTarget, Time.fixedDeltaTime);
+        }
     }
 
     void VSIRotation()
     {
         vsiNeedle.transform.rotation = Quaternion.Slerp(vsiNeedle.transform.rotation, vsiNeedleTarget,  Time.fixedDeltaTime);
     }
-   
+
+    void RepeaterCompassRotation()
+    {
+        if(repeaterCompassFace != null)
+            repeaterCompassFace.transform.rotation = Quaternion.Slerp(repeaterCompassFace.transform.rotation, repeaterCompassTarget, Time.fixedDeltaTime);
+    }
+
+    void ArtificialHorizonTranslations()
+    {
+        if (artificialHorizonBackground == null)
+            return;
+
+        ArtificialHorizonPosition();
+        ArtificialHorizonRotation();
+        ArtificialHorizonChevronRotation();
+    }
+
+    void ArtificialHorizonRotation()
+    {
+        artificialHorizonBackground.transform.rotation = Quaternion.Slerp(artificialHorizonBackground.transform.rotation, artificialHorizonRotationTarget, Time.fixedDeltaTime);
+    }
+
+    void ArtificialHorizonPosition()
+    {
+        artificialHorizonBackground.transform.localPosition = Vector3.Lerp(artificialHorizonBackground.transform.localPosition, artificialHorizonPositionTarget, Time.fixedDeltaTime);
+    }
+
+    void ArtificialHorizonChevronRotation()
+    {
+        if(artificialHorizonChevron != null)
+            artificialHorizonChevron.transform.rotation = Quaternion.Slerp(artificialHorizonChevron.transform.rotation, artificialHorizonChevronTarget, Time.fixedDeltaTime);
+    }
 }

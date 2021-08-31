@@ -8,6 +8,8 @@ using UnityEngine;
 
 public class AirplaneData : MonoBehaviour
 {
+
+    public float scalar0;public float scalar1;
     public bool useTestPlane;
     public GameObject testPlane;
 

@@ -28,6 +28,14 @@ public class PlaneCountryFromName : AirplaneData
                 country = Country.GER;
                 break;
 
+            case "US A":
+                country = Country.US;
+                break;
+
+            case "UK A":
+                country = Country.UK;
+                break;
+
             //main
 
             //RSE.RSE::CCockpitInstruments::simulation+1117 - 48 8D 15 DA7A1200     - lea rdx,[RSE.RSE::CAeroplane_LaGG_3_ser_29::`vftable'+210] { ("LaGG-3 ser.29") }
