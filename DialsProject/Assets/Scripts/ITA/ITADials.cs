@@ -55,4 +55,68 @@ public class ITADials : MonoBehaviour
 
         return mmhgTarget;
     }
+
+
+    public static Vector3 HeadingIndicatorPosition(float heading)
+    {
+        //check for Nan
+        if (float.IsNaN(heading) || heading == 0f)
+            return Vector3.zero;
+
+        //range is 0 to pi*2
+        float ratio = Mathf.PI * heading;
+        //adjust for arbitry render camera position
+        ratio *= 11.945f;
+        Vector3 pos = Vector3.right * ratio;
+
+
+        return pos;
+    }
+
+    public static Quaternion ArtificialHorizonRotation(float roll, float rollMultiplier)
+    {
+        //rotate horizon        
+
+        Quaternion t = Quaternion.Euler(0, 0, roll * rollMultiplier);
+
+        //for x rotation we need to rotate around global x after z rot
+        //t *= Quaternion.Euler(climb * climbMultiplier, 0, 0);
+
+        return t;
+    }
+
+
+    public static Vector3 ArtificialHorizonPosition(float climb, float pitchMultiplier)
+    {
+        //move plane up and down
+        return new Vector3(0, climb * pitchMultiplier, 0);
+    }
+
+    public static Quaternion TurnCoordinatorNeedleTarget(float v)
+    {
+        Quaternion target = Quaternion.Euler(0, 0, v);
+
+        return target;
+    }
+
+    public static Quaternion TurnCoordinatorBallTarget(float ball, float multiplier)
+    {
+        //indicates whether the aircraft is in coordinated flight, showing the slip or skid of the turn. 
+        Quaternion target = Quaternion.Euler(0, 0, ball * multiplier);
+
+        return target;
+    }
+
+    public static Quaternion VerticalSpeedTarget(float verticalSpeed)
+    {
+        //vsi
+        //start at 9 o'clock
+        verticalSpeed = 90f - verticalSpeed * 7.2f;
+        //clamp to "10"
+        verticalSpeed = Mathf.Clamp(verticalSpeed, -90, 270);
+
+        Quaternion target = Quaternion.Euler(0, 0, verticalSpeed);
+
+        return target;
+    }
 }

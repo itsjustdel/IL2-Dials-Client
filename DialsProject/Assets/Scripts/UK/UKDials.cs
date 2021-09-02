@@ -77,11 +77,81 @@ public class UKDials : MonoBehaviour
         //range is 0 to pi*2
         float ratio = Mathf.PI * heading;
         //adjust for arbitry render camera position
-        ratio *= 16.66f;
+        ratio *= 16.39f;
 
         Vector3 pos = Vector3.right * ratio;
 
 
         return pos;
     }
+
+    public static Quaternion ArtificialHorizonRotation(float roll, float rollMultiplier)
+    {
+        //rotate horizon        
+
+        Quaternion t = Quaternion.Euler(0, 0, roll * rollMultiplier);
+
+        //for x rotation we need to rotate around global x after z rot
+        //t *= Quaternion.Euler(climb * climbMultiplier, 0, 0);
+
+        return t;
+    }
+
+
+    public static Vector3 ArtificialHorizonPosition(float climb, float pitchMultiplier)
+    {
+        //move plane up and down
+        return new Vector3(0, climb * pitchMultiplier, 0);
+    }
+
+    public static Quaternion ArtificialHorizonChevronRotation(float roll, float rollMultiplier)
+    {
+        //rotate horizon        
+
+        Quaternion t = Quaternion.Euler(0, 0, roll * rollMultiplier);
+
+        //for x rotation we need to rotate around global x after z rot
+        //t *= Quaternion.Euler(climb * climbMultiplier, 0, 0);
+
+        return t;
+    }
+
+    public static Quaternion TurnCoordinatorNeedleTarget(float v)
+    {
+        Quaternion target = Quaternion.identity;
+        if (Mathf.Abs( v ) < 10f)
+             target = Quaternion.Euler(0, 0, v * 2f);
+        //geared
+        else if (Mathf.Abs( v )>= 10f )
+            //take in to account if v is positive or negative
+            if(v > 0)
+                target = Quaternion.Euler(0, 0,  10 + ((v)));
+            else
+                 target = Quaternion.Euler(0, 0, -10 + ((v)));
+        return target;
+    }
+
+    public static Quaternion TurnCoordinatorBallTarget(float ball, float multiplier)
+    {
+        //indicates whether the aircraft is in coordinated flight, showing the slip or skid of the turn. 
+        Quaternion target = Quaternion.Euler(0, 0, ball * multiplier + 180f);
+
+        return target;
+    }
+
+
+    public static Quaternion VerticalSpeedTarget(float verticalSpeed)
+    {
+        //vsi
+        //start at 9 o'clock
+        verticalSpeed = 90f - verticalSpeed * 36f;
+        //clamp to "10"
+        verticalSpeed = Mathf.Clamp(verticalSpeed, -90, 270);
+
+        Quaternion target = Quaternion.Euler(0, 0, verticalSpeed);
+
+        return target;
+    }
+
+
 }

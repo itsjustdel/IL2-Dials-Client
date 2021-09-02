@@ -67,19 +67,6 @@ public class GermanDials : MonoBehaviour
         return pos;
     }
 
-    public static Quaternion VerticalSpeedTarget15(float verticalSpeed)
-    {
-        //vsi
-        //start at 9 o'clock
-        verticalSpeed = 90f - verticalSpeed * 9f;
-        //clamp to "10"
-        verticalSpeed = Mathf.Clamp(verticalSpeed, -90, 270);
-
-        Quaternion target = Quaternion.Euler(0, 0, verticalSpeed);
-
-        return target;
-    }
-
 
     //turn and bank
     public static Quaternion TurnAndBankPlaneRotation(float roll, float climb, float rollMultiplier, float climbMultiplier)
@@ -136,6 +123,21 @@ public class GermanDials : MonoBehaviour
 
         return target;
     }
+
+
+    public static Quaternion VerticalSpeedTarget15(float verticalSpeed)
+    {
+        //vsi
+        //start at 9 o'clock
+        verticalSpeed = 90f - verticalSpeed * 9f;
+        //clamp to "10"
+        verticalSpeed = Mathf.Clamp(verticalSpeed, -90, 270);
+
+        Quaternion target = Quaternion.Euler(0, 0, verticalSpeed);
+
+        return target;
+    }
+
 
     public static Quaternion VerticalSpeedTarget30(float verticalSpeed)
     {

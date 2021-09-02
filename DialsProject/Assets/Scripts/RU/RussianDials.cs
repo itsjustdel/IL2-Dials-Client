@@ -74,7 +74,7 @@ public class RussianDials : MonoBehaviour
         return pos;
     }
 
-    public static Quaternion TurnAndBankPlaneRotation(float roll,float climb, float rollMultiplier, float climbMultiplier)
+    public static Quaternion TurnAndBankPlaneRotation(float roll,float climb, float rollMultiplier, float xRotation)
     {        
         //rotate plane
         //clamp roll , in game cockpit stop rotation at just under 90 degrees - this happens when roll rate is ~1.7
@@ -84,7 +84,7 @@ public class RussianDials : MonoBehaviour
         Quaternion r = t;
 
         //for x rotatin we need to rotate around global x after z rot
-        r *= Quaternion.Euler(climb * climbMultiplier, 0, 0);
+        r *= Quaternion.Euler(climb * xRotation, 0, 0);
 
         return r;
     }

@@ -368,7 +368,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.2}
+  m_AnchoredPosition: {x: 0, y: -0.2}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2427977040161398984
@@ -1302,12 +1302,17 @@ MonoBehaviour:
   turnCoordinatorNeedle: {fileID: 2427977041743375265}
   turnCoordinatorBall: {fileID: 2427977041704891153}
   vsiNeedle: {fileID: 2427977040669854849}
+  repeaterCompassFace: {fileID: 0}
+  artificialHorizonPlane: {fileID: 0}
+  artificialHorizonBackground: {fileID: 0}
+  artificialHorizonChevron: {fileID: 0}
+  turnAndBankBall: {fileID: 0}
   lastMessageReceivedTime: 0
   previousMessageTime: 0
   maxSpin: 1
   turnAndBankPitchMultiplier: 8.56
   turnAndBankRollMultiplier: 50
-  turnAndBankPlaneXMultiplier: 5
+  turnAndBankPlaneXMultiplier: 7
   quaternionsAirspeed:
   - {x: 0, y: 0, z: 0, w: 1}
   - {x: 0, y: 0, z: 0, w: 1}
@@ -1319,6 +1324,15 @@ MonoBehaviour:
   turnCoordinaterDamp: 0.1
   turnCoordinaterRollMod: 0.1
   turnCoordinaterMultiplier: 200
+  artificialHorizonBomberRollMod: 1
+  artificialHorizonBomberMultiplier: 20
+  turnAndBankBallMultiplier: 1
+  animationCurveVSI:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &2427977040658897802
 GameObject:
   m_ObjectHideFlags: 0
@@ -3822,7 +3836,7 @@ RectTransform:
   m_GameObject: {fileID: 2427977041820621469}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 6.70929, y: 6.70929, z: 6.70929}
+  m_LocalScale: {x: 6.3806176, y: 6.3806176, z: 6.3806176}
   m_Children:
   - {fileID: 2427977040161398990}
   m_Father: {fileID: 2427977040570253204}
