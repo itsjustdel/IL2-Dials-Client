@@ -41,7 +41,7 @@ public class UKDials : MonoBehaviour
     {
         //convert to feet
         altitude *= 3.2808f;
-        Quaternion altitudeSmallTarget = Quaternion.Euler(0, 0, -(altitude * .0018f));
+        Quaternion altitudeSmallTarget = Quaternion.Euler(0, 0, -(altitude * .0036f));
 
         return altitudeSmallTarget;
 
@@ -77,7 +77,7 @@ public class UKDials : MonoBehaviour
         //range is 0 to pi*2
         float ratio = Mathf.PI * heading;
         //adjust for arbitry render camera position
-        ratio *= 16.39f;
+        ratio *= 20.315f;
 
         Vector3 pos = Vector3.right * ratio;
 
@@ -116,8 +116,10 @@ public class UKDials : MonoBehaviour
         return t;
     }
 
-    public static Quaternion TurnCoordinatorNeedleTarget(float v)
+    public static Quaternion TurnCoordinatorNeedleTarget(float v, float mod)
     {
+      
+
         Quaternion target = Quaternion.identity;
         if (Mathf.Abs( v ) < 10f)
              target = Quaternion.Euler(0, 0, v * 2f);

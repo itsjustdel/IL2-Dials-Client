@@ -95,10 +95,10 @@ public class RotateNeedle : MonoBehaviour
 
     // -- modifiers
     public float trackLength = -15.64f;
-    public float turnCoordinatorNeedleVelocity = 0;
-    public float turnCoordinaterSpring = 1f;
-    public float turnCoordinaterDamp = 1f;
-    public float turnCoordinaterRollMod = 1f;
+   
+    
+    public float turnCoordinaterNeedleMod = 1f;
+    public float turnCoordinaterBallMod = 1f;
     public float turnCoordinaterMultiplier = 20f;
     public float artificialHorizonBomberRollMod = 1f;
     public float artificialHorizonBomberMultiplier = 20f;
@@ -535,7 +535,7 @@ public class RotateNeedle : MonoBehaviour
             case (AirplaneData.Country.RU):
                 //RU
                 //pendulum needle
-                turnCoordinatorNeedleTarget = RussianDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.turnCoordinatorNeedle);
+                turnCoordinatorNeedleTarget = RussianDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.turnCoordinatorNeedle, turnCoordinaterNeedleMod);
 
                 //ball indicator                
                 turnCoordinatorBallTarget = RussianDials.TurnCoordinatorBallTarget(iL2GameDataClient.turnCoordinatorBall);
@@ -547,7 +547,7 @@ public class RotateNeedle : MonoBehaviour
                 turnCoordinatorNeedleTarget = GermanDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.turnCoordinatorNeedle);
 
                 //ball indicator                
-                turnCoordinatorBallTarget = GermanDials.TurnCoordinatorBallTarget(iL2GameDataClient.turnCoordinatorBall);
+                turnCoordinatorBallTarget = GermanDials.TurnCoordinatorBallTarget(iL2GameDataClient.turnCoordinatorBall,turnCoordinaterBallMod);
                 break;
 
             case (AirplaneData.Country.US):
@@ -559,10 +559,10 @@ public class RotateNeedle : MonoBehaviour
 
 
             case (AirplaneData.Country.UK):
-                turnCoordinatorNeedleTarget = UKDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.turnCoordinatorNeedle);
+                turnCoordinatorNeedleTarget = UKDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.turnCoordinatorNeedle, turnCoordinaterNeedleMod);
 
                 //second needle        
-                turnCoordinatorBallTarget = UKDials.TurnCoordinatorBallTarget(iL2GameDataClient.turnCoordinatorBall, turnCoordinaterRollMod);
+                turnCoordinatorBallTarget = UKDials.TurnCoordinatorBallTarget(iL2GameDataClient.turnCoordinatorBall, turnCoordinaterBallMod);
                 break;
 
 
@@ -570,7 +570,7 @@ public class RotateNeedle : MonoBehaviour
                 turnCoordinatorNeedleTarget = ITADials.TurnCoordinatorNeedleTarget(iL2GameDataClient.turnCoordinatorNeedle);
 
                 //second needle        
-                turnCoordinatorBallTarget = ITADials.TurnCoordinatorBallTarget(iL2GameDataClient.turnCoordinatorBall, turnCoordinaterRollMod);
+                turnCoordinatorBallTarget = ITADials.TurnCoordinatorBallTarget(iL2GameDataClient.turnCoordinatorBall, turnCoordinaterBallMod);
                 break;
 
         }

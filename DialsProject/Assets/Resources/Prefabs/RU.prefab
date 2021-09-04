@@ -1299,7 +1299,7 @@ MonoBehaviour:
   turnAndBankPlane: {fileID: 2427977040161398991}
   headingIndicator: {fileID: 2427977040462608216}
   headingIndicatorChild0: {fileID: 2427977041608850873}
-  turnCoordinatorNeedle: {fileID: 2427977041743375265}
+  turnCoordinatorNeedle: {fileID: 547716610044357435}
   turnCoordinatorBall: {fileID: 2427977041704891153}
   vsiNeedle: {fileID: 2427977040669854849}
   repeaterCompassFace: {fileID: 0}
@@ -1319,10 +1319,8 @@ MonoBehaviour:
   airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
   trackLength: -97.74
-  turnCoordinatorNeedleVelocity: 0
-  turnCoordinaterSpring: 10
-  turnCoordinaterDamp: 0.1
-  turnCoordinaterRollMod: 0.1
+  turnCoordinaterNeedleMod: 1
+  turnCoordinaterBallMod: 1
   turnCoordinaterMultiplier: 200
   artificialHorizonBomberRollMod: 1
   artificialHorizonBomberMultiplier: 20

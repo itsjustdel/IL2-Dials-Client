@@ -120,14 +120,14 @@ RectTransform:
   m_GameObject: {fileID: 304648305350633320}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 1, z: 1}
+  m_LocalScale: {x: 4.9592, y: 1.2398, z: 1.2398}
   m_Children: []
   m_Father: {fileID: 7828212804233146620}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 5.5}
+  m_AnchoredPosition: {x: 0, y: 4.7}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6614788684966777994
@@ -345,14 +345,14 @@ RectTransform:
   m_GameObject: {fileID: 412740934145166031}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 1, z: 1}
+  m_LocalScale: {x: 4.9592, y: 1.2398, z: 1.2398}
   m_Children: []
   m_Father: {fileID: 3594297004532523014}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 5.5000076}
+  m_AnchoredPosition: {x: 0, y: 4.7000055}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6217146862730563385
@@ -2162,14 +2162,14 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0, w: 1}
   airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
-  trackLength: -161.75
+  trackLength: -200.5
   turnCoordinatorNeedleVelocity: 0
   turnCoordinaterSpring: 10
   turnCoordinaterDamp: 0.1
-  turnCoordinaterRollMod: 10
+  turnCoordinaterRollMod: -800
   turnCoordinaterMultiplier: 200
-  artificialHorizonBomberRollMod: 1
-  artificialHorizonBomberMultiplier: 20
+  artificialHorizonBomberRollMod: 60
+  artificialHorizonBomberMultiplier: -170
   turnAndBankBallMultiplier: 1
   animationCurveVSI:
     serializedVersion: 2

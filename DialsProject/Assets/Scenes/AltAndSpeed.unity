@@ -4895,7 +4895,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &840226279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5648,10 +5648,8 @@ MonoBehaviour:
   airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
   trackLength: -15.64
-  turnCoordinatorNeedleVelocity: 0
-  turnCoordinaterSpring: 1
-  turnCoordinaterDamp: 1
-  turnCoordinaterRollMod: 1
+  turnCoordinaterNeedleMod: 1
+  turnCoordinaterBallMod: 1
   turnCoordinaterMultiplier: 20
   artificialHorizonBomberRollMod: 1
   artificialHorizonBomberMultiplier: 20
@@ -7449,10 +7447,8 @@ MonoBehaviour:
   airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
   trackLength: -15.64
-  turnCoordinatorNeedleVelocity: 0
-  turnCoordinaterSpring: 1
-  turnCoordinaterDamp: 1
-  turnCoordinaterRollMod: 1
+  turnCoordinaterNeedleMod: 1
+  turnCoordinaterBallMod: 1
   turnCoordinaterMultiplier: 20
   artificialHorizonBomberRollMod: 1
   artificialHorizonBomberMultiplier: 20
@@ -7623,10 +7619,8 @@ MonoBehaviour:
   airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
   trackLength: -15.64
-  turnCoordinatorNeedleVelocity: 0
-  turnCoordinaterSpring: 1
-  turnCoordinaterDamp: 1
-  turnCoordinaterRollMod: 1
+  turnCoordinaterNeedleMod: 1
+  turnCoordinaterBallMod: 1
   turnCoordinaterMultiplier: 20
   artificialHorizonBomberRollMod: 1
   artificialHorizonBomberMultiplier: 20
@@ -8273,7 +8267,7 @@ MonoBehaviour:
   testPlane: {fileID: 0}
   clientVersion: 0.3
   serverVersion: 0
-  planeType: GER A
+  planeType: 
   planeTypePrevious: 
   country: 5
   altitude: 0
@@ -9580,10 +9574,8 @@ MonoBehaviour:
   airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
   trackLength: -15.64
-  turnCoordinatorNeedleVelocity: 0
-  turnCoordinaterSpring: 10
-  turnCoordinaterDamp: 0.1
-  turnCoordinaterRollMod: 0.1
+  turnCoordinaterNeedleMod: 1
+  turnCoordinaterBallMod: 1
   turnCoordinaterMultiplier: 200
   artificialHorizonBomberRollMod: 1
   artificialHorizonBomberMultiplier: 20
@@ -11887,10 +11879,8 @@ MonoBehaviour:
   airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
   trackLength: -15.64
-  turnCoordinatorNeedleVelocity: 0
-  turnCoordinaterSpring: 1
-  turnCoordinaterDamp: 1
-  turnCoordinaterRollMod: 1
+  turnCoordinaterNeedleMod: 1
+  turnCoordinaterBallMod: 1
   turnCoordinaterMultiplier: 20
   artificialHorizonBomberRollMod: 1
   artificialHorizonBomberMultiplier: 20

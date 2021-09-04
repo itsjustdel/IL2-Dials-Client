@@ -87,7 +87,7 @@ public class GermanDials : MonoBehaviour
     public static Vector3 TurnAndBankPlanePosition(float climb, float pitchMultiplier)
     {
         //move plane up and down
-        return new Vector3(0, climb * pitchMultiplier, 0);
+        return new Vector3(0, climb * pitchMultiplier - 3.61f, 0);
     }
 
     //turn co
@@ -99,10 +99,10 @@ public class GermanDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion TurnCoordinatorBallTarget(float ball)
+    public static Quaternion TurnCoordinatorBallTarget(float ball,float mod)
     {
         //indicates whether the aircraft is in coordinated flight, showing the slip or skid of the turn. 
-        Quaternion target = Quaternion.Euler(0, 0, ball );
+        Quaternion target = Quaternion.Euler(0, 0, ball * mod);
 
         return target;
     }

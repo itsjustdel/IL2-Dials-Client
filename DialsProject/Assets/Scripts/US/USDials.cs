@@ -84,7 +84,7 @@ public class USDials : MonoBehaviour
         //range is 0 to pi*2
         float ratio = Mathf.PI * heading;
         //adjust for arbitry render camera position
-        ratio *= 17.85f;
+        ratio *= 18.15f;
 
         Vector3 pos = Vector3.right * ratio;
 

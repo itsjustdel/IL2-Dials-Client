@@ -102,9 +102,9 @@ public class RussianDials : MonoBehaviour
     }
 
 
-    public static Quaternion TurnCoordinatorNeedleTarget(float v)
+    public static Quaternion TurnCoordinatorNeedleTarget(float v, float mod)
     {
-        Quaternion target = Quaternion.Euler(0, 0, v);
+        Quaternion target = Quaternion.Euler(0, 0, v * mod);
 
         return target;
     }
