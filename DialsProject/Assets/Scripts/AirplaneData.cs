@@ -91,10 +91,12 @@ public class AirplaneData : MonoBehaviour
     {
         if (planeType != planeTypePrevious)
         {
-            country = PlaneCountryFromName.AsignCountryFromName(planeType);
+            PlaneDataFromName.PlaneAttributes planeAttributes = PlaneDataFromName.AttributesFromName(planeType);
+            //set as its own public variable to expose in hierarchy (in unity) for testing ease
+            country = planeAttributes.country;
+
 
             //empty the trays
-
 
             //enable and disable dials depending on plane/country
             SwitchDialsFromCountry();
