@@ -29,6 +29,9 @@ public class AirplaneData : MonoBehaviour
     public string planeType;
     public string planeTypePrevious;
     public Country country = Country.RU;
+    //stores name avaialble dials
+    private PlaneDataFromName.PlaneAttributes planeAttributes;
+
     public float altitude;
     public float mmhg;
     public float airspeed;
@@ -52,6 +55,7 @@ public class AirplaneData : MonoBehaviour
     public BuildControl buildControl;
     public MenuHandler menuHandler;
     public TCPClient tcpClient;
+    
     //fixed update is enough for checking status
     void FixedUpdate()
     {
@@ -91,7 +95,8 @@ public class AirplaneData : MonoBehaviour
     {
         if (planeType != planeTypePrevious)
         {
-            PlaneDataFromName.PlaneAttributes planeAttributes = PlaneDataFromName.AttributesFromName(planeType);
+            //construct country and available dials in to planeAttributes class/struct
+            planeAttributes = PlaneDataFromName.AttributesFromName(planeType);
             //set as its own public variable to expose in hierarchy (in unity) for testing ease
             country = planeAttributes.country;
 
@@ -125,19 +130,9 @@ public class AirplaneData : MonoBehaviour
     {
         //change dials depending on what value we received from the networking component
 
-
-        //switch all off
-        /*
-        for (int i = 0; i < countryDials.Count; i++)
-        {
-            countryDials[i].SetActive(false);
-        }
-        */
-
-        //remove dials board prefab
+        //remove any existing dials board prefab in scene
         if(countryDialBoard != null)
             Destroy(countryDialBoard);
-
 
         GameObject canvas = GameObject.FindGameObjectWithTag("Canvas");
 
@@ -181,9 +176,49 @@ public class AirplaneData : MonoBehaviour
             tcpClient.rN.buildControl = GameObject.Find("Build Chooser").GetComponent<BuildControl>();
             tcpClient.rN.iL2GameDataClient = GameObject.Find("Player Plane").GetComponent<AirplaneData>();
             tcpClient.rN.tcpClient = GameObject.Find("Networking").GetComponent<TCPClient>();
+
+            //switch off any unavailable dials to this plane
+            DeactivateUnavailableDials(countryDialBoard, planeType, planeAttributes);
         }
         
     }   
+
+    //static to refactor to new class - to do
+    static void DeactivateUnavailableDials(GameObject countryDialBoard, string planeName, PlaneDataFromName.PlaneAttributes planeAttributes)
+    {
+        //check what dials are available and switch off as needed
+        //altimeter and speedo are always available
+        
+        if(!planeAttributes.headingIndicator)
+            if(countryDialBoard.transform.Find("Heading Indicator")!= null)
+            countryDialBoard.transform.Find("Heading Indicator").gameObject.SetActive(false);
+
+        if (!planeAttributes.turnAndBank)
+            if(countryDialBoard.transform.Find("Turn And Bank")!= null)
+                countryDialBoard.transform.Find("Turn And Bank").gameObject.SetActive(false);
+
+        if (!planeAttributes.turnCoordinator)
+            if(countryDialBoard.transform.Find("Turn Coordinator").gameObject != null)
+                countryDialBoard.transform.Find("Turn Coordinator").gameObject.SetActive(false);
+
+        if (!planeAttributes.vsiSmall)
+            if(countryDialBoard.transform.Find("VSI Small")!= null)
+                countryDialBoard.transform.Find("VSI Small").gameObject.SetActive(false);
+
+        if (!planeAttributes.vsiLarge)
+            if(countryDialBoard.transform.Find("VSI Large")!= null)
+                countryDialBoard.transform.Find("VSI Large").gameObject.SetActive(false);
+
+        if (!planeAttributes.repeaterCompass)
+            if(countryDialBoard.transform.Find("Repeater Compass")!= null)
+                countryDialBoard.transform.Find("Repeater Compass").gameObject.SetActive(false);
+
+        if (!planeAttributes.artificialHorizon)
+            if(countryDialBoard.transform.Find("Artificial Horizon") != null)
+                countryDialBoard.transform.Find("Artificial Horizon").gameObject.SetActive(false);
+
+
+    }
 
     public static int CountryIndexFromEnum(AirplaneData.Country country)
     {
@@ -213,6 +248,7 @@ public class AirplaneData : MonoBehaviour
 
     void LoadLayout()
     {
+        //Save layout is in MenuHandler
 
         //first of all empty trays
         ButtonManager.EmptyTrays(menuHandler);
@@ -223,7 +259,7 @@ public class AirplaneData : MonoBehaviour
         {
 
             //set dials to default
-
+            DefaultLayouts(countryDialBoard);
             return;
         }
 
@@ -282,6 +318,61 @@ public class AirplaneData : MonoBehaviour
         
        
 
+
+    }
+
+    static void DefaultLayouts(GameObject dialsPrefab)
+    {
+        //organise dials depending on how many are available
+        //we need to know the total amount of active dials before we continue
+        List<GameObject> activeDials = new List<GameObject>();
+        for (int i = 0; i < dialsPrefab.transform.childCount; i++)
+            if (dialsPrefab.transform.GetChild(i).gameObject.activeSelf)
+                activeDials.Add(dialsPrefab.transform.GetChild(i).gameObject);
+
+        
+
+        //split in to two rows, if odd number, put more on the bottom
+        for (int i = 0; i < activeDials.Count; i++)
+        {
+
+            if (i < activeDials.Count / 2)
+            {                
+                //0 0
+                //150 1
+                //300 2
+
+                //get starting point by chopping off float(if odd)
+                int x = ((int)(activeDials.Count / 2)-1) * -150;
+                //then add step
+                int step = 300 * (i);
+                x += step;
+
+                int y = 150;
+
+                activeDials[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
+            }
+            else
+            {
+
+                //HERE bottom row skewed
+
+                //starting point //from whats left 
+                int diff = activeDials.Count - (activeDials.Count/2 +1);
+                int x = ((int)(diff) );
+                x*= -150;
+                //then add step
+                int step = 300 * (i - diff );
+                x += step;
+
+                int y = -150;
+
+                activeDials[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
+            }
+            
+        }
+
+        
 
     }
 

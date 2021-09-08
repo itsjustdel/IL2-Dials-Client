@@ -403,7 +403,7 @@ GameObject:
   m_Component:
   - component: {fileID: 926423342235908008}
   m_Layer: 5
-  m_Name: VSI
+  m_Name: VSI Large
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2163,10 +2163,8 @@ MonoBehaviour:
   airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
   trackLength: -200.5
-  turnCoordinatorNeedleVelocity: 0
-  turnCoordinaterSpring: 10
-  turnCoordinaterDamp: 0.1
-  turnCoordinaterRollMod: -800
+  turnCoordinaterNeedleMod: 1
+  turnCoordinaterBallMod: 1
   turnCoordinaterMultiplier: 200
   artificialHorizonBomberRollMod: 60
   artificialHorizonBomberMultiplier: -170
@@ -3965,7 +3963,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7992653178758776018}
   m_Layer: 5
-  m_Name: Artifical Horizon
+  m_Name: Artificial Horizon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -740,10 +740,8 @@ MonoBehaviour:
   airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
   trackLength: -118
-  turnCoordinatorNeedleVelocity: 0
-  turnCoordinaterSpring: 10
-  turnCoordinaterDamp: 0.1
-  turnCoordinaterRollMod: 0.1
+  turnCoordinaterNeedleMod: 1
+  turnCoordinaterBallMod: 1
   turnCoordinaterMultiplier: 200
   artificialHorizonBomberRollMod: 1
   artificialHorizonBomberMultiplier: 20
@@ -2578,7 +2576,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4155672839131282273}
   m_Layer: 5
-  m_Name: VSI
+  m_Name: VSI Large
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

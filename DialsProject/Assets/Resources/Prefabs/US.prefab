@@ -1140,7 +1140,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2274393300892106279}
   m_Layer: 5
-  m_Name: VSI
+  m_Name: VSI Large
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2128,10 +2128,8 @@ MonoBehaviour:
   airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
   trackLength: -179.12
-  turnCoordinatorNeedleVelocity: 0
-  turnCoordinaterSpring: 10
-  turnCoordinaterDamp: 0.1
-  turnCoordinaterRollMod: 0.1
+  turnCoordinaterNeedleMod: 1
+  turnCoordinaterBallMod: 1
   turnCoordinaterMultiplier: 200
   artificialHorizonBomberRollMod: 1
   artificialHorizonBomberMultiplier: 20
@@ -3671,7 +3669,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7996816165616768825}
   m_Layer: 5
-  m_Name: Compass
+  m_Name: Repeater Compass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
