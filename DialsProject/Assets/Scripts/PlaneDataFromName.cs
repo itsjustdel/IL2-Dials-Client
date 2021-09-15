@@ -44,21 +44,54 @@ public class PlaneDataFromName : AirplaneData
             //tests
             case "RU A":
                 planeAttributes.country = Country.RU;
-                
+                planeAttributes.speedometer = true;
+                planeAttributes.altimeter = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.headingIndicator = true;
+                planeAttributes.vsiLarge = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.artificialHorizon = true;
+                planeAttributes.turnAndBank = true;
+
                 break;
 
                 
             case "RU B":
                 planeAttributes.country = Country.RU;
-                
+                planeAttributes.speedometer = true;
+                planeAttributes.altimeter = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.headingIndicator = true;
+                planeAttributes.vsiLarge = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.artificialHorizon = true;
+                planeAttributes.turnAndBank = true;
+
                 break;
 
             case "GER A":
                 planeAttributes.country = Country.GER;
+                planeAttributes.speedometer = true;
+                planeAttributes.altimeter = true;
+               // planeAttributes.turnCoordinator = true;
+               /// planeAttributes.headingIndicator = true;
+               // planeAttributes.vsiSmall = true;
+               // planeAttributes.repeaterCompass = true;
+                //planeAttributes.artificialHorizon = true;
+                //planeAttributes.turnAndBank = true;
                 break;
 
             case "GER B":
                 planeAttributes.country = Country.GER;
+                planeAttributes.speedometer = true;
+                planeAttributes.altimeter = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.headingIndicator = true;
+                
+                planeAttributes.vsiLarge = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.artificialHorizon = true;
+                planeAttributes.turnAndBank = true;
                 break;
 
             case "US A":
@@ -69,7 +102,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.headingIndicator = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.repeaterCompass = true;
-               // planeAttributes.artificialHorizon = true;
+              //  planeAttributes.artificialHorizon = true;
                 break;
 
             case "UK A":
@@ -79,10 +112,20 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.vsiLarge = true;
+                planeAttributes.turnAndBank = true;
+                planeAttributes.artificialHorizon = true;
                 break;
 
             case "ITA A":
                 planeAttributes.country = Country.ITA;
+                planeAttributes.speedometer = true;
+                planeAttributes.altimeter = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.headingIndicator = true;
+                planeAttributes.vsiLarge = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.artificialHorizon = true;
+                planeAttributes.turnAndBank = true;
                 break;
 
             //main

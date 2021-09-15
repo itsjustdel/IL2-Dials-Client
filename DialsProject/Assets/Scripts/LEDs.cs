@@ -13,6 +13,10 @@ public class LEDs : MonoBehaviour
     public GameObject redOff;
     public List<GameObject> fadeIns;
     public float fadeInSpeed = 1f;
+
+    public bool startFadeIn = false;
+    public bool fadeInProgress = false;
+    public bool fadeInComplete = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +35,9 @@ public class LEDs : MonoBehaviour
     {
         //intro screen, turn off all LEDS
 
+
+
+        /*
         if (!menuHandler.fadeLeds)
         {
             greenOn.SetActive(false);
@@ -39,31 +46,53 @@ public class LEDs : MonoBehaviour
             redOff.SetActive(false);
             return;
         }
-        else
+        */
+
+        //else
+        //  fadeInProgress = true;
+
+
+        if (startFadeIn)
         {
+            fadeInProgress = true;
+            startFadeIn = false;
+        }
+
+        if(fadeInProgress)       
+        {
+            
+
             //fade button and leds in            
             for (int i = 0; i < fadeIns.Count; i++)
             {
                 Color color = fadeIns[i].GetComponent<Image>().color;
                 color.a += fadeInSpeed * Time.deltaTime;
                 fadeIns[i].GetComponent<Image>().color = color;
-            }
 
-            //show lights
-            if (tcpClient.connected)
-            {
-                greenOn.SetActive(true);
-                greenOff.SetActive(false);
-                redOn.SetActive(false);
-                redOff.SetActive(true);
+                
+                //turn flag off
+                if (color.a > 1)
+                {
+                    fadeInProgress = false;
+                    fadeInComplete = true;
+                }
             }
-            else
-            {
-                greenOn.SetActive(false);
-                greenOff.SetActive(true);
-                redOn.SetActive(true);
-                redOff.SetActive(false);
-            }
+        }
+
+        //show lights
+        if (tcpClient.connected)
+        {
+            greenOn.SetActive(true);
+            greenOff.SetActive(false);
+            redOn.SetActive(false);
+            redOff.SetActive(true);
+        }
+        else
+        {
+            greenOn.SetActive(false);
+            greenOff.SetActive(true);
+            redOn.SetActive(true);
+            redOff.SetActive(false);
         }
     }
 }

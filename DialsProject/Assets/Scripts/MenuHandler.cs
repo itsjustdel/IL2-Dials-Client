@@ -44,6 +44,7 @@ public class MenuHandler : MonoBehaviour
 
 
     //opening animations
+  
     public float slideSpeed = 1f;    
     private Color missionStartColor;
     private Color titleColor;
@@ -52,13 +53,17 @@ public class MenuHandler : MonoBehaviour
     public float titleFadeSpeed = 1f;
     public float startLEDFade = 1f;
     public float startMissionGlowFade = 1f;
-    public bool fadeLeds = false;
+    //public bool fadeLeds = false;
     public System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-
-
+    //idle timer
+    public float idleTimer;
+    private Vector3 mousePos;
     public  bool layoutOpen;
+
+
     public void Start()
     {
+        mousePos = Input.mousePosition;
 
         if (deletePrefs)
         {
@@ -83,7 +88,7 @@ public class MenuHandler : MonoBehaviour
         if (dontShowAgain)
         {
             welcomePanel.SetActive(false);
-            //enable blur
+            //disable blur
             blurPanel.SetActive(false);
             //buttons and leds
             ledParent.SetActive(true);
@@ -91,8 +96,9 @@ public class MenuHandler : MonoBehaviour
         }
         else
         {
+            //hello!
             welcomePanel.SetActive(true);
-            //straight to unblurred dials
+            
             blurPanel.SetActive(true);
             //buttons and leds
             ledParent.SetActive(false);
@@ -162,7 +168,52 @@ public class MenuHandler : MonoBehaviour
 
             MissionStartGlow();
         }
+
+        IdleTimer();
     }
+
+    void IdleTimer()
+    {
+        //TODO  if android add click?
+
+        //return if intro animation not finished
+        if (!GetComponent<LEDs>().fadeInComplete)
+            return;
+
+        //if mouse is not moving, update timer
+        if (Input.mousePosition == mousePos)
+            idleTimer += Time.deltaTime;
+        //else, reset timer
+        else
+            idleTimer = 0f;
+
+
+        //click can reset timer too - works on android?
+        if (Input.GetButtonDown("Fire1"))
+        {
+            idleTimer = 0f;
+        }    
+
+        //update for next frame
+        mousePos = Input.mousePosition;
+
+        if(idleTimer == 0f)
+        {
+            Color color = menuButton.GetComponent<Image>().color;
+            color.a = 1f;// * Time.deltaTime;
+            menuButton.GetComponent<Image>().color = color;
+        }
+
+        if(idleTimer > 10f)
+        {
+            int fadeInSpeed = 10;
+            Color color = menuButton.GetComponent<Image>().color;
+            color.a -= 1f * Time.deltaTime;
+            menuButton.GetComponent<Image>().color = color;
+        }
+
+    }
+
     void RemoveTitle()
     {
         title.SetActive(false);
@@ -193,7 +244,9 @@ public class MenuHandler : MonoBehaviour
 
             if(stopwatch.ElapsedMilliseconds > startLEDFade*1000)
             {
-                fadeLeds = true;
+                //led script on same object
+                if(!GetComponent<LEDs>().fadeInProgress && !GetComponent<LEDs>().fadeInComplete)                   
+                    GetComponent<LEDs>().startFadeIn = true;
             }
         }
 
@@ -246,45 +299,49 @@ public class MenuHandler : MonoBehaviour
 
     public void MenuButtonClicked()
     {
-        
 
-        
-
-        //
-        if(connectionPanel.activeInHierarchy)
+        if(!connectionPanel.activeInHierarchy && !menuPanel.activeInHierarchy)
         {
-            Debug.Log("Menu Clicked 0");
-            connectionPanel.SetActive(false);
-            menuPanel.SetActive(false);
+            //everything closed, open menu panel
+            Debug.Log("Opening menu from closed");
+            menuPanel.SetActive(true);
+            blurPanel.SetActive(true);
         }
 
-        else if (!menuPanel.activeInHierarchy)
-        {
-            if(layoutOpen)
-            {
-                //leaving layout screen
-                Debug.Log("Closing menu from layout");
-                
 
-                //point to accept layout function - we can close this page from menu button or accept button
-                AcceptLayoutClick();
-
-                
-                
-            }
-            else
-            {
-                Debug.Log("Opening menu from closed");
-                menuPanel.SetActive(true);
-            }
-
-
-        }
         else if (menuPanel.activeInHierarchy)
         {
-            Debug.Log("Menu Clicked 2");
+            //close from main main menu 
+            Debug.Log("Closing from main menu");
             menuPanel.SetActive(false);
+            //
+            blurPanel.SetActive(false);
+            layoutWarningMessage.SetActive(false);
+
         }
+        
+        else if(connectionPanel.activeInHierarchy)
+        {
+            //close from connection panel
+            Debug.Log("Closing from connection panel");
+            connectionPanel.SetActive(false);
+            menuPanel.SetActive(false);
+            blurPanel.SetActive(false);
+            layoutWarningMessage.SetActive(false);
+        }        
+
+        else if (layoutOpen)
+        {
+            //leaving layout screen
+            Debug.Log("Closing menu from layout");                
+
+            //point to accept layout function - we can close this page from menu button or accept button
+            AcceptLayoutClick();
+
+            layoutWarningMessage.SetActive(false);
+
+        }
+       
             
         //blurPanel.SetActive(!blurPanel.activeSelf);
         //menuPanel.SetActive(!menuPanel.activeSelf);
@@ -435,7 +492,7 @@ public class MenuHandler : MonoBehaviour
         menuPanel.SetActive(false);
 
         //hide Leds and Menu button
-       // menuButton.SetActive(false);
+        menuButton.SetActive(false);
         ledParent.SetActive(false);
 
         
@@ -534,7 +591,7 @@ public class MenuHandler : MonoBehaviour
             UIhandlers[i].GetComponent<Image>().enabled = false;
         }
     }
-        
+
 
     public void SaveLayout()
     {
@@ -547,79 +604,96 @@ public class MenuHandler : MonoBehaviour
 
         //use location of current Rotate Needle script to get dials positions
 
-        //look for dial on dashboard - original parent
-        try
-        {
-            GameObject speedometer = airplaneData.countryDialBoard.transform.Find("Speedometer").gameObject;
+        //look for dial on dashboard - original parent        
 
+        if (airplaneData.countryDialBoard.transform.Find("Speedometer") != null)
+        {
             layout.speedoPos = airplaneData.countryDialBoard.transform.Find("Speedometer").GetComponent<RectTransform>().anchoredPosition;
             layout.speedoScale = airplaneData.countryDialBoard.transform.Find("Speedometer").GetComponent<RectTransform>().localScale.x;
         }
-        catch
-        {
+        else
             //if we don't find it, look for it in the tray
             DialInTray("Speedometer", layout);
-        }
-        
-        try
+
+
+        if (airplaneData.countryDialBoard.transform.Find("Altimeter") != null)
         {
-            GameObject altimeter = airplaneData.countryDialBoard.transform.Find("Altimeter").gameObject;
             layout.altPos = airplaneData.countryDialBoard.transform.Find("Altimeter").GetComponent<RectTransform>().anchoredPosition;
             layout.altScale = airplaneData.countryDialBoard.transform.Find("Altimeter").GetComponent<RectTransform>().localScale.x;
         }
-        catch
-        {
+        else
             DialInTray("Altimeter", layout);
-        }
 
-        try
+
+        if (airplaneData.countryDialBoard.transform.Find("Heading Indicator") != null)
         {
-            GameObject headingIndicator = airplaneData.countryDialBoard.transform.Find("Heading Indicator").gameObject;
             layout.headingPos = airplaneData.countryDialBoard.transform.Find("Heading Indicator").GetComponent<RectTransform>().anchoredPosition;
             layout.headingScale = airplaneData.countryDialBoard.transform.Find("Heading Indicator").GetComponent<RectTransform>().localScale.x;
         }
-        catch
-        {
+        else
             DialInTray("Heading Indicator", layout);
-        }
 
-        try
-        {
-            GameObject turnAndBank = airplaneData.countryDialBoard.transform.Find("Turn And Bank").gameObject;
+
+        if (airplaneData.countryDialBoard.transform.Find("Turn And Bank") != null)
+        { 
             layout.turnAndBankPos = airplaneData.countryDialBoard.transform.Find("Turn And Bank").GetComponent<RectTransform>().anchoredPosition;
-            layout.turnAndBankScale = airplaneData.countryDialBoard.transform.Find("Turn And Bank").GetComponent<RectTransform>().localScale.x;
+        layout.turnAndBankScale = airplaneData.countryDialBoard.transform.Find("Turn And Bank").GetComponent<RectTransform>().localScale.x;
         }
-        catch
-        {
+        else        
             DialInTray("Turn And Bank", layout);
-        }
 
-        try
+
+        if (airplaneData.countryDialBoard.transform.Find("Turn Coordinator") != null)
         {
-            GameObject turnIndicator = airplaneData.countryDialBoard.transform.Find("Turn Coordinator").gameObject;
             layout.turnIndicatorPos = airplaneData.countryDialBoard.transform.Find("Turn Coordinator").GetComponent<RectTransform>().anchoredPosition;
             layout.turnIndicatorScale = airplaneData.countryDialBoard.transform.Find("Turn Coordinator").GetComponent<RectTransform>().localScale.x;
         }
-        catch 
-        {
+        else
             DialInTray("Turn Coordinator", layout);
-        }
 
-        try
+
+        if (airplaneData.countryDialBoard.transform.Find("VSI Small") != null)
         {
-            GameObject vsi = airplaneData.countryDialBoard.transform.Find("VSI").gameObject;
-            layout.vsiPos = airplaneData.countryDialBoard.transform.Find("VSI").GetComponent<RectTransform>().anchoredPosition;
-            layout.vsiScale = airplaneData.countryDialBoard.transform.Find("VSI").GetComponent<RectTransform>().localScale.x;
-
+            layout.vsiSmallPos = airplaneData.countryDialBoard.transform.Find("VSI Small").GetComponent<RectTransform>().anchoredPosition;
+            layout.vsiSmallScale = airplaneData.countryDialBoard.transform.Find("VSI Small").GetComponent<RectTransform>().localScale.x;
         }
-        catch
+
+        else
+            DialInTray("VSI Small", layout);
+
+
+        if (airplaneData.countryDialBoard.transform.Find("VSI Large") != null)
         {
-            DialInTray("VSI", layout);            
+            layout.vsiLargePos = airplaneData.countryDialBoard.transform.Find("VSI Large").GetComponent<RectTransform>().anchoredPosition;
+            layout.vsiLargeScale = airplaneData.countryDialBoard.transform.Find("VSI Large").GetComponent<RectTransform>().localScale.x;
         }
-               
+        else
+            DialInTray("VSI Large", layout);
 
+
+        if (airplaneData.countryDialBoard.transform.Find("Artificial Horizon") != null)
+        {
+            layout.artificialHorizonPos = airplaneData.countryDialBoard.transform.Find("Artificial Horizon").GetComponent<RectTransform>().anchoredPosition;
+            layout.artificialHorizonScale = airplaneData.countryDialBoard.transform.Find("Artificial Horizon").GetComponent<RectTransform>().localScale.x;
+        }
+        else
+            DialInTray("Artificial Horizon", layout);
+
+
+        if (airplaneData.countryDialBoard.transform.Find("Repeater Compass") != null)
+        {
+            layout.repeaterCompassPos = airplaneData.countryDialBoard.transform.Find("Repeater Compass").GetComponent<RectTransform>().anchoredPosition;
+            layout.repeaterCompassScale = airplaneData.countryDialBoard.transform.Find("Repeater Compass").GetComponent<RectTransform>().localScale.x;
+        }
+        else
+            DialInTray("Repeater Compass", layout);
+
+
+
+        //pack with json utility
         string jsonFoo = JsonUtility.ToJson(layout);
 
+        //save packed string to player preferences (unity)
         PlayerPrefs.SetString(airplaneData.planeType, jsonFoo);
         PlayerPrefs.Save();
 
@@ -664,10 +738,28 @@ public class MenuHandler : MonoBehaviour
                     layout.turnIndicatorInTray = true;
                     break;
 
-                case "VSI":
-                    layout.vsiPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
-                    layout.vsiScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
-                    layout.vsiInTray = true;
+                case "VSI Small":
+                    layout.vsiSmallPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
+                    layout.vsiSmallScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
+                    layout.vsiSmallInTray = true;
+                    break;
+
+                case "VSI Large":
+                    layout.vsiLargePos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
+                    layout.vsiLargeScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
+                    layout.vsiLargeInTray = true;
+                    break;
+
+                case "Artificial Horizon":
+                    layout.artificialHorizonPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
+                    layout.artificialHorizonScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
+                    layout.artificialHorizonInTray = true;
+                    break;
+
+                case "Repeater Compass":
+                    layout.repeaterCompassPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
+                    layout.repeaterCompassScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
+                    layout.repeaterCompassInTray = true;
                     break;
             }
         }
