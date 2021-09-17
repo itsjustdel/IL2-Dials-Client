@@ -122,8 +122,8 @@ public class RussianDials : MonoBehaviour
     {
         //vsi
         //start at 9 o'clock
-        verticalSpeed = 90f - verticalSpeed * 18f;
-        //clamp to "10"
+        verticalSpeed = 90f - verticalSpeed * 6f;
+        //clamp to "30"
         verticalSpeed = Mathf.Clamp(verticalSpeed, -90, 270);
 
         Quaternion target = Quaternion.Euler(0, 0,  verticalSpeed);

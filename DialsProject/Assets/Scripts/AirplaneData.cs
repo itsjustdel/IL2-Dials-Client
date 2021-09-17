@@ -30,7 +30,8 @@ public class AirplaneData : MonoBehaviour
     public string planeTypePrevious;
     public Country country = Country.RU;
     //stores name avaialble dials
-    private PlaneDataFromName.PlaneAttributes planeAttributes;
+    
+    public PlaneDataFromName.PlaneAttributes planeAttributes;
 
     public float altitude;
     public float mmhg;
@@ -106,6 +107,9 @@ public class AirplaneData : MonoBehaviour
             //enable and disable dials depending on plane/country
             SwitchDialsFromCountry();
 
+            //select correct needle form many vsi prefacbs depeding on plane
+            SetVSINeedle();
+
             if (countryDialBoard != null)
                 LoadLayout();
             else
@@ -125,6 +129,24 @@ public class AirplaneData : MonoBehaviour
 
         planeTypePrevious = planeType;
     }
+
+    void SetVSINeedle()
+    {
+        //there are more than one vsi but never more than one at the same time, so we share prefabs
+        //let the rotate needle script know which needle to turn
+        if (planeAttributes.vsiLarge)
+        {
+            countryDialBoard.GetComponent<RotateNeedle>().vsiNeedle = countryDialBoard.transform.Find("VSI Large").Find("Needle").gameObject;
+        }
+
+        else if (planeAttributes.vsiSmall)
+        {
+            countryDialBoard.GetComponent<RotateNeedle>().vsiNeedle = countryDialBoard.transform.Find("VSI Small").Find("Needle").gameObject;
+        }
+
+    }
+        
+
 
     void SwitchDialsFromCountry()
     {

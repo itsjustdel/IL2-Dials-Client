@@ -125,7 +125,7 @@ public class GermanDials : MonoBehaviour
     }
 
 
-    public static Quaternion VerticalSpeedTarget15(float verticalSpeed)
+    public static Quaternion VerticalSpeedTargetSmall(float verticalSpeed)
     {
         //vsi
         //start at 9 o'clock
@@ -139,7 +139,7 @@ public class GermanDials : MonoBehaviour
     }
 
 
-    public static Quaternion VerticalSpeedTarget30(float verticalSpeed)
+    public static Quaternion VerticalSpeedTargetLarge(float verticalSpeed)
     {
         //vsi
 

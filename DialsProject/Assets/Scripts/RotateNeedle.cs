@@ -499,19 +499,25 @@ public class RotateNeedle : MonoBehaviour
         switch (country)
         {
             case (AirplaneData.Country.RU):
-                vsiNeedleTarget = RussianDials.VerticalSpeedTarget(iL2GameDataClient.verticalSpeed);
+                if(iL2GameDataClient.planeAttributes.vsiLarge)
+                    vsiNeedleTarget = RussianDials.VerticalSpeedTargetLarge(iL2GameDataClient.verticalSpeed);
+                
+                else if(iL2GameDataClient.planeAttributes.vsiSmall)
+                    vsiNeedleTarget = RussianDials.VerticalSpeedTargetSmall(iL2GameDataClient.verticalSpeed);
+
                 break;
 
             case (AirplaneData.Country.GER):
-                //choose plane (need to asign correct needle)
-                bool vsi15 = false;
 
-                if(vsi15)
-                    vsiNeedleTarget = GermanDials.VerticalSpeedTarget15(iL2GameDataClient.verticalSpeed);
-                else
-                    vsiNeedleTarget = GermanDials.VerticalSpeedTarget30(iL2GameDataClient.verticalSpeed);
+                if (iL2GameDataClient.planeAttributes.vsiLarge)
+                    vsiNeedleTarget = GermanDials.VerticalSpeedTargetLarge(iL2GameDataClient.verticalSpeed);
+                
+                else if (iL2GameDataClient.planeAttributes.vsiSmall)
+                    vsiNeedleTarget = GermanDials.VerticalSpeedTargetSmall(iL2GameDataClient.verticalSpeed);
+
                 break;
 
+            //these countries only have one vsi (so far)
             case (AirplaneData.Country.US):
                 vsiNeedleTarget = USDials.VerticalSpeedTarget(iL2GameDataClient.verticalSpeed,animationCurveVSI);
                 break;

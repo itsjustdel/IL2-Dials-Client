@@ -5,7 +5,7 @@ using UnityEngine;
 //extending from airplanedata for Country enum
 public class PlaneDataFromName : AirplaneData
 {
-
+    
     public class PlaneAttributes
     {
         public Country country;
@@ -19,20 +19,7 @@ public class PlaneDataFromName : AirplaneData
         public bool vsiLarge; //larger scale than standard
         public bool repeaterCompass;
 
-        //constructor to set all true
-        public PlaneAttributes()
-        {
-            
-            speedometer = false;
-            altimeter = false;
-            headingIndicator = false;
-            turnAndBank = false;
-            artificialHorizon = false;
-            turnCoordinator = false;
-            vsiSmall = false;
-            vsiLarge = false;
-            repeaterCompass = false;
-        }
+      
     }
 
     public static PlaneAttributes AttributesFromName(string name)
@@ -48,7 +35,8 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
-                planeAttributes.vsiLarge = true;
+                planeAttributes.vsiSmall = true;
+                //planeAttributes.vsiLarge = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.turnAndBank = true;
@@ -75,8 +63,9 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                // planeAttributes.turnCoordinator = true;
                /// planeAttributes.headingIndicator = true;
-               // planeAttributes.vsiSmall = true;
-               // planeAttributes.repeaterCompass = true;
+                planeAttributes.vsiSmall = true;
+                //planeAttributes.vsiLarge = true;
+                // planeAttributes.repeaterCompass = true;
                 //planeAttributes.artificialHorizon = true;
                 //planeAttributes.turnAndBank = true;
                 break;
