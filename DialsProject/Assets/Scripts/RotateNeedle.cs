@@ -22,7 +22,7 @@ public class RotateNeedle : MonoBehaviour
     public GameObject turnAndBankPlane;
     public GameObject headingIndicator;
     public GameObject headingIndicatorChild0;
-    private GameObject headingIndicatorActive;
+    public GameObject headingIndicatorActive;
     public GameObject turnCoordinatorNeedle;
     public GameObject turnCoordinatorBall;
     public GameObject vsiNeedle;
@@ -204,7 +204,7 @@ public class RotateNeedle : MonoBehaviour
 
         //best place to put this?
         //flicks between different 2d number tracks to create smooth wrap around
-        HeadingIndicatorSwitch();
+        //HeadingIndicatorSwitch();
 
         NeedleRotations();
 
@@ -228,7 +228,7 @@ public class RotateNeedle : MonoBehaviour
         AddRotationToList(quaternionsMmhg, mmhgDial.transform.rotation);
 
         //heading
-        AddPositionToList(positionsHeading, headingIndicator.transform.localPosition);
+        AddPositionToList(positionsHeading, headingIndicatorActive.transform.localPosition );
 
         //turn and bank
         if (turnAndBankPlane != null)
@@ -351,60 +351,80 @@ public class RotateNeedle : MonoBehaviour
 
         //heading
         Vector3 differenceV3 = positionsHeading[0] - positionsHeading[1];
-        headingIndicatorStart = headingIndicator.transform.localPosition;
-        headingIndicatorTarget = headingIndicator.transform.localPosition + differenceV3;
+        headingIndicatorStart = headingIndicatorActive.transform.localPosition;
+        headingIndicatorTarget = headingIndicatorActive.transform.localPosition + differenceV3;
 
         //turn and bank
         // - plane position
-        differenceV3 = positionsTurnAndBankPlane[0] - positionsTurnAndBankPlane[1];
-        turnAndBankPlanePositionStart = turnAndBankPlane.transform.localPosition;
-        turnAndBankPlanePositionTarget = turnAndBankPlane.transform.localPosition + differenceV3;
-        // - plane rotation
-        difference = quaternionsTurnAndBankPlane[0].z - quaternionsTurnAndBankPlane[1].z;
-        turnAndBankPlaneRotationStart = turnAndBankPlane.transform.rotation;
-        turnAndBankPlaneRotationTarget = turnAndBankPlane.transform.rotation * Quaternion.Euler(0, 0, difference);
-        // - number track
-        differenceV3 = positionsTurnAndBankNumberTrack[0] - positionsTurnAndBankNumberTrack[1];
-        turnAndBankNumberTrackStart = turnAndBankNumberTrack.transform.localPosition;
-        turnAndBankNumberTrackTarget = turnAndBankNumberTrack.transform.localPosition + differenceV3;
+        if (turnAndBankPlane != null)
+        {
+            differenceV3 = positionsTurnAndBankPlane[0] - positionsTurnAndBankPlane[1];
+            turnAndBankPlanePositionStart = turnAndBankPlane.transform.localPosition;
+            turnAndBankPlanePositionTarget = turnAndBankPlane.transform.localPosition + differenceV3;
+            // - plane rotation
+            difference = quaternionsTurnAndBankPlane[0].z - quaternionsTurnAndBankPlane[1].z;
+            turnAndBankPlaneRotationStart = turnAndBankPlane.transform.rotation;
+            turnAndBankPlaneRotationTarget = turnAndBankPlane.transform.rotation * Quaternion.Euler(0, 0, difference);
+            // - number track
+            if (turnAndBankNumberTrack != null)
+            {
+                differenceV3 = positionsTurnAndBankNumberTrack[0] - positionsTurnAndBankNumberTrack[1];
+                turnAndBankNumberTrackStart = turnAndBankNumberTrack.transform.localPosition;
+                turnAndBankNumberTrackTarget = turnAndBankNumberTrack.transform.localPosition + differenceV3;
+            }
+        }
+        if (turnCoordinatorNeedle != null)
+        {
+            //turn co-ordinator
+            // - needle
+            difference = quaternionsTurnCoordinatorNeedle[0].z - quaternionsTurnCoordinatorNeedle[1].z;
+            turnCoordinatorNeedleStart = turnCoordinatorNeedle.transform.rotation;
+            turnCoordinatorNeedleTarget = turnCoordinatorNeedle.transform.rotation * Quaternion.Euler(0, 0, difference);
+            // - ball
+            difference = quaternionsTurnCoordinatorBall[0].z - quaternionsTurnCoordinatorBall[1].z;
+            turnCoordinatorBallStart = turnCoordinatorBall.transform.rotation;
+            turnCoordinatorBallTarget = turnCoordinatorBall.transform.rotation * Quaternion.Euler(0, 0, difference);
+        }
 
-        //turn co-ordinator
-        // - needle
-        difference = quaternionsTurnCoordinatorNeedle[0].z - quaternionsTurnCoordinatorNeedle[1].z;
-        turnCoordinatorNeedleStart = turnCoordinatorNeedle.transform.rotation;
-        turnCoordinatorNeedleTarget = turnCoordinatorNeedle.transform.rotation * Quaternion.Euler(0, 0, difference);
-        // - ball
-        difference = quaternionsTurnCoordinatorBall[0].z - quaternionsTurnCoordinatorBall[1].z;
-        turnCoordinatorBallStart = turnCoordinatorBall.transform.rotation;
-        turnCoordinatorBallTarget = turnCoordinatorBall.transform.rotation * Quaternion.Euler(0, 0, difference);
-
-        //VSI
-        difference = quaternionsVSI[0].z - quaternionsVSI[1].z;        
-        vsiNeedleTarget = turnCoordinatorBall.transform.rotation * Quaternion.Euler(0, 0, difference);
+        if (vsiNeedle != null)
+        {
+            //VSI
+            difference = quaternionsVSI[0].z - quaternionsVSI[1].z;
+            vsiNeedleTarget = vsiNeedle.transform.rotation * Quaternion.Euler(0, 0, difference);
+        }
 
         //ger repeater
         if (iL2GameDataClient.country == AirplaneData.Country.GER)
         {
             difference = quaternionsRepeaterCompass[0].z - quaternionsRepeaterCompass[1].z;
-            vsiNeedleTarget = repeaterCompassFace.transform.rotation * Quaternion.Euler(0, 0, difference);
+            repeaterCompassTarget = repeaterCompassFace.transform.rotation * Quaternion.Euler(0, 0, difference);
         }
 
         //artificial horizon
         //background        
         //rotation
-        difference = quaternionsArtificialHorizon[0].z - quaternionsArtificialHorizon[1].z;
-        artificialHorizonRotationTarget = artificialHorizonChevron.transform.rotation * Quaternion.Euler(0, 0, difference);
-        //pos
-        differenceV3 = positionsArtificialHorizonBomber[0] - positionsArtificialHorizonBomber[1];
-        artificialHorizonPositionTarget = artificialHorizonChevron.transform.localPosition + differenceV3;
+        if (artificialHorizonBackground != null)
+        {
+            difference = quaternionsArtificialHorizon[0].z - quaternionsArtificialHorizon[1].z;
+            artificialHorizonRotationTarget = artificialHorizonBackground.transform.rotation * Quaternion.Euler(0, 0, difference);
+            //pos
+            differenceV3 = positionsArtificialHorizonBomber[0] - positionsArtificialHorizonBomber[1];
+            artificialHorizonPositionTarget = artificialHorizonBackground.transform.localPosition + differenceV3;
+
+        }
+
         //chevron
-        difference = quaternionsArtificialHorizonChevron[0].z - quaternionsArtificialHorizonChevron[1].z;
-        artificialHorizonChevronTarget = artificialHorizonChevron.transform.rotation * Quaternion.Euler(0, 0, difference);
-
-        //ger turn and bank ball         --only do these if not null? -- opto
-        difference = quaternionsTurnAndBankBall[0].z - quaternionsTurnAndBankBall[1].z;
-        turnAndBankBallTarget = turnAndBankBall.transform.rotation * Quaternion.Euler(0, 0, difference);
-
+        if (artificialHorizonChevron != null)
+        {
+            difference = quaternionsArtificialHorizonChevron[0].z - quaternionsArtificialHorizonChevron[1].z;
+            artificialHorizonChevronTarget = artificialHorizonChevron.transform.rotation * Quaternion.Euler(0, 0, difference);
+        }
+        if (turnAndBankBall != null)
+        {
+            //ger turn and bank ball
+            difference = quaternionsTurnAndBankBall[0].z - quaternionsTurnAndBankBall[1].z;
+            turnAndBankBallTarget = turnAndBankBall.transform.rotation * Quaternion.Euler(0, 0, difference);
+        }
      
     }
 
@@ -624,22 +644,28 @@ public class RotateNeedle : MonoBehaviour
         {
             case (AirplaneData.Country.RU):
                 headingIndicatorTarget = RussianDials.HeadingIndicatorPosition(iL2GameDataClient.heading);
+                //add track scale
+                headingIndicatorTarget += (trackLength * Vector3.right);
                 break;
 
             case (AirplaneData.Country.GER):
                 headingIndicatorTarget = GermanDials.HeadingIndicatorPosition(iL2GameDataClient.heading);
+                headingIndicatorTarget += (trackLength * Vector3.right);
                 break;
 
             case (AirplaneData.Country.US):
                 headingIndicatorTarget = USDials.HeadingIndicatorPosition(iL2GameDataClient.heading);
+                headingIndicatorTarget += (trackLength * Vector3.right);
                 break;
 
             case (AirplaneData.Country.UK):
-                headingIndicatorTarget = UKDials.HeadingIndicatorPosition(iL2GameDataClient.heading);
+                headingIndicatorTarget = UKDials.HeadingIndicatorPosition(iL2GameDataClient.heading, iL2GameDataClient.scalar0);
+               // headingIndicatorTarget += (trackLength * Vector3.right);
                 break;
 
             case (AirplaneData.Country.ITA):
                 headingIndicatorTarget = ITADials.HeadingIndicatorPosition(iL2GameDataClient.heading);
+                headingIndicatorTarget += (trackLength * Vector3.right);
                 break;
         }
         

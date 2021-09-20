@@ -622,7 +622,7 @@ RectTransform:
   m_GameObject: {fileID: 2427977040161398991}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.1923766, y: 1.1923766, z: 1.1923766}
+  m_LocalScale: {x: 1.3930537, y: 1.3930537, z: 1.3930537}
   m_Children: []
   m_Father: {fileID: 2427977041820621468}
   m_RootOrder: 0
@@ -922,14 +922,14 @@ RectTransform:
   m_GameObject: {fileID: 2427977040462608216}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 6, y: 1.5, z: 3}
   m_Children: []
   m_Father: {fileID: 2427977040033392806}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -2}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2427977040462608213
@@ -1230,7 +1230,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df859cd46969e04499e3f199a4fd6c07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testValues: 1
+  testValues: 0
   buildControl: {fileID: 0}
   iL2GameDataClient: {fileID: 0}
   tcpClient: {fileID: 0}
@@ -1254,7 +1254,7 @@ MonoBehaviour:
   lastMessageReceivedTime: 0
   previousMessageTime: 0
   maxSpin: 1
-  turnAndBankPitchMultiplier: 8.56
+  turnAndBankPitchMultiplier: 84
   turnAndBankRollMultiplier: 50
   turnAndBankPlaneXMultiplier: 7
   quaternionsAirspeed:
@@ -1262,7 +1262,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0, w: 1}
   airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
-  trackLength: -97.74
+  trackLength: -108.44
   turnCoordinaterNeedleMod: 1
   turnCoordinaterBallMod: 1
   turnCoordinaterMultiplier: 200
@@ -1633,7 +1633,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2427977041608850872
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1643,14 +1643,14 @@ RectTransform:
   m_GameObject: {fileID: 2427977041608850873}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 6, y: 1.5, z: 3}
   m_Children: []
   m_Father: {fileID: 2427977040033392806}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -2}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2427977041608850874

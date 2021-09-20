@@ -119,7 +119,7 @@ public class GermanDials : MonoBehaviour
     public static Quaternion RepeaterCompassTarget(float heading)
     {
         //number passed is rotation in rads, pi = 180 degrees
-        Quaternion target = Quaternion.Euler(0, 0, heading * Mathf.Rad2Deg);
+        Quaternion target = Quaternion.Euler(0, 0, -heading * Mathf.Rad2Deg);
 
         return target;
     }

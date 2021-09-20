@@ -66,7 +66,7 @@ public class RussianDials : MonoBehaviour
         //range is 0 to pi*2
         float ratio = Mathf.PI * heading;
         //adjust for arbitry render camera position
-        ratio *= 9.895f;
+        ratio *= 10.99f;
 
         Vector3 pos = Vector3.right*ratio;
         
