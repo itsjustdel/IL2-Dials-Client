@@ -44,16 +44,21 @@ public class GermanDials : MonoBehaviour
         
 
         //mmhg to mbar
-        float input = mmhg * 1.333f;        
-        Quaternion mmhgTarget = Quaternion.Euler(0, 0, ((1013.25f -input) *1f) - 3.25f); // 0 is 1013.25 mbar //0 degrees // bit more confusing because of asset rotation
+        float input = mmhg * 1.333f;
+        float z = ((1013.25f - input) * 1f) - 3.25f;
+        Quaternion mmhgTarget = Quaternion.identity;
+
+        //catch bad value
+          if(!float.IsNaN(z))
+            mmhgTarget = Quaternion.Euler(0, 0, z); // 0 is 1013.25 mbar //0 degrees // bit more confusing because of asset rotation
 
         return mmhgTarget;
     }
 
-    public static Vector3 HeadingIndicatorPosition(float heading)
+    public static Vector3 HeadingIndicatorPosition(float heading, float trackLength)
     {
         //check for Nan
-        if (float.IsNaN(heading) || heading == 0f)
+        if (float.IsNaN(heading))
             return Vector3.zero;
 
         //range is 0 to pi*2
@@ -62,7 +67,7 @@ public class GermanDials : MonoBehaviour
         ratio *= 11.93f;
 
         Vector3 pos = Vector3.right * ratio;
-
+        pos += Vector3.right * trackLength;
 
         return pos;
     }

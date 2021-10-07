@@ -67,28 +67,36 @@ public class USDials : MonoBehaviour
         //mmhg to inches of mercury
         float input = mmhg / 25.4f;
         float seaLevelInHg = 760f / 25.4f;//29.921
-        Quaternion mmhgTarget = Quaternion.Euler(0, 0, ((input - seaLevelInHg) * 148f) + 3f); //zero degree at 29.921 (slight ofset in asset rotation 3 degrees on blender)
+        float z = ((input - seaLevelInHg) * 148f) + 3f; //zero degree at 29.921 (slight ofset in asset rotation 3 degrees on blender)
 
-       // Debug.Log("inches of merc = " + input);
+        // Debug.Log("inches of merc = " + input);
+
+
+        Quaternion mmhgTarget = Quaternion.identity;
+
+        //catch bad value
+        if (!float.IsNaN(z))
+            mmhgTarget = Quaternion.Euler(0, 0, z); 
 
         return mmhgTarget;
     }
 
-    public static Vector3 HeadingIndicatorPosition(float heading)
+    public static Vector3 HeadingIndicatorPosition(float heading,float trackLength)
     {
      
         //check for Nan
-        if (float.IsNaN(heading) || heading == 0f)
+        if (float.IsNaN(heading))
             return Vector3.zero;
 
         //range is 0 to pi*2
         float ratio = Mathf.PI * heading;
         //adjust for arbitry render camera position
-        ratio *= 18.15f;
+        ratio *= 18.235f;
 
         Vector3 pos = Vector3.right * ratio;
+        pos += Vector3.right * trackLength;
 
-
+       
 
         return pos;
     }

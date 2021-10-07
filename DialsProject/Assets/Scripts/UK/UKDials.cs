@@ -60,18 +60,24 @@ public class UKDials : MonoBehaviour
     public static Quaternion MmhgTarget(float mmhg)
     {
         float input = mmhg * 1.333f;
-        Quaternion mmhgTarget = Quaternion.Euler(0, 0, ((1013.25f - input) * 1f) - 13.25f);
+
+        float z = ((1013.25f - input) * 1f) - 13.25f;
 
 
+        Quaternion mmhgTarget = Quaternion.identity;
+
+        //catch bad value
+        if (!float.IsNaN(z))
+            mmhgTarget = Quaternion.Euler(0, 0, z);
 
 
         return mmhgTarget;
     }
 
-    public static Vector3 HeadingIndicatorPosition(float heading,float scale)
+    public static Vector3 HeadingIndicatorPosition(float heading, float trackLength)
     {
         //check for Nan
-        if (float.IsNaN(heading) || heading == 0f)
+        if (float.IsNaN(heading))
             return Vector3.zero;
 
         //range is 0 to pi*2
@@ -80,6 +86,8 @@ public class UKDials : MonoBehaviour
         ratio *= 20.32f;
 
         Vector3 pos = Vector3.right * ratio;
+        //add track length
+        pos += Vector3.right * trackLength;
 
 
         return pos;
@@ -116,29 +124,43 @@ public class UKDials : MonoBehaviour
         return t;
     }
 
-    public static Quaternion TurnCoordinatorNeedleTarget(float v, float mod)
+    public static Quaternion TurnCoordinatorNeedleTarget(float v, float mod)//bottom needle
     {
-      
 
+        v *= -.62f; //clamped at 31 in game sp double that?
         Quaternion target = Quaternion.identity;
         if (Mathf.Abs( v ) < 10f)
-             target = Quaternion.Euler(0, 0, v * 2f);
+             target = Quaternion.Euler(0, 0, v * 2f + 180);
         //geared
         else if (Mathf.Abs( v )>= 10f )
             //take in to account if v is positive or negative
             if(v > 0)
-                target = Quaternion.Euler(0, 0,  10 + ((v)));
+                target = Quaternion.Euler(0, 0,  10 + ((v)) + 180);
             else
-                 target = Quaternion.Euler(0, 0, -10 + ((v)));
+                 target = Quaternion.Euler(0, 0, -10 + ((v)) + 180);
         return target;
     }
 
-    public static Quaternion TurnCoordinatorBallTarget(float ball, float multiplier)
+    public static Quaternion TurnCoordinatorBallTarget(float v, float multiplier)//top needle
     {
-        //indicates whether the aircraft is in coordinated flight, showing the slip or skid of the turn. 
-        Quaternion target = Quaternion.Euler(0, 0, ball * multiplier + 180f);
+        v *= -1000;
+        Debug.Log(v);
+        float gearChange = 10f;
+        Quaternion target = Quaternion.identity;
+        if (Mathf.Abs(v) < gearChange)
+            target = Quaternion.Euler(0, 0, v);
+        //geared
+        else if (Mathf.Abs(v) >= gearChange)
+            //take in to account if v is positive or negative
+            if (v > 0)
+                target = Quaternion.Euler(0, 0, (( gearChange + v)));
+            else
+                target = Quaternion.Euler(0, 0, -(gearChange - v));
 
+
+        
         return target;
+
     }
 
 
@@ -146,8 +168,10 @@ public class UKDials : MonoBehaviour
     {
         //vsi
         //start at 9 o'clock
-        verticalSpeed = 90f - verticalSpeed * 36f;
-        //clamp to "10"
+        verticalSpeed = 90f - verticalSpeed* 7.2f;
+
+
+        //clamp to 90 degrees /TODO dont clamp hee, clamp after thre rotations applied to its hitsd the pin opn the dial rather coming to a smooth stop
         verticalSpeed = Mathf.Clamp(verticalSpeed, -90, 270);
 
         Quaternion target = Quaternion.Euler(0, 0, verticalSpeed);

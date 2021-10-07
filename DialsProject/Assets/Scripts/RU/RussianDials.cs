@@ -52,15 +52,22 @@ public class RussianDials : MonoBehaviour
 
     public static Quaternion MmhgTarget(float mmhg)
     {
-        Quaternion mmhgTarget = Quaternion.Euler(0, 0, ((760f - mmhg) / 100f) * 300);
+
+        float z = ((760f - mmhg) / 100f) * 300;
+        
+        Quaternion mmhgTarget = Quaternion.identity;
+
+        //catch bad value
+        if (!float.IsNaN(z))
+            mmhgTarget = Quaternion.Euler(0, 0, z); 
 
         return mmhgTarget;
     }
 
-    public static Vector3 HeadingIndicatorPosition(float heading)
+    public static Vector3 HeadingIndicatorPosition(float heading, float trackLength)
     {
         //check for Nan
-        if (float.IsNaN(heading) || heading == 0f)
+        if (float.IsNaN(heading))
             return Vector3.zero;
 
         //range is 0 to pi*2
@@ -69,6 +76,8 @@ public class RussianDials : MonoBehaviour
         ratio *= 10.99f;
 
         Vector3 pos = Vector3.right*ratio;
+        //track length
+        pos += Vector3.right * trackLength;
         
 
         return pos;

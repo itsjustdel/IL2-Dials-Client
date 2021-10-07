@@ -239,6 +239,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiSmall = true;
+                planeAttributes.headingIndicator = true;// needs new model for gyro combined?
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+2199 - 48 8D 15 80B41400     - lea rdx,[RSE.RSE::CAeroplane_MC_202_s8::`vftable'+1E8] { ("MC 202 s8") }
