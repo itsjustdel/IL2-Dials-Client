@@ -518,7 +518,6 @@ MonoBehaviour:
   turnAndBankNumberTrack: {fileID: 0}
   turnAndBankPlane: {fileID: 0}
   headingIndicator: {fileID: 3819932646523166662}
-  headingIndicatorChild0: {fileID: 3409633510867512438}
   turnCoordinatorNeedle: {fileID: 8962990478586342054}
   turnCoordinatorBall: {fileID: 2434544927437576054}
   vsiNeedle: {fileID: 1884359028215300586}
@@ -539,6 +538,7 @@ MonoBehaviour:
   airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
   trackLength: -118
+  trackLengthForSwitch: 200.3
   turnCoordinaterNeedleMod: 1
   turnCoordinaterBallMod: 1
   turnCoordinaterMultiplier: 200
@@ -609,7 +609,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.989232, b: 0.8537736, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

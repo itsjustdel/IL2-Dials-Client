@@ -134,22 +134,28 @@ public class RotateNeedle : MonoBehaviour
             //note- need seperate mmhg test
             //if (iL2GameDataClient.heading > .2f && iL2GameDataClient.heading < 6.2f)
             //headingIndicatorShift = !headingIndicatorShift;
-            float h = iL2GameDataClient.heading;
-            float a = .4f;
-            float b = 6f;
-                        
-            //swithc direction
-            if (h > a && h < b)
+            bool autoMove = false;
+            if (autoMove)
             {
-                //                Debug.Log(headingIndicatorShift);
-                headingIndicatorTest = !headingIndicatorTest;
-            }
-            float speed = .001f;
-            if(headingIndicatorTest)
-                iL2GameDataClient.heading += speed;
-            else
-                iL2GameDataClient.heading -= speed;
 
+
+                float h = iL2GameDataClient.heading;
+                float a = .4f;
+                float b = 6f;
+
+                //swithc direction
+                if (h > a && h < b)
+                {
+                    //                Debug.Log(headingIndicatorShift);
+                    headingIndicatorTest = !headingIndicatorTest;
+                }
+                float speed = .001f;
+                if (headingIndicatorTest)
+                    iL2GameDataClient.heading += speed;
+                else
+                    iL2GameDataClient.heading -= speed;
+
+            }
             previousMessageTime = lastMessageReceivedTime;//using?
             lastMessageReceivedTime = Time.time -Time.deltaTime;
 
@@ -673,7 +679,7 @@ public class RotateNeedle : MonoBehaviour
 
     void HeadingTarget(AirplaneData.Country country)
     {
-        //RU
+        
         switch (country)
         {
             case (AirplaneData.Country.RU):
@@ -1018,8 +1024,8 @@ public class RotateNeedle : MonoBehaviour
 
 
         //now rework target
-        headingIndicatorTarget = UKDials.HeadingIndicatorPosition(iL2GameDataClient.heading, trackLength);
-        
+        HeadingTarget(iL2GameDataClient.country);
+
 
         return false;
     }

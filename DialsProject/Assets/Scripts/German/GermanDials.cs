@@ -57,14 +57,15 @@ public class GermanDials : MonoBehaviour
 
     public static Vector3 HeadingIndicatorPosition(float heading, float trackLength)
     {
+        
         //check for Nan
         if (float.IsNaN(heading))
             return Vector3.zero;
-
+        
         //range is 0 to pi*2
         float ratio = Mathf.PI * heading;
         //adjust for arbitry render camera position
-        ratio *= 11.93f;
+        ratio *= 11.89f;
 
         Vector3 pos = Vector3.right * ratio;
         pos += Vector3.right * trackLength;

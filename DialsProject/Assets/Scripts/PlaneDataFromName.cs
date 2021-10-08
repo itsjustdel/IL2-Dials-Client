@@ -61,13 +61,13 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.country = Country.GER;
                 planeAttributes.speedometer = true;
                 planeAttributes.altimeter = true;
-               // planeAttributes.turnCoordinator = true;
-               /// planeAttributes.headingIndicator = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.headingIndicator = true;
                 planeAttributes.vsiSmall = true;
-                //planeAttributes.vsiLarge = true;
-                // planeAttributes.repeaterCompass = true;
-                //planeAttributes.artificialHorizon = true;
-                //planeAttributes.turnAndBank = true;
+                //planeAttributes.vsiLarge = true; //test
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.artificialHorizon = true;
+                planeAttributes.turnAndBank = true;
                 break;
 
             case "GER B":
