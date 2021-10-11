@@ -61,21 +61,22 @@ public class RotateNeedle : MonoBehaviour
     private List<Vector3> positionsArtificialHorizonBomber = new List<Vector3>() { Vector3.zero, Vector3.zero };
 
     //  private bool saveForPredictions -- rotations
-    public Quaternion airspeedStart; // -- "Start" needed, just use object transform loation/rotation
+    
+    //public Quaternion airspeedStart; // -- "Start" needed, just use object transform loation/rotation
     public  Quaternion airspeedTarget;
-    private Quaternion altitudeLargeStart;
+    //private Quaternion altitudeLargeStart;
     private Quaternion altitudeLargeTarget;
-    private Quaternion altitudeSmallStart;
+    //private Quaternion altitudeSmallStart;
     private Quaternion altitudeSmallTarget;
-    private Quaternion altitudeSmallestStart;
+    //private Quaternion altitudeSmallestStart;
     private Quaternion altitudeSmallestTarget;
-    private Quaternion mmhgStart;
+    //private Quaternion mmhgStart;
     private Quaternion mmhgTarget;
-    private Quaternion turnAndBankPlaneRotationStart;
+    //private Quaternion turnAndBankPlaneRotationStart;
     private Quaternion turnAndBankPlaneRotationTarget;
-    private Quaternion turnCoordinatorNeedleStart;
+    //private Quaternion turnCoordinatorNeedleStart;
     private Quaternion turnCoordinatorNeedleTarget;
-    private Quaternion turnCoordinatorBallStart;
+    //private Quaternion turnCoordinatorBallStart;
     private Quaternion turnCoordinatorBallTarget;
     private Quaternion vsiNeedleTarget;
     private Quaternion repeaterCompassTarget;
@@ -85,11 +86,11 @@ public class RotateNeedle : MonoBehaviour
 
     // -- positions
     //heading is on a track, we move along the x, we don't rotate
-    private Vector3 headingIndicatorStart;
+    //private Vector3 headingIndicatorStart;
     private Vector3 headingIndicatorTarget;
-    private Vector3 turnAndBankPlanePositionStart;
+    //private Vector3 turnAndBankPlanePositionStart;
     private Vector3 turnAndBankPlanePositionTarget;
-    private Vector3 turnAndBankNumberTrackStart;
+    //private Vector3 turnAndBankNumberTrackStart;
     private Vector3 turnAndBankNumberTrackTarget;
     private Vector3 artificialHorizonPositionTarget;
 
@@ -350,7 +351,7 @@ public class RotateNeedle : MonoBehaviour
         float difference = quaternionsAirspeed[0].eulerAngles.z - quaternionsAirspeed[1].eulerAngles.z;        
         //keep moving at client send rate at previous known step        
         //set start point
-        airspeedStart =  airspeedNeedle.transform.rotation;
+        //airspeedStart =  airspeedNeedle.transform.rotation;
         //and end point
         airspeedTarget = airspeedNeedle.transform.rotation * Quaternion.Euler(0, 0, difference); ;
 
@@ -359,7 +360,7 @@ public class RotateNeedle : MonoBehaviour
         difference = quaternionsAltitudeLarge[0].eulerAngles.z - quaternionsAltitudeLarge[1].eulerAngles.z;
         //keep moving at client send rate at previous known step
         //set start point
-        altitudeLargeStart = altitudeNeedleLarge.transform.rotation;
+       // altitudeLargeStart = altitudeNeedleLarge.transform.rotation;
         //and end point
         altitudeLargeTarget = altitudeNeedleLarge.transform.rotation * Quaternion.Euler(0, 0, difference); ;
 
@@ -367,7 +368,7 @@ public class RotateNeedle : MonoBehaviour
         difference = quaternionsAltitudeSmall[0].eulerAngles.z - quaternionsAltitudeSmall[1].eulerAngles.z;
         //keep moving at client send rate at previous known step        
         //set start point
-        altitudeSmallStart = altitudeNeedleSmall.transform.rotation;
+       // altitudeSmallStart = altitudeNeedleSmall.transform.rotation;
         //and end point
         altitudeSmallTarget = altitudeNeedleSmall.transform.rotation * Quaternion.Euler(0, 0, difference); ;
 
@@ -379,7 +380,7 @@ public class RotateNeedle : MonoBehaviour
             difference = quaternionsAltitudeSmallest[0].eulerAngles.z - quaternionsAltitudeSmallest[1].eulerAngles.z;
             //keep moving at client send rate at previous known step        
             //set start point
-            altitudeSmallestStart = altitudeNeedleSmallest.transform.rotation;
+        //    altitudeSmallestStart = altitudeNeedleSmallest.transform.rotation;
             //and end point
             altitudeSmallestTarget = altitudeNeedleSmallest.transform.rotation * Quaternion.Euler(0, 0, difference); ;
 
@@ -388,13 +389,13 @@ public class RotateNeedle : MonoBehaviour
         difference = quaternionsMmhg[0].eulerAngles.z - quaternionsMmhg[1].eulerAngles.z;
         //keep moving at client send rate at previous known step        
         //set start point
-        mmhgStart = mmhgDial.transform.rotation;
+      //  mmhgStart = mmhgDial.transform.rotation;
         //and end point
         mmhgTarget = mmhgDial.transform.rotation * Quaternion.Euler(0, 0, difference);
 
         //heading
         Vector3 differenceV3 = positionsHeading[0] - positionsHeading[1];
-        headingIndicatorStart = headingIndicator.transform.localPosition;
+      //  headingIndicatorStart = headingIndicator.transform.localPosition;
         headingIndicatorTarget = headingIndicator.transform.localPosition + differenceV3;
        
         //turn and bank
@@ -402,17 +403,17 @@ public class RotateNeedle : MonoBehaviour
         if (turnAndBankPlane != null)
         {
             differenceV3 = positionsTurnAndBankPlane[0] - positionsTurnAndBankPlane[1];
-            turnAndBankPlanePositionStart = turnAndBankPlane.transform.localPosition;
+          //  turnAndBankPlanePositionStart = turnAndBankPlane.transform.localPosition;
             turnAndBankPlanePositionTarget = turnAndBankPlane.transform.localPosition + differenceV3;
             // - plane rotation
             difference = quaternionsTurnAndBankPlane[0].z - quaternionsTurnAndBankPlane[1].z;
-            turnAndBankPlaneRotationStart = turnAndBankPlane.transform.rotation;
+           // turnAndBankPlaneRotationStart = turnAndBankPlane.transform.rotation;
             turnAndBankPlaneRotationTarget = turnAndBankPlane.transform.rotation * Quaternion.Euler(0, 0, difference);
             // - number track
             if (turnAndBankNumberTrack != null)
             {
                 differenceV3 = positionsTurnAndBankNumberTrack[0] - positionsTurnAndBankNumberTrack[1];
-                turnAndBankNumberTrackStart = turnAndBankNumberTrack.transform.localPosition;
+          //      turnAndBankNumberTrackStart = turnAndBankNumberTrack.transform.localPosition;
                 turnAndBankNumberTrackTarget = turnAndBankNumberTrack.transform.localPosition + differenceV3;
             }
         }
@@ -421,11 +422,11 @@ public class RotateNeedle : MonoBehaviour
             //turn co-ordinator
             // - needle
             difference = quaternionsTurnCoordinatorNeedle[0].z - quaternionsTurnCoordinatorNeedle[1].z;
-            turnCoordinatorNeedleStart = turnCoordinatorNeedle.transform.rotation;
+         //   turnCoordinatorNeedleStart = turnCoordinatorNeedle.transform.rotation;
             turnCoordinatorNeedleTarget = turnCoordinatorNeedle.transform.rotation * Quaternion.Euler(0, 0, difference);
             // - ball
             difference = quaternionsTurnCoordinatorBall[0].z - quaternionsTurnCoordinatorBall[1].z;
-            turnCoordinatorBallStart = turnCoordinatorBall.transform.rotation;
+          //  turnCoordinatorBallStart = turnCoordinatorBall.transform.rotation;
             turnCoordinatorBallTarget = turnCoordinatorBall.transform.rotation * Quaternion.Euler(0, 0, difference);
         }
 
@@ -513,13 +514,20 @@ public class RotateNeedle : MonoBehaviour
             //US
             case (AirplaneData.Country.US):
                 //rotation // roll
-                artificialHorizonRotationTarget = USDials.ArtificialHorizonRotation(iL2GameDataClient.roll, artificialHorizonBomberRollMod);
+                //adjustemnts for certain planes
+                
+                    artificialHorizonRotationTarget = USDials.ArtificialHorizonRotation(iL2GameDataClient.roll, artificialHorizonBomberRollMod);
 
-                //position  
+
+                //position  /pitch
+                
                 artificialHorizonPositionTarget = USDials.ArtificialHorizonPosition(iL2GameDataClient.pitch, artificialHorizonBomberMultiplier);
+                
+
                 //chevron
                 artificialHorizonChevronTarget = USDials.ArtificialHorizonChevronRotation(iL2GameDataClient.roll, artificialHorizonBomberRollMod);
 
+                
                 break;
 
             case (AirplaneData.Country.UK):
@@ -617,10 +625,13 @@ public class RotateNeedle : MonoBehaviour
                 break;
 
             case (AirplaneData.Country.US):
-                turnCoordinatorNeedleTarget = USDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.turnCoordinatorNeedle);
+                if(iL2GameDataClient.planeType == "A-20B")
+                    turnCoordinatorNeedleTarget = USDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.turnCoordinatorNeedle, true);
+                else 
+                    turnCoordinatorNeedleTarget = USDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.turnCoordinatorNeedle, false);
 
                 //ball indicator                
-                turnCoordinatorBallTarget = USDials.TurnCoordinatorBallTarget(iL2GameDataClient.turnCoordinatorBall, 1f);
+                turnCoordinatorBallTarget = USDials.TurnCoordinatorBallTarget(iL2GameDataClient.turnCoordinatorBall, turnCoordinaterBallMod);
                 break;
 
 
@@ -709,7 +720,7 @@ public class RotateNeedle : MonoBehaviour
     {  
         //Altitude
         //set where we rotate from
-        AltitudeStarts();
+        //AltitudeStarts();
         //find where we are rotating to for each needle
 
         //only UK has this
@@ -726,7 +737,7 @@ public class RotateNeedle : MonoBehaviour
     {   //Pressure //mmhg
 
         //set where we rotate from
-        MmhgStart();
+        //MmhgStart();
 
         //set where we are rotating to
         mmhgTarget = AtmosphericPressure(iL2GameDataClient.country, iL2GameDataClient.mmhg);
@@ -737,14 +748,14 @@ public class RotateNeedle : MonoBehaviour
     {
         // Airspeed
         //set where we rotate from
-        AirspeedStart();
+        //AirspeedStart();
         //find where we are rotating to
         airspeedTarget = AirspeedTarget(iL2GameDataClient.country, iL2GameDataClient.airspeed);
     }
 
     void AirspeedStart()
     {
-        airspeedStart = quaternionsAirspeed[0];
+        //airspeedStart = quaternionsAirspeed[0];
     }
 
     static Quaternion AtmosphericPressure(AirplaneData.Country country, float unit)
@@ -894,6 +905,7 @@ public class RotateNeedle : MonoBehaviour
         return target;
     }
 
+    /*
     void AltitudeStarts()
     {
         altitudeSmallStart = quaternionsAltitudeSmall[0];
@@ -904,12 +916,14 @@ public class RotateNeedle : MonoBehaviour
 
 
         altitudeLargeStart = quaternionsAltitudeLarge[0];
+        
     }
 
     void MmhgStart()
     {
         mmhgStart = quaternionsMmhg[0];
     }
+    */
 
     void NeedleRotations()
     {
@@ -942,7 +956,7 @@ public class RotateNeedle : MonoBehaviour
         //float d = Mathf.Abs( airspeedTarget.eulerAngles.z - quaternionsAirspeed[0].eulerAngles.z);
        // Debug.Log("air needle");
 
-        airspeedNeedle.transform.rotation = Quaternion.Slerp(airspeedStart, airspeedTarget, (Time.time - lastMessageReceivedTime)/(Time.fixedDeltaTime)); //fixed delta is step time for receiving messages - works well
+        airspeedNeedle.transform.rotation = Quaternion.Slerp(airspeedNeedle.transform.rotation, airspeedTarget, Time.fixedDeltaTime); 
         
     }
 
@@ -950,16 +964,16 @@ public class RotateNeedle : MonoBehaviour
     {
         //only UK has the smallest needle
         if (iL2GameDataClient.country == AirplaneData.Country.UK)
-            altitudeNeedleSmallest.transform.rotation = Quaternion.Slerp(altitudeSmallestStart, altitudeSmallestTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
+            altitudeNeedleSmallest.transform.rotation = Quaternion.Slerp(altitudeNeedleSmallest.transform.rotation, altitudeSmallestTarget, Time.fixedDeltaTime);
 
 
-        altitudeNeedleSmall.transform.rotation = Quaternion.Slerp(altitudeSmallStart, altitudeSmallTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
-        altitudeNeedleLarge.transform.rotation = Quaternion.Slerp(altitudeLargeStart, altitudeLargeTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
+        altitudeNeedleSmall.transform.rotation = Quaternion.Slerp(altitudeNeedleSmall.transform.rotation, altitudeSmallTarget, Time.fixedDeltaTime);
+        altitudeNeedleLarge.transform.rotation = Quaternion.Slerp(altitudeNeedleLarge.transform.rotation, altitudeLargeTarget, Time.fixedDeltaTime);
     }
 
     void MmhgNeedleRotation()
     {
-        mmhgDial.transform.rotation = Quaternion.Slerp(mmhgStart, mmhgTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
+        mmhgDial.transform.rotation = Quaternion.Slerp(mmhgDial.transform.rotation, mmhgTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
     }
 
     void TurnCoordinatorRotation()

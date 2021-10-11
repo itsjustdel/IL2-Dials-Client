@@ -535,15 +535,14 @@ MonoBehaviour:
   quaternionsAirspeed:
   - {x: 0, y: 0, z: 0, w: 1}
   - {x: 0, y: 0, z: 0, w: 1}
-  airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
   trackLength: -118
   trackLengthForSwitch: 200.3
-  turnCoordinaterNeedleMod: 1
-  turnCoordinaterBallMod: 1
+  turnCoordinaterNeedleMod: -1
+  turnCoordinaterBallMod: 100
   turnCoordinaterMultiplier: 200
-  artificialHorizonBomberRollMod: 1
-  artificialHorizonBomberMultiplier: 20
+  artificialHorizonBomberRollMod: -56
+  artificialHorizonBomberMultiplier: 60
   turnAndBankBallMultiplier: 1
   animationCurveVSI:
     serializedVersion: 2

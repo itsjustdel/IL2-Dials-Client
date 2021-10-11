@@ -41,6 +41,9 @@ public class USDials : MonoBehaviour
 
     public static Quaternion AltitudeTargetSmall(float altitude)
     {
+        if (float.IsNaN(altitude))
+            return Quaternion.identity;
+
         //convert to feet
         altitude *= 3.2808f;
        // Debug.Log("feet = " + altitude);
@@ -54,6 +57,9 @@ public class USDials : MonoBehaviour
 
     public static Quaternion AltitudeTargetLarge(float altitude)
     {
+        if (float.IsNaN(altitude))
+            return Quaternion.identity;
+
         //convert to feet
         altitude *= 3.2808f;
 
@@ -138,7 +144,7 @@ public class USDials : MonoBehaviour
     public static Quaternion RepeaterCompassTarget(float heading)
     {
         //number passed is rotation in rads, pi = 180 degrees
-        Quaternion target = Quaternion.Euler(0, 0, heading * Mathf.Rad2Deg);
+        Quaternion target = Quaternion.Euler(0, 0, -heading * Mathf.Rad2Deg);
 
         return target;
     }
@@ -166,9 +172,12 @@ public class USDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion TurnCoordinatorNeedleTarget(float v)
+    public static Quaternion TurnCoordinatorNeedleTarget(float v, bool flip)
     {
-        Quaternion target = Quaternion.Euler(0, 0, v);
+        if (flip)
+            v = -v;
+
+        Quaternion target = Quaternion.Euler(0, 0, -v);
 
         return target;
     }

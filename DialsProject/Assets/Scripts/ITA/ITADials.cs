@@ -7,7 +7,7 @@ public class ITADials : MonoBehaviour
     public static Quaternion AirspeedTarget(float airspeed)
     {
 
-        if (airspeed == 0)
+        if (airspeed == 0 || float.IsNaN(airspeed))
             return Quaternion.Euler(0,0,90);
 
         //airspeed dial has three gears
