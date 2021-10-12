@@ -151,12 +151,14 @@ public class USDials : MonoBehaviour
 
     public static Quaternion VerticalSpeedTarget(float verticalSpeed,AnimationCurve curve)
     {
+        //metres to feet
+        //verticalSpeed *= 0.3048f;
         //using animation curve to define angle to spin ( component on prefab)
         //animation curve needs positive value to work so save if negative
         bool negative = (verticalSpeed>= 0) ? false : true;
 
         //and work out percentage to use 0-1 scale for curve
-        float percentage = (Mathf.Abs(verticalSpeed) /6f);
+        float percentage = (Mathf.Abs(verticalSpeed / 6)); //was divdied by6
         //multiply by half a dial of spin (180 degrees)
         float angleToSpin = curve.Evaluate(percentage) * 180;
         //put negative back?
@@ -167,6 +169,19 @@ public class USDials : MonoBehaviour
         verticalSpeed = 90f -  angleToSpin;
         
         //set to quaternion
+        Quaternion target = Quaternion.Euler(0, 0, verticalSpeed);
+
+        return target;
+    }
+
+    public static Quaternion VerticalSpeedTargetSimple(float verticalSpeed)
+    {
+        //vsi
+        //start at 9 o'clock
+        verticalSpeed = 90f - verticalSpeed * 9f;
+        //clamp to "10"
+        verticalSpeed = Mathf.Clamp(verticalSpeed, -90, 270);
+
         Quaternion target = Quaternion.Euler(0, 0, verticalSpeed);
 
         return target;

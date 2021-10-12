@@ -2109,9 +2109,9 @@ MonoBehaviour:
   turnCoordinatorBall: {fileID: 4853732624792005576}
   vsiNeedle: {fileID: 3410964343312059683}
   repeaterCompassFace: {fileID: 0}
-  artificialHorizonPlane: {fileID: 0}
-  artificialHorizonBackground: {fileID: 7563512662274255241}
+  artificialHorizon: {fileID: 7563512662274255241}
   artificialHorizonChevron: {fileID: 4291599837589318832}
+  artificialHorizonPlane: {fileID: 0}
   turnAndBankBall: {fileID: 0}
   lastMessageReceivedTime: 0
   previousMessageTime: 0
@@ -2122,15 +2122,14 @@ MonoBehaviour:
   quaternionsAirspeed:
   - {x: 0, y: 0, z: 0, w: 1}
   - {x: 0, y: 0, z: 0, w: 1}
-  airspeedStart: {x: 0, y: 0, z: 0, w: 0}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
   trackLength: -200.5
   trackLengthForSwitch: 200.3
   turnCoordinaterNeedleMod: 1
   turnCoordinaterBallMod: -1225
   turnCoordinaterMultiplier: 200
-  artificialHorizonBomberRollMod: 58
-  artificialHorizonBomberMultiplier: -88
+  artificialHorizonRollMod: 56
+  artificialHorizonMultiplier: -100
   turnAndBankBallMultiplier: 1
   animationCurveVSI:
     serializedVersion: 2
