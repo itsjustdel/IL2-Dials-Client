@@ -65,7 +65,7 @@ public class TCPClient : MonoBehaviour {
     public void FixedUpdate()
 	{
 		//wait for as econd before scanning
-		if (menuHandler.stopwatch.ElapsedMilliseconds < 5000)
+		if (menuHandler.stopwatch.ElapsedMilliseconds < 5)
 			return;
 
 
@@ -148,7 +148,7 @@ public class TCPClient : MonoBehaviour {
 
 					if (ip3 > 255)
 					{
-						Debug.Log("Did not find server");
+					//	Debug.Log("Did not find server");
 
 
 						//restart -if people have strange ips they probably know about it and can use direct connection option

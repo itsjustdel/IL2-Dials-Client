@@ -39,7 +39,7 @@ public class USDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion AltitudeTargetSmall(float altitude)
+    public static Quaternion AltitudeTargetSmall2(float altitude)
     {
         if (float.IsNaN(altitude))
             return Quaternion.identity;
@@ -53,7 +53,15 @@ public class USDials : MonoBehaviour
 
     }
 
+    public static Quaternion AltitudeTargetSmall(float altitude)
+    {
+        //convert to feet
+        altitude *= 3.2808f;
+        Quaternion altitudeSmallTarget = Quaternion.Euler(0, 0, -(altitude * .036f));
 
+        return altitudeSmallTarget;
+
+    }
 
     public static Quaternion AltitudeTargetLarge(float altitude)
     {
@@ -65,6 +73,16 @@ public class USDials : MonoBehaviour
 
         Quaternion altitudeLargeTarget = Quaternion.Euler(0, 0, -(altitude / 1000f) * 360);
         return altitudeLargeTarget;
+
+    }
+
+    public static Quaternion AltitudeTargetSmallest(float altitude)
+    {
+        //convert to feet
+        altitude *= 3.2808f;
+        Quaternion altitudeSmallTarget = Quaternion.Euler(0, 0, -(altitude * .0036f));
+
+        return altitudeSmallTarget;
 
     }
 
@@ -151,19 +169,29 @@ public class USDials : MonoBehaviour
 
     public static Quaternion VerticalSpeedTarget(float verticalSpeed,AnimationCurve curve)
     {
-        //metres to feet
-        //verticalSpeed *= 0.3048f;
+       
         //using animation curve to define angle to spin ( component on prefab)
         //animation curve needs positive value to work so save if negative
         bool negative = (verticalSpeed>= 0) ? false : true;
 
+        //metres to feet
+        //verticalSpeed *= 0.3048f;
+        //verticalSpeed *= 3.048f;///test
+
         //and work out percentage to use 0-1 scale for curve
-        float percentage = (Mathf.Abs(verticalSpeed / 6)); //was divdied by6
+        float percentage = (Mathf.Abs(verticalSpeed/30f)); 
         //multiply by half a dial of spin (180 degrees)
-        float angleToSpin = curve.Evaluate(percentage) * 180;
+        float angleToSpin = curve.Evaluate(percentage) ;
+       // Debug.Log(angleToSpin);
+        angleToSpin *= 180;
+        
         //put negative back?
+
+        
         if (negative)
             angleToSpin *= -1;
+
+        
 
         //offset by 90 degrees - vsi starts at 9 0'clock on the dial
         verticalSpeed = 90f -  angleToSpin;
