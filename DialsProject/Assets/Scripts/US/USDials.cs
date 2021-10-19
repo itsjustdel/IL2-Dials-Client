@@ -228,7 +228,9 @@ public class USDials : MonoBehaviour
     public static Quaternion TurnCoordinatorBallTarget(float ball, float multiplier)
     {
         //indicates whether the aircraft is in coordinated flight, showing the slip or skid of the turn. 
-        Quaternion target = Quaternion.Euler(0, 0, ball * multiplier);
+        float z = ball * multiplier;
+        z = Mathf.Clamp(z, -15f, 15f);
+        Quaternion target = Quaternion.Euler(0, 0, z);
 
         return target;
     }

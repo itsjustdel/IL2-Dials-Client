@@ -531,6 +531,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnAndBank = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.headingIndicator = true;
+                planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiLarge = true;
                 break;
 
