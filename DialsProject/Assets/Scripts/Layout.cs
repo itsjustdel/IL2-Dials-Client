@@ -6,6 +6,8 @@ using UnityEngine;
 public class Layout
 {
     //class used for saving layout positions to player prefs with JSON
+    public float version;
+
     public string planeType;
     public Vector2 speedoPos;
     public Vector2 altPos;

@@ -206,6 +206,8 @@ MonoBehaviour:
   move: 1
   scale: 0
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &414093480649545495
 GameObject:
@@ -602,6 +604,8 @@ MonoBehaviour:
   move: 1
   scale: 0
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &688179927535042367
 GameObject:
@@ -939,6 +943,8 @@ MonoBehaviour:
   move: 0
   scale: 1
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &869349306734908125
 GameObject:
@@ -1032,6 +1038,8 @@ MonoBehaviour:
   move: 1
   scale: 0
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &912124348586358145
 GameObject:
@@ -1125,6 +1133,8 @@ MonoBehaviour:
   move: 1
   scale: 0
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &978798639326727179
 GameObject:
@@ -1293,6 +1303,8 @@ MonoBehaviour:
   move: 1
   scale: 0
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &1093931442454195673
 GameObject:
@@ -1536,6 +1548,8 @@ MonoBehaviour:
   move: 1
   scale: 0
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &1755014386427275534
 GameObject:
@@ -1854,6 +1868,8 @@ MonoBehaviour:
   move: 0
   scale: 1
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &2359046704308746298
 GameObject:
@@ -2022,6 +2038,8 @@ MonoBehaviour:
   move: 1
   scale: 0
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &2825827163968422518
 GameObject:
@@ -2340,6 +2358,8 @@ MonoBehaviour:
   move: 1
   scale: 0
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &3351772645518809326
 GameObject:
@@ -2433,6 +2453,8 @@ MonoBehaviour:
   move: 0
   scale: 0
   remove: 1
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &3376395221957337604
 GameObject:
@@ -2565,6 +2587,8 @@ MonoBehaviour:
   move: 1
   scale: 0
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &3413792558649686240
 GameObject:
@@ -2733,6 +2757,8 @@ MonoBehaviour:
   move: 1
   scale: 0
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &3453042456347008475
 GameObject:
@@ -2979,6 +3005,8 @@ MonoBehaviour:
   move: 0
   scale: 0
   remove: 1
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &4124090721673285638
 GameObject:
@@ -3222,6 +3250,8 @@ MonoBehaviour:
   move: 0
   scale: 0
   remove: 1
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &4478650947700666495
 GameObject:
@@ -3274,9 +3304,10 @@ GameObject:
   - component: {fileID: 5545304814640759317}
   - component: {fileID: 7149964852391075328}
   - component: {fileID: 4925139848785019821}
+  - component: {fileID: 4764181840045492217}
   m_Layer: 5
   m_Name: Face
-  m_TagString: Untagged
+  m_TagString: CompassSpin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3322,7 +3353,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -3338,6 +3369,25 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4764181840045492217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4601670034947458157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc3bebc31c4852243be2cf74ebf46f24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuHandler: {fileID: 0}
+  move: 0
+  scale: 0
+  remove: 0
+  compass: 1
+  compassSpinSpeed: 100
+  canvas: {fileID: 0}
 --- !u!1 &4874331046040569977
 GameObject:
   m_ObjectHideFlags: 0
@@ -3469,6 +3519,8 @@ MonoBehaviour:
   move: 0
   scale: 1
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &5039094292921619291
 GameObject:
@@ -3562,6 +3614,8 @@ MonoBehaviour:
   move: 0
   scale: 1
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &5081575440315537724
 GameObject:
@@ -3730,6 +3784,8 @@ MonoBehaviour:
   move: 0
   scale: 0
   remove: 1
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &5137819944122000165
 GameObject:
@@ -3898,6 +3954,8 @@ MonoBehaviour:
   move: 1
   scale: 0
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &5537307383764232901
 GameObject:
@@ -4066,6 +4124,8 @@ MonoBehaviour:
   move: 1
   scale: 0
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &5741297850524227900
 GameObject:
@@ -4308,6 +4368,8 @@ MonoBehaviour:
   move: 1
   scale: 0
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &5988131993830973386
 GameObject:
@@ -4401,6 +4463,8 @@ MonoBehaviour:
   move: 0
   scale: 0
   remove: 1
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &6031366396253652641
 GameObject:
@@ -4569,6 +4633,8 @@ MonoBehaviour:
   move: 0
   scale: 0
   remove: 1
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &6290651361617609661
 GameObject:
@@ -4662,6 +4728,8 @@ MonoBehaviour:
   move: 0
   scale: 1
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &6428659984162223853
 GameObject:
@@ -4830,6 +4898,8 @@ MonoBehaviour:
   move: 1
   scale: 0
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &6520226328558179066
 GameObject:
@@ -5115,6 +5185,8 @@ MonoBehaviour:
   move: 1
   scale: 0
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &6824706988755486288
 GameObject:
@@ -5283,6 +5355,8 @@ MonoBehaviour:
   move: 0
   scale: 0
   remove: 1
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &7164987664717334739
 GameObject:
@@ -5414,6 +5488,8 @@ MonoBehaviour:
   move: 0
   scale: 1
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &7630104665519242285
 GameObject:
@@ -5507,6 +5583,8 @@ MonoBehaviour:
   move: 0
   scale: 0
   remove: 1
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &7647492620310743508
 GameObject:
@@ -5662,6 +5740,7 @@ MonoBehaviour:
   artificialHorizonPlane: {fileID: 0}
   artificialHorizonNeedle: {fileID: 1881509513860590664}
   turnAndBankBall: {fileID: 5745540631245300156}
+  compassRim: {fileID: 4601670034947458157}
   lastMessageReceivedTime: 0
   previousMessageTime: 0
   maxSpin: 1
@@ -6133,6 +6212,8 @@ MonoBehaviour:
   move: 0
   scale: 1
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &8375116062217299995
 GameObject:
@@ -6376,6 +6457,8 @@ MonoBehaviour:
   move: 0
   scale: 0
   remove: 1
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &8803418852959917651
 GameObject:
@@ -6469,6 +6552,8 @@ MonoBehaviour:
   move: 0
   scale: 1
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &8947238046722422198
 GameObject:
@@ -6637,6 +6722,8 @@ MonoBehaviour:
   move: 0
   scale: 1
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &9024633644038897840
 GameObject:
@@ -6896,6 +6983,8 @@ MonoBehaviour:
   move: 1
   scale: 0
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &9119807248520997997
 GameObject:
@@ -6989,6 +7078,8 @@ MonoBehaviour:
   move: 1
   scale: 0
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}
 --- !u!1 &9205803889090982268
 GameObject:
@@ -7082,4 +7173,6 @@ MonoBehaviour:
   move: 1
   scale: 0
   remove: 0
+  compass: 0
+  compassSpinSpeed: 100
   canvas: {fileID: 0}

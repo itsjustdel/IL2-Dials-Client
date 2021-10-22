@@ -103,6 +103,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnAndBank = true;
                 planeAttributes.artificialHorizon = true;
+                planeAttributes.repeaterCompass = true;
                 break;
 
             case "ITA A":
@@ -406,7 +407,8 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.headingIndicator = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator= true;
-                
+                planeAttributes.repeaterCompass = true;
+
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+CD8 - 48 8D 15 D9EC0800     - lea rdx,[RSE.RSE::CAeroplane_Hs_129_B2::`vftable'+2E8] { ("Hs 129 B-2") }
@@ -489,6 +491,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.headingIndicator = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator = true;
+                planeAttributes.repeaterCompass = true;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+27A - 48 8D 15 FFF10700     - lea rdx,[RSE.RSE::CAeroplane_FW_190_A8::`vftable'+2C0] { ("FW 190 A8") }
@@ -527,12 +530,12 @@ public class PlaneDataFromName : AirplaneData
             case "P-51D-15":
                 planeAttributes.country = Country.US;
                 planeAttributes.altimeter = true;
-                planeAttributes.speedometer = true;
-                planeAttributes.turnAndBank = true;
+                planeAttributes.speedometer = true;                
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiLarge = true;
+                planeAttributes.turnCoordinator = true;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+5778 - 48 8D 15 09890A00     - lea rdx,[RSE.RSE::CAeroplane_Me_262_A::`vftable'+260] { ("Me 262 A") }
@@ -576,6 +579,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
+                planeAttributes.repeaterCompass = true;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+EBF - 4C 8D 05 8A0C0600     - lea r8,[RSE.RSE::CAeroplane_B_25_D::`vftable'+2B8] { ("B-25D") }
@@ -630,6 +634,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.artificialHorizon = true;
+                planeAttributes.repeaterCompass = true;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+F0D - 4C 8D 05 ECA40600     - lea r8,[RSE.RSE::CAeroplane_C_47A::`vftable'+210] { ("C-47A") }
@@ -674,6 +679,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
+                planeAttributes.repeaterCompass = true;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+263 - 48 8D 15 0EC40700     - lea rdx,[RSE.RSE::CAeroplane_FW_190_A6::`vftable'+8] { ("FW 190 A6") }
@@ -692,6 +698,18 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.speedometer = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiLarge = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.headingIndicator = true;
+                planeAttributes.repeaterCompass = true;
+                break;
+
+            //RSE.RSE::CCockpitInstruments::simulation+DDD - 4C 8D 05 6CB00C00     - lea r8,[RSE.RSE::CAeroplane_Po_2_VS::`vftable'+1D0] { ("U-2VS") }
+            case "U-2VS":
+                planeAttributes.country = Country.UK;
+                planeAttributes.altimeter = true;
+                planeAttributes.speedometer = true;//needs smaller modelled and "smallest" prefab/variable  added
+                planeAttributes.turnAndBank = true;
+                planeAttributes.vsiSmall = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
                 break;

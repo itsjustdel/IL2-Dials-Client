@@ -123,7 +123,7 @@ public class RussianDials : MonoBehaviour
     {
         //indicates whether the aircraft is in coordinated flight, showing the slip or skid of the turn. 
         float z = ball * 420;
-        z = Mathf.Clamp(z,-15f, 15f);
+        z = Mathf.Clamp(z,-19.5f, 19.5f);//test
         Quaternion target = Quaternion.Euler(0, 0, z);
 
         return target;

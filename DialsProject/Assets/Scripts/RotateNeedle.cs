@@ -30,6 +30,7 @@ public class RotateNeedle : MonoBehaviour
     public GameObject artificialHorizonPlane;//for ITA
     public GameObject artificialHorizonNeedle;//GER
     public GameObject turnAndBankBall;
+    public GameObject compassRim;//GER
     
     //public bool tcpReceived = false; //moved to tcpClient, multiple instances of Rotate Needle for each country, only single instance of tcpclient
     public float lastMessageReceivedTime;//two ways of doing the same thing
@@ -560,12 +561,18 @@ public class RotateNeedle : MonoBehaviour
 
     void RepeaterCompassTarget(AirplaneData.Country country)
     {
-        
+
         if (country == AirplaneData.Country.GER)
-            repeaterCompassTarget = GermanDials.RepeaterCompassTarget(iL2GameDataClient.heading);
+        {
+            float offset = compassRim.transform.eulerAngles.z;
+            repeaterCompassTarget = GermanDials.RepeaterCompassTarget(iL2GameDataClient.heading,offset);
+        }
 
         else if (country == AirplaneData.Country.US)
             repeaterCompassTarget = USDials.RepeaterCompassTarget(iL2GameDataClient.heading);
+
+        else if (country == AirplaneData.Country.UK)
+            repeaterCompassTarget = UKDials.RepeaterCompassTarget(iL2GameDataClient.heading);
 
 
     }

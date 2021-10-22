@@ -14,12 +14,15 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     public bool move;    
     public bool scale;
     public bool remove;
+    public bool compass;
 
+    public float compassSpinSpeed = 100f;
 
-  //  public GameObject originalParent;
     
     public Canvas canvas;
     private RectTransform rectTransform;
+
+    private Quaternion compassTarget;
     private void Awake()
     {
         canvas = GameObject.FindGameObjectWithTag("Canvas").transform.GetComponent<Canvas>();
@@ -28,8 +31,18 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         rectTransform = transform.parent.parent.GetComponent<RectTransform>();
     }
 
+    private void Update()
+    {
+        if(compass)
+        {
+             transform.rotation = Quaternion.RotateTowards(transform.rotation, compassTarget, Time.deltaTime * compassSpinSpeed);
+        }
+    }
+
     public void OnPointerClick(PointerEventData eventData)
-    {        
+    {
+       
+
         if (!menuHandler.layoutOpen)
             return;
 
@@ -52,75 +65,90 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (!menuHandler.layoutOpen)
-            return;
-
-        if (move)
+        if (menuHandler.layoutOpen)
         {
-            //check the dial is attached to the original parent (not in tray)
 
-            //was it in tray?
-            if(menuHandler.dialsInTray.Contains(transform.parent.parent.gameObject))
-            //if (transform.parent.parent.parent.gameObject != originalParent)
+
+            if (move)
             {
-                //it is in the tray
-                //put it back to orignal parent
-                transform.parent.parent.gameObject.transform.parent = menuHandler.tcpClient.rN.transform;
-                //reset scale
-                rectTransform.localScale = new Vector3(0.35f, .35f, 1f);
+                //check the dial is attached to the original parent (not in tray)
 
-                //remove from tray list
-                menuHandler.dialsInTray.Remove(rectTransform.gameObject);
+                //was it in tray?
+                if (menuHandler.dialsInTray.Contains(transform.parent.parent.gameObject))
+                //if (transform.parent.parent.parent.gameObject != originalParent)
+                {
+                    //it is in the tray
+                    //put it back to orignal parent
+                    transform.parent.parent.gameObject.transform.parent = menuHandler.tcpClient.rN.transform;
+                    //reset scale
+                    rectTransform.localScale = new Vector3(0.35f, .35f, 1f);
 
-                //turn on/off empty trays
-                menuHandler.UpdateLayoutPanel();
+                    //remove from tray list
+                    menuHandler.dialsInTray.Remove(rectTransform.gameObject);
 
+                    //turn on/off empty trays
+                    menuHandler.UpdateLayoutPanel();
+
+                }
+                else
+                {
+
+                }
             }
-            else
-            {
+            Debug.Log("OnBeginDrag");
 
-            }
         }
-        Debug.Log("OnBeginDrag");
-        
+        else
+        {
+           
+        }
        
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (!menuHandler.layoutOpen)
-            return;
 
-        Debug.Log("OnDrag");
-
-        if (move)
+        if (menuHandler.layoutOpen)
         {
-            //int snap = 10;
+
+            Debug.Log("OnDrag");
+
+            if (move)
+            {
+                //int snap = 10;
 
 
-            Vector2 d2 =  eventData.delta / canvas.scaleFactor ;
-            
-         //   d2.x = Mathf.Round(d2.x / snap) * snap;
-           // d2.y = Mathf.Round(d2.y / snap) * snap;
-            rectTransform.anchoredPosition += d2 ;
+                Vector2 d2 = eventData.delta / canvas.scaleFactor;
+
+                //   d2.x = Mathf.Round(d2.x / snap) * snap;
+                // d2.y = Mathf.Round(d2.y / snap) * snap;
+                rectTransform.anchoredPosition += d2;
+            }
+
+            if (scale)
+            {
+
+                Vector2 d2 = eventData.delta;
+                float avg = (d2.x + d2.y) / 2;
+                avg /= canvas.scaleFactor;// * Time.deltaTime;
+                                          //scale speed var
+                avg /= 200;
+
+                rectTransform.localScale += new Vector3(avg, avg, 0f);
+
+                float clampX = Mathf.Clamp(rectTransform.localScale.x, 0.2f, .75f);
+                float clampY = Mathf.Clamp(rectTransform.localScale.y, 0.2f, .75f);
+
+                rectTransform.localScale = new Vector3(clampX, clampY, 1f);
+            }
+        }
+        else
+        {
+            //dragging to move arrows
+            compassTarget = getCompassTarget(eventData);
+
         }
 
-        if(scale)
-        {
-           
-            Vector2 d2 = eventData.delta ;
-            float avg = (d2.x + d2.y) / 2;
-            avg /= canvas.scaleFactor;// * Time.deltaTime;
-            //scale speed var
-            avg /= 200;
-
-            rectTransform.localScale += new Vector3(avg, avg, 0f);
-
-            float clampX = Mathf.Clamp(rectTransform.localScale.x, 0.2f, .75f);
-            float clampY = Mathf.Clamp(rectTransform.localScale.y, 0.2f, .75f);
-
-            rectTransform.localScale = new Vector3(clampX, clampY, 1f);
-        }
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -192,12 +220,38 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         
     }
 
+    Quaternion getCompassTarget(PointerEventData eventData)
+    {
+        // Get Angle in Radians
+        float AngleRad = Mathf.Atan2(eventData.position.y - transform.position.y, eventData.position.x - transform.position.x);
+        // Get Angle in Degrees
+        float AngleDeg = (180 / Mathf.PI) * AngleRad;
+        // Rotate Object
+
+        Quaternion target = Quaternion.Euler(0, 0, AngleDeg - 90);
+
+        return target;
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
+
+
+        if (compass)
+        {
+            //one time to click to move arrows on compass
+            Debug.Log("Compass Pointer Click");           
+
+            compassTarget = getCompassTarget(eventData);
+        }
+
+        Debug.Log("OnPointerDown");
+
+
         if (!menuHandler.layoutOpen)
             return;
 
-        Debug.Log("OnPointerDown");
+      
         //is it in tray? - make scale larger to  preview dial
         //if (transform.parent.parent.parent.gameObject != originalParent)
         if (menuHandler.dialsInTray.Contains(transform.parent.parent.gameObject))
@@ -210,6 +264,8 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     public void OnPointerUp(PointerEventData eventData)
     {
 
+        
+
         if (!menuHandler.layoutOpen)
             return;
 
@@ -220,6 +276,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         {
             rectTransform.localScale = new Vector3(1f, 1f, 1f);
         }
+
 
     }
 

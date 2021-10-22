@@ -111,7 +111,7 @@ public class AirplaneData : MonoBehaviour
             SetVSINeedle();
 
             if (countryDialBoard != null)
-                LoadLayout();
+               menuHandler.LoadLayout();
             else
             //close layout
             {
@@ -268,8 +268,13 @@ public class AirplaneData : MonoBehaviour
         return countryIndex;
     }
 
+    /*
+
     void LoadLayout()
     {
+
+        //MenuHandler menuHandler = GameObject.FindGameObjectWithTag("MenuHandler").GetComponent<MenuHandler>();
+
         //Save layout is in MenuHandler
 
         //first of all empty trays
@@ -499,4 +504,6 @@ public class AirplaneData : MonoBehaviour
 //        dial.GetComponent<RectTransform>().anchoredPosition = layout.speedoPos;
         //dial.GetComponent<RectTransform>().localScale = new Vector3(layout.speedoScale, layout.speedoScale, 1f);
     }
+
+    */
 }

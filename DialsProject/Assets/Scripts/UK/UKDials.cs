@@ -179,5 +179,15 @@ public class UKDials : MonoBehaviour
         return target;
     }
 
+    //repeater compass
+
+    public static Quaternion RepeaterCompassTarget(float heading)
+    {
+        //number passed is rotation in rads, pi = 180 degrees
+        Quaternion target = Quaternion.Euler(0, 0, -heading * Mathf.Rad2Deg);
+
+        return target;
+    }
+
 
 }

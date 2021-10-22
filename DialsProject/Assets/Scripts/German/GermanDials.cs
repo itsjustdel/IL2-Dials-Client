@@ -126,10 +126,11 @@ public class GermanDials : MonoBehaviour
     }
 
 
-    public static Quaternion RepeaterCompassTarget(float heading)
+    public static Quaternion RepeaterCompassTarget(float heading, float rimSpin)
     {
         //number passed is rotation in rads, pi = 180 degrees
-        Quaternion target = Quaternion.Euler(0, 0, -heading * Mathf.Rad2Deg);
+        //rim spin is how much of an offset to add if user has spun the outer rim to navigate
+        Quaternion target = Quaternion.Euler(0, 0, -heading * Mathf.Rad2Deg + rimSpin);
 
         return target;
     }
