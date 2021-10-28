@@ -18,6 +18,8 @@ public class Layout
     public Vector2 vsiLargePos;
     public Vector2 artificialHorizonPos;
     public Vector2 repeaterCompassPos;
+    public Vector2 repeaterCompassAlternatePos;
+
 
     public float speedoScale;
     public float altScale;
@@ -28,6 +30,7 @@ public class Layout
     public float vsiLargeScale;
     public float artificialHorizonScale;
     public float repeaterCompassScale;
+    public float repeaterCompassAlternateScale;
 
 
     public bool speedoInTray;
@@ -39,6 +42,7 @@ public class Layout
     public bool vsiLargeInTray;
     public bool artificialHorizonInTray;
     public bool repeaterCompassInTray;
+    public bool repeaterCompassAlternateInTray;
 
 
 }

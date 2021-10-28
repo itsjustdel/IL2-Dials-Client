@@ -570,7 +570,7 @@ public class MenuHandler : MonoBehaviour
         //remove compass interactiveness
         GameObject[] compassSpinners = GameObject.FindGameObjectsWithTag("CompassSpin");
 
-        Debug.Log("compasses = " + compassSpinners.Length);
+        //Debug.Log("compasses = " + compassSpinners.Length);
         for (int i = 0; i < compassSpinners.Length; i++)
         {
             compassSpinners[i].GetComponent<Image>().raycastTarget = false;
@@ -640,6 +640,8 @@ public class MenuHandler : MonoBehaviour
             return;
         }
 
+        //continue if there is a pref file
+
         //rebuild json
         Layout layout = JsonUtility.FromJson<Layout>(jsonFoo);
 
@@ -651,6 +653,7 @@ public class MenuHandler : MonoBehaviour
             //set dials to default
             Debug.Log("Version change detected");
             DefaultLayouts(airplaneData.countryDialBoard);
+
             return;
         }
 
@@ -749,6 +752,18 @@ public class MenuHandler : MonoBehaviour
                 AddToTrayOnLoad(repeaterCompass, layout, menuHandler);
         }
 
+        if (airplaneData.countryDialBoard.transform.Find("Repeater Compass Alternate") != null)
+        {
+
+            GameObject repeaterCompassAlternate = airplaneData.countryDialBoard.transform.Find("Repeater Compass Alternate").gameObject;
+            //using non alternate variables because we won't have two compasses 
+            repeaterCompassAlternate.GetComponent<RectTransform>().anchoredPosition = layout.repeaterCompassAlternatePos;
+            repeaterCompassAlternate.GetComponent<RectTransform>().localScale = new Vector3(layout.repeaterCompassAlternateScale, layout.repeaterCompassAlternateScale, 1f);
+
+            if (layout.repeaterCompassAlternateInTray)
+                AddToTrayOnLoad(repeaterCompassAlternate, layout, menuHandler);
+        }
+
 
 
 
@@ -798,7 +813,7 @@ public class MenuHandler : MonoBehaviour
         if (airplaneData.countryDialBoard.transform.Find("Turn And Bank") != null)
         { 
             layout.turnAndBankPos = airplaneData.countryDialBoard.transform.Find("Turn And Bank").GetComponent<RectTransform>().anchoredPosition;
-        layout.turnAndBankScale = airplaneData.countryDialBoard.transform.Find("Turn And Bank").GetComponent<RectTransform>().localScale.x;
+            layout.turnAndBankScale = airplaneData.countryDialBoard.transform.Find("Turn And Bank").GetComponent<RectTransform>().localScale.x;
         }
         else        
             DialInTray("Turn And Bank", layout);
@@ -848,6 +863,14 @@ public class MenuHandler : MonoBehaviour
         }
         else
             DialInTray("Repeater Compass", layout);
+
+        if (airplaneData.countryDialBoard.transform.Find("Repeater Compass Alternate") != null)
+        {
+            layout.repeaterCompassAlternatePos = airplaneData.countryDialBoard.transform.Find("Repeater Compass Alternate").GetComponent<RectTransform>().anchoredPosition;
+            layout.repeaterCompassAlternateScale = airplaneData.countryDialBoard.transform.Find("Repeater Compass Alternate").GetComponent<RectTransform>().localScale.x;
+        }
+        else
+            DialInTray("Repeater Compass Alternate", layout);
 
 
 
@@ -922,6 +945,12 @@ public class MenuHandler : MonoBehaviour
                     layout.repeaterCompassScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
                     layout.repeaterCompassInTray = true;
                     break;
+
+                case "Repeater Compass Alternate":
+                    layout.repeaterCompassAlternatePos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
+                    layout.repeaterCompassAlternateScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
+                    layout.repeaterCompassAlternateInTray = true;
+                    break;
             }
         }
     }
@@ -948,13 +977,13 @@ public class MenuHandler : MonoBehaviour
 
         GameObject canvasObject = GameObject.FindGameObjectWithTag("Canvas");
         //if longer than the canvas width
-        UnityEngine.Debug.Log("longest row = " + longestRow);
-        UnityEngine.Debug.Log("canvas X = " + canvasObject.GetComponent<RectTransform>().rect.width);
+        //UnityEngine.Debug.Log("longest row = " + longestRow);
+        //UnityEngine.Debug.Log("canvas X = " + canvasObject.GetComponent<RectTransform>().rect.width);
 
         float scale = 1f;
         if (longestRow > canvasObject.GetComponent<RectTransform>().rect.width)
         {
-            UnityEngine.Debug.Log("row longer than canvas");
+            //UnityEngine.Debug.Log("row longer than canvas");
 
             //use this ratio for all positional calculations
             scale = canvasObject.GetComponent<RectTransform>().rect.width / longestRow;

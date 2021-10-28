@@ -24,7 +24,8 @@ public class RotateNeedle : MonoBehaviour
     public GameObject turnCoordinatorNeedle;
     public GameObject turnCoordinatorBall;
     public GameObject vsiNeedle;
-    public GameObject repeaterCompassFace;    
+    public GameObject repeaterCompassFace;
+    public GameObject repeaterCompassAlternateFace;
     public GameObject artificialHorizon;
     public GameObject artificialHorizonChevron;
     public GameObject artificialHorizonPlane;//for ITA
@@ -53,7 +54,8 @@ public class RotateNeedle : MonoBehaviour
     private List<Quaternion> quaternionsTurnCoordinatorNeedle = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     private List<Quaternion> quaternionsTurnCoordinatorBall = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     private List<Quaternion> quaternionsVSI = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
-    private List<Quaternion> quaternionsRepeaterCompass = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };    
+    private List<Quaternion> quaternionsRepeaterCompass = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
+    private List<Quaternion> quaternionsRepeaterCompassAlternate = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     private List<Quaternion> quaternionsArtificialHorizon = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     private List<Quaternion> quaternionsArtificialHorizonPlane = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     private List<Quaternion> quaternionsArtificialHorizonNeedle = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
@@ -80,6 +82,7 @@ public class RotateNeedle : MonoBehaviour
     private Quaternion turnCoordinatorBallTarget;
     private Quaternion vsiNeedleTarget;
     private Quaternion repeaterCompassTarget;
+    private Quaternion repeaterCompassAlternateTarget;
     private Quaternion artificialHorizonRotationTarget;
     private Quaternion artificialHorizonNeedleTarget;
     private Quaternion artificialHorizonChevronTarget;
@@ -301,6 +304,10 @@ public class RotateNeedle : MonoBehaviour
         if (repeaterCompassFace != null)
             AddRotationToList(quaternionsRepeaterCompass, repeaterCompassFace.transform.rotation);
 
+        //repeater compass alt
+        if (repeaterCompassAlternateFace != null)
+            AddRotationToList(quaternionsRepeaterCompassAlternate, repeaterCompassAlternateFace.transform.rotation);
+
         //artificial horizon
         if (artificialHorizon)
             AddRotationToList(quaternionsArtificialHorizon, artificialHorizon.transform.rotation);
@@ -444,6 +451,13 @@ public class RotateNeedle : MonoBehaviour
             repeaterCompassTarget = repeaterCompassFace.transform.rotation * Quaternion.Euler(0, 0, difference);
         }
 
+        if (repeaterCompassAlternateFace != null)
+        {
+            difference = quaternionsRepeaterCompassAlternate[0].z - quaternionsRepeaterCompassAlternate[1].z;
+            repeaterCompassAlternateTarget = repeaterCompassAlternateFace.transform.rotation * Quaternion.Euler(0, 0, difference);
+        }
+
+
         //artificial horizon        
         if (artificialHorizon!= null)
         {
@@ -498,6 +512,7 @@ public class RotateNeedle : MonoBehaviour
 
         RepeaterCompassTarget(iL2GameDataClient.country);
 
+
         ArtificialHorizonTargets(iL2GameDataClient.country);
     }
 
@@ -517,7 +532,7 @@ public class RotateNeedle : MonoBehaviour
 
                 //use the same function that turn co-ordinator uses
                 if (artificialHorizonNeedle != null)
-                    artificialHorizonNeedleTarget = GermanDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.turnCoordinatorNeedle);
+                    artificialHorizonNeedleTarget = GermanDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.turnCoordinatorNeedle,iL2GameDataClient.planeType);
 
                 break;
 
@@ -564,8 +579,18 @@ public class RotateNeedle : MonoBehaviour
 
         if (country == AirplaneData.Country.GER)
         {
-            float offset = compassRim.transform.eulerAngles.z;
-            repeaterCompassTarget = GermanDials.RepeaterCompassTarget(iL2GameDataClient.heading,offset);
+            if (iL2GameDataClient.planeAttributes.repeaterCompass)
+            {
+                //if user spins rim
+                float offset = compassRim.transform.eulerAngles.z;
+                repeaterCompassTarget = GermanDials.RepeaterCompassTarget(iL2GameDataClient.heading, offset);
+            }
+           
+            if(iL2GameDataClient.planeAttributes.repeaterCompassAlternate)
+            {
+                //Junkers unique dial
+                repeaterCompassAlternateTarget = GermanDials.RepeaterCompassAlternateTarget(iL2GameDataClient.heading);
+            }
         }
 
         else if (country == AirplaneData.Country.US)
@@ -634,7 +659,7 @@ public class RotateNeedle : MonoBehaviour
             case (AirplaneData.Country.GER):
                 //RU
                 //pendulum needle
-                turnCoordinatorNeedleTarget = GermanDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.turnCoordinatorNeedle);
+                turnCoordinatorNeedleTarget = GermanDials.TurnCoordinatorNeedleTarget(iL2GameDataClient.turnCoordinatorNeedle,iL2GameDataClient.planeType);
 
                 //ball indicator                
                 turnCoordinatorBallTarget = GermanDials.TurnCoordinatorBallTarget(iL2GameDataClient.turnCoordinatorBall,turnCoordinaterBallMod);
@@ -1109,8 +1134,17 @@ public class RotateNeedle : MonoBehaviour
 
     void RepeaterCompassRotation()
     {
-        if(repeaterCompassFace != null)
-            repeaterCompassFace.transform.rotation = Quaternion.Slerp(repeaterCompassFace.transform.rotation, repeaterCompassTarget, Time.fixedDeltaTime);
+        if (iL2GameDataClient.planeAttributes.repeaterCompass)
+        {
+            if (repeaterCompassFace != null)
+                repeaterCompassFace.transform.rotation = Quaternion.Slerp(repeaterCompassFace.transform.rotation, repeaterCompassTarget, Time.fixedDeltaTime);
+        }
+
+        if(iL2GameDataClient.planeAttributes.repeaterCompassAlternate)
+        {
+            if(repeaterCompassAlternateFace != null)
+                repeaterCompassAlternateFace.transform.rotation = Quaternion.Slerp(repeaterCompassAlternateFace.transform.rotation, repeaterCompassAlternateTarget, Time.fixedDeltaTime);
+        }
     }
 
     void ArtificialHorizonTranslations()

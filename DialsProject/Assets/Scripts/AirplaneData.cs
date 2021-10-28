@@ -127,6 +127,7 @@ public class AirplaneData : MonoBehaviour
 
         }
 
+        //update previous so we can detect a change on next update
         planeTypePrevious = planeType;
     }
 
@@ -234,6 +235,10 @@ public class AirplaneData : MonoBehaviour
         if (!planeAttributes.repeaterCompass)
             if(countryDialBoard.transform.Find("Repeater Compass")!= null)
                 countryDialBoard.transform.Find("Repeater Compass").gameObject.SetActive(false);
+
+        if (!planeAttributes.repeaterCompassAlternate)
+            if (countryDialBoard.transform.Find("Repeater Compass Alternate") != null)
+                countryDialBoard.transform.Find("Repeater Compass Alternate").gameObject.SetActive(false);
 
         if (!planeAttributes.artificialHorizon)
             if(countryDialBoard.transform.Find("Artificial Horizon") != null)

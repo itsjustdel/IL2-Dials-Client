@@ -98,8 +98,11 @@ public class GermanDials : MonoBehaviour
 
     //turn co
 
-    public static Quaternion TurnCoordinatorNeedleTarget(float v)
+    public static Quaternion TurnCoordinatorNeedleTarget(float v, string planeType)
     {
+        if (planeType == "Hs 129 B-2")
+            v *= 0.333f;
+
         Quaternion target = Quaternion.Euler(0, 0, v);
 
         return target;
@@ -135,6 +138,13 @@ public class GermanDials : MonoBehaviour
         return target;
     }
 
+    public static Quaternion RepeaterCompassAlternateTarget(float heading)
+    {
+        //number passed is rotation in rads, pi = 180 degrees
+        Quaternion target = Quaternion.Euler(0, 0, heading * Mathf.Rad2Deg);
+
+        return target;
+    }
 
     public static Quaternion VerticalSpeedTargetSmall(float verticalSpeed)
     {

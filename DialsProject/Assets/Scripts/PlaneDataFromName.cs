@@ -18,8 +18,9 @@ public class PlaneDataFromName : AirplaneData
         public bool vsiSmall;
         public bool vsiLarge; //larger scale than standard
         public bool repeaterCompass;
+        public bool repeaterCompassAlternate;
 
-      
+
     }
 
     public static PlaneAttributes AttributesFromName(string name)
@@ -66,6 +67,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiSmall = true;
                 //planeAttributes.vsiLarge = true; //test
                 planeAttributes.repeaterCompass = true;
+                planeAttributes.repeaterCompassAlternate = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.turnAndBank = true;
                 break;
@@ -262,6 +264,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiSmall = true;//actually smallest (needs modelled)
+                planeAttributes.repeaterCompassAlternate = true;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+2580 - 48 8D 15 416A1500     - lea rdx,[RSE.RSE::CAeroplane_I_16_t_24::`vftable'+1C0] { ("I-16 type 24") }
@@ -601,7 +604,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.speedometer = true;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.turnCoordinator = true;
-                planeAttributes.vsiSmall = true;
+                planeAttributes.vsiLarge = true;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+D5F - 48 8D 15 AA681100     - lea rdx,[RSE.RSE::CAeroplane_Yak_9T_ser_1::`vftable'+2E8] { ("Yak-9T ser.1") }
@@ -611,7 +614,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.speedometer = true;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.turnCoordinator = true;
-                planeAttributes.vsiSmall = true;
+                planeAttributes.vsiLarge = true;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+E14 - 48 8D 15 ED210D00     - lea rdx,[RSE.RSE::CGearPost_P_47D_22::`vftable'+68] { ("P-47D-22") }
