@@ -623,6 +623,9 @@ public class RotateNeedle : MonoBehaviour
                 else if (iL2GameDataClient.planeAttributes.vsiSmall)
                     vsiNeedleTarget = GermanDials.VerticalSpeedTargetSmall(iL2GameDataClient.verticalSpeed);
 
+                else if (iL2GameDataClient.planeAttributes.vsiSmallest)
+                    vsiNeedleTarget = GermanDials.VerticalSpeedTargetSmallest(iL2GameDataClient.verticalSpeed);
+
                 break;
 
             //these countries only have one vsi (so far)

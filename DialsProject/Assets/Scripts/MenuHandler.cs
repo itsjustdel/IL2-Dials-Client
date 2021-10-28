@@ -707,6 +707,18 @@ public class MenuHandler : MonoBehaviour
         }
 
         //both vsi share the same variable - only one vsi per plane
+
+        if (airplaneData.countryDialBoard.transform.Find("VSI Smallest") != null)
+        {
+
+            GameObject vsi = airplaneData.countryDialBoard.transform.Find("VSI Smallest").gameObject;
+            vsi.GetComponent<RectTransform>().anchoredPosition = layout.vsiSmallestPos;
+            vsi.GetComponent<RectTransform>().localScale = new Vector3(layout.vsiSmallestScale, layout.vsiSmallestScale, 1f);
+
+            if (layout.vsiSmallestInTray)
+                AddToTrayOnLoad(vsi, layout, menuHandler);
+        }
+
         if (airplaneData.countryDialBoard.transform.Find("VSI Small") != null)
         {
 
@@ -827,6 +839,15 @@ public class MenuHandler : MonoBehaviour
         else
             DialInTray("Turn Coordinator", layout);
 
+        if (airplaneData.countryDialBoard.transform.Find("VSI Smallest") != null)
+        {
+            layout.vsiSmallestPos = airplaneData.countryDialBoard.transform.Find("VSI Smallest").GetComponent<RectTransform>().anchoredPosition;
+            layout.vsiSmallestScale = airplaneData.countryDialBoard.transform.Find("VSI Smallest").GetComponent<RectTransform>().localScale.x;
+        }
+
+        else
+            DialInTray("VSI Smallest", layout);
+
 
         if (airplaneData.countryDialBoard.transform.Find("VSI Small") != null)
         {
@@ -920,6 +941,12 @@ public class MenuHandler : MonoBehaviour
                     layout.turnIndicatorPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
                     layout.turnIndicatorScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
                     layout.turnIndicatorInTray = true;
+                    break;
+
+                case "VSI Smallest":
+                    layout.vsiSmallestPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
+                    layout.vsiSmallestScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
+                    layout.vsiSmallestInTray = true;
                     break;
 
                 case "VSI Small":

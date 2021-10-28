@@ -15,6 +15,7 @@ public class PlaneDataFromName : AirplaneData
         public bool turnAndBank; // with slip
         public bool artificialHorizon; // 
         public bool turnCoordinator; // with ball and wobbly needle
+        public bool vsiSmallest;
         public bool vsiSmall;
         public bool vsiLarge; //larger scale than standard
         public bool repeaterCompass;
@@ -64,7 +65,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
-                planeAttributes.vsiSmall = true;
+                planeAttributes.vsiSmallest = true;
                 //planeAttributes.vsiLarge = true; //test
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.repeaterCompassAlternate = true;
@@ -139,6 +140,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.repeaterCompass = true;
+
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+1995 - 48 8D 15 FC911700     - lea rdx,[RSE.RSE::CAeroplane_Il_2_m_41::`vftable'+1E8] { ("Il-2 mod.1941") }
@@ -710,9 +712,9 @@ public class PlaneDataFromName : AirplaneData
             case "U-2VS":
                 planeAttributes.country = Country.UK;
                 planeAttributes.altimeter = true;
-                planeAttributes.speedometer = true;//needs smaller modelled and "smallest" prefab/variable  added
+                planeAttributes.speedometer = true;
                 planeAttributes.turnAndBank = true;
-                planeAttributes.vsiSmall = true;
+                planeAttributes.vsiSmallest = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
                 break;
