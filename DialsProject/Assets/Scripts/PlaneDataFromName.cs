@@ -710,7 +710,7 @@ public class PlaneDataFromName : AirplaneData
 
             //RSE.RSE::CCockpitInstruments::simulation+DDD - 4C 8D 05 6CB00C00     - lea r8,[RSE.RSE::CAeroplane_Po_2_VS::`vftable'+1D0] { ("U-2VS") }
             case "U-2VS":
-                planeAttributes.country = Country.UK;
+                planeAttributes.country = Country.US;
                 planeAttributes.altimeter = true;
                 planeAttributes.speedometer = true;
                 planeAttributes.turnAndBank = true;
