@@ -195,8 +195,8 @@ public class GermanDials : MonoBehaviour
             verticalSpeed = 90f - (verticalSpeed * 3f) -45f;
 
         }
-        //clamp to "10"
-        verticalSpeed = Mathf.Clamp(verticalSpeed, -90, 270);
+        //clamp to "30"
+        verticalSpeed = Mathf.Clamp(verticalSpeed, -45, 225);
 
         Quaternion target = Quaternion.Euler(0, 0, verticalSpeed);
 

@@ -618,13 +618,23 @@ public class RotateNeedle : MonoBehaviour
             case (AirplaneData.Country.GER):
 
                 if (iL2GameDataClient.planeAttributes.vsiLarge)
+                {
+                    //need to clamp vertical speed - helps with coming back from over the limit
+                    iL2GameDataClient.verticalSpeed = Mathf.Clamp(iL2GameDataClient.verticalSpeed, -30f, 30f);
                     vsiNeedleTarget = GermanDials.VerticalSpeedTargetLarge(iL2GameDataClient.verticalSpeed);
-                
+                }
+
                 else if (iL2GameDataClient.planeAttributes.vsiSmall)
+                {
+                    iL2GameDataClient.verticalSpeed = Mathf.Clamp(iL2GameDataClient.verticalSpeed, -15f, 15f);
                     vsiNeedleTarget = GermanDials.VerticalSpeedTargetSmall(iL2GameDataClient.verticalSpeed);
+                }
 
                 else if (iL2GameDataClient.planeAttributes.vsiSmallest)
+                {
+                    iL2GameDataClient.verticalSpeed = Mathf.Clamp(iL2GameDataClient.verticalSpeed, -5f, 5f);
                     vsiNeedleTarget = GermanDials.VerticalSpeedTargetSmallest(iL2GameDataClient.verticalSpeed);
+                }
 
                 break;
 

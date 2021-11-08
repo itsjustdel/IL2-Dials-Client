@@ -45,6 +45,7 @@ public class AirplaneData : MonoBehaviour
     public float heading;
     public float headingPrevious;
     public float headingPreviousPrevious;
+    public float rpm;
 
 
     //public List<GameObject> countryDials = new List<GameObject>();
