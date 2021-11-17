@@ -20,7 +20,8 @@ public class PlaneDataFromName : AirplaneData
         public bool vsiLarge; //larger scale than standard
         public bool repeaterCompass;
         public bool repeaterCompassAlternate;
-
+        public bool rpmA;
+        public bool rpmB;
 
     }
 
@@ -42,6 +43,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.turnAndBank = true;
+                planeAttributes.rpmA = true;
 
                 break;
 
@@ -56,6 +58,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.turnAndBank = true;
+                planeAttributes.rpmB = true;
 
                 break;
 
@@ -71,6 +74,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.repeaterCompassAlternate = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.turnAndBank = true;
+                planeAttributes.rpmA = true;
                 break;
 
             case "GER B":
@@ -78,12 +82,12 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.speedometer = true;
                 planeAttributes.altimeter = true;
                 planeAttributes.turnCoordinator = true;
-                planeAttributes.headingIndicator = true;
-                
+                planeAttributes.headingIndicator = true;                
                 planeAttributes.vsiLarge = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.turnAndBank = true;
+                planeAttributes.rpmA = true;
                 break;
 
             case "US A":
@@ -94,7 +98,21 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.headingIndicator = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.repeaterCompass = true;
-              //  planeAttributes.artificialHorizon = true;
+                //  planeAttributes.artificialHorizon = true;
+                planeAttributes.rpmA = true;
+                break;
+
+
+            case "US B":
+                planeAttributes.country = Country.US;
+                planeAttributes.speedometer = true;
+                planeAttributes.altimeter = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.headingIndicator = true;
+                planeAttributes.vsiLarge = true;
+                planeAttributes.repeaterCompass = true;
+                //  planeAttributes.artificialHorizon = true;
+                planeAttributes.rpmB = true;
                 break;
 
             case "UK A":
@@ -107,6 +125,20 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnAndBank = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmA = true;
+                break;
+
+            case "UK B":
+                planeAttributes.country = Country.UK;
+                planeAttributes.speedometer = true;
+                planeAttributes.altimeter = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.headingIndicator = true;
+                planeAttributes.vsiLarge = true;
+                planeAttributes.turnAndBank = true;
+                planeAttributes.artificialHorizon = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmB = true;
                 break;
 
             case "ITA A":
@@ -140,7 +172,6 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.repeaterCompass = true;
-
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+1995 - 48 8D 15 FC911700     - lea rdx,[RSE.RSE::CAeroplane_Il_2_m_41::`vftable'+1E8] { ("Il-2 mod.1941") }

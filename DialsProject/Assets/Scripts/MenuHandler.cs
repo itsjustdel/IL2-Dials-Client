@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class MenuHandler : MonoBehaviour
 {
     public AirplaneData airplaneData;
+    public DialsManager dialsManager;
     
     public bool deletePrefs = false;
     public GameObject title;    
@@ -20,11 +21,8 @@ public class MenuHandler : MonoBehaviour
     public GameObject layoutPanel;
     public GameObject layoutButton;
 
-    public GameObject trayParent;
-    public bool trayOpen;
-    public List<GameObject> trayObjects;
-    public List<GameObject> dialsInTray;
-    public List<GameObject> dialsOnBoard;
+
+    
     public GameObject connectionsButton;
     public GameObject ledParent;
     public GameObject ipTextField;
@@ -35,6 +33,13 @@ public class MenuHandler : MonoBehaviour
     public Toggle dontShowAgainToggle;
     public bool ipFieldOpen;
     public bool portFieldOpen;
+
+
+    public bool trayOpen;
+    public GameObject trayParent;
+    public List<GameObject> trayObjects;
+    public List<GameObject> dialsInTray;
+    public List<GameObject> dialsOnBoard;
 
     //messages
     public GameObject layoutWarningMessage;
@@ -170,7 +175,11 @@ public class MenuHandler : MonoBehaviour
         }
 
         IdleTimer();
+
+        
     }
+
+
 
     void IdleTimer()
     {
@@ -219,14 +228,13 @@ public class MenuHandler : MonoBehaviour
         title.SetActive(false);
         missionStart.SetActive(false);
     }
+
     void EnableTitle()
     {
         title.SetActive(true);
         missionStart.SetActive(true);
     }
-
-
-   
+       
     void TitleFade()
     {
         
@@ -285,9 +293,7 @@ public class MenuHandler : MonoBehaviour
             missionStartColor.a = 1f;
             glowDirection = !glowDirection;
         }
-    }
-
-    
+    }    
 
     public void InputFieldOpen11()
     {
@@ -529,7 +535,7 @@ public class MenuHandler : MonoBehaviour
         //turn compasses back on 
         ActivateCompassTouch();
 
-        SaveLayout();
+        dialsManager.SaveLayout();
 
     }
 
@@ -548,8 +554,6 @@ public class MenuHandler : MonoBehaviour
         //show copnnection panel - IP address, port etc
         connectionPanel.SetActive(true);
     }
-
-
 
     public void UpdateLayoutPanel()
     {
@@ -618,479 +622,6 @@ public class MenuHandler : MonoBehaviour
         {
             UIhandlers[i].GetComponent<Image>().enabled = false;
         }
-    }
-
-    public void LoadLayout()
-    {
-
-        MenuHandler menuHandler = GameObject.FindGameObjectWithTag("MenuObject").GetComponent<MenuHandler>();
-
-        //Save layout is in MenuHandler
-
-        //first of all empty trays
-        ButtonManager.EmptyTrays(menuHandler);
-
-        //grab layout data if available from player prefs
-        string jsonFoo = PlayerPrefs.GetString(airplaneData.planeType);
-        if (System.String.IsNullOrEmpty(jsonFoo))
-        {
-
-            //set dials to default
-            DefaultLayouts(airplaneData.countryDialBoard);
-            return;
-        }
-
-        //continue if there is a pref file
-
-        //rebuild json
-        Layout layout = JsonUtility.FromJson<Layout>(jsonFoo);
-
-        //check for version change
-        if(layout.version != airplaneData.clientVersion)
-        {
-            //reset all dials :(
-
-            //set dials to default
-            Debug.Log("Version change detected");
-            DefaultLayouts(airplaneData.countryDialBoard);
-
-            return;
-        }
-
-        //apply to dials/positions
-
-        GameObject speedometer = airplaneData.countryDialBoard.transform.Find("Speedometer").gameObject;
-        speedometer.GetComponent<RectTransform>().anchoredPosition = layout.speedoPos;
-        speedometer.GetComponent<RectTransform>().localScale = new Vector3(layout.speedoScale, layout.speedoScale, 1f);
-
-        if (layout.speedoInTray)
-            AddToTrayOnLoad(speedometer, layout, menuHandler);
-
-        GameObject altimeter = airplaneData.countryDialBoard.transform.Find("Altimeter").gameObject;
-        altimeter.GetComponent<RectTransform>().anchoredPosition = layout.altPos;
-        altimeter.GetComponent<RectTransform>().localScale = new Vector3(layout.altScale, layout.altScale, 1f);
-
-
-        if (layout.altimeterInTray)
-            AddToTrayOnLoad(altimeter, layout, menuHandler);
-
-        if (airplaneData.countryDialBoard.transform.Find("Heading Indicator") != null)
-        {
-            GameObject headingIndicator = airplaneData.countryDialBoard.transform.Find("Heading Indicator").gameObject;
-            headingIndicator.GetComponent<RectTransform>().anchoredPosition = layout.headingPos;
-            headingIndicator.GetComponent<RectTransform>().localScale = new Vector3(layout.headingScale, layout.headingScale, 1f);
-
-            if (layout.headingIndicatorInTray)
-                AddToTrayOnLoad(headingIndicator, layout, menuHandler);
-        }
-
-        if (airplaneData.countryDialBoard.transform.Find("Turn And Bank") != null)
-        {
-            GameObject turnAndBank = airplaneData.countryDialBoard.transform.Find("Turn And Bank").gameObject;
-            turnAndBank.GetComponent<RectTransform>().anchoredPosition = layout.turnAndBankPos;
-            turnAndBank.GetComponent<RectTransform>().localScale = new Vector3(layout.turnAndBankScale, layout.turnAndBankScale, 1f);
-
-            if (layout.turnAndBankInTray)
-                AddToTrayOnLoad(turnAndBank, layout, menuHandler);
-
-        }
-
-        if (airplaneData.countryDialBoard.transform.Find("Turn Coordinator") != null)
-        {
-
-            GameObject turnIndicator = airplaneData.countryDialBoard.transform.Find("Turn Coordinator").gameObject;
-            turnIndicator.GetComponent<RectTransform>().anchoredPosition = layout.turnIndicatorPos;
-            turnIndicator.GetComponent<RectTransform>().localScale = new Vector3(layout.turnIndicatorScale, layout.turnIndicatorScale, 1f);
-
-            if (layout.turnIndicatorInTray)
-                AddToTrayOnLoad(turnIndicator, layout, menuHandler);
-        }
-
-        //both vsi share the same variable - only one vsi per plane
-
-        if (airplaneData.countryDialBoard.transform.Find("VSI Smallest") != null)
-        {
-
-            GameObject vsi = airplaneData.countryDialBoard.transform.Find("VSI Smallest").gameObject;
-            vsi.GetComponent<RectTransform>().anchoredPosition = layout.vsiSmallestPos;
-            vsi.GetComponent<RectTransform>().localScale = new Vector3(layout.vsiSmallestScale, layout.vsiSmallestScale, 1f);
-
-            if (layout.vsiSmallestInTray)
-                AddToTrayOnLoad(vsi, layout, menuHandler);
-        }
-
-        if (airplaneData.countryDialBoard.transform.Find("VSI Small") != null)
-        {
-
-            GameObject vsi = airplaneData.countryDialBoard.transform.Find("VSI Small").gameObject;
-            vsi.GetComponent<RectTransform>().anchoredPosition = layout.vsiSmallPos;
-            vsi.GetComponent<RectTransform>().localScale = new Vector3(layout.vsiSmallScale, layout.vsiSmallScale, 1f);
-
-            if (layout.vsiSmallInTray)
-                AddToTrayOnLoad(vsi, layout, menuHandler);
-        }
-
-        //both vsi share the same variable - only one vsi per plane
-        if (airplaneData.countryDialBoard.transform.Find("VSI Large") != null)
-        {
-
-            GameObject vsi = airplaneData.countryDialBoard.transform.Find("VSI Large").gameObject;
-            vsi.GetComponent<RectTransform>().anchoredPosition = layout.vsiLargePos;
-            vsi.GetComponent<RectTransform>().localScale = new Vector3(layout.vsiLargeScale, layout.vsiLargeScale, 1f);
-
-            if (layout.vsiLargeInTray)
-                AddToTrayOnLoad(vsi, layout, menuHandler);
-        }
-
-        if (airplaneData.countryDialBoard.transform.Find("Artificial Horizon") != null)
-        {
-
-            GameObject artificialHorizon = airplaneData.countryDialBoard.transform.Find("Artificial Horizon").gameObject;
-            artificialHorizon.GetComponent<RectTransform>().anchoredPosition = layout.artificialHorizonPos;
-            artificialHorizon.GetComponent<RectTransform>().localScale = new Vector3(layout.artificialHorizonScale, layout.artificialHorizonScale, 1f);
-
-            if (layout.repeaterCompassInTray)
-                AddToTrayOnLoad(artificialHorizon, layout, menuHandler);
-        }
-
-        if (airplaneData.countryDialBoard.transform.Find("Repeater Compass") != null)
-        {
-
-            GameObject repeaterCompass = airplaneData.countryDialBoard.transform.Find("Repeater Compass").gameObject;
-            repeaterCompass.GetComponent<RectTransform>().anchoredPosition = layout.repeaterCompassPos;
-            repeaterCompass.GetComponent<RectTransform>().localScale = new Vector3(layout.repeaterCompassScale, layout.repeaterCompassScale, 1f);
-
-            if (layout.repeaterCompassInTray)
-                AddToTrayOnLoad(repeaterCompass, layout, menuHandler);
-        }
-
-        if (airplaneData.countryDialBoard.transform.Find("Repeater Compass Alternate") != null)
-        {
-
-            GameObject repeaterCompassAlternate = airplaneData.countryDialBoard.transform.Find("Repeater Compass Alternate").gameObject;
-            //using non alternate variables because we won't have two compasses 
-            repeaterCompassAlternate.GetComponent<RectTransform>().anchoredPosition = layout.repeaterCompassAlternatePos;
-            repeaterCompassAlternate.GetComponent<RectTransform>().localScale = new Vector3(layout.repeaterCompassAlternateScale, layout.repeaterCompassAlternateScale, 1f);
-
-            if (layout.repeaterCompassAlternateInTray)
-                AddToTrayOnLoad(repeaterCompassAlternate, layout, menuHandler);
-        }
-
-
-
-
-
-    }
-
-
-    public void SaveLayout()
-    {
-        //use class to write with json // https://forum.unity.com/threads/how-would-i-do-the-following-in-playerprefs.397516/#post-2595609
-        Layout layout = new Layout();
-        layout.planeType = airplaneData.planeType;
-
-        //save version to cover for updates
-        layout.version = airplaneData.clientVersion;
-
-        //look for dial on dashboard - original parent        
-
-        if (airplaneData.countryDialBoard.transform.Find("Speedometer") != null)
-        {
-            layout.speedoPos = airplaneData.countryDialBoard.transform.Find("Speedometer").GetComponent<RectTransform>().anchoredPosition;
-            layout.speedoScale = airplaneData.countryDialBoard.transform.Find("Speedometer").GetComponent<RectTransform>().localScale.x;
-        }
-        else
-            //if we don't find it, look for it in the tray
-            DialInTray("Speedometer", layout);
-
-
-        if (airplaneData.countryDialBoard.transform.Find("Altimeter") != null)
-        {
-            layout.altPos = airplaneData.countryDialBoard.transform.Find("Altimeter").GetComponent<RectTransform>().anchoredPosition;
-            layout.altScale = airplaneData.countryDialBoard.transform.Find("Altimeter").GetComponent<RectTransform>().localScale.x;
-        }
-        else
-            DialInTray("Altimeter", layout);
-
-
-        if (airplaneData.countryDialBoard.transform.Find("Heading Indicator") != null)
-        {
-            layout.headingPos = airplaneData.countryDialBoard.transform.Find("Heading Indicator").GetComponent<RectTransform>().anchoredPosition;
-            layout.headingScale = airplaneData.countryDialBoard.transform.Find("Heading Indicator").GetComponent<RectTransform>().localScale.x;
-        }
-        else
-            DialInTray("Heading Indicator", layout);
-
-
-        if (airplaneData.countryDialBoard.transform.Find("Turn And Bank") != null)
-        { 
-            layout.turnAndBankPos = airplaneData.countryDialBoard.transform.Find("Turn And Bank").GetComponent<RectTransform>().anchoredPosition;
-            layout.turnAndBankScale = airplaneData.countryDialBoard.transform.Find("Turn And Bank").GetComponent<RectTransform>().localScale.x;
-        }
-        else        
-            DialInTray("Turn And Bank", layout);
-
-
-        if (airplaneData.countryDialBoard.transform.Find("Turn Coordinator") != null)
-        {
-            layout.turnIndicatorPos = airplaneData.countryDialBoard.transform.Find("Turn Coordinator").GetComponent<RectTransform>().anchoredPosition;
-            layout.turnIndicatorScale = airplaneData.countryDialBoard.transform.Find("Turn Coordinator").GetComponent<RectTransform>().localScale.x;
-        }
-        else
-            DialInTray("Turn Coordinator", layout);
-
-        if (airplaneData.countryDialBoard.transform.Find("VSI Smallest") != null)
-        {
-            layout.vsiSmallestPos = airplaneData.countryDialBoard.transform.Find("VSI Smallest").GetComponent<RectTransform>().anchoredPosition;
-            layout.vsiSmallestScale = airplaneData.countryDialBoard.transform.Find("VSI Smallest").GetComponent<RectTransform>().localScale.x;
-        }
-
-        else
-            DialInTray("VSI Smallest", layout);
-
-
-        if (airplaneData.countryDialBoard.transform.Find("VSI Small") != null)
-        {
-            layout.vsiSmallPos = airplaneData.countryDialBoard.transform.Find("VSI Small").GetComponent<RectTransform>().anchoredPosition;
-            layout.vsiSmallScale = airplaneData.countryDialBoard.transform.Find("VSI Small").GetComponent<RectTransform>().localScale.x;
-        }
-
-        else
-            DialInTray("VSI Small", layout);
-
-
-        if (airplaneData.countryDialBoard.transform.Find("VSI Large") != null)
-        {
-            layout.vsiLargePos = airplaneData.countryDialBoard.transform.Find("VSI Large").GetComponent<RectTransform>().anchoredPosition;
-            layout.vsiLargeScale = airplaneData.countryDialBoard.transform.Find("VSI Large").GetComponent<RectTransform>().localScale.x;
-        }
-        else
-            DialInTray("VSI Large", layout);
-
-
-        if (airplaneData.countryDialBoard.transform.Find("Artificial Horizon") != null)
-        {
-            layout.artificialHorizonPos = airplaneData.countryDialBoard.transform.Find("Artificial Horizon").GetComponent<RectTransform>().anchoredPosition;
-            layout.artificialHorizonScale = airplaneData.countryDialBoard.transform.Find("Artificial Horizon").GetComponent<RectTransform>().localScale.x;
-        }
-        else
-            DialInTray("Artificial Horizon", layout);
-
-
-        if (airplaneData.countryDialBoard.transform.Find("Repeater Compass") != null)
-        {
-            layout.repeaterCompassPos = airplaneData.countryDialBoard.transform.Find("Repeater Compass").GetComponent<RectTransform>().anchoredPosition;
-            layout.repeaterCompassScale = airplaneData.countryDialBoard.transform.Find("Repeater Compass").GetComponent<RectTransform>().localScale.x;
-        }
-        else
-            DialInTray("Repeater Compass", layout);
-
-        if (airplaneData.countryDialBoard.transform.Find("Repeater Compass Alternate") != null)
-        {
-            layout.repeaterCompassAlternatePos = airplaneData.countryDialBoard.transform.Find("Repeater Compass Alternate").GetComponent<RectTransform>().anchoredPosition;
-            layout.repeaterCompassAlternateScale = airplaneData.countryDialBoard.transform.Find("Repeater Compass Alternate").GetComponent<RectTransform>().localScale.x;
-        }
-        else
-            DialInTray("Repeater Compass Alternate", layout);
-
-
-
-        //pack with json utility
-        string jsonFoo = JsonUtility.ToJson(layout);
-
-        //save packed string to player preferences (unity)
-        PlayerPrefs.SetString(airplaneData.planeType, jsonFoo);
-        PlayerPrefs.Save();
-
-    }
-
-    void DialInTray(string name, Layout layout)
-    {
-        
-        for (int i = 0; i < dialsInTray.Count; i++)
-        {
-        
-
-            switch (name)
-            {
-                case "Speedometer":
-                    layout.speedoPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
-                    layout.speedoScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
-                    layout.speedoInTray = true;
-                    break;
-
-                case "Altimeter":
-                    layout.altPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
-                    layout.altScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
-                    layout.altimeterInTray = true;
-                    break;
-
-                case "Heading Indicator":
-                    layout.headingPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
-                    layout.headingScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
-                    layout.headingIndicatorInTray = true;
-                    break;
-
-                case "Turn And Bank":
-                    layout.turnAndBankPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
-                    layout.turnAndBankScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
-                    layout.turnAndBankInTray = true;
-                    break;
-
-                case "Turn Coordinator":
-                    layout.turnIndicatorPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
-                    layout.turnIndicatorScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
-                    layout.turnIndicatorInTray = true;
-                    break;
-
-                case "VSI Smallest":
-                    layout.vsiSmallestPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
-                    layout.vsiSmallestScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
-                    layout.vsiSmallestInTray = true;
-                    break;
-
-                case "VSI Small":
-                    layout.vsiSmallPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
-                    layout.vsiSmallScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
-                    layout.vsiSmallInTray = true;
-                    break;
-
-                case "VSI Large":
-                    layout.vsiLargePos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
-                    layout.vsiLargeScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
-                    layout.vsiLargeInTray = true;
-                    break;
-
-                case "Artificial Horizon":
-                    layout.artificialHorizonPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
-                    layout.artificialHorizonScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
-                    layout.artificialHorizonInTray = true;
-                    break;
-
-                case "Repeater Compass":
-                    layout.repeaterCompassPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
-                    layout.repeaterCompassScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
-                    layout.repeaterCompassInTray = true;
-                    break;
-
-                case "Repeater Compass Alternate":
-                    layout.repeaterCompassAlternatePos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
-                    layout.repeaterCompassAlternateScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
-                    layout.repeaterCompassAlternateInTray = true;
-                    break;
-            }
-        }
-    }
-
-    static void DefaultLayouts(GameObject dialsPrefab)
-    {
-        //Programtically sort default layouts, so if there is an update, i don't need to create a prefab layout
-
-        //organise dials depending on how many are available
-        //we need to know the total amount of active dials before we continue
-        List<GameObject> activeDials = new List<GameObject>();
-        for (int i = 0; i < dialsPrefab.transform.childCount; i++)
-            if (dialsPrefab.transform.GetChild(i).gameObject.activeSelf)
-                activeDials.Add(dialsPrefab.transform.GetChild(i).gameObject);
-
-
-        //find out if we ned to scale dials to fit them all in the screen (happens if 7 or more dials)
-        //length of top will be the longest
-        float f = activeDials.Count;
-        //round half of count upwards and convert to int. Mathf.Ceil rounds up. If on a whole number, it doesn't round up //https://docs.unity3d.com/ScriptReference/Mathf.Ceil.html
-        //half of count because there are two rows
-        int longestRow = (int)Mathf.Ceil(f / 2);
-        longestRow *= 300;//300 default step between dials
-
-        GameObject canvasObject = GameObject.FindGameObjectWithTag("Canvas");
-        //if longer than the canvas width
-        //UnityEngine.Debug.Log("longest row = " + longestRow);
-        //UnityEngine.Debug.Log("canvas X = " + canvasObject.GetComponent<RectTransform>().rect.width);
-
-        float scale = 1f;
-        if (longestRow > canvasObject.GetComponent<RectTransform>().rect.width)
-        {
-            //UnityEngine.Debug.Log("row longer than canvas");
-
-            //use this ratio for all positional calculations
-            scale = canvasObject.GetComponent<RectTransform>().rect.width / longestRow;
-
-        }
-
-
-        //split in to two rows, if odd number, put more on the top
-        for (int i = 0; i < activeDials.Count; i++)
-        {
-            //ternary statement            
-            int odd = activeDials.Count % 2 != 0 ? 1 : 0;
-
-            //if odd, we will add one extra to the top row
-            if (i < activeDials.Count / 2 + odd)
-            {
-                //0 0
-                //150 1
-                //300 2
-
-                int x = ((int)((activeDials.Count - 1) / 2)) * -150;
-                //then add step
-                int step = 300 * (i);
-                x += step;
-
-                int y = 150;
-
-                //scale and round and convert to int for position
-                float xFloat = x * scale;
-                x = (int)(Mathf.Round(xFloat));
-                float yFloat = y * scale;
-                y = (int)(Mathf.Round(yFloat));
-
-                activeDials[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
-
-
-            }
-            else
-            {
-                //starting point //from whats left 
-                //use "odd" to nudge in to position
-                int diff = activeDials.Count - 1 + odd - (activeDials.Count / 2);
-                int x = ((int)(diff));
-                x *= -150;
-                //then add step
-                int step = 300 * (i - (activeDials.Count / 2));
-                x += step;
-
-                int y = -150;
-
-                //scale and round and convert to int 
-                float xFloat = x * scale;
-                x = (int)(Mathf.Round(xFloat));
-                float yFloat = y * scale;
-                y = (int)(Mathf.Round(yFloat));
-
-                activeDials[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
-            }
-
-            //scale dial
-            activeDials[i].transform.localScale *= scale;
-        }
-
-
-
-
-
-    }
-
-    void AddToTrayOnLoad(GameObject dial, Layout layout, MenuHandler menuHandler)
-    {
-
-        //list
-        //menuHandler.dialsInTray.Add(dial);
-        //in hierarchy
-        ButtonManager.PutDialInTray(dial, menuHandler);
-
-        //apply transforms
-        //        dial.GetComponent<RectTransform>().anchoredPosition = layout.speedoPos;
-        //dial.GetComponent<RectTransform>().localScale = new Vector3(layout.speedoScale, layout.speedoScale, 1f);
     }
 
 }

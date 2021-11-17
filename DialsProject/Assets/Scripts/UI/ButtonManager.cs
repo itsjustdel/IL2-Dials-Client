@@ -52,7 +52,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             PutDialInTray(transform.parent.parent.gameObject, menuHandler);
             Debug.Log("Remove Dial Click");
 
-            menuHandler.SaveLayout();
+            menuHandler.dialsManager.SaveLayout();
 
 
 
@@ -216,7 +216,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         }
 
 
-        menuHandler.SaveLayout();
+        menuHandler.dialsManager.SaveLayout();
         
     }
 

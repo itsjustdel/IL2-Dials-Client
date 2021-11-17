@@ -20,6 +20,9 @@ public class Layout
     public Vector2 artificialHorizonPos;
     public Vector2 repeaterCompassPos;
     public Vector2 repeaterCompassAlternatePos;
+    public Vector2 rpmAPos;
+    public Vector2 rpmBPos;
+
 
 
     public float speedoScale;
@@ -33,6 +36,8 @@ public class Layout
     public float artificialHorizonScale;
     public float repeaterCompassScale;
     public float repeaterCompassAlternateScale;
+    public float rpmAScale;
+    public float rpmBScale;
 
 
     public bool speedoInTray;
@@ -46,6 +51,8 @@ public class Layout
     public bool artificialHorizonInTray;
     public bool repeaterCompassInTray;
     public bool repeaterCompassAlternateInTray;
+    public bool rpmAInTray;
+    public bool rpmBInTray;
 
 
 }
