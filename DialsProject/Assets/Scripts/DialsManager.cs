@@ -49,12 +49,10 @@ public class DialsManager : MonoBehaviour
             DeactivateUnavailableDials(countryDialBoard, airplaneData.planeType, airplaneData.planeAttributes);
 
 
-            //empty the trays
-
             //vis needle variables need updated depending on what dials were loaded
             AsignVSI(airplaneData.planeAttributes, countryDialBoard);
 
-
+            AsignRPM(airplaneData.planeAttributes, countryDialBoard);
 
 
             if (countryDialBoard != null)
@@ -80,7 +78,6 @@ public class DialsManager : MonoBehaviour
     //POOSIBLE NEW CLASS FROM HERE?
     void AsignVSI(PlaneDataFromName.PlaneAttributes planeAttributes, GameObject countryDialBoard)
     {
-
         //there are more than one vsi but never more than one at the same time, so we share prefabs
         //let the rotate needle script know which needle to turn
         if (planeAttributes.vsiLarge)
@@ -99,6 +96,23 @@ public class DialsManager : MonoBehaviour
         }
     }
 
+    void AsignRPM(PlaneDataFromName.PlaneAttributes planeAttributes, GameObject countrydialBoard)
+    {
+        if (planeAttributes.country == AirplaneData.Country.RU)
+        {
+            if (planeAttributes.rpmA)
+            {
+                countryDialBoard.GetComponent<RotateNeedle>().rpmNeedleA = countryDialBoard.transform.Find("RPM A").Find("Needle A").gameObject;
+                countryDialBoard.GetComponent<RotateNeedle>().rpmNeedleB = countryDialBoard.transform.Find("RPM A").Find("Needle B").gameObject;
+            }
+
+            if (planeAttributes.rpmB)
+            {
+
+                countryDialBoard.GetComponent<RotateNeedle>().rpmNeedleA = countryDialBoard.transform.Find("RPM A").Find("Needle A").gameObject;
+            }
+        }
+    }
 
     public void LoadLayout()
     {
@@ -277,6 +291,8 @@ public class DialsManager : MonoBehaviour
             if (layout.rpmBInTray)
                 AddToTrayOnLoad(rpmB, menuHandler);
         }
+
+
     }
 
     public void SwitchDialBoardFromCountry(AirplaneData.Country country)
@@ -327,7 +343,7 @@ public class DialsManager : MonoBehaviour
             //asign variables - can't asign scen variables to prefab in editor
             tcpClient.rN = countryDialBoard.GetComponent<RotateNeedle>();
             tcpClient.rN.buildControl = GameObject.Find("Build Chooser").GetComponent<BuildControl>();
-            tcpClient.rN.iL2GameDataClient = GameObject.Find("Player Plane").GetComponent<AirplaneData>();
+            tcpClient.rN.airplaneData = GameObject.Find("Player Plane").GetComponent<AirplaneData>();
             tcpClient.rN.tcpClient = GameObject.Find("Networking").GetComponent<TCPClient>();
 
 
@@ -376,7 +392,6 @@ public class DialsManager : MonoBehaviour
         if (!planeAttributes.artificialHorizon)
             if (countryDialBoard.transform.Find("Artificial Horizon") != null)
                 countryDialBoard.transform.Find("Artificial Horizon").gameObject.SetActive(false);
-
 
         if (!planeAttributes.rpmA)
             if (countryDialBoard.transform.Find("RPM A") != null)
@@ -600,7 +615,6 @@ public class DialsManager : MonoBehaviour
                     layout.repeaterCompassAlternateInTray = true;
                     break;
 
-
                 case "RPM A":
                     layout.rpmAPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
                     layout.rpmAScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
@@ -707,11 +721,6 @@ public class DialsManager : MonoBehaviour
             //scale dial
             activeDials[i].transform.localScale *= scale;
         }
-
-
-
-
-
     }
 
     void AddToTrayOnLoad(GameObject dial, MenuHandler menuHandler)

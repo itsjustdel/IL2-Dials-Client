@@ -154,4 +154,30 @@ public class RussianDials : MonoBehaviour
 
         return target;
     }
+
+    public static Quaternion RPMATarget(float rpm)
+    {
+        float r = rpm * -0.036f;
+        Quaternion target = Quaternion.Euler(0, 0, r);
+
+        return target;
+    }
+
+    //2nd needle on two needle rpm
+    public static Quaternion RPMBTarget(float rpm)
+    {
+        float r = rpm * -0.0036f;
+        Quaternion target = Quaternion.Euler(0, 0, r);
+
+        return target;
+    }
+
+
+    public static Quaternion RPMCTarget(float rpm)
+    {
+        float r = rpm * -0.36f;
+        Quaternion target = Quaternion.Euler(0, 0, r);
+
+        return target;
+    }
 }
