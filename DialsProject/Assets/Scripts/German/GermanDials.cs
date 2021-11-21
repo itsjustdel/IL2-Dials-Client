@@ -25,6 +25,8 @@ public class GermanDials : MonoBehaviour
 
     public static Quaternion AltitudeTargetSmall(float altitude)
     {
+        if (altitude == 0f)
+            return Quaternion.identity;
 
         Quaternion altitudeSmallTarget = Quaternion.Euler(0, 0, -(altitude / 10000f) * 360);
 
@@ -34,6 +36,9 @@ public class GermanDials : MonoBehaviour
 
     public static Quaternion AltitudeTargetLarge(float altitude)
     {
+        if (altitude == 0f)
+            return Quaternion.identity;
+
         Quaternion altitudeLargeTarget = Quaternion.Euler(0, 0, -((altitude / 1000f) * 360) + 180);
         return altitudeLargeTarget;
 
@@ -219,6 +224,18 @@ public class GermanDials : MonoBehaviour
     {
         //move plane up and down
         return new Vector3(0, climb * pitchMultiplier, 0);
+    }
+
+    public static Quaternion RPMATarget(float rpm, float scalar, float scalar2)
+    {
+        float r = rpm * -0.11f + (230);
+
+        //clamp low is actually high, rotation are negative
+        r = Mathf.Clamp(r, -180, 164);
+
+        Quaternion target = Quaternion.Euler(0, 0, r);
+
+        return target;
     }
 
 

@@ -2504,7 +2504,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   testValues: 0
   buildControl: {fileID: 0}
-  iL2GameDataClient: {fileID: 0}
+  airplaneData: {fileID: 0}
   tcpClient: {fileID: 0}
   altitudeNeedleSmall: {fileID: 7442739921289791636}
   altitudeNeedleSmallest: {fileID: 1697489282462233465}
@@ -2525,6 +2525,8 @@ MonoBehaviour:
   artificialHorizonNeedle: {fileID: 0}
   turnAndBankBall: {fileID: 0}
   compassRim: {fileID: 0}
+  rpmNeedleLarge: {fileID: 0}
+  rpmNeedleSmall: {fileID: 0}
   lastMessageReceivedTime: 0
   previousMessageTime: 0
   maxSpin: 1
@@ -6027,7 +6029,7 @@ GameObject:
   - component: {fileID: 6602812383304884001}
   - component: {fileID: 7491999483497348117}
   m_Layer: 5
-  m_Name: Needle
+  m_Name: Needle Large
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6425,7 +6427,7 @@ GameObject:
   - component: {fileID: 9040386833265471186}
   - component: {fileID: 2305818023619192269}
   m_Layer: 5
-  m_Name: Needle
+  m_Name: Needle Large
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6500,7 +6502,7 @@ GameObject:
   - component: {fileID: 4922471465152306660}
   - component: {fileID: 5522610523358032167}
   m_Layer: 5
-  m_Name: Needle (1)
+  m_Name: Needle Small
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

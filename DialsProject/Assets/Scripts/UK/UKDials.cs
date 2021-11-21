@@ -190,4 +190,28 @@ public class UKDials : MonoBehaviour
     }
 
 
+    public static Quaternion RPMATarget(float rpm, float scalar, float scalar2)
+    {
+        float r = rpm * -scalar + (scalar2);
+
+        //clamp low is actually high, rotation are negative
+        //r = Mathf.Clamp(r, -180, 164);
+
+        Quaternion target = Quaternion.Euler(0, 0, r);
+
+        return target;
+    }
+
+    public static Quaternion RPMBTarget(float rpm, float scalar, float scalar2)
+    {
+        float r = rpm * -scalar + (scalar2);
+
+        //clamp low is actually high, rotation are negative
+        //r = Mathf.Clamp(r, -180, 164);
+
+        Quaternion target = Quaternion.Euler(0, 0, r);
+
+        return target;
+    }
+
 }

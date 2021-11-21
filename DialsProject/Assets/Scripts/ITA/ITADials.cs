@@ -126,4 +126,19 @@ public class ITADials : MonoBehaviour
 
         return target;
     }
+
+    public static Quaternion RPMATarget(float rpm, float scalar, float scalar2)
+    {
+        // -0.12275*
+        //209.135
+        float start = -30;
+        float r = rpm * -0.1f + (start);
+
+        //clamp low is actually high, rotation are negative
+        //r = Mathf.Clamp(r, -180, 160);
+
+        Quaternion target = Quaternion.Euler(0, 0, r);
+
+        return target;
+    }
 }

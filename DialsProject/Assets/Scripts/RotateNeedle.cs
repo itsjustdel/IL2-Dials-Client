@@ -32,8 +32,8 @@ public class RotateNeedle : MonoBehaviour
     public GameObject artificialHorizonNeedle;//GER
     public GameObject turnAndBankBall;
     public GameObject compassRim;//GER
-    public GameObject rpmNeedleA;
-    public GameObject rpmNeedleB;
+    public GameObject rpmNeedleLarge;
+    public GameObject rpmNeedleSmall;
 
     //public bool tcpReceived = false; //moved to tcpClient, multiple instances of Rotate Needle for each country, only single instance of tcpclient
     public float lastMessageReceivedTime;//two ways of doing the same thing
@@ -90,8 +90,8 @@ public class RotateNeedle : MonoBehaviour
     private Quaternion artificialHorizonNeedleTarget;
     private Quaternion artificialHorizonChevronTarget;
     private Quaternion artificialHorizonRotationPlaneTarget;//if dial has seperate background and plane
-    private Quaternion rpmATarget;
-    private Quaternion rpmBTarget;
+    private Quaternion rpmLargeTarget;
+    private Quaternion rpmSmallTarget;
 
     private Quaternion turnAndBankBallTarget;
 
@@ -325,11 +325,11 @@ public class RotateNeedle : MonoBehaviour
             AddRotationToList(quaternionsTurnAndBankBall, turnAndBankBall.transform.rotation);
 
         //rpm A (big needle)
-        if (rpmNeedleA != null)
-            AddRotationToList(quaternionsRPMA, rpmNeedleA.transform.rotation);
+        if (rpmNeedleLarge != null)
+            AddRotationToList(quaternionsRPMA, rpmNeedleLarge.transform.rotation);
 
-        if (rpmNeedleB != null)
-            AddRotationToList(quaternionsRPMB, rpmNeedleB.transform.rotation);
+        if (rpmNeedleSmall != null)
+            AddRotationToList(quaternionsRPMB, rpmNeedleSmall.transform.rotation);
     }
 
 
@@ -496,15 +496,15 @@ public class RotateNeedle : MonoBehaviour
         }
       
         //rpm A big needle
-        if(rpmNeedleA != null)
+        if(rpmNeedleLarge != null)
         {
             difference = quaternionsRPMA[0].z - quaternionsRPMA[1].z;
-            rpmATarget = rpmNeedleA.transform.rotation * Quaternion.Euler(0, 0, difference);
+            rpmLargeTarget = rpmNeedleLarge.transform.rotation * Quaternion.Euler(0, 0, difference);
         }
-        if (rpmNeedleB != null)
+        if (rpmNeedleSmall != null)
         {
             difference = quaternionsRPMB[0].z - quaternionsRPMB[1].z;
-            rpmBTarget = rpmNeedleB.transform.rotation * Quaternion.Euler(0, 0, difference);
+            rpmSmallTarget = rpmNeedleSmall.transform.rotation * Quaternion.Euler(0, 0, difference);
         }
 
 
@@ -542,41 +542,55 @@ public class RotateNeedle : MonoBehaviour
             case (AirplaneData.Country.RU):
                 if (airplaneData.planeAttributes.rpmA)
                 { 
-                    rpmATarget = RussianDials.RPMATarget(airplaneData.rpm);
-                    rpmBTarget = RussianDials.RPMBTarget(airplaneData.rpm);
+                    rpmLargeTarget = RussianDials.RPMATarget(airplaneData.rpm);
+                    rpmSmallTarget = RussianDials.RPMBTarget(airplaneData.rpm);
                 }
                 else if (airplaneData.planeAttributes.rpmB)
-                    rpmATarget = RussianDials.RPMCTarget(airplaneData.rpm);
+                    rpmLargeTarget = RussianDials.RPMCTarget(airplaneData.rpm,airplaneData.scalar0, airplaneData.scalar1);
 
                 break;
 
             //GER
             case (AirplaneData.Country.GER):
-               
+                if (airplaneData.planeAttributes.rpmA)
+                {
+                    rpmLargeTarget = GermanDials.RPMATarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+                }
                 break;
 
             //US
             case (AirplaneData.Country.US):
-                
+                if (airplaneData.planeAttributes.rpmA)
+                {
+                    rpmLargeTarget = USDials.RPMATarget(airplaneData.rpm, airplaneData.scalar0,airplaneData.scalar1);
+                    rpmSmallTarget = USDials.RPMBTarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+                }
+                else if (airplaneData.planeAttributes.rpmB)
+                    rpmLargeTarget = USDials.RPMCTarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+
                 break;
 
+
             case (AirplaneData.Country.UK):
-
-                artificialHorizonRotationTarget = UKDials.ArtificialHorizonRotation(airplaneData.roll, artificialHorizonRollMod);
-
-                //position  
-                artificialHorizonPositionTarget = UKDials.ArtificialHorizonPosition(airplaneData.pitch, artificialHorizonMultiplier);
-                //chevron
-                artificialHorizonChevronTarget = UKDials.ArtificialHorizonChevronRotation(airplaneData.roll, artificialHorizonRollMod);
+                if (airplaneData.planeAttributes.rpmA)
+                {
+                    //A Taret is first needle
+                    rpmLargeTarget = UKDials.RPMATarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+                    
+                }
+                else if (airplaneData.planeAttributes.rpmB)
+                {
+                    //"A" Target is first Needle - not the best naming
+                    rpmLargeTarget = UKDials.RPMBTarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+                }
                 break;
 
             case (AirplaneData.Country.ITA):
-
-                //rotation of plane
-                artificialHorizonRotationPlaneTarget = ITADials.ArtificialHorizonRotation(airplaneData.roll, artificialHorizonRollMod);
-
-                //position of moving track/ball, only moves on Y axis
-                artificialHorizonPositionTarget = ITADials.ArtificialHorizonPosition(airplaneData.pitch, artificialHorizonMultiplier);
+                
+                if (airplaneData.planeAttributes.rpmA)
+                {
+                    rpmLargeTarget = ITADials.RPMATarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+                }
                 break;
         }
     }
@@ -1048,10 +1062,11 @@ public class RotateNeedle : MonoBehaviour
 
     void RPMRotations()
     {
-        rpmNeedleA.transform.rotation = Quaternion.Slerp(rpmNeedleA.transform.rotation, rpmATarget, Time.fixedDeltaTime);
+        if (rpmNeedleLarge != null)
+            rpmNeedleLarge.transform.rotation = Quaternion.Slerp(rpmNeedleLarge.transform.rotation, rpmLargeTarget, Time.fixedDeltaTime);
 
-        if(rpmNeedleB != null)
-            rpmNeedleB.transform.rotation = Quaternion.Slerp(rpmNeedleB.transform.rotation, rpmBTarget, Time.fixedDeltaTime);
+        if(rpmNeedleSmall != null)
+            rpmNeedleSmall.transform.rotation = Quaternion.Slerp(rpmNeedleSmall.transform.rotation, rpmSmallTarget, Time.fixedDeltaTime);
     }
 
     void AirspeedNeedleRotation()

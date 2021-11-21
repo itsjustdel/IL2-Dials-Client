@@ -517,7 +517,7 @@ RectTransform:
   m_GameObject: {fileID: 1590759992638346390}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.7499999, y: 1.7499999, z: 1}
+  m_LocalScale: {x: 1.7499996, y: 1.7499996, z: 1}
   m_Children:
   - {fileID: 7112111408801463220}
   - {fileID: 4152774524183850368}
@@ -1546,8 +1546,8 @@ MonoBehaviour:
   artificialHorizonNeedle: {fileID: 0}
   turnAndBankBall: {fileID: 0}
   compassRim: {fileID: 0}
-  rpmNeedleA: {fileID: 6432465749400209368}
-  rpmNeedleB: {fileID: 8190308820076941352}
+  rpmNeedleLarge: {fileID: 0}
+  rpmNeedleSmall: {fileID: 0}
   lastMessageReceivedTime: 0
   previousMessageTime: 0
   maxSpin: 1
@@ -4633,7 +4633,7 @@ GameObject:
   - component: {fileID: 9092738386696081017}
   - component: {fileID: 6849583828309794119}
   m_Layer: 5
-  m_Name: Needle A
+  m_Name: Needle Large
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5373,7 +5373,7 @@ GameObject:
   - component: {fileID: 2454246110139636237}
   - component: {fileID: 3782178420798493986}
   m_Layer: 5
-  m_Name: Needle A
+  m_Name: Needle Large
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5998,7 +5998,7 @@ GameObject:
   - component: {fileID: 6653309541260503156}
   - component: {fileID: 4726353768829533849}
   m_Layer: 5
-  m_Name: Needle B
+  m_Name: Needle Small
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

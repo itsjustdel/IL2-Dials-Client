@@ -266,6 +266,39 @@ public class USDials : MonoBehaviour
         return t;
     }
 
+
+    public static Quaternion RPMATarget(float rpm, float scalar, float scalar2)
+    {
+        float r = rpm * -0.36f;
+        Quaternion target = Quaternion.Euler(0, 0, r);
+
+        return target;
+    }
+
+    //2nd needle on two needle rpm
+    public static Quaternion RPMBTarget(float rpm, float scalar, float scalar2)
+    {
+        float r = rpm * -0.036f;
+        Quaternion target = Quaternion.Euler(0, 0, r);
+
+        return target;
+    }
+
+
+    public static Quaternion RPMCTarget(float rpm, float scalar, float scalar2)
+    {
+        // -0.12275*
+        //209.135
+        float start = 155f;
+        float r = rpm * -0.07f + (start);
+
+        //clamp low is actually high, rotation are negative
+        r = Mathf.Clamp(r, -180, 180);
+
+        Quaternion target = Quaternion.Euler(0, 0, r);
+
+        return target;
+    }
 }
 
 
