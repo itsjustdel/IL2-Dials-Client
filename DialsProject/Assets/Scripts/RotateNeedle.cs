@@ -32,8 +32,8 @@ public class RotateNeedle : MonoBehaviour
     public GameObject artificialHorizonNeedle;//GER
     public GameObject turnAndBankBall;
     public GameObject compassRim;//GER
-    public GameObject rpmNeedleLarge;
-    public GameObject rpmNeedleSmall;
+    public List<GameObject> rpmNeedlesLarge = new List<GameObject>();
+    public List<GameObject> rpmNeedlesSmall = new List<GameObject>();
 
     //public bool tcpReceived = false; //moved to tcpClient, multiple instances of Rotate Needle for each country, only single instance of tcpclient
     public float lastMessageReceivedTime;//two ways of doing the same thing
@@ -62,8 +62,8 @@ public class RotateNeedle : MonoBehaviour
     private List<Quaternion> quaternionsArtificialHorizonPlane = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     private List<Quaternion> quaternionsArtificialHorizonNeedle = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
     private List<Quaternion> quaternionsArtificialHorizonChevron = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
-    private List<Quaternion> quaternionsRPMA = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
-    private List<Quaternion> quaternionsRPMB = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
+    private List<List<Quaternion>> quaternionsRPMLarge = new List<List<Quaternion>>();// = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
+    private List<List<Quaternion>> quaternionsRPMSmall = new List<List<Quaternion>>();// = new List<Quaternion>() { Quaternion.identity, Quaternion.identity };
 
     // -- positions
     private List<Vector3> positionsHeading = new List<Vector3>() { Vector3.zero, Vector3.zero };
@@ -90,8 +90,8 @@ public class RotateNeedle : MonoBehaviour
     private Quaternion artificialHorizonNeedleTarget;
     private Quaternion artificialHorizonChevronTarget;
     private Quaternion artificialHorizonRotationPlaneTarget;//if dial has seperate background and plane
-    private Quaternion rpmLargeTarget;
-    private Quaternion rpmSmallTarget;
+    public List<Quaternion> rpmLargeTargets = new List<Quaternion>();
+    private List<Quaternion> rpmSmallTargets = new List<Quaternion>();
 
     private Quaternion turnAndBankBallTarget;
 
@@ -116,14 +116,22 @@ public class RotateNeedle : MonoBehaviour
     public float turnAndBankBallMultiplier = 1f;
 
     public AnimationCurve animationCurveVSI;
-  
     private bool headingIndicatorTest;
 
     // Start is called before the first frame update
     void Start()
     {
-        
 
+        for (int i = 0; i < 3; i++)
+        {
+            //initialise lists with zero rotations
+            quaternionsRPMLarge.Add(new List<Quaternion>() { Quaternion.identity, Quaternion.identity });
+            quaternionsRPMSmall.Add(new List<Quaternion>() { Quaternion.identity, Quaternion.identity });
+
+            //fill empty so wecan asign to later
+            rpmLargeTargets.Add(Quaternion.identity);
+            rpmSmallTargets.Add(Quaternion.identity);
+        }
 
     }
 
@@ -324,12 +332,18 @@ public class RotateNeedle : MonoBehaviour
         if (turnAndBankBall != null)
             AddRotationToList(quaternionsTurnAndBankBall, turnAndBankBall.transform.rotation);
 
-        //rpm A (big needle)
-        if (rpmNeedleLarge != null)
-            AddRotationToList(quaternionsRPMA, rpmNeedleLarge.transform.rotation);
+        //rpm
+        for (int i = 0; i < rpmNeedlesLarge.Count; i++)
+        {
+            if (rpmNeedlesLarge[i] != null)
+                AddRotationToList(quaternionsRPMLarge[i], rpmNeedlesLarge[i].transform.rotation);
+        }
 
-        if (rpmNeedleSmall != null)
-            AddRotationToList(quaternionsRPMB, rpmNeedleSmall.transform.rotation);
+        for (int i = 0; i < rpmNeedlesSmall.Count; i++)
+        {
+            if (rpmNeedlesSmall[i] != null)
+                AddRotationToList(quaternionsRPMSmall[i], rpmNeedlesSmall[i].transform.rotation);
+        }
     }
 
 
@@ -494,19 +508,23 @@ public class RotateNeedle : MonoBehaviour
             difference = quaternionsArtificialHorizonChevron[0].z - quaternionsArtificialHorizonChevron[1].z;
             artificialHorizonChevronTarget = artificialHorizonChevron.transform.rotation * Quaternion.Euler(0, 0, difference);
         }
-      
-        //rpm A big needle
-        if(rpmNeedleLarge != null)
-        {
-            difference = quaternionsRPMA[0].z - quaternionsRPMA[1].z;
-            rpmLargeTarget = rpmNeedleLarge.transform.rotation * Quaternion.Euler(0, 0, difference);
-        }
-        if (rpmNeedleSmall != null)
-        {
-            difference = quaternionsRPMB[0].z - quaternionsRPMB[1].z;
-            rpmSmallTarget = rpmNeedleSmall.transform.rotation * Quaternion.Euler(0, 0, difference);
-        }
 
+        for (int i = 0; i < rpmNeedlesLarge.Count; i++)
+        {
+            if (rpmNeedlesLarge[i] != null)
+            {
+                difference = quaternionsRPMLarge[i][0].z - quaternionsRPMLarge[i][1].z;
+                rpmLargeTargets[i] = rpmNeedlesLarge[i].transform.rotation * Quaternion.Euler(0, 0, difference);
+            }
+        }
+        for (int i = 0; i < rpmNeedlesSmall.Count; i++)
+        {
+            if (rpmNeedlesSmall[i] != null)
+            {
+                difference = quaternionsRPMSmall[i][0].z - quaternionsRPMSmall[i][1].z;
+                rpmSmallTargets[i] = rpmNeedlesSmall[i].transform.rotation * Quaternion.Euler(0, 0, difference);
+            }
+        }
 
     }
 
@@ -536,62 +554,68 @@ public class RotateNeedle : MonoBehaviour
 
     void RPMTarget(AirplaneData.Country country)
     {
-        switch (country)
+        for (int i = 0; i < 3; i++)
         {
-            //RU
-            case (AirplaneData.Country.RU):
-                if (airplaneData.planeAttributes.rpmA)
-                { 
-                    rpmLargeTarget = RussianDials.RPMATarget(airplaneData.rpm);
-                    rpmSmallTarget = RussianDials.RPMBTarget(airplaneData.rpm);
-                }
-                else if (airplaneData.planeAttributes.rpmB)
-                    rpmLargeTarget = RussianDials.RPMCTarget(airplaneData.rpm,airplaneData.scalar0, airplaneData.scalar1);
-
-                break;
-
-            //GER
-            case (AirplaneData.Country.GER):
-                if (airplaneData.planeAttributes.rpmA)
-                {
-                    rpmLargeTarget = GermanDials.RPMATarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
-                }
-                break;
-
-            //US
-            case (AirplaneData.Country.US):
-                if (airplaneData.planeAttributes.rpmA)
-                {
-                    rpmLargeTarget = USDials.RPMATarget(airplaneData.rpm, airplaneData.scalar0,airplaneData.scalar1);
-                    rpmSmallTarget = USDials.RPMBTarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
-                }
-                else if (airplaneData.planeAttributes.rpmB)
-                    rpmLargeTarget = USDials.RPMCTarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
-
-                break;
+            //do inside for loop for jup to 3 engines
 
 
-            case (AirplaneData.Country.UK):
-                if (airplaneData.planeAttributes.rpmA)
-                {
-                    //A Taret is first needle
-                    rpmLargeTarget = UKDials.RPMATarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
-                    
-                }
-                else if (airplaneData.planeAttributes.rpmB)
-                {
-                    //"A" Target is first Needle - not the best naming
-                    rpmLargeTarget = UKDials.RPMBTarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
-                }
-                break;
+            switch (country)
+            {
+                //RU
+                case (AirplaneData.Country.RU):
+                    if (airplaneData.planeAttributes.rpmA)
+                    {
+                        rpmLargeTargets[i] = RussianDials.RPMATarget(airplaneData.rpm);
+                        rpmSmallTargets[i] = RussianDials.RPMBTarget(airplaneData.rpm);
+                    }
+                    else if (airplaneData.planeAttributes.rpmB)
+                        rpmLargeTargets[i] = RussianDials.RPMCTarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
 
-            case (AirplaneData.Country.ITA):
-                
-                if (airplaneData.planeAttributes.rpmA)
-                {
-                    rpmLargeTarget = ITADials.RPMATarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
-                }
-                break;
+                    break;
+
+                //GER
+                case (AirplaneData.Country.GER):
+                    if (airplaneData.planeAttributes.rpmA)
+                    {
+                        rpmLargeTargets[i] = GermanDials.RPMATarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    break;
+
+                //US
+                case (AirplaneData.Country.US):
+                    if (airplaneData.planeAttributes.rpmA)
+                    {
+                        rpmLargeTargets[i] = USDials.RPMATarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+                        rpmSmallTargets[i] = USDials.RPMBTarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    else if (airplaneData.planeAttributes.rpmB)
+                        rpmLargeTargets[i] = USDials.RPMCTarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+
+                    break;
+
+
+                case (AirplaneData.Country.UK):
+                    if (airplaneData.planeAttributes.rpmA)
+                    {
+                        //A Taret is first needle
+                        rpmLargeTargets[i] = UKDials.RPMATarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+
+                    }
+                    else if (airplaneData.planeAttributes.rpmB)
+                    {
+                        //"A" Target is first Needle - not the best naming
+                        rpmLargeTargets[i] = UKDials.RPMBTarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    break;
+
+                case (AirplaneData.Country.ITA):
+
+                    if (airplaneData.planeAttributes.rpmA)
+                    {
+                        rpmLargeTargets[i] = ITADials.RPMATarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    break;
+            }
         }
     }
 
@@ -1062,11 +1086,15 @@ public class RotateNeedle : MonoBehaviour
 
     void RPMRotations()
     {
-        if (rpmNeedleLarge != null)
-            rpmNeedleLarge.transform.rotation = Quaternion.Slerp(rpmNeedleLarge.transform.rotation, rpmLargeTarget, Time.fixedDeltaTime);
+        for (int i = 0; i < airplaneData.planeAttributes.engines; i++) //3 is max engines in game
+        {
+            if (rpmNeedlesLarge[i] != null)
+                rpmNeedlesLarge[i].transform.rotation = Quaternion.Slerp(rpmNeedlesLarge[i].transform.rotation, rpmLargeTargets[i], Time.fixedDeltaTime);
 
-        if(rpmNeedleSmall != null)
-            rpmNeedleSmall.transform.rotation = Quaternion.Slerp(rpmNeedleSmall.transform.rotation, rpmSmallTarget, Time.fixedDeltaTime);
+            if (rpmNeedlesSmall[i] != null)
+                rpmNeedlesSmall[i].transform.rotation = Quaternion.Slerp(rpmNeedlesSmall[i].transform.rotation, rpmSmallTargets[i], Time.fixedDeltaTime);
+
+        }
     }
 
     void AirspeedNeedleRotation()

@@ -22,12 +22,13 @@ public class PlaneDataFromName : AirplaneData
         public bool repeaterCompassAlternate;
         public bool rpmA;
         public bool rpmB;
-
+        public int engines = 1; //default to 1
     }
 
     public static PlaneAttributes AttributesFromName(string name)
     {
         PlaneAttributes planeAttributes = new PlaneAttributes();
+        
 
         switch (name)
         {
@@ -44,7 +45,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.turnAndBank = true;
                 planeAttributes.rpmA = true;
-
+                planeAttributes.engines = 2;
                 break;
 
                 
