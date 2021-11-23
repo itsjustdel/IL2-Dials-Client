@@ -1086,12 +1086,16 @@ public class RotateNeedle : MonoBehaviour
 
     void RPMRotations()
     {
-        for (int i = 0; i < airplaneData.planeAttributes.engines; i++) //3 is max engines in game
+        for (int i = 0; i < rpmNeedlesLarge.Count; i++)
         {
-            if (rpmNeedlesLarge[i] != null)
+            if (rpmNeedlesLarge[i].gameObject != null)
                 rpmNeedlesLarge[i].transform.rotation = Quaternion.Slerp(rpmNeedlesLarge[i].transform.rotation, rpmLargeTargets[i], Time.fixedDeltaTime);
+        }
 
-            if (rpmNeedlesSmall[i] != null)
+
+        for (int i = 0; i < rpmNeedlesSmall.Count; i++)
+        {
+            if (rpmNeedlesSmall[i].gameObject != null)
                 rpmNeedlesSmall[i].transform.rotation = Quaternion.Slerp(rpmNeedlesSmall[i].transform.rotation, rpmSmallTargets[i], Time.fixedDeltaTime);
 
         }

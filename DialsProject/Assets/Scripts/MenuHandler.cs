@@ -309,7 +309,7 @@ public class MenuHandler : MonoBehaviour
         if(!connectionPanel.activeInHierarchy && !menuPanel.activeInHierarchy)
         {
             //everything closed, open menu panel
-            Debug.Log("Opening menu from closed");
+            //Debug.Log("Opening menu from closed");
             menuPanel.SetActive(true);
             blurPanel.SetActive(true);
         }
@@ -318,7 +318,7 @@ public class MenuHandler : MonoBehaviour
         else if (menuPanel.activeInHierarchy)
         {
             //close from main main menu 
-            Debug.Log("Closing from main menu");
+            //Debug.Log("Closing from main menu");
             menuPanel.SetActive(false);
             //
             blurPanel.SetActive(false);
@@ -329,7 +329,7 @@ public class MenuHandler : MonoBehaviour
         else if(connectionPanel.activeInHierarchy)
         {
             //close from connection panel
-            Debug.Log("Closing from connection panel");
+            //Debug.Log("Closing from connection panel");
             connectionPanel.SetActive(false);
             menuPanel.SetActive(false);
             blurPanel.SetActive(false);
@@ -339,7 +339,7 @@ public class MenuHandler : MonoBehaviour
         else if (layoutOpen)
         {
             //leaving layout screen
-            Debug.Log("Closing menu from layout");                
+            //Debug.Log("Closing menu from layout");                
 
             //point to accept layout function - we can close this page from menu button or accept button
             AcceptLayoutClick();
@@ -481,14 +481,14 @@ public class MenuHandler : MonoBehaviour
 
     public void OpenLayoutClick()
     {
-        Debug.Log("Layout Click");
+        //Debug.Log("Layout Click");
         layoutOpen = true;
         
         //check for plane - can only organise if plane loaded
         if(airplaneData.country == AirplaneData.Country.UNDEFINED)
         {
             layoutWarningMessage.SetActive(true);
-            Debug.Log("Layout Warning message");
+            //Debug.Log("Layout Warning message");
             return;
         }
         else

@@ -60,7 +60,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.turnAndBank = true;
                 planeAttributes.rpmB = true;
-
+                planeAttributes.engines = 2;
                 break;
 
             case "GER A":
@@ -76,6 +76,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.turnAndBank = true;
                 planeAttributes.rpmA = true;
+                planeAttributes.engines = 2;
                 break;
 
             case "GER B":
@@ -101,6 +102,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.repeaterCompass = true;
                 //  planeAttributes.artificialHorizon = true;
                 planeAttributes.rpmA = true;
+                planeAttributes.engines = 2;
                 break;
 
 
@@ -114,6 +116,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.repeaterCompass = true;
                 //  planeAttributes.artificialHorizon = true;
                 planeAttributes.rpmB = true;
+                planeAttributes.engines = 2;
                 break;
 
             case "UK A":
@@ -127,6 +130,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmA = true;
+                planeAttributes.engines = 2;
                 break;
 
             case "UK B":
@@ -140,6 +144,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmB = true;
+                planeAttributes.engines = 2;
                 break;
 
             case "ITA A":

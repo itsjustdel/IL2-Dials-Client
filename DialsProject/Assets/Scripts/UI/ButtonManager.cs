@@ -23,6 +23,9 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     private RectTransform rectTransform;
 
     private Quaternion compassTarget;
+
+    private float minScale = 0.1f;
+    private float maxScale = .75f;
     private void Awake()
     {
         canvas = GameObject.FindGameObjectWithTag("Canvas").transform.GetComponent<Canvas>();
@@ -50,7 +53,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         {
             //parent from button press is first parameter
             PutDialInTray(transform.parent.parent.gameObject, menuHandler);
-            Debug.Log("Remove Dial Click");
+            //Debug.Log("Remove Dial Click");
 
             menuHandler.dialsManager.SaveLayout();
 
@@ -95,7 +98,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
                 }
             }
-            Debug.Log("OnBeginDrag");
+            //Debug.Log("OnBeginDrag");
 
         }
         else
@@ -111,7 +114,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         if (menuHandler.layoutOpen)
         {
 
-            Debug.Log("OnDrag");
+            //Debug.Log("OnDrag");
 
             if (move)
             {
@@ -136,8 +139,8 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
                 rectTransform.localScale += new Vector3(avg, avg, 0f);
 
-                float clampX = Mathf.Clamp(rectTransform.localScale.x, 0.2f, .75f);
-                float clampY = Mathf.Clamp(rectTransform.localScale.y, 0.2f, .75f);
+                float clampX = Mathf.Clamp(rectTransform.localScale.x, minScale, maxScale);
+                float clampY = Mathf.Clamp(rectTransform.localScale.y, minScale, maxScale);
 
                 rectTransform.localScale = new Vector3(clampX, clampY, 1f);
             }
@@ -156,13 +159,13 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         if (!menuHandler.layoutOpen)
             return;
 
-        Debug.Log("OnEndDrag");
+        //Debug.Log("OnEndDrag");
 
 
         //check if user dragged dial on to tray        
        // if(IsOverTray())
         {
-            //Debug.Log("over tray");
+            ////Debug.Log("over tray");
         }
 
         //snap 
@@ -201,11 +204,6 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
             rectTransform.localScale = new Vector3(d2.x, d2.y, 1f);
 
-            //  float clampX = Mathf.Clamp(rectTransform.localScale.x, 0.2f, 1f);
-            //  float clampY = Mathf.Clamp(rectTransform.localScale.y, 0.2f, 1f);
-
-            //  rectTransform.localScale = new Vector3(clampX, clampY, 1f);
-
             //clamping on drag above function
             rectTransform.localScale = new Vector3(d2.x, d2.y, 1f);
 
@@ -240,12 +238,12 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         if (compass)
         {
             //one time to click to move arrows on compass
-            Debug.Log("Compass Pointer Click");           
+            //Debug.Log("Compass Pointer Click");           
 
             compassTarget = getCompassTarget(eventData);
         }
 
-        Debug.Log("OnPointerDown");
+        //Debug.Log("OnPointerDown");
 
 
         if (!menuHandler.layoutOpen)
@@ -269,7 +267,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         if (!menuHandler.layoutOpen)
             return;
 
-        Debug.Log("OnPointerUp");
+        //Debug.Log("OnPointerUp");
         //is it in tray? - put it to small scale (happens after a prewiew click when in tray)
         //if (transform.parent.parent.parent.gameObject != originalParent)
         if (menuHandler.dialsInTray.Contains(transform.parent.parent.gameObject))
@@ -403,15 +401,15 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             List<RaycastResult> results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(pointerData, results);
 
-            Debug.Log(results.Count);
+            //Debug.Log(results.Count);
             if (results.Count > 0)
             {
                 for (int i = 0; i < results.Count; ++i)
                 {
-                    Debug.Log(results[i].gameObject.name);
+                    //Debug.Log(results[i].gameObject.name);
                     if (results[i].gameObject.CompareTag("DialsTray"))
                     {
-                        Debug.Log("found");
+                        //Debug.Log("found");
                         isOverTaggedElement = true;
                     }
                 }

@@ -221,7 +221,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7573307996583355572}
   m_Layer: 5
-  m_Name: RPM A
+  m_Name: RPM A 0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -611,8 +611,8 @@ MonoBehaviour:
   artificialHorizonNeedle: {fileID: 0}
   turnAndBankBall: {fileID: 0}
   compassRim: {fileID: 0}
-  rpmNeedleLarge: {fileID: 0}
-  rpmNeedleSmall: {fileID: 0}
+  rpmNeedlesLarge: []
+  rpmNeedlesSmall: []
   lastMessageReceivedTime: 0
   previousMessageTime: 0
   maxSpin: 1
@@ -623,6 +623,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0, w: 1}
   - {x: 0, y: 0, z: 0, w: 1}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
+  rpmLargeTargets: []
   trackLength: -118
   trackLengthForSwitch: 200.3
   turnCoordinaterNeedleMod: -1
@@ -3743,7 +3744,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6600905735064848411}
   m_Layer: 5
-  m_Name: Artifical Horizon
+  m_Name: Artificial Horizon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
