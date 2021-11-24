@@ -15,6 +15,12 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     public bool scale;
     public bool remove;
     public bool compass;
+    public bool navArrow;
+    public GameObject trayParent;
+    public bool leftArrow;
+    private bool navArrowDown;
+    public float navArrowDownSpeed =10f;
+    public float navArrowClickSpeed = 0f;
 
     public float compassSpinSpeed = 100f;
 
@@ -26,6 +32,9 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
     private float minScale = 0.1f;
     private float maxScale = .75f;
+
+    
+
     private void Awake()
     {
         canvas = GameObject.FindGameObjectWithTag("Canvas").transform.GetComponent<Canvas>();
@@ -39,6 +48,15 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         if(compass)
         {
              transform.rotation = Quaternion.RotateTowards(transform.rotation, compassTarget, Time.deltaTime * compassSpinSpeed);
+        }
+
+        if(navArrow && navArrowDown)
+        {
+            
+            if (leftArrow)
+                trayParent.transform.position -= Vector3.right * navArrowDownSpeed * Time.fixedDeltaTime;
+            else
+                trayParent.transform.position += Vector3.right * navArrowDownSpeed * Time.fixedDeltaTime;
         }
     }
 
@@ -56,9 +74,6 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             //Debug.Log("Remove Dial Click");
 
             menuHandler.dialsManager.SaveLayout();
-
-
-
         }
 
       
@@ -257,6 +272,11 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             rectTransform.localScale = new Vector3(3.5f, 3.5f, 1f);
         }
 
+
+        if (navArrow)
+        {
+            navArrowDown = true;
+        }
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -275,7 +295,8 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             rectTransform.localScale = new Vector3(1f, 1f, 1f);
         }
 
-
+        if (navArrow)
+            navArrowDown = false;
     }
 
     public void ScreenTrap(  Vector2 d2 )
@@ -294,10 +315,6 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
         rectTransform.anchoredPosition = d2;
     }
-
-
-
-    //private helpers
 
 
     //put dial in tray
@@ -382,6 +399,18 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
                 child.gameObject.GetComponent<UnityEngine.UI.Image>().enabled = false;
             }
         }
+    }
+
+    public void TrayArrowLeft(GameObject parent)
+    {
+        Debug.Log("Tray Arrow Left");
+        parent.transform.position -= navArrowClickSpeed * Vector3.right;
+    }
+
+    public void TrayArrowRight(GameObject parent)
+    {
+        Debug.Log("Tray Arrow Right");
+        parent.transform.position += navArrowClickSpeed * Vector3.right;
     }
 
     private bool IsOverTray()
