@@ -209,7 +209,7 @@ public class TCPClient : MonoBehaviour {
 					int p = 0;
 
 					//set length sent from server	
-					int floatArrayLength = 10;
+					int floatArrayLength = 14;
 					int floatArrayLengthBytes = 4 * floatArrayLength; //4 bytes for float * array length
 					//float array
 					float[] floats = GetFloats(bytes, p, floatArrayLength);
@@ -228,7 +228,10 @@ public class TCPClient : MonoBehaviour {
 					iL2GameDataClient.verticalSpeed = floats[6];
 					iL2GameDataClient.turnCoordinatorBall = floats[7];
 					iL2GameDataClient.turnCoordinatorNeedle = floats[8];
-					iL2GameDataClient.rpm = floats[9];
+					iL2GameDataClient.rpms[0] = floats[9];
+					iL2GameDataClient.rpms[1] = floats[10];
+					iL2GameDataClient.rpms[2] = floats[12];
+					iL2GameDataClient.rpms[3] = floats[13]; //support for 4 engines (you never know!)
 					p += floatArrayLengthBytes;
 
 					//Debug.Log("Reading received data");

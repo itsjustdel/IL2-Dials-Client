@@ -45,7 +45,7 @@ public class AirplaneData : MonoBehaviour
     public float heading;
     public float headingPrevious;
     public float headingPreviousPrevious;
-    public float rpm;
+    public List<float> rpms;
 
 
     //public List<GameObject> countryDials = new List<GameObject>();
@@ -57,7 +57,13 @@ public class AirplaneData : MonoBehaviour
     public BuildControl buildControl;
     public MenuHandler menuHandler;
     public TCPClient tcpClient;
-    
+
+    public void Start()
+    {
+        //initialise list with empty
+        rpms = new List<float> { 0f, 0f, 0f, 0f };
+}
+
     //fixed update is enough for checking status
     void FixedUpdate()
     {

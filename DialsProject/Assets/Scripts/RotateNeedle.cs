@@ -122,7 +122,7 @@ public class RotateNeedle : MonoBehaviour
     void Start()
     {
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
         {
             //initialise lists with zero rotations
             quaternionsRPMLarge.Add(new List<Quaternion>() { Quaternion.identity, Quaternion.identity });
@@ -554,22 +554,19 @@ public class RotateNeedle : MonoBehaviour
 
     void RPMTarget(AirplaneData.Country country)
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
         {
-            //do inside for loop for jup to 3 engines
-
-
             switch (country)
             {
                 //RU
                 case (AirplaneData.Country.RU):
                     if (airplaneData.planeAttributes.rpmA)
                     {
-                        rpmLargeTargets[i] = RussianDials.RPMATarget(airplaneData.rpm);
-                        rpmSmallTargets[i] = RussianDials.RPMBTarget(airplaneData.rpm);
+                        rpmLargeTargets[i] = RussianDials.RPMATarget(airplaneData.rpms[i]);
+                        rpmSmallTargets[i] = RussianDials.RPMBTarget(airplaneData.rpms[i]);
                     }
                     else if (airplaneData.planeAttributes.rpmB)
-                        rpmLargeTargets[i] = RussianDials.RPMCTarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+                        rpmLargeTargets[i] = RussianDials.RPMCTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
 
                     break;
 
@@ -577,7 +574,7 @@ public class RotateNeedle : MonoBehaviour
                 case (AirplaneData.Country.GER):
                     if (airplaneData.planeAttributes.rpmA)
                     {
-                        rpmLargeTargets[i] = GermanDials.RPMATarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+                        rpmLargeTargets[i] = GermanDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
                     break;
 
@@ -585,11 +582,11 @@ public class RotateNeedle : MonoBehaviour
                 case (AirplaneData.Country.US):
                     if (airplaneData.planeAttributes.rpmA)
                     {
-                        rpmLargeTargets[i] = USDials.RPMATarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
-                        rpmSmallTargets[i] = USDials.RPMBTarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+                        rpmLargeTargets[i] = USDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+                        rpmSmallTargets[i] = USDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
                     else if (airplaneData.planeAttributes.rpmB)
-                        rpmLargeTargets[i] = USDials.RPMCTarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+                        rpmLargeTargets[i] = USDials.RPMCTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
 
                     break;
 
@@ -598,13 +595,13 @@ public class RotateNeedle : MonoBehaviour
                     if (airplaneData.planeAttributes.rpmA)
                     {
                         //A Taret is first needle
-                        rpmLargeTargets[i] = UKDials.RPMATarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+                        rpmLargeTargets[i] = UKDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
 
                     }
                     else if (airplaneData.planeAttributes.rpmB)
                     {
                         //"A" Target is first Needle - not the best naming
-                        rpmLargeTargets[i] = UKDials.RPMBTarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+                        rpmLargeTargets[i] = UKDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
                     break;
 
@@ -612,7 +609,7 @@ public class RotateNeedle : MonoBehaviour
 
                     if (airplaneData.planeAttributes.rpmA)
                     {
-                        rpmLargeTargets[i] = ITADials.RPMATarget(airplaneData.rpm, airplaneData.scalar0, airplaneData.scalar1);
+                        rpmLargeTargets[i] = ITADials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
                     break;
             }

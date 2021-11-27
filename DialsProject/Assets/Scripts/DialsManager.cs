@@ -422,7 +422,7 @@ public class DialsManager : MonoBehaviour
             artificialHorizon.GetComponent<RectTransform>().anchoredPosition = layout.artificialHorizonPos;
             artificialHorizon.GetComponent<RectTransform>().localScale = new Vector3(layout.artificialHorizonScale, layout.artificialHorizonScale, 1f);
 
-            if (layout.repeaterCompassInTray)
+            if (layout.artificialHorizonInTray)
                 AddToTrayOnLoad(artificialHorizon, menuHandler);
         }
 

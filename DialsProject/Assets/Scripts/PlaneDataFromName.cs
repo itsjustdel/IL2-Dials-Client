@@ -388,6 +388,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmA = true;
+                planeAttributes.engines = 2;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+1AA - 48 8D 15 F7B01700     - lea rdx,[RSE.RSE::CAeroplane_Pe_2_ser_35::`vftable'+1E8] { ("Pe-2 ser.35") }
@@ -399,6 +400,8 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
+                planeAttributes.rpmA = true;
+                planeAttributes.engines = 2;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+1FB - 48 8D 15 5E751000     - lea rdx,[RSE.RSE::CAeroplane_Yak_1_ser_127::`vftable'+1E8] { ("Yak-1 ser.127") }
