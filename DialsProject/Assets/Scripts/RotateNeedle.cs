@@ -554,6 +554,7 @@ public class RotateNeedle : MonoBehaviour
 
     void RPMTarget(AirplaneData.Country country)
     {
+        /*
         for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
         {
             switch (country)
@@ -614,6 +615,8 @@ public class RotateNeedle : MonoBehaviour
                     break;
             }
         }
+
+        */
     }
 
     void ArtificialHorizonTargets(AirplaneData.Country country)
