@@ -329,8 +329,9 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             {
                 GameObject targetTray = menuHandler.trayParent.transform.GetChild(i).gameObject;
                 //we have found an empty tray, place dial in tray
+                Debug.Log("B4 =" + dialParent.transform.parent.name);
                 dialParent.transform.parent = targetTray.transform;
-
+                Debug.Log("After =" + dialParent.transform.parent.name);
                 dialParent.transform.position = targetTray.transform.position;
 
                 dialParent.transform.localScale = new Vector3(1f, 1f, 1f);

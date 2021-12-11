@@ -75,6 +75,21 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.engines = 2;
                 break;
 
+            case "RU C":
+                planeAttributes.country = Country.RU;
+                planeAttributes.speedometer = true;
+                planeAttributes.altimeter = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.headingIndicator = true;
+                planeAttributes.vsiLarge = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.artificialHorizon = true;
+                planeAttributes.turnAndBank = true;
+                planeAttributes.rpmType = RpmType.C;
+                planeAttributes.engines = 2;
+                break;
+
+
             case "GER A":
                 planeAttributes.country = Country.GER;
                 planeAttributes.speedometer = true;
@@ -102,6 +117,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.turnAndBank = true;
                 planeAttributes.rpmType = RpmType.B;
+                planeAttributes.engines = 2;
                 break;
 
             case "US A":

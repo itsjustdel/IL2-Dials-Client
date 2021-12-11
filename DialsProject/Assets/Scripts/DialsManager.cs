@@ -112,74 +112,74 @@ public class DialsManager : MonoBehaviour
         countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Clear();
 
 
-        for (int i = 0; i < planeAttributes.engines; i++)
+
+        for (int i = 0; i < rpmObjects.Count; i++)
         {
-            /*
             if (planeAttributes.country == AirplaneData.Country.RU)
             {
-                if (planeAttributes.rpmA)
+                //Primary needle
+                GameObject needleLarge = rpmObjects[i].transform.Find("Needle Large").gameObject;
+                countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleLarge);
+
+                if (planeAttributes.rpmType == RpmType.A)
                 {
-                    //large and small needles for each rpm
-                    countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(countryDialBoard.transform.Find("RPM A " + i.ToString()).Find("Needle Large").gameObject);
-                    countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(countryDialBoard.transform.Find("RPM A " + i.ToString()).Find("Needle Small").gameObject);
+                    GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
+                    countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
+
                 }
 
-                if (planeAttributes.rpmB)
-                {
-                    //russian rpm b only has one needle
-                    countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(countryDialBoard.transform.Find("RPM B " + i.ToString()).Find("Needle Large").gameObject);
-                    
-                }
             }
-
-            if (planeAttributes.country == AirplaneData.Country.GER)
-            {
-                if (planeAttributes.rpmA)
-                {
-                    countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(countryDialBoard.transform.Find("RPM A " + i.ToString()).Find("Needle Large").gameObject);
-                }
-            }
-
-            if (planeAttributes.country == AirplaneData.Country.UK)
-            {
-                if (planeAttributes.rpmA)
-                {
-                    countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(countryDialBoard.transform.Find("RPM A " + i.ToString()).Find("Needle Large").gameObject);
-
-                }
-
-                if (planeAttributes.rpmB)
-                {
-
-                    countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(countryDialBoard.transform.Find("RPM B " + i.ToString()).Find("Needle Large").gameObject);
-                }
-            }
-
-            if (planeAttributes.country == AirplaneData.Country.US)
-            {
-                if (planeAttributes.rpmA)
-                {
-                    countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(countryDialBoard.transform.Find("RPM A " + i.ToString()).Find("Needle Large").gameObject);
-                    countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(countryDialBoard.transform.Find("RPM A " + i.ToString()).Find("Needle Small").gameObject);
-
-                }
-
-                if (planeAttributes.rpmB)
-                {
-
-                    countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(countryDialBoard.transform.Find("RPM B " + i.ToString()).Find("Needle Large").gameObject);
-                }
-            }
-
-            if (planeAttributes.country == AirplaneData.Country.ITA)
-            {
-                if (planeAttributes.rpmA)
-                {
-                    countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(countryDialBoard.transform.Find("RPM A " + i.ToString()).Find("Needle Large").gameObject);
-                }
-            }
-            */
         }
+
+            /*
+          if (planeAttributes.country == AirplaneData.Country.GER)
+          {
+              if (planeAttributes.rpmA)
+              {
+                  countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(countryDialBoard.transform.Find("RPM A " + i.ToString()).Find("Needle Large").gameObject);
+              }
+          }
+
+          if (planeAttributes.country == AirplaneData.Country.UK)
+          {
+              if (planeAttributes.rpmA)
+              {
+                  countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(countryDialBoard.transform.Find("RPM A " + i.ToString()).Find("Needle Large").gameObject);
+
+              }
+
+              if (planeAttributes.rpmB)
+              {
+
+                  countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(countryDialBoard.transform.Find("RPM B " + i.ToString()).Find("Needle Large").gameObject);
+              }
+          }
+
+          if (planeAttributes.country == AirplaneData.Country.US)
+          {
+              if (planeAttributes.rpmA)
+              {
+                  countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(countryDialBoard.transform.Find("RPM A " + i.ToString()).Find("Needle Large").gameObject);
+                  countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(countryDialBoard.transform.Find("RPM A " + i.ToString()).Find("Needle Small").gameObject);
+
+              }
+
+              if (planeAttributes.rpmB)
+              {
+
+                  countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(countryDialBoard.transform.Find("RPM B " + i.ToString()).Find("Needle Large").gameObject);
+              }
+          }
+
+          if (planeAttributes.country == AirplaneData.Country.ITA)
+          {
+              if (planeAttributes.rpmA)
+              {
+                  countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(countryDialBoard.transform.Find("RPM A " + i.ToString()).Find("Needle Large").gameObject);
+              }
+          }
+          */
+        
 
     }
 
@@ -239,7 +239,7 @@ public class DialsManager : MonoBehaviour
             //Instantiate RPMs
             rpmObjects.Clear();
             //is this condition true ? yes : no
-            string rpmString = airplaneData.planeAttributes.rpmType == RpmType.A ? "A" : "B";
+            string rpmString = airplaneData.planeAttributes.rpmType.ToString();// == RpmType.A ? "A" : "B";
             if (countryDialBoard.transform.Find("RPM " + rpmString) != null)
             {
                 //find prefab outside of loop
@@ -312,7 +312,6 @@ public class DialsManager : MonoBehaviour
         List<GameObject> allRpms = new List<GameObject>();
         allRpms.AddRange(allRpmsArray);
 
-        Debug.Log("allrpm count = " + allRpms.Count);
         foreach (GameObject rpm in rpmObjects)
             allRpms.Remove(rpm);
 
@@ -604,40 +603,16 @@ public class DialsManager : MonoBehaviour
         for (int i = 0; i < rpmObjects.Count; i++)
         {
             //if on dial board
-            if(rpmObjects[i].transform.parent = countryDialBoard.transform)
+            if(rpmObjects[i].transform.parent == countryDialBoard.transform)
             {
                 layout.rpmPos[i] = rpmObjects[i].GetComponent<RectTransform>().anchoredPosition;
                 layout.rpmScale[i] = rpmObjects[i].GetComponent<RectTransform>().localScale.x;
             }
             //or in tray
             else
-                DialInTray(rpmObjects[i].name, layout);
+                //note - RPMInTray function
+                RPMInTray(layout,i,rpmObjects[i]);
         }
-
-            /*
-            if (airplaneData.planeAttributes.rpmType == RpmType.A)
-            {
-                if (countryDialBoard.transform.Find("RPM A " + i.ToString()) != null)
-                {
-                    layout.rpmPos[i] = countryDialBoard.transform.Find("RPM A " + i.ToString()).GetComponent<RectTransform>().anchoredPosition;
-                    layout.rpmScale[i] = countryDialBoard.transform.Find("RPM A " + i.ToString()).GetComponent<RectTransform>().localScale.x;
-                }
-                else
-                    DialInTray("RPM A " + i.ToString(), layout);
-            }
-
-            else if (airplaneData.planeAttributes.rpmType == RpmType.B)
-            {
-                if (countryDialBoard.transform.Find("RPM B " + i.ToString()) != null)
-                {
-                    layout.rpmPos[i] = countryDialBoard.transform.Find("RPM B " + i.ToString()).GetComponent<RectTransform>().anchoredPosition;
-                    layout.rpmScale[i] = countryDialBoard.transform.Find("RPM B " + i.ToString()).GetComponent<RectTransform>().localScale.x;
-                }
-                else
-                    DialInTray("RPM B " + i.ToString(), layout);
-            }
-            */
-        
         
         //pack with json utility
         string jsonFoo = JsonUtility.ToJson(layout);
@@ -646,6 +621,16 @@ public class DialsManager : MonoBehaviour
         PlayerPrefs.SetString(airplaneData.planeType, jsonFoo);
         PlayerPrefs.Save();
 
+    }
+
+     void RPMInTray(Layout layout, int i, GameObject rpm)
+    {
+        //slightly different for multiple dials
+        
+        layout.rpmPos[i] = rpm.GetComponent<RectTransform>().anchoredPosition;
+        layout.rpmScale[i] = rpm.GetComponent<RectTransform>().localScale.x;
+        layout.rpmInTray[i] = true;      
+     
     }
 
     void DialInTray(string name, Layout layout)
@@ -723,45 +708,6 @@ public class DialsManager : MonoBehaviour
                     layout.repeaterCompassAlternateScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
                     layout.repeaterCompassAlternateInTray = true;
                     break;
-
-                    /*
-                //Needs redesign!
-                case "RPM A 0":
-                    layout.rpmAPos[0] = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
-                    layout.rpmAScale[0] = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
-                    layout.rpmAInTray[0] = true;
-                    break;
-
-                case "RPM A 1":
-                    layout.rpmAPos[1] = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
-                    layout.rpmAScale[1] = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
-                    layout.rpmAInTray[1] = true;
-                    break;
-
-                case "RPM A 2":
-                    layout.rpmAPos[2] = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
-                    layout.rpmAScale[2] = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
-                    layout.rpmAInTray[2] = true;
-                    break;
-
-                case "RPM B 0":
-                    layout.rpmBPos[0] = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
-                    layout.rpmBScale[0] = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
-                    layout.rpmBInTray[0] = true;
-                    break;
-
-                case "RPM B 1":
-                    layout.rpmBPos[1] = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
-                    layout.rpmBScale[1] = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
-                    layout.rpmBInTray[1] = true;
-                    break;
-
-                case "RPM B 2":
-                    layout.rpmBPos[2] = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
-                    layout.rpmBScale[2] = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
-                    layout.rpmBInTray[2] = true;
-                    break;
-                    */
             }
         }
     }

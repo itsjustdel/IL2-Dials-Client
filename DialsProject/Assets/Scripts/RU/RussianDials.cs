@@ -155,7 +155,7 @@ public class RussianDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion RPMATarget(float rpm)
+    public static Quaternion RPMALargeTarget(float rpm)
     {
         float r = rpm * -0.036f;
         Quaternion target = Quaternion.Euler(0, 0, r);
@@ -164,7 +164,7 @@ public class RussianDials : MonoBehaviour
     }
 
     //2nd needle on two needle rpm
-    public static Quaternion RPMBTarget(float rpm)
+    public static Quaternion RPMASmallTarget(float rpm)
     {
         float r = rpm * -0.36f;
         Quaternion target = Quaternion.Euler(0, 0, r);
@@ -173,7 +173,7 @@ public class RussianDials : MonoBehaviour
     }
 
 
-    public static Quaternion RPMCTarget(float rpm, float scalar, float scalar2)        
+    public static Quaternion RPMBTarget(float rpm, float scalar, float scalar2)        
     {
         // -0.12275*
         //209.135
@@ -182,6 +182,20 @@ public class RussianDials : MonoBehaviour
 
         //clamp low is actually high, rotation are negative
         r = Mathf.Clamp(r, -180,  160);
+
+        Quaternion target = Quaternion.Euler(0, 0, r);
+
+        return target;
+    }
+    public static Quaternion RPMCTarget(float rpm, float scalar, float scalar2)
+    {
+        // -0.12275*
+        //209.135
+        float start = 0f;
+        float r = rpm * -0.036f + (start);
+
+        //clamp low is actually high, rotation are negative
+        //r = Mathf.Clamp(r, -180, 160);
 
         Quaternion target = Quaternion.Euler(0, 0, r);
 

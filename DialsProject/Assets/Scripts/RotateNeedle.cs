@@ -554,23 +554,29 @@ public class RotateNeedle : MonoBehaviour
 
     void RPMTarget(AirplaneData.Country country)
     {
-        /*
+     
         for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
         {
             switch (country)
             {
                 //RU
                 case (AirplaneData.Country.RU):
-                    if (airplaneData.planeAttributes.rpmA)
+                    if (airplaneData.planeAttributes.rpmType == RpmType.A)
                     {
-                        rpmLargeTargets[i] = RussianDials.RPMATarget(airplaneData.rpms[i]);
-                        rpmSmallTargets[i] = RussianDials.RPMBTarget(airplaneData.rpms[i]);
+                        rpmLargeTargets[i] = RussianDials.RPMALargeTarget(airplaneData.rpms[i]);
+                        rpmSmallTargets[i] = RussianDials.RPMASmallTarget(airplaneData.rpms[i]);
                     }
-                    else if (airplaneData.planeAttributes.rpmB)
+                    else if (airplaneData.planeAttributes.rpmType == RpmType.B)
+                    {
+                        rpmLargeTargets[i] = RussianDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    else if (airplaneData.planeAttributes.rpmType == RpmType.C)
+                    {
                         rpmLargeTargets[i] = RussianDials.RPMCTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
 
                     break;
-
+                    /*
                 //GER
                 case (AirplaneData.Country.GER):
                     if (airplaneData.planeAttributes.rpmA)
@@ -613,10 +619,11 @@ public class RotateNeedle : MonoBehaviour
                         rpmLargeTargets[i] = ITADials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
                     break;
+                    */
             }
         }
 
-        */
+        
     }
 
     void ArtificialHorizonTargets(AirplaneData.Country country)
