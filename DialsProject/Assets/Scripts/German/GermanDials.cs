@@ -231,12 +231,22 @@ public class GermanDials : MonoBehaviour
         float r = rpm * -0.11f + (230);
 
         //clamp low is actually high, rotation are negative
-        r = Mathf.Clamp(r, -180, 164);
+        r = Mathf.Clamp(r, -180, 180);//164 i "6" on dial if want to clamp to that
 
         Quaternion target = Quaternion.Euler(0, 0, r);
 
         return target;
     }
 
+    public static Quaternion RPMBTarget(float rpm, float scalar, float scalar2)
+    {
+        float r = rpm * scalar + (230);
 
+        //clamp low is actually high, rotation are negative
+        r = Mathf.Clamp(r, -180, 180);//164 i "6" on dial if want to clamp to that
+
+        Quaternion target = Quaternion.Euler(0, 0, r);
+
+        return target;
+    }
 }

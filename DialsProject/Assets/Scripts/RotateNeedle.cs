@@ -576,50 +576,53 @@ public class RotateNeedle : MonoBehaviour
                     }
 
                     break;
-                    /*
+                    
                 //GER
                 case (AirplaneData.Country.GER):
-                    if (airplaneData.planeAttributes.rpmA)
+                    if (airplaneData.planeAttributes.rpmType == RpmType.A)
                     {
                         rpmLargeTargets[i] = GermanDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                    break;
-
-                //US
-                case (AirplaneData.Country.US):
-                    if (airplaneData.planeAttributes.rpmA)
-                    {
-                        rpmLargeTargets[i] = USDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
-                        rpmSmallTargets[i] = USDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
-                    }
-                    else if (airplaneData.planeAttributes.rpmB)
-                        rpmLargeTargets[i] = USDials.RPMCTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+                    else
+                        rpmLargeTargets[i] = GermanDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
 
                     break;
+                    /*
+               //US
+               case (AirplaneData.Country.US):
+                   if (airplaneData.planeAttributes.rpmA)
+                   {
+                       rpmLargeTargets[i] = USDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+                       rpmSmallTargets[i] = USDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+                   }
+                   else if (airplaneData.planeAttributes.rpmB)
+                       rpmLargeTargets[i] = USDials.RPMCTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+
+                   break;
 
 
-                case (AirplaneData.Country.UK):
-                    if (airplaneData.planeAttributes.rpmA)
-                    {
-                        //A Taret is first needle
-                        rpmLargeTargets[i] = UKDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+               case (AirplaneData.Country.UK):
+                   if (airplaneData.planeAttributes.rpmA)
+                   {
+                       //A Taret is first needle
+                       rpmLargeTargets[i] = UKDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
 
-                    }
-                    else if (airplaneData.planeAttributes.rpmB)
-                    {
-                        //"A" Target is first Needle - not the best naming
-                        rpmLargeTargets[i] = UKDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
-                    }
-                    break;
+                   }
+                   else if (airplaneData.planeAttributes.rpmB)
+                   {
+                       //"A" Target is first Needle - not the best naming
+                       rpmLargeTargets[i] = UKDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+                   }
+                   break;
 
-                case (AirplaneData.Country.ITA):
+               case (AirplaneData.Country.ITA):
 
-                    if (airplaneData.planeAttributes.rpmA)
-                    {
-                        rpmLargeTargets[i] = ITADials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
-                    }
-                    break;
-                    */
+                   if (airplaneData.planeAttributes.rpmA)
+                   {
+                       rpmLargeTargets[i] = ITADials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+                   }
+                   break;
+                   */
             }
         }
 
