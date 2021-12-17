@@ -144,7 +144,7 @@ public class UKDials : MonoBehaviour
     public static Quaternion TurnCoordinatorBallTarget(float v, float multiplier)//top needle
     {
         v *= -1000;
-        Debug.Log(v);
+
         float gearChange = 10f;
         Quaternion target = Quaternion.identity;
         if (Mathf.Abs(v) < gearChange)
@@ -190,24 +190,71 @@ public class UKDials : MonoBehaviour
     }
 
 
-    public static Quaternion RPMATarget(float rpm, float scalar, float scalar2)
+    public static Quaternion RPMATarget(float rpm, float scalar, float scalar1, AnimationCurve curve)
     {
-        float r = rpm * -scalar + (scalar2);
+        //-315 full needle spin to 3000
+        //and work out percentage to use 0-1 scale for curve
+        float highest = 4000;
+        float percentage = (Mathf.Abs(rpm / highest));
+        
+        //multiply by half a dial of spin (180 degrees)
+        float angleToSpin = curve.Evaluate(percentage);
+        // Debug.Log(angleToSpin);
+        angleToSpin *=  -335;
 
-        //clamp low is actually high, rotation are negative
-        //r = Mathf.Clamp(r, -180, 164);
+        //put negative back?
 
-        Quaternion target = Quaternion.Euler(0, 0, r);
+
+        // if (negative)
+        //   angleToSpin *= -1;
+
+        angleToSpin -= 180;
+
+        //offset by 90 degrees - vsi starts at 9 0'clock on the dial
+        //verticalSpeed = 90f - angleToSpin;
+
+        //set to quaternion
+        Quaternion target = Quaternion.Euler(0, 0, angleToSpin);
+
 
         return target;
     }
 
     public static Quaternion RPMBTarget(float rpm, float scalar, float scalar2)
     {
-        float r = rpm * -scalar + (scalar2);
-
-        //clamp low is actually high, rotation are negative
-        //r = Mathf.Clamp(r, -180, 164);
+        float r;
+        
+        //geared
+        if(rpm < 1000)
+        {
+            r = rpm * -0.02f;
+            r -= 180;
+        }
+        else if(rpm >= 1000 && rpm < 2000)
+        {
+            //make start point for rpm multiplication 
+            rpm -= 1000;
+            r = rpm * -0.07f;
+            //add degrees back on where we started ( at 10 on dial)
+            r -= 200;            
+        }        
+        else if (rpm >= 2000 && rpm < 4000)
+        { 
+            //make start point for rpm multiplication 
+            rpm -= 2000;
+            r = rpm * -0.09f;
+            //add degrees back on where we started ( at 20 on dial)
+            r -= 270;
+        }
+        else
+        //over 4000
+        {
+            //make start point for rpm multiplication 
+            rpm -= 4000;
+            r = rpm * -0.07f;
+            //add degrees back on where we started ( at 40 on dial)
+            r -= 90;
+        }
 
         Quaternion target = Quaternion.Euler(0, 0, r);
 

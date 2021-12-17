@@ -238,14 +238,32 @@ public class GermanDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion RPMBTarget(float rpm, float scalar, float scalar2)
-    {
-        float r = rpm * scalar + (230);
+    public static Quaternion RPMBTarget(float rpm,float scalar,float scalar1, AnimationCurve curve)
+    { 
+        //-315 full needle spin to 3000
+        //and work out percentage to use 0-1 scale for curve
+        float highest = 3000;
+        float percentage = (Mathf.Abs(rpm / highest));
+        
+        //multiply by half a dial of spin (180 degrees)
+        float angleToSpin = curve.Evaluate(percentage);
+        // Debug.Log(angleToSpin);
+        angleToSpin *= -315;// scalar1;
 
-        //clamp low is actually high, rotation are negative
-        r = Mathf.Clamp(r, -180, 180);//164 i "6" on dial if want to clamp to that
+        //put negative back?
 
-        Quaternion target = Quaternion.Euler(0, 0, r);
+
+        // if (negative)
+        //   angleToSpin *= -1;
+
+        angleToSpin -= 180;
+
+        //offset by 90 degrees - vsi starts at 9 0'clock on the dial
+        //verticalSpeed = 90f - angleToSpin;
+
+        //set to quaternion
+        Quaternion target = Quaternion.Euler(0, 0, angleToSpin);
+
 
         return target;
     }

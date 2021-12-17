@@ -283,6 +283,8 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.speedometer = true;
                 planeAttributes.turnAndBank = true;
                 planeAttributes.altimeter = true;
+                planeAttributes.rpmType = RpmType.C;
+                planeAttributes.engines = 2;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+216 - 48 8D 15 AB701400     - lea rdx,[RSE.RSE::CAeroplane_La_5_ser_8::`vftable'+290] { ("La-5 ser.8") }
@@ -428,7 +430,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
-                planeAttributes.rpmType = RpmType.A;
+                planeAttributes.rpmType = RpmType.C;
                 planeAttributes.engines = 2;
                 break;
 

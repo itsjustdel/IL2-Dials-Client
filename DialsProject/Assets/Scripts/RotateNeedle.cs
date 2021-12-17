@@ -7,8 +7,7 @@ using UnityEngine;
 
 public class RotateNeedle : MonoBehaviour
 {
-    public bool testValues;
-   
+    //
     public BuildControl buildControl;
     public AirplaneData airplaneData;
     public TCPClient tcpClient;
@@ -116,6 +115,7 @@ public class RotateNeedle : MonoBehaviour
     public float turnAndBankBallMultiplier = 1f;
 
     public AnimationCurve animationCurveVSI;
+    public AnimationCurve animationCurveRPM;
     private bool headingIndicatorTest;
 
     // Start is called before the first frame update
@@ -142,7 +142,7 @@ public class RotateNeedle : MonoBehaviour
 
         
 
-        if (testValues)
+        if (airplaneData.tests)
         {
             //this makes the network code think we received a message on the last frame
             //note- need seperate mmhg test
@@ -572,7 +572,8 @@ public class RotateNeedle : MonoBehaviour
                     }
                     else if (airplaneData.planeAttributes.rpmType == RpmType.C)
                     {
-                        rpmLargeTargets[i] = RussianDials.RPMCTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+                        rpmLargeTargets[i] = RussianDials.RPMCLargeTarget(airplaneData.rpms[i]);
+                        rpmSmallTargets[i] = RussianDials.RPMCSmallTarget(airplaneData.rpms[i]);
                     }
 
                     break;
@@ -584,45 +585,45 @@ public class RotateNeedle : MonoBehaviour
                         rpmLargeTargets[i] = GermanDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
                     else
-                        rpmLargeTargets[i] = GermanDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+                        rpmLargeTargets[i] = GermanDials.RPMBTarget(airplaneData.rpms[i],airplaneData.scalar0,airplaneData.scalar1, animationCurveRPM);
 
                     break;
-                    /*
+                
                //US
                case (AirplaneData.Country.US):
-                   if (airplaneData.planeAttributes.rpmA)
+                   if (airplaneData.planeAttributes.rpmType == RpmType.A)
                    {
                        rpmLargeTargets[i] = USDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
                        rpmSmallTargets[i] = USDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
                    }
-                   else if (airplaneData.planeAttributes.rpmB)
+                   else if (airplaneData.planeAttributes.rpmType == RpmType.B)
                        rpmLargeTargets[i] = USDials.RPMCTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
 
                    break;
 
+                    
+           case (AirplaneData.Country.UK):
+               if (airplaneData.planeAttributes.rpmType == RpmType.A)
+               {
+                   //A Taret is first needle
+                   rpmLargeTargets[i] = UKDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1,animationCurveRPM);
 
-               case (AirplaneData.Country.UK):
-                   if (airplaneData.planeAttributes.rpmA)
-                   {
-                       //A Taret is first needle
-                       rpmLargeTargets[i] = UKDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+               }
+               else if (airplaneData.planeAttributes.rpmType == RpmType.B)
+               {
+                   //"A" Target is first Needle - not the best naming
+                   rpmLargeTargets[i] = UKDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+               }
+               break;
 
-                   }
-                   else if (airplaneData.planeAttributes.rpmB)
-                   {
-                       //"A" Target is first Needle - not the best naming
-                       rpmLargeTargets[i] = UKDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
-                   }
-                   break;
+           case (AirplaneData.Country.ITA):
 
-               case (AirplaneData.Country.ITA):
-
-                   if (airplaneData.planeAttributes.rpmA)
-                   {
-                       rpmLargeTargets[i] = ITADials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
-                   }
-                   break;
-                   */
+               if (airplaneData.planeAttributes.rpmType == RpmType.A)
+               {
+                   rpmLargeTargets[i] = ITADials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+               }
+               break;
+               
             }
         }
 
