@@ -6,6 +6,10 @@ public class GermanDials : MonoBehaviour
 {
     public static Quaternion AirspeedTarget(float airspeed)
     {
+        if (float.IsNaN(airspeed))
+            return Quaternion.identity;
+            
+
         if (airspeed == 0)
             return Quaternion.Euler(0, 0, 180);
 
@@ -54,8 +58,14 @@ public class GermanDials : MonoBehaviour
         Quaternion mmhgTarget = Quaternion.identity;
 
         //catch bad value
-          if(!float.IsNaN(z))
-            mmhgTarget = Quaternion.Euler(0, 0, z); // 0 is 1013.25 mbar //0 degrees // bit more confusing because of asset rotation
+        try
+        {
+            if (!float.IsNaN(z))
+                mmhgTarget = Quaternion.Euler(0, 0, z); // 0 is 1013.25 mbar //0 degrees // bit more confusing because of asset rotation
+        }catch
+        {
+            return Quaternion.identity;
+        }
 
         return mmhgTarget;
     }
@@ -231,7 +241,7 @@ public class GermanDials : MonoBehaviour
         float r = rpm * -0.11f + (230);
 
         //clamp low is actually high, rotation are negative
-        r = Mathf.Clamp(r, -180, 180);//164 i "6" on dial if want to clamp to that
+        r = Mathf.Clamp(r, -180, 164);//164 i "6" on dial if want to clamp to that
 
         Quaternion target = Quaternion.Euler(0, 0, r);
 
@@ -249,6 +259,67 @@ public class GermanDials : MonoBehaviour
         float angleToSpin = curve.Evaluate(percentage);
         // Debug.Log(angleToSpin);
         angleToSpin *= -315;// scalar1;
+
+        //put negative back?
+
+
+        // if (negative)
+        //   angleToSpin *= -1;
+
+        angleToSpin -= 180;
+
+        //offset by 90 degrees - vsi starts at 9 0'clock on the dial
+        //verticalSpeed = 90f - angleToSpin;
+
+        //set to quaternion
+        Quaternion target = Quaternion.Euler(0, 0, angleToSpin);
+
+
+        return target;
+    }
+
+
+    public static Quaternion RPMCTarget(float rpm, float scalar, float scalar1, AnimationCurve curve)
+    {
+        //-315 full needle spin to 3000
+        //and work out percentage to use 0-1 scale for curve
+        float highest = 3500;
+        float percentage = (Mathf.Abs(rpm / highest));
+
+        //multiply by half a dial of spin (180 degrees)
+        float angleToSpin = curve.Evaluate(percentage);
+        // Debug.Log(angleToSpin);
+        angleToSpin *= -315;
+
+        //put negative back?
+
+
+        // if (negative)
+        //   angleToSpin *= -1;
+
+        angleToSpin -= 180;
+
+        //offset by 90 degrees - vsi starts at 9 0'clock on the dial
+        //verticalSpeed = 90f - angleToSpin;
+
+        //set to quaternion
+        Quaternion target = Quaternion.Euler(0, 0, angleToSpin);
+
+
+        return target;
+    }
+
+    public static Quaternion RPMDTarget(float rpm, float scalar, float scalar1, AnimationCurve curve)
+    {
+        //-315 full needle spin to 3000
+        //and work out percentage to use 0-1 scale for curve
+        float highest = 14000;
+        float percentage = (Mathf.Abs(rpm / highest));
+
+        //multiply by half a dial of spin (180 degrees)
+        float angleToSpin = curve.Evaluate(percentage);
+        // Debug.Log(angleToSpin);
+        angleToSpin *= -307;
 
         //put negative back?
 

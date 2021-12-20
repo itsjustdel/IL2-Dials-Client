@@ -115,7 +115,11 @@ public class RotateNeedle : MonoBehaviour
     public float turnAndBankBallMultiplier = 1f;
 
     public AnimationCurve animationCurveVSI;
-    public AnimationCurve animationCurveRPM;
+    
+    public AnimationCurve animationCurveRPMA;
+    public AnimationCurve animationCurveRPMB;
+    public AnimationCurve animationCurveRPMC;
+    public AnimationCurve animationCurveRPMD;
     private bool headingIndicatorTest;
 
     // Start is called before the first frame update
@@ -488,14 +492,14 @@ public class RotateNeedle : MonoBehaviour
         }
 
         //artificial horizon ITA plane
-        if (artificialHorizonPlane != null)
+        if (artificialHorizonPlane != null && airplaneData.planeAttributes.country == AirplaneData.Country.ITA)
         {
             difference = quaternionsArtificialHorizonPlane[0].z - quaternionsArtificialHorizonPlane[1].z;
             artificialHorizonRotationPlaneTarget = artificialHorizonPlane.transform.rotation * Quaternion.Euler(0, 0, difference);
         }
 
         //artificial horizon GER needle
-        if (artificialHorizonPlane != null)
+        if (artificialHorizonPlane != null && airplaneData.planeAttributes.country == AirplaneData.Country.GER)
         {
             difference = quaternionsArtificialHorizonNeedle[0].z - quaternionsArtificialHorizonNeedle[1].z;
             artificialHorizonNeedleTarget = artificialHorizonNeedle.transform.rotation * Quaternion.Euler(0, 0, difference);
@@ -584,8 +588,16 @@ public class RotateNeedle : MonoBehaviour
                     {
                         rpmLargeTargets[i] = GermanDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
+                    else if (airplaneData.planeAttributes.rpmType == RpmType.B)
+                    {
+                        rpmLargeTargets[i] = GermanDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1, animationCurveRPMA);
+                    }
+                    else if (airplaneData.planeAttributes.rpmType == RpmType.C)
+                    {
+                        rpmLargeTargets[i] = GermanDials.RPMCTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1, animationCurveRPMC);
+                    }
                     else
-                        rpmLargeTargets[i] = GermanDials.RPMBTarget(airplaneData.rpms[i],airplaneData.scalar0,airplaneData.scalar1, animationCurveRPM);
+                        rpmLargeTargets[i] = GermanDials.RPMDTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1, animationCurveRPMD);
 
                     break;
                 
@@ -606,7 +618,7 @@ public class RotateNeedle : MonoBehaviour
                if (airplaneData.planeAttributes.rpmType == RpmType.A)
                {
                    //A Taret is first needle
-                   rpmLargeTargets[i] = UKDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1,animationCurveRPM);
+                   rpmLargeTargets[i] = UKDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1,animationCurveRPMA);
 
                }
                else if (airplaneData.planeAttributes.rpmType == RpmType.B)
@@ -1209,12 +1221,13 @@ public class RotateNeedle : MonoBehaviour
         HeadingIndicatorSwitch();
 
         //
-                headingIndicator.transform.localPosition = Vector3.Lerp(headingIndicator.transform.localPosition, headingIndicatorTarget, Time.fixedDeltaTime);
+        if (float.IsNaN(headingIndicatorTarget.y) || float.IsNaN(headingIndicatorTarget.z))
+            return;
 
-        //headingIndicator.transform.localPosition = headingIndicatorTarget;
+        headingIndicator.transform.localPosition = Vector3.Lerp(headingIndicator.transform.localPosition, headingIndicatorTarget, Time.fixedDeltaTime);
 
-        Debug.DrawLine(headingIndicator.transform.localPosition, headingIndicator.transform.localPosition + Vector3.up*100);
-        Debug.DrawLine(headingIndicatorTarget, headingIndicatorTarget + Vector3.up * 100, Color.red);
+
+
 
 
     }

@@ -7,6 +7,7 @@ public enum RpmType
     A,
     B,
     C,
+    D,
     None
 }
 
@@ -118,6 +119,34 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnAndBank = true;
                 planeAttributes.rpmType = RpmType.B;
                 planeAttributes.engines = 2;
+                break;
+
+            case "GER C":
+                planeAttributes.country = Country.GER;
+                planeAttributes.speedometer = true;
+                planeAttributes.altimeter = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.headingIndicator = true;
+                planeAttributes.vsiLarge = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.artificialHorizon = true;
+                planeAttributes.turnAndBank = true;
+                planeAttributes.rpmType = RpmType.C;
+                planeAttributes.engines = 2;
+                break;
+
+            case "GER D":
+                planeAttributes.country = Country.GER;
+                planeAttributes.speedometer = true;
+                planeAttributes.altimeter = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.headingIndicator = true;
+                planeAttributes.vsiLarge = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.artificialHorizon = true;
+                planeAttributes.turnAndBank = true;
+                planeAttributes.rpmType = RpmType.D;
+                planeAttributes.engines = 4;
                 break;
 
             case "US A":
@@ -317,7 +346,8 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiSmall = true;
                 planeAttributes.headingIndicator = true;// needs new model for gyro combined?
-                planeAttributes.rpmType = RpmType.A;
+                planeAttributes.rpmType = RpmType.B;
+                planeAttributes.engines = 2;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+2199 - 48 8D 15 80B41400     - lea rdx,[RSE.RSE::CAeroplane_MC_202_s8::`vftable'+1E8] { ("MC 202 s8") }
@@ -329,6 +359,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiLarge = true; //large for fighters
                 planeAttributes.headingIndicator = true;
+                planeAttributes.rpmType = RpmType.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+CA2 - 48 8D 15 6FFD1400     - lea rdx,[RSE.RSE::CAeroplane_Ju523mg4e::`vftable'+1E8] { ("Ju-52/3m g4e") }
@@ -373,7 +404,8 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.vsiSmall = true;
                 planeAttributes.artificialHorizon = true;
-                planeAttributes.rpmType = RpmType.A;
+                planeAttributes.rpmType = RpmType.C;
+                planeAttributes.engines = 2;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+BFB - 4C 8D 05 56E31500     - lea r8,[RSE.RSE::CFlywheelStarter_P_40E_1::`vftable'+68] { ("P-40E-1") }
@@ -417,7 +449,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.repeaterCompass = true;
-                planeAttributes.rpmType = RpmType.A;
+                planeAttributes.rpmType = RpmType.B;
                 planeAttributes.engines = 2;
                 break;
 
@@ -473,7 +505,8 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.repeaterCompass = true;
-                planeAttributes.rpmType = RpmType.A;
+                planeAttributes.rpmType = RpmType.C;
+                planeAttributes.engines = 2;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+217E - 48 8D 15 334D0800     - lea rdx,[RSE.RSE::CAeroplane_He_111_H16::`vftable'+298] { ("He 111 H-16") }
@@ -486,7 +519,8 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiSmall = true;                
                 planeAttributes.headingIndicator = true;
                 planeAttributes.repeaterCompass = true;
-                planeAttributes.rpmType = RpmType.A;
+                planeAttributes.rpmType = RpmType.B;
+                planeAttributes.engines = 2;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+CBD - 48 8D 15 7C330F00     - lea rdx,[RSE.RSE::CAeroplane_Spitfire_Mk_Vb::`vftable'+210] { ("Spitfire Mk.Vb") }
@@ -511,6 +545,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.vsiSmall = true;
                 planeAttributes.rpmType = RpmType.A;
+                planeAttributes.engines = 2;
 
                 break;
 
@@ -523,6 +558,8 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiLarge = true;
+                planeAttributes.rpmType = RpmType.A;
+                planeAttributes.engines = 2;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+D83 - 4C 8D 05 6EAF0C00     - lea r8,[RSE.RSE::CAeroplane_P_39L_1::`vftable'+210] { ("P-39L-1") }
@@ -535,6 +572,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = RpmType.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+D29 - 48 8D 15 C0DE1000     - lea rdx,[RSE.RSE::CAeroplane_Yak_7B_ser_36::`vftable'+2C0] { ("Yak-7B ser.36") }
@@ -608,6 +646,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiLarge = true;
+                planeAttributes.rpmType = RpmType.D;
                     
                 break;
 
@@ -632,6 +671,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator = true;
+                planeAttributes.rpmType = RpmType.B;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+5778 - 48 8D 15 09890A00     - lea rdx,[RSE.RSE::CAeroplane_Me_262_A::`vftable'+260] { ("Me 262 A") }
@@ -642,7 +682,8 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnAndBank = true;
                 planeAttributes.repeaterCompass = true;                
                 planeAttributes.vsiLarge = true;
-                //rpm ?
+                planeAttributes.rpmType = RpmType.D;
+                planeAttributes.engines = 2;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+E80 - 48 8D 15 C1F80700     - lea rdx,[RSE.RSE::CAeroplane_FW_190_D9::`vftable'+430] { ("FW 190 D9") }
