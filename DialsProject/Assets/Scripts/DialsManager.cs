@@ -63,6 +63,8 @@ public class DialsManager : MonoBehaviour
 
             AsignRPM(airplaneData.planeAttributes, countryDialBoard);
 
+            Markings(airplaneData);
+
 
             if (countryDialBoard != null)
                 LoadLayout();
@@ -83,6 +85,15 @@ public class DialsManager : MonoBehaviour
 
     }
 
+    void Markings(AirplaneData airplaneData)
+    {
+        //rpm markings
+        //p47 28 needs one red removed
+        if(airplaneData.planeType == "P-47D-28")
+        {
+            countryDialBoard.transform.Find("RPM D 0").Find("Markings").Find("Red 2.7").gameObject.SetActive(false);
+        }
+    }
 
     //POOSIBLE NEW CLASS FROM HERE?
     void AsignVSI(PlaneDataFromName.PlaneAttributes planeAttributes, GameObject countryDialBoard)
@@ -117,12 +128,15 @@ public class DialsManager : MonoBehaviour
         {
             //  if (planeAttributes.country == AirplaneData.Country.RU)
             {
-                //Primary needle
-                GameObject needleLarge = rpmObjects[i].transform.Find("Needle Large").gameObject;
-                countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleLarge);
+                //Primary needle - most planes have this
+                if (rpmObjects[i].transform.Find("Needle Large") != null)
+                {
+                    GameObject needleLarge = rpmObjects[i].transform.Find("Needle Large").gameObject;
+                    countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleLarge);
+                }
 
 
-                if (planeAttributes.country == AirplaneData.Country.RU || planeAttributes.country == AirplaneData.Country.US)
+                if (planeAttributes.country == AirplaneData.Country.RU)
                 {
                     if (planeAttributes.rpmType == RpmType.A)
                     {
@@ -138,6 +152,26 @@ public class DialsManager : MonoBehaviour
                         countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
                     }
 
+                }
+
+                if(planeAttributes.country == AirplaneData.Country.US)
+                {
+                    if (planeAttributes.rpmType == RpmType.A || planeAttributes.rpmType == RpmType.D)
+                    {
+                        GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
+                        countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
+                    }
+
+
+                    //p38 J
+                    if (planeAttributes.rpmType == RpmType.E)
+                    {
+                        GameObject needleLeft = rpmObjects[i].transform.Find("Needle Left").gameObject;
+                        countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleLeft);
+
+                        GameObject needleRight = rpmObjects[i].transform.Find("Needle Right").gameObject;
+                        countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleRight);
+                    }
                 }
             }
         }

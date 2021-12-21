@@ -90,7 +90,7 @@ public class RotateNeedle : MonoBehaviour
     private Quaternion artificialHorizonChevronTarget;
     private Quaternion artificialHorizonRotationPlaneTarget;//if dial has seperate background and plane
     public List<Quaternion> rpmLargeTargets = new List<Quaternion>();
-    private List<Quaternion> rpmSmallTargets = new List<Quaternion>();
+    public  List<Quaternion> rpmSmallTargets = new List<Quaternion>();
 
     private Quaternion turnAndBankBallTarget;
 
@@ -603,15 +603,33 @@ public class RotateNeedle : MonoBehaviour
                 
                //US
                case (AirplaneData.Country.US):
-                   if (airplaneData.planeAttributes.rpmType == RpmType.A)
-                   {
-                       rpmLargeTargets[i] = USDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
-                       rpmSmallTargets[i] = USDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
-                   }
-                   else if (airplaneData.planeAttributes.rpmType == RpmType.B)
-                       rpmLargeTargets[i] = USDials.RPMCTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+                    if (airplaneData.planeAttributes.rpmType == RpmType.A)
+                    {
+                        rpmLargeTargets[i] = USDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+                        rpmSmallTargets[i] = USDials.RPMAInnerTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    else if (airplaneData.planeAttributes.rpmType == RpmType.B)
+                    {
+                        rpmLargeTargets[i] = USDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    else if (airplaneData.planeAttributes.rpmType == RpmType.C)
+                    {
+                        rpmLargeTargets[i] = USDials.RPMCTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    else if (airplaneData.planeAttributes.rpmType == RpmType.D)
+                    {
+                        //we can use A for big needle
+                        rpmLargeTargets[i] = USDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+                        rpmSmallTargets[i] = USDials.RPMDSmallTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    else if (airplaneData.planeAttributes.rpmType == RpmType.E)
+                    {
+                        //note we use hard indexes for rpms and engine lists. P38J is asigend "1 engine" because it only has 1 engine dial
+                        rpmLargeTargets[0] = USDials.RPMCTarget(airplaneData.rpms[0], airplaneData.scalar0, airplaneData.scalar1);
+                        rpmSmallTargets[0] = USDials.RPMCTarget(airplaneData.rpms[1], airplaneData.scalar0, airplaneData.scalar1);
+                    }
 
-                   break;
+                        break;
 
                     
            case (AirplaneData.Country.UK):

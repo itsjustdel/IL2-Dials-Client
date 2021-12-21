@@ -8,6 +8,7 @@ public enum RpmType
     B,
     C,
     D,
+    E,
     None
 }
 
@@ -163,7 +164,7 @@ public class PlaneDataFromName : AirplaneData
                 break;
 
 
-            case "US B":
+            case "US B"://kittyhawk
                 planeAttributes.country = Country.US;
                 planeAttributes.speedometer = true;
                 planeAttributes.altimeter = true;
@@ -174,6 +175,44 @@ public class PlaneDataFromName : AirplaneData
                 //  planeAttributes.artificialHorizon = true;
                 planeAttributes.rpmType = RpmType.B;
                 planeAttributes.engines = 2;
+                break;
+
+            case "US C":
+                planeAttributes.country = Country.US;
+                planeAttributes.speedometer = true;
+                planeAttributes.altimeter = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.headingIndicator = true;
+                planeAttributes.vsiLarge = true;
+                planeAttributes.repeaterCompass = true;
+                //  planeAttributes.artificialHorizon = true;
+                planeAttributes.rpmType = RpmType.C;
+                planeAttributes.engines = 2;
+                break;
+
+            case "US D":
+                planeAttributes.country = Country.US;
+                planeAttributes.speedometer = true;
+                planeAttributes.altimeter = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.headingIndicator = true;
+                planeAttributes.vsiLarge = true;
+                planeAttributes.repeaterCompass = true;
+                //  planeAttributes.artificialHorizon = true;
+                planeAttributes.rpmType = RpmType.D;
+                planeAttributes.engines = 2;
+                break;
+
+            case "US E"://p38j
+                planeAttributes.country = Country.US;
+                planeAttributes.speedometer = true;
+                planeAttributes.altimeter = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.headingIndicator = true;
+                planeAttributes.vsiLarge = true;
+                planeAttributes.repeaterCompass = true;
+                //  planeAttributes.artificialHorizon = true;
+                planeAttributes.rpmType = RpmType.E;                
                 break;
 
             case "UK A":
@@ -417,6 +456,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiLarge = true;//fighter
                 planeAttributes.turnCoordinator = true;
+                planeAttributes.rpmType = RpmType.B;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+C51 - 48 8D 15 88A51600     - lea rdx,[RSE.RSE::CAeroplane_MiG_3_ser_24::`vftable'+1C0] { ("MiG-3 ser.24") }
@@ -671,7 +711,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator = true;
-                planeAttributes.rpmType = RpmType.B;
+                planeAttributes.rpmType = RpmType.C;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+5778 - 48 8D 15 09890A00     - lea rdx,[RSE.RSE::CAeroplane_Me_262_A::`vftable'+260] { ("Me 262 A") }
@@ -707,6 +747,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
+                planeAttributes.rpmType = RpmType.E;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+E9B - 48 8D 15 56E10F00     - lea rdx,[RSE.RSE::CAeroplane_Tempest_Mk_V_ser_2::`vftable'+2E8] { ("Tempest Mk.V ser.2") }
@@ -762,6 +803,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.artificialHorizon = true;
+                planeAttributes.rpmType = RpmType.D;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+EE9 - 48 8D 15 C85E0900     - lea rdx,[RSE.RSE::CAeroplane_Hurricane_Mk_II::`vftable'+2E8] { ("Hurricane Mk.II") }
@@ -798,6 +840,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
+                planeAttributes.rpmType = RpmType.C;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+F66 - 48 8D 15 530F0500     - lea rdx,[RSE.RSE::CAeroplane_Bf_109_G6_Late::`vftable'+310] { ("Bf 109 G-6 Late") }
@@ -855,6 +898,8 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
                 break;
+
+         
 
             default:
                 planeAttributes.country = Country.UNDEFINED;
