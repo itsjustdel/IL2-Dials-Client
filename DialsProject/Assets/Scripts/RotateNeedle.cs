@@ -1322,6 +1322,7 @@ public class RotateNeedle : MonoBehaviour
 
     void ArtificialHorizonPosition()
     {
+
         artificialHorizon.transform.localPosition = Vector3.Lerp(artificialHorizon.transform.localPosition, artificialHorizonPositionTarget, Time.fixedDeltaTime);
 
         //clamp plane to background

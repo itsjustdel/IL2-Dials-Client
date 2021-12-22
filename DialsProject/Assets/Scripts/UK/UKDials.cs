@@ -199,23 +199,14 @@ public class UKDials : MonoBehaviour
         
         //multiply by half a dial of spin (180 degrees)
         float angleToSpin = curve.Evaluate(percentage);
-        // Debug.Log(angleToSpin);
+        Debug.Log(angleToSpin);
         angleToSpin *=  -335;
 
-        //put negative back?
-
-
-        // if (negative)
-        //   angleToSpin *= -1;
-
+        
         angleToSpin -= 180;
-
-        //offset by 90 degrees - vsi starts at 9 0'clock on the dial
-        //verticalSpeed = 90f - angleToSpin;
-
-        //set to quaternion
         Quaternion target = Quaternion.Euler(0, 0, angleToSpin);
 
+        
 
         return target;
     }
@@ -255,6 +246,8 @@ public class UKDials : MonoBehaviour
             //add degrees back on where we started ( at 40 on dial)
             r -= 90;
         }
+
+        
 
         Quaternion target = Quaternion.Euler(0, 0, r);
 

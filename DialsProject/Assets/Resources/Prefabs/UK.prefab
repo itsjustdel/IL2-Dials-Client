@@ -3182,6 +3182,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0, w: 1}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
   rpmLargeTargets: []
+  rpmSmallTargets: []
   trackLength: -200.5
   trackLengthForSwitch: 200.3
   turnCoordinaterNeedleMod: 1
@@ -3196,63 +3197,21 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  animationCurveRPM:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0.050081376
-      outSlope: 0.050081376
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.2893911
-      value: 0.014493104
-      inSlope: 0.18876037
-      outSlope: 0.18876037
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.47415167
-      outWeight: 0.09286727
-    - serializedVersion: 3
-      time: 0.44284004
-      value: 0.16264713
-      inSlope: 2.136027
-      outSlope: 2.136027
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.17929272
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1.001709
-      value: 1
-      inSlope: 1.0630019
-      outSlope: 1.0630019
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.11152431
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
   animationCurveRPMA:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0.050081376
-      outSlope: 0.050081376
+      time: 0.013935089
+      value: 0.051940918
+      inSlope: 0.041578975
+      outSlope: 0.041578975
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.2893911
-      value: 0.014493104
+      time: 0.3155294
+      value: 0.0644809
       inSlope: 0.18876037
       outSlope: 0.18876037
       tangentMode: 0
@@ -5748,13 +5707,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7943290327025218704}
-  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0.9914449, w: 0.13052626}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 8, y: 8, z: 8}
   m_Children: []
   m_Father: {fileID: 1920285941008695870}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 165}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}

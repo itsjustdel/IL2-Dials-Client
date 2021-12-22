@@ -266,6 +266,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.vsiLarge = true;
+                planeAttributes.rpmType = RpmType.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+3E0 - 48 8D 15 29E11200     - lea rdx,[RSE.RSE::CAeroplane_Bf_109_F4::`vftable'+310] { ("Bf 109 F-4") }
@@ -287,6 +288,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.vsiSmall = true;
                 planeAttributes.turnAndBank = true;
+                planeAttributes.rpmType = RpmType.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+19B0 - 48 8D 15 D9F61200     - lea rdx,[RSE.RSE::CAeroplane_Il_2_m_42::`vftable'+1E8] { ("Il-2 mod.1942") }
@@ -298,6 +300,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.vsiSmall = true;
                 planeAttributes.turnAndBank = true;
+                planeAttributes.rpmType = RpmType.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+19CB - 48 8D 15 96ED0900     - lea rdx,[RSE.RSE::CAeroplane_Il_2_m_43::`vftable'+1E8] { ("Il-2 mod.1943") }
@@ -309,6 +312,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.vsiSmall = true;
                 planeAttributes.turnAndBank = true;
+                planeAttributes.rpmType = RpmType.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+159 - 48 8D 15 78421300     - lea rdx,[RSE.RSE::CAeroplane_Ju_87_D_3::`vftable'+238] { ("Ju-87 D3") }
@@ -330,6 +334,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.turnCoordinator = true;
+                planeAttributes.rpmType = RpmType.B;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+3FB - 48 8D 15 D64E1400     - lea rdx,[RSE.RSE::CAeroplane_Bf_109_G2::`vftable'+310] { ("Bf 109 G-2") }
@@ -363,6 +368,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.headingIndicator = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.vsiLarge = true;
+                planeAttributes.rpmType = RpmType.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+482 - 48 8D 15 07AA1400     - lea rdx,[RSE.RSE::CAeroplane_FW_190_A3::`vftable'+2C0] { ("FW 190 A3") }
@@ -421,6 +427,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.headingIndicator = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.vsiLarge = true;
+                planeAttributes.rpmType = RpmType.B;
 
                 break;
                             
@@ -468,6 +475,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.turnAndBank = true;
                 planeAttributes.vsiLarge = true;
+                planeAttributes.rpmType = RpmType.B;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+3C5 - 48 8D 15 94131700     - lea rdx,[RSE.RSE::CAeroplane_Bf_109_F2::`vftable'+310] { ("Bf 109 F-2") }
@@ -513,6 +521,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;                
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
+                planeAttributes.rpmType = RpmType.B;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+416 - 48 8D 15 93BD0400     - lea rdx,[RSE.RSE::CAeroplane_Bf_109_G4::`vftable'+310] { ("Bf 109 G-4") }
@@ -573,7 +582,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator= true;
                 planeAttributes.repeaterCompass = true;
-
+                planeAttributes.rpmType = RpmType.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+CD8 - 48 8D 15 D9EC0800     - lea rdx,[RSE.RSE::CAeroplane_Hs_129_B2::`vftable'+2E8] { ("Hs 129 B-2") }
@@ -622,6 +631,8 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.speedometer = true;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.turnCoordinator = true;
+                planeAttributes.rpmType = RpmType.A;
+
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+231 - 48 8D 15 78770A00     - lea rdx,[RSE.RSE::CAeroplane_La_5_FN_ser_2::`vftable'+2B8] { ("La-5 FN ser.2") }
@@ -632,6 +643,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.headingIndicator = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.vsiLarge = true;
+                planeAttributes.rpmType = RpmType.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+2A8 - 48 8D 15 A1FB0400     - lea rdx,[RSE.RSE::CAeroplane_Bf_109_G6::`vftable'+310] { ("Bf 109 G-6") }
@@ -664,6 +676,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = RpmType.B;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+27A - 48 8D 15 FFF10700     - lea rdx,[RSE.RSE::CAeroplane_FW_190_A8::`vftable'+2C0] { ("FW 190 A8") }
@@ -760,6 +773,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = RpmType.B;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+EBF - 4C 8D 05 8A0C0600     - lea r8,[RSE.RSE::CAeroplane_B_25_D::`vftable'+2B8] { ("B-25D") }
@@ -772,6 +786,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
+                planeAttributes.rpmType = RpmType.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+D44 - 48 8D 15 F5D01100     - lea rdx,[RSE.RSE::CAeroplane_Yak_9_ser_1::`vftable'+2E8] { ("Yak-9 ser.1") }
@@ -782,6 +797,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.headingIndicator = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.vsiLarge = true;
+                planeAttributes.rpmType = RpmType.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+D5F - 48 8D 15 AA681100     - lea rdx,[RSE.RSE::CAeroplane_Yak_9T_ser_1::`vftable'+2E8] { ("Yak-9T ser.1") }
@@ -792,6 +808,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.headingIndicator = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.vsiLarge = true;
+                planeAttributes.rpmType = RpmType.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+E14 - 48 8D 15 ED210D00     - lea rdx,[RSE.RSE::CGearPost_P_47D_22::`vftable'+68] { ("P-47D-22") }
@@ -816,6 +833,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiLarge = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = RpmType.B;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+F0D - 4C 8D 05 ECA40600     - lea r8,[RSE.RSE::CAeroplane_C_47A::`vftable'+210] { ("C-47A") }
@@ -828,6 +846,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
+                planeAttributes.rpmType = RpmType.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+F3F - 4C 8D 05 F2D40D00     - lea r8,[RSE.RSE::CAeroplane_P_51B_5::`vftable'+210] { ("P-51B-5") }
@@ -863,6 +882,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = RpmType.B;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+263 - 48 8D 15 0EC40700     - lea rdx,[RSE.RSE::CAeroplane_FW_190_A6::`vftable'+8] { ("FW 190 A6") }
@@ -885,7 +905,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.repeaterCompass = true;
-
+                planeAttributes.rpmType = RpmType.B;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+DDD - 4C 8D 05 6CB00C00     - lea r8,[RSE.RSE::CAeroplane_Po_2_VS::`vftable'+1D0] { ("U-2VS") }
@@ -897,6 +917,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiSmallest = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
+                planeAttributes.rpmType = RpmType.A;
                 break;
 
          
