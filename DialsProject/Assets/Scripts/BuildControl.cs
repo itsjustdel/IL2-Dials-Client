@@ -11,7 +11,7 @@ public class BuildControl : MonoBehaviour
     public void Awake()
     {
 
-        Application.targetFrameRate = 60;
+        //Application.targetFrameRate = 60;
 
         //stop screen from turnign off
         if (Application.platform == RuntimePlatform.Android)

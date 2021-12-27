@@ -1647,6 +1647,7 @@ MonoBehaviour:
   buildControl: {fileID: 0}
   airplaneData: {fileID: 0}
   tcpClient: {fileID: 0}
+  smoothing: 3
   altitudeNeedleSmall: {fileID: 2427977040760218792}
   altitudeNeedleSmallest: {fileID: 0}
   altitudeNeedleLarge: {fileID: 2427977040071669931}
@@ -1679,6 +1680,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0, w: 1}
   airspeedTarget: {x: 0, y: 0, z: 0, w: 0}
   rpmLargeTargets: []
+  rpmSmallTargets: []
   trackLength: -108.44
   trackLengthForSwitch: 200.3
   turnCoordinaterNeedleMod: 1
@@ -1693,12 +1695,31 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  animationCurveRPM:
+  animationCurveRPMA:
     serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  animationCurveRPMB:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  animationCurveRPMC:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  animationCurveRPMD:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  vsiValues: []
 --- !u!1 &2427977040669854849
 GameObject:
   m_ObjectHideFlags: 0

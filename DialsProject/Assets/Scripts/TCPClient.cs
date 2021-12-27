@@ -214,24 +214,27 @@ public class TCPClient : MonoBehaviour {
 					//float array
 					float[] floats = GetFloats(bytes, p, floatArrayLength);
 
-					//set Il2 game data for client
-					iL2GameDataClient.altitude = floats[0];
-					iL2GameDataClient.mmhg = floats[1];
-					iL2GameDataClient.airspeed = floats[2];
-					//save previous heading before asigning new heading - needed for turn co-ordinator needle
-					iL2GameDataClient.headingPreviousPrevious = iL2GameDataClient.headingPrevious;
-					iL2GameDataClient.headingPrevious = iL2GameDataClient.heading;
-					iL2GameDataClient.heading = floats[3];
-					iL2GameDataClient.pitch = floats[4];
-					iL2GameDataClient.rollPrev = iL2GameDataClient.roll;
-					iL2GameDataClient.roll = floats[5];
-					iL2GameDataClient.verticalSpeed = floats[6];
-					iL2GameDataClient.turnCoordinatorBall = floats[7];
-					iL2GameDataClient.turnCoordinatorNeedle = floats[8];
-					iL2GameDataClient.rpms[0] = floats[9];
-					iL2GameDataClient.rpms[1] = floats[10];
-					iL2GameDataClient.rpms[2] = floats[12];
-					iL2GameDataClient.rpms[3] = floats[13]; //support for 4 engines (you never know!)
+					if (!testPrediction)
+					{
+						//set Il2 game data for client
+						iL2GameDataClient.altitude = floats[0];
+						iL2GameDataClient.mmhg = floats[1];
+						iL2GameDataClient.airspeed = floats[2];
+						//save previous heading before asigning new heading - needed for turn co-ordinator needle
+						iL2GameDataClient.headingPreviousPrevious = iL2GameDataClient.headingPrevious;
+						iL2GameDataClient.headingPrevious = iL2GameDataClient.heading;
+						iL2GameDataClient.heading = floats[3];
+						iL2GameDataClient.pitch = floats[4];
+						iL2GameDataClient.rollPrev = iL2GameDataClient.roll;
+						iL2GameDataClient.roll = floats[5];
+						iL2GameDataClient.verticalSpeed = floats[6];
+						iL2GameDataClient.turnCoordinatorBall = floats[7];
+						iL2GameDataClient.turnCoordinatorNeedle = floats[8];
+						iL2GameDataClient.rpms[0] = floats[9];
+						iL2GameDataClient.rpms[1] = floats[10];
+						iL2GameDataClient.rpms[2] = floats[12];
+						iL2GameDataClient.rpms[3] = floats[13]; //support for 4 engines (you never know!)
+					}
 					p += floatArrayLengthBytes;
 
 					//Debug.Log("Reading received data");

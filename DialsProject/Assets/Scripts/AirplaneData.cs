@@ -49,12 +49,6 @@ public class AirplaneData : MonoBehaviour
     public List<float> rpms;
 
 
-    //public List<GameObject> countryDials = new List<GameObject>();
-    //public GameObject countryDialBoard;
-
-    
-    private Country previousCountry;
-
     public BuildControl buildControl;
     public MenuHandler menuHandler;
     public TCPClient tcpClient;

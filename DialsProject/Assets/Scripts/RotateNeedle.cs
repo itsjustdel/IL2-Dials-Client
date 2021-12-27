@@ -11,6 +11,7 @@ public class RotateNeedle : MonoBehaviour
     public BuildControl buildControl;
     public AirplaneData airplaneData;
     public TCPClient tcpClient;
+    public float smoothing = 3f;
 
     public GameObject altitudeNeedleSmall;
     public GameObject altitudeNeedleSmallest;//UK
@@ -121,6 +122,7 @@ public class RotateNeedle : MonoBehaviour
     public AnimationCurve animationCurveRPMC;
     public AnimationCurve animationCurveRPMD;
     private bool headingIndicatorTest;
+    bool predictStart = false;
 
     // Start is called before the first frame update
     void Start()
@@ -142,134 +144,106 @@ public class RotateNeedle : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-
-        
-
+    { 
         if (airplaneData.tests)
         {
-            //this makes the network code think we received a message on the last frame
-            //note- need seperate mmhg test
-            //if (airplaneData.heading > .2f && airplaneData.heading < 6.2f)
-            //headingIndicatorShift = !headingIndicatorShift;
-            bool autoMove = false;
-            if (autoMove)
-            {
-
-
-                float h = airplaneData.heading;
-                float a = .4f;
-                float b = 6f;
-
-                //swithc direction
-                if (h > a && h < b)
-                {
-                    //                Debug.Log(headingIndicatorShift);
-                    headingIndicatorTest = !headingIndicatorTest;
-                }
-                float speed = .001f;
-                if (headingIndicatorTest)
-                    airplaneData.heading += speed;
-                else
-                    airplaneData.heading -= speed;
-
-            }
-            previousMessageTime = lastMessageReceivedTime;//using?
-            lastMessageReceivedTime = Time.time -Time.deltaTime;
-
-
-            airplaneData.headingPrevious= airplaneData.heading;
-           
-            //airplaneData.heading = airplaneData.heading;
-
-            
-            if (airplaneData.heading > Mathf.PI * 2)
-            {
-                airplaneData.heading -= Mathf.PI * 2;
-               // airplaneData.headingPrevious -= Mathf.PI * 2;
-
-             //   headingIndicatorCrossoverLeft = true;
-            }
-
-            else if (airplaneData.heading < 0)
-            {
-                airplaneData.heading += Mathf.PI * 2;
-              //  airplaneData.headingPrevious += Mathf.PI * 2;
-
-              //  headingIndicatorCrossoverRight = true;
-            }
-
-            
-
-            ////////////
-
-
-
-            //////////
-
-            //PredictRotations();
-            SetRotationTargets();
-            
-            NeedleRotations();
-
-            
-            
-
+            Tests();   
             return;
         }
 
-
         if (!tcpClient.connected)
         {
-            //if we have completely lost connection reset needles, there is a 5 second grace period where prediction takes over            
-            airplaneData.altitude = 0f;
-            airplaneData.mmhg = 0f;
-            airplaneData.airspeed = 0f;
+            ResetNeedles();
         }
         else //we are connected
         {
             if (tcpClient.tcpReceived)
             {
-
-                //flag set by tcp client in async thread
-                //save two steps of time
-                
-                previousMessageTime = lastMessageReceivedTime;
-                lastMessageReceivedTime = Time.time;
-                SetRotationTargets();
-
-                tcpClient.tcpReceived = false;
-
-
+                TCPReceived();
             }
 
             //check to see if we need to predict or if we received a new update recently
             else if (Time.time - lastMessageReceivedTime > Time.fixedDeltaTime)//we send and receive on fixed time step
             {
-                tcpClient.tcpReceived = false;
-
-                //   Debug.Log("0");
-                lastMessageReceivedTime += Time.fixedDeltaTime;
-
-                //  SavePreviousRotations(); -- don't save roation,s we will just use the last one to continue with until real update occurs
-                PredictRotations();
+                PredictTCPEvent();
             }
         }
 
-
-        //float difference = quaternionsAirspeed[0].eulerAngles.z - quaternionsAirspeed[1].eulerAngles.z;
-        //Debug.Log(difference);
-
-
-        //best place to put this?
-        //flicks between different 2d number tracks to create smooth wrap around
-        //HeadingIndicatorSwitch();
-
         NeedleRotations();
-
-
+    }
+    void PredictTCPEvent()
+    {
+        lastMessageReceivedTime = Time.time;
+        PredictRotations();        
     }
 
+    void TCPReceived()
+    {
+        Debug.Log("tcp received");
+
+        previousMessageTime = lastMessageReceivedTime;
+        lastMessageReceivedTime = Time.time;
+
+        //called when tcp client receives update
+        SavePreviousRotationsAndPositions();
+
+        SetRotationTargets();
+
+        tcpClient.tcpReceived = false;
+
+       
+    }
+
+    void ResetNeedles()
+    {
+        //if we have completely lost connection reset needles, there is a 5 second grace period where prediction takes over            
+        airplaneData.altitude = 0f;
+        airplaneData.mmhg = 0f;
+        airplaneData.airspeed = 0f;
+        //add more? -TODO   
+    }
+
+    void Tests()
+    {
+        bool autoMove = false;
+        if (autoMove)
+        {
+            float h = airplaneData.heading;
+            float a = .4f;
+            float b = 6f;
+
+            //swithc direction
+            if (h > a && h < b)
+            {
+                //                Debug.Log(headingIndicatorShift);
+                headingIndicatorTest = !headingIndicatorTest;
+            }
+            float speed = .001f;
+            if (headingIndicatorTest)
+                airplaneData.heading += speed;
+            else
+                airplaneData.heading -= speed;
+
+        }
+        previousMessageTime = lastMessageReceivedTime;//using?
+        lastMessageReceivedTime = Time.time - Time.deltaTime;
+
+        airplaneData.headingPrevious = airplaneData.heading;
+
+        if (airplaneData.heading > Mathf.PI * 2)
+        {
+            airplaneData.heading -= Mathf.PI * 2;
+        }
+
+        else if (airplaneData.heading < 0)
+        {
+            airplaneData.heading += Mathf.PI * 2;
+        }
+
+        SetRotationTargets();
+
+        NeedleRotations();
+    }
     
 
     void SavePreviousRotationsAndPositions()
@@ -321,20 +295,25 @@ public class RotateNeedle : MonoBehaviour
             AddRotationToList(quaternionsRepeaterCompassAlternate, repeaterCompassAlternateFace.transform.rotation);
 
         //artificial horizon
-        if (artificialHorizon)
+        if (artificialHorizon != null)
             AddRotationToList(quaternionsArtificialHorizon, artificialHorizon.transform.rotation);
 
         //artificial horizon plane for ITA
-        if (artificialHorizonPlane)
+        if (artificialHorizonPlane != null)
             AddRotationToList(quaternionsArtificialHorizonPlane, artificialHorizonPlane.transform.rotation);
 
         //middle needle for tnb ger
-        if(artificialHorizonNeedle)
+        if(artificialHorizonNeedle != null)
             AddRotationToList(quaternionsArtificialHorizonNeedle, artificialHorizonNeedle.transform.rotation);
+
+        //chevron
+        if (artificialHorizonChevron != null)
+            AddRotationToList(quaternionsArtificialHorizonChevron, artificialHorizonChevron.transform.rotation);
 
         //turn and bank ball
         if (turnAndBankBall != null)
             AddRotationToList(quaternionsTurnAndBankBall, turnAndBankBall.transform.rotation);
+
 
         //rpm
         for (int i = 0; i < rpmNeedlesLarge.Count; i++)
@@ -376,6 +355,28 @@ public class RotateNeedle : MonoBehaviour
         return v3List;
     }
 
+
+
+    public List<float> vsiValues = new List<float>() ;
+    void AddPlaneValues()
+    {
+        vsiValues.Add(airplaneData.verticalSpeed* Time.deltaTime);
+        if (vsiValues.Count > 2)
+            vsiValues.RemoveAt(0);
+        
+    }
+
+
+    void PredictPlaneValues()
+    {
+        float diff = (vsiValues[0] +10000) - (vsiValues[1] + 10000);
+        Debug.Log("diff = " + diff);
+        if (airplaneData.verticalSpeed < 0)
+            airplaneData.verticalSpeed += diff;
+        else
+            airplaneData.verticalSpeed -= diff;
+    }
+
     void PredictRotations()
     {
         //simulate a tcp event
@@ -383,7 +384,7 @@ public class RotateNeedle : MonoBehaviour
         if (quaternionsAirspeed.Count < 2)
             return;
 
-     //   Debug.Log("predicting");        
+        Debug.Log("predicting");        
         
 
         //airspeed - prediction doesn't take in to account gearing on speedometer
@@ -398,13 +399,13 @@ public class RotateNeedle : MonoBehaviour
         difference = quaternionsAltitudeLarge[0].eulerAngles.z - quaternionsAltitudeLarge[1].eulerAngles.z;
         //keep moving at client send rate at previous known step    
         //and end point
-        altitudeLargeTarget = altitudeNeedleLarge.transform.rotation * Quaternion.Euler(0, 0, difference); ;
+        altitudeLargeTarget = altitudeNeedleLarge.transform.rotation * Quaternion.Euler(0, 0, difference);
 
         //small altutude
         difference = quaternionsAltitudeSmall[0].eulerAngles.z - quaternionsAltitudeSmall[1].eulerAngles.z;
         //keep moving at client send rate at previous known step       
         //and end point
-        altitudeSmallTarget = altitudeNeedleSmall.transform.rotation * Quaternion.Euler(0, 0, difference); ;
+        altitudeSmallTarget = altitudeNeedleSmall.transform.rotation * Quaternion.Euler(0, 0, difference);
 
         //smallest altutude (if UK)
 
@@ -433,7 +434,7 @@ public class RotateNeedle : MonoBehaviour
             differenceV3 = positionsTurnAndBankPlane[0] - positionsTurnAndBankPlane[1];         
             turnAndBankPlanePositionTarget = turnAndBankPlane.transform.localPosition + differenceV3;
             // - plane rotation
-            difference = quaternionsTurnAndBankPlane[0].z - quaternionsTurnAndBankPlane[1].z;          
+            difference = quaternionsTurnAndBankPlane[0].eulerAngles.z - quaternionsTurnAndBankPlane[1].eulerAngles.z;          
             turnAndBankPlaneRotationTarget = turnAndBankPlane.transform.rotation * Quaternion.Euler(0, 0, difference);
             // - number track
             if (turnAndBankNumberTrack != null)
@@ -445,7 +446,7 @@ public class RotateNeedle : MonoBehaviour
 
         if (turnAndBankBall != null)
         {
-            difference = quaternionsTurnAndBankBall[0].z - quaternionsTurnAndBankBall[1].z;
+            difference = quaternionsTurnAndBankBall[0].eulerAngles.z - quaternionsTurnAndBankBall[1].eulerAngles.z;
             turnAndBankBallTarget = turnAndBankBall.transform.rotation * Quaternion.Euler(0, 0, difference);
         }
 
@@ -453,30 +454,32 @@ public class RotateNeedle : MonoBehaviour
         {
             //turn co-ordinator
             // - needle
-            difference = quaternionsTurnCoordinatorNeedle[0].z - quaternionsTurnCoordinatorNeedle[1].z;
+            difference = quaternionsTurnCoordinatorNeedle[0].eulerAngles.z - quaternionsTurnCoordinatorNeedle[1].eulerAngles.z;
             turnCoordinatorNeedleTarget = turnCoordinatorNeedle.transform.rotation * Quaternion.Euler(0, 0, difference);
             // - ball
-            difference = quaternionsTurnCoordinatorBall[0].z - quaternionsTurnCoordinatorBall[1].z;
+            difference = quaternionsTurnCoordinatorBall[0].eulerAngles.z - quaternionsTurnCoordinatorBall[1].eulerAngles.z;
             turnCoordinatorBallTarget = turnCoordinatorBall.transform.rotation * Quaternion.Euler(0, 0, difference);
         }
 
         if (vsiNeedle != null)
         {
             //VSI
-            difference = quaternionsVSI[0].z - quaternionsVSI[1].z;
+            difference = quaternionsVSI[0].eulerAngles.z - quaternionsVSI[1].eulerAngles.z;
+            
+                
             vsiNeedleTarget = vsiNeedle.transform.rotation * Quaternion.Euler(0, 0, difference);
         }
 
         //ger repeater / US repeater
         if (repeaterCompassFace != null)
         {
-            difference = quaternionsRepeaterCompass[0].z - quaternionsRepeaterCompass[1].z;
+            difference = quaternionsRepeaterCompass[0].eulerAngles.z - quaternionsRepeaterCompass[1].eulerAngles.z;
             repeaterCompassTarget = repeaterCompassFace.transform.rotation * Quaternion.Euler(0, 0, difference);
         }
 
         if (repeaterCompassAlternateFace != null)
         {
-            difference = quaternionsRepeaterCompassAlternate[0].z - quaternionsRepeaterCompassAlternate[1].z;
+            difference = quaternionsRepeaterCompassAlternate[0].eulerAngles.z - quaternionsRepeaterCompassAlternate[1].eulerAngles.z;
             repeaterCompassAlternateTarget = repeaterCompassAlternateFace.transform.rotation * Quaternion.Euler(0, 0, difference);
         }
 
@@ -484,7 +487,7 @@ public class RotateNeedle : MonoBehaviour
         //artificial horizon        
         if (artificialHorizon!= null)
         {
-            difference = quaternionsArtificialHorizon[0].z - quaternionsArtificialHorizon[1].z;
+            difference = quaternionsArtificialHorizon[0].eulerAngles.z - quaternionsArtificialHorizon[1].eulerAngles.z;
             artificialHorizonRotationTarget = artificialHorizon.transform.rotation * Quaternion.Euler(0, 0, difference);
             //pos
             differenceV3 = positionsArtificialHorizon[0] - positionsArtificialHorizon[1];
@@ -494,30 +497,32 @@ public class RotateNeedle : MonoBehaviour
         //artificial horizon ITA plane
         if (artificialHorizonPlane != null && airplaneData.planeAttributes.country == AirplaneData.Country.ITA)
         {
-            difference = quaternionsArtificialHorizonPlane[0].z - quaternionsArtificialHorizonPlane[1].z;
+            difference = quaternionsArtificialHorizonPlane[0].eulerAngles.z - quaternionsArtificialHorizonPlane[1].eulerAngles.z;
             artificialHorizonRotationPlaneTarget = artificialHorizonPlane.transform.rotation * Quaternion.Euler(0, 0, difference);
         }
 
         //artificial horizon GER needle
         if (artificialHorizonPlane != null && airplaneData.planeAttributes.country == AirplaneData.Country.GER)
         {
-            difference = quaternionsArtificialHorizonNeedle[0].z - quaternionsArtificialHorizonNeedle[1].z;
+            difference = quaternionsArtificialHorizonNeedle[0].eulerAngles.z - quaternionsArtificialHorizonNeedle[1].eulerAngles.z;
             artificialHorizonNeedleTarget = artificialHorizonNeedle.transform.rotation * Quaternion.Euler(0, 0, difference);
         }
-
 
         //chevron
         if (artificialHorizonChevron != null)
         {
-            difference = quaternionsArtificialHorizonChevron[0].z - quaternionsArtificialHorizonChevron[1].z;
-            artificialHorizonChevronTarget = artificialHorizonChevron.transform.rotation * Quaternion.Euler(0, 0, difference);
+            difference = quaternionsArtificialHorizonChevron[0].eulerAngles.z - quaternionsArtificialHorizonChevron[1].eulerAngles.z;// 
+            artificialHorizonChevronTarget  *=  Quaternion.Euler(0, 0, difference);
+
         }
 
+        //rpms
         for (int i = 0; i < rpmNeedlesLarge.Count; i++)
         {
             if (rpmNeedlesLarge[i] != null)
             {
-                difference = quaternionsRPMLarge[i][0].z - quaternionsRPMLarge[i][1].z;
+
+                difference = quaternionsRPMLarge[i][0].eulerAngles.z - quaternionsRPMLarge[i][1].eulerAngles.z;
                 rpmLargeTargets[i] = rpmNeedlesLarge[i].transform.rotation * Quaternion.Euler(0, 0, difference);
             }
         }
@@ -525,7 +530,7 @@ public class RotateNeedle : MonoBehaviour
         {
             if (rpmNeedlesSmall[i] != null)
             {
-                difference = quaternionsRPMSmall[i][0].z - quaternionsRPMSmall[i][1].z;
+                difference = quaternionsRPMSmall[i][0].eulerAngles.z - quaternionsRPMSmall[i][1].eulerAngles.z;
                 rpmSmallTargets[i] = rpmNeedlesSmall[i].transform.rotation * Quaternion.Euler(0, 0, difference);
             }
         }
@@ -534,8 +539,7 @@ public class RotateNeedle : MonoBehaviour
 
     public void SetRotationTargets()
     {
-        //called when tcp client receives update
-        SavePreviousRotationsAndPositions();
+        
 
         AirspeedTarget();
 
@@ -1130,14 +1134,14 @@ public class RotateNeedle : MonoBehaviour
         for (int i = 0; i < rpmNeedlesLarge.Count; i++)
         {
             if (rpmNeedlesLarge[i].gameObject != null)
-                rpmNeedlesLarge[i].transform.rotation = Quaternion.Slerp(rpmNeedlesLarge[i].transform.rotation, rpmLargeTargets[i], Time.fixedDeltaTime);
+                rpmNeedlesLarge[i].transform.rotation = Quaternion.Slerp(rpmNeedlesLarge[i].transform.rotation, rpmLargeTargets[i], Time.deltaTime*smoothing);
         }
 
 
         for (int i = 0; i < rpmNeedlesSmall.Count; i++)
         {
             if (rpmNeedlesSmall[i].gameObject != null)
-                rpmNeedlesSmall[i].transform.rotation = Quaternion.Slerp(rpmNeedlesSmall[i].transform.rotation, rpmSmallTargets[i], Time.fixedDeltaTime);
+                rpmNeedlesSmall[i].transform.rotation = Quaternion.Slerp(rpmNeedlesSmall[i].transform.rotation, rpmSmallTargets[i], Time.deltaTime * smoothing);
 
         }
     }
@@ -1147,7 +1151,7 @@ public class RotateNeedle : MonoBehaviour
         //float d = Mathf.Abs( airspeedTarget.eulerAngles.z - quaternionsAirspeed[0].eulerAngles.z);
        // Debug.Log("air needle");
 
-        airspeedNeedle.transform.rotation = Quaternion.Slerp(airspeedNeedle.transform.rotation, airspeedTarget, Time.fixedDeltaTime); 
+        airspeedNeedle.transform.rotation = Quaternion.Slerp(airspeedNeedle.transform.rotation, airspeedTarget, Time.deltaTime * smoothing); 
         
     }
 
@@ -1155,26 +1159,26 @@ public class RotateNeedle : MonoBehaviour
     {
         //only UK / US has the smallest needle
         if (altitudeNeedleSmallest != null)
-            altitudeNeedleSmallest.transform.rotation = Quaternion.Slerp(altitudeNeedleSmallest.transform.rotation, altitudeSmallestTarget, Time.fixedDeltaTime);
+            altitudeNeedleSmallest.transform.rotation = Quaternion.Slerp(altitudeNeedleSmallest.transform.rotation, altitudeSmallestTarget, Time.deltaTime * smoothing);
 
 
-        altitudeNeedleSmall.transform.rotation = Quaternion.Slerp(altitudeNeedleSmall.transform.rotation, altitudeSmallTarget, Time.fixedDeltaTime);
-        altitudeNeedleLarge.transform.rotation = Quaternion.Slerp(altitudeNeedleLarge.transform.rotation, altitudeLargeTarget, Time.fixedDeltaTime);
+        altitudeNeedleSmall.transform.rotation = Quaternion.Slerp(altitudeNeedleSmall.transform.rotation, altitudeSmallTarget, Time.deltaTime * smoothing);
+        altitudeNeedleLarge.transform.rotation = Quaternion.Slerp(altitudeNeedleLarge.transform.rotation, altitudeLargeTarget, Time.deltaTime * smoothing);
     }
 
     void MmhgNeedleRotation()
     {
-        mmhgDial.transform.rotation = Quaternion.Slerp(mmhgDial.transform.rotation, mmhgTarget, (Time.time - lastMessageReceivedTime) / (Time.fixedDeltaTime));
+        mmhgDial.transform.rotation = Quaternion.Slerp(mmhgDial.transform.rotation, mmhgTarget, Time.deltaTime * smoothing);
     }
 
     void TurnCoordinatorRotation()
     {
         //Needle        
-        turnCoordinatorNeedle.transform.rotation = Quaternion.Slerp(turnCoordinatorNeedle.transform.rotation, turnCoordinatorNeedleTarget, Time.fixedDeltaTime);//already used time difference in calculation
+        turnCoordinatorNeedle.transform.rotation = Quaternion.Slerp(turnCoordinatorNeedle.transform.rotation, turnCoordinatorNeedleTarget, Time.deltaTime * smoothing);
 
 
         //Ball
-        turnCoordinatorBall.transform.rotation = Quaternion.Slerp(turnCoordinatorBall.transform.rotation, turnCoordinatorBallTarget,  (Time.fixedDeltaTime)); //smoother without time.time - last message time
+        turnCoordinatorBall.transform.rotation = Quaternion.Slerp(turnCoordinatorBall.transform.rotation, turnCoordinatorBallTarget, Time.deltaTime * smoothing); 
     }
 
     bool HeadingIndicatorSwitch()
@@ -1242,11 +1246,7 @@ public class RotateNeedle : MonoBehaviour
         if (float.IsNaN(headingIndicatorTarget.y) || float.IsNaN(headingIndicatorTarget.z))
             return;
 
-        headingIndicator.transform.localPosition = Vector3.Lerp(headingIndicator.transform.localPosition, headingIndicatorTarget, Time.fixedDeltaTime);
-
-
-
-
+        headingIndicator.transform.localPosition = Vector3.Lerp(headingIndicator.transform.localPosition, headingIndicatorTarget, Time.deltaTime * smoothing);
 
     }
 
@@ -1256,27 +1256,27 @@ public class RotateNeedle : MonoBehaviour
             {
         
             //for x rotatin we need to rotate around global x after z rot
-            turnAndBankPlane.transform.rotation = Quaternion.Slerp(turnAndBankPlane.transform.rotation, turnAndBankPlaneRotationTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);//?
+            turnAndBankPlane.transform.rotation = Quaternion.Slerp(turnAndBankPlane.transform.rotation, turnAndBankPlaneRotationTarget, Time.deltaTime * smoothing);
 
             //move plane up and down
-            turnAndBankPlane.transform.localPosition = Vector3.Lerp(turnAndBankPlane.transform.localPosition, turnAndBankPlanePositionTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
+            turnAndBankPlane.transform.localPosition = Vector3.Lerp(turnAndBankPlane.transform.localPosition, turnAndBankPlanePositionTarget, Time.deltaTime * smoothing);
 
         }
 
         //number track - only russian
         if(turnAndBankNumberTrack != null)
-            turnAndBankNumberTrack.transform.localPosition = Vector3.Lerp(turnAndBankNumberTrack.transform.localPosition, turnAndBankNumberTrackTarget, (Time.time - lastMessageReceivedTime) / Time.fixedDeltaTime);
+            turnAndBankNumberTrack.transform.localPosition = Vector3.Lerp(turnAndBankNumberTrack.transform.localPosition, turnAndBankNumberTrackTarget, Time.deltaTime * smoothing);
 
         //ball -- only german
         if(turnAndBankBall != null)
         {
-            turnAndBankBall.transform.rotation = Quaternion.Slerp(turnAndBankBall.transform.rotation, turnAndBankBallTarget, Time.fixedDeltaTime);
+            turnAndBankBall.transform.rotation = Quaternion.Slerp(turnAndBankBall.transform.rotation, turnAndBankBallTarget, Time.deltaTime * smoothing);
         }
     }
 
     void VSIRotation()
     {
-        vsiNeedle.transform.rotation = Quaternion.Slerp(vsiNeedle.transform.rotation, vsiNeedleTarget,  Time.fixedDeltaTime);
+        vsiNeedle.transform.rotation = Quaternion.Slerp(vsiNeedle.transform.rotation, vsiNeedleTarget,Time.deltaTime * smoothing);
     }
 
     void RepeaterCompassRotation()
@@ -1284,13 +1284,13 @@ public class RotateNeedle : MonoBehaviour
         if (airplaneData.planeAttributes.repeaterCompass)
         {
             if (repeaterCompassFace != null)
-                repeaterCompassFace.transform.rotation = Quaternion.Slerp(repeaterCompassFace.transform.rotation, repeaterCompassTarget, Time.fixedDeltaTime);
+                repeaterCompassFace.transform.rotation = Quaternion.Slerp(repeaterCompassFace.transform.rotation, repeaterCompassTarget, Time.deltaTime * smoothing);
         }
 
         if(airplaneData.planeAttributes.repeaterCompassAlternate)
         {
             if(repeaterCompassAlternateFace != null)
-                repeaterCompassAlternateFace.transform.rotation = Quaternion.Slerp(repeaterCompassAlternateFace.transform.rotation, repeaterCompassAlternateTarget, Time.fixedDeltaTime);
+                repeaterCompassAlternateFace.transform.rotation = Quaternion.Slerp(repeaterCompassAlternateFace.transform.rotation, repeaterCompassAlternateTarget, Time.deltaTime * smoothing);
         }
     }
 
@@ -1308,22 +1308,22 @@ public class RotateNeedle : MonoBehaviour
     {
         if (artificialHorizonPlane != null)
             //ITA plane rotates whilst background doesn't
-            artificialHorizonPlane.transform.rotation = Quaternion.Slerp(artificialHorizonPlane.transform.rotation, artificialHorizonRotationPlaneTarget, Time.fixedDeltaTime);
+            artificialHorizonPlane.transform.rotation = Quaternion.Slerp(artificialHorizonPlane.transform.rotation, artificialHorizonRotationPlaneTarget, Time.deltaTime * smoothing);
 
         else
-            artificialHorizon.transform.rotation = Quaternion.Slerp(artificialHorizon.transform.rotation, artificialHorizonRotationTarget, Time.fixedDeltaTime);
+            artificialHorizon.transform.rotation = Quaternion.Slerp(artificialHorizon.transform.rotation, artificialHorizonRotationTarget, Time.deltaTime * smoothing);
 
         //german plane also has co-ordinator needle on this dial
         if(artificialHorizonNeedle != null)
         {
-            artificialHorizonNeedle.transform.rotation = Quaternion.Slerp(artificialHorizonNeedle.transform.rotation, artificialHorizonNeedleTarget, Time.fixedDeltaTime);
+            artificialHorizonNeedle.transform.rotation = Quaternion.Slerp(artificialHorizonNeedle.transform.rotation, artificialHorizonNeedleTarget, Time.deltaTime * smoothing);
         }
     }
 
     void ArtificialHorizonPosition()
     {
 
-        artificialHorizon.transform.localPosition = Vector3.Lerp(artificialHorizon.transform.localPosition, artificialHorizonPositionTarget, Time.fixedDeltaTime);
+        artificialHorizon.transform.localPosition = Vector3.Lerp(artificialHorizon.transform.localPosition, artificialHorizonPositionTarget, Time.deltaTime * smoothing);
 
         //clamp plane to background
         if(artificialHorizonPlane != null) //ITA
@@ -1333,6 +1333,6 @@ public class RotateNeedle : MonoBehaviour
     void ArtificialHorizonChevronRotation()
     {
         if(artificialHorizonChevron != null)
-            artificialHorizonChevron.transform.rotation = Quaternion.Slerp(artificialHorizonChevron.transform.rotation, artificialHorizonChevronTarget, Time.fixedDeltaTime);
+            artificialHorizonChevron.transform.rotation = Quaternion.Slerp(artificialHorizonChevron.transform.rotation, artificialHorizonChevronTarget, Time.deltaTime * smoothing);
     }
 }
