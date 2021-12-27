@@ -57,11 +57,9 @@ public class DialsManager : MonoBehaviour
             //switch off any unavailable dials to this plane
             DeactivateUnavailableDials(countryDialBoard, airplaneData.planeType, airplaneData.planeAttributes, rpmObjects);
 
+            //asign correct needle to rotate scripts depending on what plane we have loaded
+            AsignNeedles();
 
-            //vis needle variables need updated depending on what dials were loaded
-            AsignVSI(airplaneData.planeAttributes, countryDialBoard);
-
-            AsignRPM(airplaneData.planeAttributes, countryDialBoard);
 
             Markings(airplaneData);
 
@@ -93,6 +91,15 @@ public class DialsManager : MonoBehaviour
         {
             countryDialBoard.transform.Find("RPM D 0").Find("Markings").Find("Red 2.7").gameObject.SetActive(false);
         }
+    }
+
+    void AsignNeedles()
+    {
+        AsignSpeedometer(airplaneData.planeAttributes, countryDialBoard);
+
+        AsignVSI(airplaneData.planeAttributes, countryDialBoard);
+
+        AsignRPM(airplaneData.planeAttributes, countryDialBoard);
     }
 
     //POOSIBLE NEW CLASS FROM HERE?
@@ -177,8 +184,15 @@ public class DialsManager : MonoBehaviour
         }
     }
 
-   
-
+    private void AsignSpeedometer(PlaneDataFromName.PlaneAttributes planeAttributes, GameObject countrydialBoard)
+    {
+        if (planeAttributes.country == AirplaneData.Country.US)
+        {
+            GameObject speedo = GameObject.FindGameObjectWithTag("speedometer");
+            countryDialBoard.GetComponent<RotateNeedle>().airspeedNeedle = speedo.transform.Find("Needle Large").transform.gameObject;
+        }
+    }
+    
     public void SwitchDialBoardFromCountry(AirplaneData.Country country)
     {
         //change dials depending on what value we received from the networking component
@@ -262,7 +276,18 @@ public class DialsManager : MonoBehaviour
     static void DeactivateUnavailableDials(GameObject countryDialBoard, string planeName, PlaneDataFromName.PlaneAttributes planeAttributes, List<GameObject> rpmObjects)
     {
         //check what dials are available and switch off as needed
-        //altimeter and speedo are always available
+
+        
+        GameObject[] speedos = GameObject.FindGameObjectsWithTag("speedometer");
+        for (int i = 0; i < speedos.Length; i++)
+        {
+            if (speedos[i].name != "Speedometer " + planeAttributes.speedometer.ToString())
+            {
+                //turn off so it doesn not appear on tag searches until it is destroyed
+                speedos[i].SetActive(false);
+                Destroy(speedos[i]);
+            }
+        }
 
         if (!planeAttributes.headingIndicator)
             if (countryDialBoard.transform.Find("Heading Indicator") != null)
