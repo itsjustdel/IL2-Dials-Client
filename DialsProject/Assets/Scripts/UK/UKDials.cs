@@ -199,10 +199,8 @@ public class UKDials : MonoBehaviour
         
         //multiply by half a dial of spin (180 degrees)
         float angleToSpin = curve.Evaluate(percentage);
-        Debug.Log(angleToSpin);
-        angleToSpin *=  -335;
-
         
+        angleToSpin *=  -335;
         angleToSpin -= 180;
         Quaternion target = Quaternion.Euler(0, 0, angleToSpin);
 

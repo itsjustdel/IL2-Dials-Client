@@ -193,21 +193,26 @@ public class GermanDials : MonoBehaviour
         //vsi
 
         //geared
-
-        if (verticalSpeed <= 5)
+        
+        if (Mathf.Abs(verticalSpeed) <= 5)
         {
             //start at 9 o'clock
             verticalSpeed = 90f - verticalSpeed * 9f;
         }
-        else if (verticalSpeed > 5 && verticalSpeed < 10f)
+        else if (Mathf.Abs (verticalSpeed )> 5 && Mathf.Abs(verticalSpeed) < 10f)
         {
             //create rotation by creating new start point ( verticalSpeed - 5 degrees )
-            verticalSpeed = 90f - ((verticalSpeed-5f) * 6f) - 45f;
+            if(verticalSpeed>0)
+                verticalSpeed = 90f - ((verticalSpeed - 5f) * 6f) - 45f;
+            else
+                verticalSpeed = 90f - ((verticalSpeed + 5f) * 6f) + 45f;
         }
-        else
+        else        
         {
-            // > 10
-            verticalSpeed = 90f - (verticalSpeed * 3f) -45f;
+            if(verticalSpeed > 0)
+                verticalSpeed = 90f - (verticalSpeed * 3f) - 45f;
+            else
+                verticalSpeed = 90f - (verticalSpeed * 3f) + 45f;
 
         }
         //clamp to "30"

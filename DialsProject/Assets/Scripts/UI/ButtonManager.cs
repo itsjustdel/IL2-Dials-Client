@@ -39,7 +39,6 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     {
         canvas = GameObject.FindGameObjectWithTag("Canvas").transform.GetComponent<Canvas>();
         menuHandler = GameObject.Find("Menu").GetComponent<MenuHandler>();
-      //  originalParent = transform.parent.parent.parent.gameObject;
         rectTransform = transform.parent.parent.GetComponent<RectTransform>();
     }
 
@@ -62,7 +61,6 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
     public void OnPointerClick(PointerEventData eventData)
     {
-       
 
         if (!menuHandler.layoutOpen)
             return;
@@ -75,50 +73,36 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
             menuHandler.dialsManager.SaveLayout();
         }
-
-      
     }
-
-
 
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (menuHandler.layoutOpen)
         {
-
-
             if (move)
             {
                 //check the dial is attached to the original parent (not in tray)
 
                 //was it in tray?
-                if (menuHandler.dialsInTray.Contains(transform.parent.parent.gameObject))
-                //if (transform.parent.parent.parent.gameObject != originalParent)
+                if (menuHandler.dialsInTray.Contains(transform.parent.parent.gameObject))                
                 {
                     //it is in the tray
                     //put it back to orignal parent
                     transform.parent.parent.gameObject.transform.parent = menuHandler.tcpClient.rN.transform;
                     //reset scale
-                    rectTransform.localScale = new Vector3(0.35f, .35f, 1f);
+                    List<GameObject> dials = DialsManager.ActiveDials(menuHandler.dialsManager.countryDialBoard);
+                    float defaultScale = DialsManager.DefaultDialScale(dials);
+                    //defauly scale in prefab is 0.35f, factor this in
+                    defaultScale *= 0.35f;
+                    rectTransform.localScale = new Vector3(defaultScale, defaultScale, 1f);
 
                     //remove from tray list
                     menuHandler.dialsInTray.Remove(rectTransform.gameObject);
 
                     //turn on/off empty trays
                     menuHandler.UpdateLayoutPanel();
-
-                }
-                else
-                {
-
                 }
             }
-            //Debug.Log("OnBeginDrag");
-
-        }
-        else
-        {
-           
         }
        
     }
@@ -128,18 +112,9 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
         if (menuHandler.layoutOpen)
         {
-
-            //Debug.Log("OnDrag");
-
             if (move)
             {
-                //int snap = 10;
-
-
                 Vector2 d2 = eventData.delta / canvas.scaleFactor;
-
-                //   d2.x = Mathf.Round(d2.x / snap) * snap;
-                // d2.y = Mathf.Round(d2.y / snap) * snap;
                 rectTransform.anchoredPosition += d2;
             }
 
@@ -176,15 +151,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
         //Debug.Log("OnEndDrag");
 
-
-        //check if user dragged dial on to tray        
-       // if(IsOverTray())
-        {
-            ////Debug.Log("over tray");
-        }
-
         //snap 
-
         if (move)
         {
             Vector2 d2 = rectTransform.anchoredPosition;
@@ -225,7 +192,6 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             //trap in screen
             ScreenTrap(rectTransform.anchoredPosition);
 
-
         }
 
 
@@ -248,8 +214,6 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
     public void OnPointerDown(PointerEventData eventData)
     {
-
-
         if (compass)
         {
             //one time to click to move arrows on compass
@@ -260,18 +224,16 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
         //Debug.Log("OnPointerDown");
 
-
         if (!menuHandler.layoutOpen)
             return;
-
       
-        //is it in tray? - make scale larger to  preview dial
-        //if (transform.parent.parent.parent.gameObject != originalParent)
+        //is it in tray? - make scale larger to preview dial
         if (menuHandler.dialsInTray.Contains(transform.parent.parent.gameObject))
         {
-            rectTransform.localScale = new Vector3(3.5f, 3.5f, 1f);
+            //using same functions as when we load the dials to find out what size they are by default
+            float defaultScale = DialsManager.DefaultDialScale( DialsManager.ActiveDials(menuHandler.dialsManager.countryDialBoard) );
+            rectTransform.localScale = new Vector3(defaultScale, defaultScale, 1f);
         }
-
 
         if (navArrow)
         {
@@ -281,14 +243,11 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
     public void OnPointerUp(PointerEventData eventData)
     {
-
-        
-
         if (!menuHandler.layoutOpen)
             return;
 
         //Debug.Log("OnPointerUp");
-        //is it in tray? - put it to small scale (happens after a prewiew click when in tray)
+        //is it in tray? - put it to small scale (happens after a preview click when in tray)
         //if (transform.parent.parent.parent.gameObject != originalParent)
         if (menuHandler.dialsInTray.Contains(transform.parent.parent.gameObject))
         {
@@ -329,9 +288,9 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             {
                 GameObject targetTray = menuHandler.trayParent.transform.GetChild(i).gameObject;
                 //we have found an empty tray, place dial in tray
-                Debug.Log("B4 =" + dialParent.transform.parent.name);
+                //Debug.Log("B4 =" + dialParent.transform.parent.name);
                 dialParent.transform.parent = targetTray.transform;
-                Debug.Log("After =" + dialParent.transform.parent.name);
+                //Debug.Log("After =" + dialParent.transform.parent.name);
                 dialParent.transform.position = targetTray.transform.position;
 
                 dialParent.transform.localScale = new Vector3(1f, 1f, 1f);
@@ -349,8 +308,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             }
         }
     }
-
-    //put dial in tray
+        
     public static void EmptyTrays( MenuHandler menuHandler)
     {
 

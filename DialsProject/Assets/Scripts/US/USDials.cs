@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class USDials : MonoBehaviour
 {
-    public static Quaternion AirspeedTarget(float airspeed)
+    public static Quaternion AirspeedTargetA(float airspeed)
     {
         if (airspeed == 0)
+            return Quaternion.identity;
+
+        if (float.IsNaN(airspeed) || float.IsNegativeInfinity(airspeed) || float.IsPositiveInfinity(airspeed))
             return Quaternion.identity;
 
         //airspeed dial has two gears
@@ -34,6 +37,39 @@ public class USDials : MonoBehaviour
         else
         {
             target = Quaternion.Euler(0, 0, -((airspeed - 300) * .3f) + 140);//140* is at 300
+        }
+
+        return target;
+    }
+
+    public static Quaternion AirspeedTargetB(float airspeed, float s0, float s1)
+    {
+        if (airspeed == 0)
+            return Quaternion.identity;
+
+        //airspeed dial has two gears
+        Quaternion target = Quaternion.identity;
+
+        //convert mph
+        airspeed /= 1.609f;
+
+        if (airspeed <= 50)
+        {
+            target = Quaternion.Euler(0, 0, -(airspeed * .6f));
+        }
+        else if (airspeed > 50 && airspeed <= 200)
+        {
+            float r = airspeed - 50f;
+            r *= 1.2f;
+            r += 30f;//where gear starts in degrees
+            target = Quaternion.Euler(0, 0, -r);
+        }
+        else
+        {
+            float r = airspeed - 200f;
+            r *= .4f;
+            r += 210;//where gear starts degrees
+            target = Quaternion.Euler(0, 0, -r);
         }
 
         return target;
@@ -99,17 +135,22 @@ public class USDials : MonoBehaviour
         Quaternion mmhgTarget = Quaternion.identity;
 
         //catch bad value
-        if (!float.IsNaN(z))
-            mmhgTarget = Quaternion.Euler(0, 0, z); 
+        if (!float.IsNaN(z) && !float.IsNegativeInfinity(z) && !float.IsPositiveInfinity(z))
+        {
+            
+            mmhgTarget = Quaternion.Euler(0, 0, z);
+        }
 
         return mmhgTarget;
+
+        
     }
 
     public static Vector3 HeadingIndicatorPosition(float heading,float trackLength)
     {
-     
+
         //check for Nan
-        if (float.IsNaN(heading))
+        if (float.IsNaN(heading) || float.IsNegativeInfinity(heading) || float.IsPositiveInfinity(heading))
             return Vector3.zero;
 
         //range is 0 to pi*2
@@ -220,6 +261,10 @@ public class USDials : MonoBehaviour
         if (flip)
             v = -v;
 
+        if (float.IsNaN(v) || float.IsPositiveInfinity(v) || float.IsNegativeInfinity(v))
+            return Quaternion.identity;
+
+        v = Mathf.Clamp(v, -30f, 30f);        
         Quaternion target = Quaternion.Euler(0, 0, -v);
 
         return target;

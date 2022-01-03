@@ -27,7 +27,7 @@ public class PlaneDataFromName : AirplaneData
     {
         public Country country;
         //public bool speedometer;
-        public Speedometer speedometer = Speedometer.B;
+        public Speedometer speedometer = Speedometer.A;
         public bool altimeter;
         public bool headingIndicator;
         public bool turnAndBank; // with slip
@@ -155,7 +155,7 @@ public class PlaneDataFromName : AirplaneData
 
             case "US A":
                 planeAttributes.country = Country.US;
-                
+                planeAttributes.speedometer = Speedometer.A;
                 planeAttributes.altimeter = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
@@ -169,7 +169,7 @@ public class PlaneDataFromName : AirplaneData
 
             case "US B"://kittyhawk
                 planeAttributes.country = Country.US;
-                
+                planeAttributes.speedometer = Speedometer.B;
                 planeAttributes.altimeter = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
@@ -605,7 +605,7 @@ public class PlaneDataFromName : AirplaneData
             case "A-20B":
                 planeAttributes.country = Country.US;
                 planeAttributes.altimeter = true;
-                
+                planeAttributes.speedometer = Speedometer.B;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.artificialHorizon = true;
@@ -913,11 +913,10 @@ public class PlaneDataFromName : AirplaneData
 
             //RSE.RSE::CCockpitInstruments::simulation+DDD - 4C 8D 05 6CB00C00     - lea r8,[RSE.RSE::CAeroplane_Po_2_VS::`vftable'+1D0] { ("U-2VS") }
             case "U-2VS":
-                planeAttributes.country = Country.US;
-                planeAttributes.altimeter = true;
-                
+                planeAttributes.country = Country.RU;
+                planeAttributes.altimeter = true;                
                 planeAttributes.turnAndBank = true;
-                planeAttributes.vsiSmallest = true;
+                planeAttributes.vsiSmall = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.rpmType = RpmType.A;

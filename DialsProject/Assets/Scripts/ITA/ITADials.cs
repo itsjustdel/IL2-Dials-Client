@@ -108,7 +108,7 @@ public class ITADials : MonoBehaviour
     {
         //indicates whether the aircraft is in coordinated flight, showing the slip or skid of the turn. 
         float z = ball * multiplier;
-        z = Mathf.Clamp(z, -3f, 3f); //high parent!
+        z = Mathf.Clamp(z, -3.75f, 3.75f); //high parent!
         Quaternion target = Quaternion.Euler(0, 0, z);
 
         return target;

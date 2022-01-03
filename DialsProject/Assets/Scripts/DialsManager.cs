@@ -13,11 +13,12 @@ public class DialsManager : MonoBehaviour
     public GameObject countryDialBoard;
 
     public List<GameObject> rpmObjects = new List<GameObject>();
+    public GameObject speedometer;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -47,8 +48,6 @@ public class DialsManager : MonoBehaviour
             if (airplaneData.planeAttributes.country == PlaneDataFromName.Country.UNDEFINED)
                 return;
 
-           
-
             //set as its own public variable to expose in hierarchy (in unity) for testing ease
             airplaneData.country = airplaneData.planeAttributes.country;
 
@@ -60,9 +59,7 @@ public class DialsManager : MonoBehaviour
             //asign correct needle to rotate scripts depending on what plane we have loaded
             AsignNeedles();
 
-
             Markings(airplaneData);
-
 
             if (countryDialBoard != null)
                 LoadLayout();
@@ -72,25 +69,30 @@ public class DialsManager : MonoBehaviour
                 //go back to main page
                 menuHandler.layoutPanel.SetActive(false);
 
-                //tunr menu button and leds back on
+                //turn menu button and leds back on
                 menuHandler.menuButton.SetActive(true);
                 menuHandler.ledParent.SetActive(true);
 
                 menuHandler.layoutOpen = false;
             }
-
         }
-
     }
 
     void Markings(AirplaneData airplaneData)
     {
         //rpm markings
         //p47 28 needs one red removed
-        if(airplaneData.planeType == "P-47D-28")
+        if (airplaneData.planeType == "P-47D-28")
         {
             countryDialBoard.transform.Find("RPM D 0").Find("Markings").Find("Red 2.7").gameObject.SetActive(false);
         }
+
+        //only the B has a red mark, so disable the one on the the "p51 D"
+        if (airplaneData.planeType == "P-51D-15")
+        {
+            countryDialBoard.transform.Find("RPM C 0").Find("Markings").Find("Red 3").gameObject.SetActive(false);
+        }
+        
     }
 
     void AsignNeedles()
@@ -153,7 +155,7 @@ public class DialsManager : MonoBehaviour
 
 
                     //pe-2
-                    if (planeAttributes.country == AirplaneData.Country.RU  && planeAttributes.rpmType == RpmType.C)
+                    if (planeAttributes.country == AirplaneData.Country.RU && planeAttributes.rpmType == RpmType.C)
                     {
                         GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
                         countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
@@ -161,7 +163,7 @@ public class DialsManager : MonoBehaviour
 
                 }
 
-                if(planeAttributes.country == AirplaneData.Country.US)
+                if (planeAttributes.country == AirplaneData.Country.US)
                 {
                     if (planeAttributes.rpmType == RpmType.A || planeAttributes.rpmType == RpmType.D)
                     {
@@ -184,22 +186,21 @@ public class DialsManager : MonoBehaviour
         }
     }
 
-    private void AsignSpeedometer(PlaneDataFromName.PlaneAttributes planeAttributes, GameObject countrydialBoard)
+    void AsignSpeedometer(PlaneDataFromName.PlaneAttributes planeAttributes, GameObject countrydialBoard)
     {
-        if (planeAttributes.country == AirplaneData.Country.US)
-        {
-            GameObject speedo = GameObject.FindGameObjectWithTag("speedometer");
-            countryDialBoard.GetComponent<RotateNeedle>().airspeedNeedle = speedo.transform.Find("Needle Large").transform.gameObject;
-        }
+        speedometer = GameObject.FindGameObjectWithTag("speedometer");
+        countryDialBoard.GetComponent<RotateNeedle>().airspeedNeedle = speedometer.transform.Find("Needle Large").transform.gameObject;
+
     }
-    
+
     public void SwitchDialBoardFromCountry(AirplaneData.Country country)
     {
         //change dials depending on what value we received from the networking component
 
         //remove any existing dials board prefab in scene
         if (countryDialBoard != null)
-            Destroy(countryDialBoard);
+            //destroy now so any existing links to variables are immediately re-asigned. If only using "Destroy", there are problems with missing 
+            DestroyImmediate(countryDialBoard);
 
         GameObject canvas = GameObject.FindGameObjectWithTag("Canvas");
 
@@ -238,7 +239,8 @@ public class DialsManager : MonoBehaviour
 
         if (countryDialBoard != null)
         {
-            //asign variables - can't asign scen variables to prefab in editor
+            //asign variables - can't asign scene variables to prefab in editor
+            //asign variables - can't asign scene variables to prefab in editor
             tcpClient.rN = countryDialBoard.GetComponent<RotateNeedle>();
             tcpClient.rN.buildControl = GameObject.Find("Build Chooser").GetComponent<BuildControl>();
             tcpClient.rN.airplaneData = GameObject.Find("Player Plane").GetComponent<AirplaneData>();
@@ -258,14 +260,14 @@ public class DialsManager : MonoBehaviour
                     GameObject rpmInstance = rpm;
                     if (i > 0)
                     {
-                        
+
 
                         //duplicate if we have more than one engine
                         rpmInstance = Instantiate(rpm, rpm.transform.position, Quaternion.identity, countryDialBoard.transform);
-                        
+
                     }
                     rpmInstance.transform.name = "RPM " + airplaneData.planeAttributes.rpmType.ToString() + " " + i.ToString();
-                                        
+
                     rpmObjects.Add(rpmInstance);
                 }
             }
@@ -273,20 +275,16 @@ public class DialsManager : MonoBehaviour
     }
 
     //static to refactor to new class - to do
-    static void DeactivateUnavailableDials(GameObject countryDialBoard, string planeName, PlaneDataFromName.PlaneAttributes planeAttributes, List<GameObject> rpmObjects)
+    void DeactivateUnavailableDials(GameObject countryDialBoard, string planeName, PlaneDataFromName.PlaneAttributes planeAttributes, List<GameObject> rpmObjects)
     {
         //check what dials are available and switch off as needed
 
-        
         GameObject[] speedos = GameObject.FindGameObjectsWithTag("speedometer");
         for (int i = 0; i < speedos.Length; i++)
         {
             if (speedos[i].name != "Speedometer " + planeAttributes.speedometer.ToString())
-            {
-                //turn off so it doesn not appear on tag searches until it is destroyed
                 speedos[i].SetActive(false);
-                Destroy(speedos[i]);
-            }
+
         }
 
         if (!planeAttributes.headingIndicator)
@@ -377,9 +375,7 @@ public class DialsManager : MonoBehaviour
             return;
         }
 
-        //apply to dials/positions
-
-        GameObject speedometer = countryDialBoard.transform.Find("Speedometer").gameObject;
+        //apply to dials/positions        
         speedometer.GetComponent<RectTransform>().anchoredPosition = layout.speedoPos;
         speedometer.GetComponent<RectTransform>().localScale = new Vector3(layout.speedoScale, layout.speedoScale, 1f);
 
@@ -389,7 +385,6 @@ public class DialsManager : MonoBehaviour
         GameObject altimeter = countryDialBoard.transform.Find("Altimeter").gameObject;
         altimeter.GetComponent<RectTransform>().anchoredPosition = layout.altPos;
         altimeter.GetComponent<RectTransform>().localScale = new Vector3(layout.altScale, layout.altScale, 1f);
-
 
         if (layout.altimeterInTray)
             AddToTrayOnLoad(altimeter, menuHandler);
@@ -518,14 +513,15 @@ public class DialsManager : MonoBehaviour
 
         //look for dial on dashboard - original parent        
 
-        if (countryDialBoard.transform.Find("Speedometer") != null)
+
+        if (!menuHandler.dialsInTray.Contains(speedometer))
         {
-            layout.speedoPos = countryDialBoard.transform.Find("Speedometer").GetComponent<RectTransform>().anchoredPosition;
-            layout.speedoScale = countryDialBoard.transform.Find("Speedometer").GetComponent<RectTransform>().localScale.x;
+            layout.speedoPos = speedometer.GetComponent<RectTransform>().anchoredPosition;
+            layout.speedoScale = speedometer.GetComponent<RectTransform>().localScale.x;
         }
         else
             //if we don't find it, look for it in the tray
-            DialInTray("Speedometer", layout);
+            SpeedoInTray(layout);
 
 
         if (countryDialBoard.transform.Find("Altimeter") != null)
@@ -622,7 +618,7 @@ public class DialsManager : MonoBehaviour
         for (int i = 0; i < rpmObjects.Count; i++)
         {
             //if on dial board
-            if(rpmObjects[i].transform.parent == countryDialBoard.transform)
+            if (rpmObjects[i].transform.parent == countryDialBoard.transform)
             {
                 layout.rpmPos[i] = rpmObjects[i].GetComponent<RectTransform>().anchoredPosition;
                 layout.rpmScale[i] = rpmObjects[i].GetComponent<RectTransform>().localScale.x;
@@ -630,9 +626,9 @@ public class DialsManager : MonoBehaviour
             //or in tray
             else
                 //note - RPMInTray function
-                RPMInTray(layout,i,rpmObjects[i]);
+                RPMInTray(layout, i, rpmObjects[i]);
         }
-        
+
         //pack with json utility
         string jsonFoo = JsonUtility.ToJson(layout);
 
@@ -642,14 +638,21 @@ public class DialsManager : MonoBehaviour
 
     }
 
-     void RPMInTray(Layout layout, int i, GameObject rpm)
+    void RPMInTray(Layout layout, int i, GameObject rpm)
     {
         //slightly different for multiple dials
-        
+
         layout.rpmPos[i] = rpm.GetComponent<RectTransform>().anchoredPosition;
         layout.rpmScale[i] = rpm.GetComponent<RectTransform>().localScale.x;
-        layout.rpmInTray[i] = true;      
-     
+        layout.rpmInTray[i] = true;
+
+    }
+
+    void SpeedoInTray(Layout layout)
+    {
+        layout.speedoPos = speedometer.GetComponent<RectTransform>().anchoredPosition;
+        layout.speedoScale = speedometer.GetComponent<RectTransform>().localScale.x;
+        layout.speedoInTray = true;
     }
 
     void DialInTray(string name, Layout layout)
@@ -662,11 +665,7 @@ public class DialsManager : MonoBehaviour
         {
             switch (name)
             {
-                case "Speedometer":
-                    layout.speedoPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
-                    layout.speedoScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
-                    layout.speedoInTray = true;
-                    break;
+
 
                 case "Altimeter":
                     layout.altPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
@@ -731,41 +730,17 @@ public class DialsManager : MonoBehaviour
         }
     }
 
+
+
     static void DefaultLayouts(GameObject dialsPrefab)
     {
         //Programtically sort default layouts, so if there is an update, i don't need to create a prefab layout
 
         //organise dials depending on how many are available
         //we need to know the total amount of active dials before we continue
-        List<GameObject> activeDials = new List<GameObject>();
-        for (int i = 0; i < dialsPrefab.transform.childCount; i++)
-            if (dialsPrefab.transform.GetChild(i).gameObject.activeSelf)
-                activeDials.Add(dialsPrefab.transform.GetChild(i).gameObject);
+        List<GameObject> activeDials = ActiveDials(dialsPrefab);
 
-
-        //find out if we ned to scale dials to fit them all in the screen (happens if 7 or more dials)
-        //length of top will be the longest
-        float f = activeDials.Count;
-        //round half of count upwards and convert to int. Mathf.Ceil rounds up. If on a whole number, it doesn't round up //https://docs.unity3d.com/ScriptReference/Mathf.Ceil.html
-        //half of count because there are two rows
-        int longestRow = (int)Mathf.Ceil(f / 2);
-        longestRow *= 300;//300 default step between dials
-
-        GameObject canvasObject = GameObject.FindGameObjectWithTag("Canvas");
-        //if longer than the canvas width
-        //UnityEngine.Debug.Log("longest row = " + longestRow);
-        //UnityEngine.Debug.Log("canvas X = " + canvasObject.GetComponent<RectTransform>().rect.width);
-
-        float scale = 1f;
-        if (longestRow > canvasObject.GetComponent<RectTransform>().rect.width)
-        {
-            //UnityEngine.Debug.Log("row longer than canvas");
-
-            //use this ratio for all positional calculations
-            scale = canvasObject.GetComponent<RectTransform>().rect.width / longestRow;
-
-        }
-
+        float scale = DefaultDialScale(activeDials);
 
         //split in to two rows, if odd number, put more on the top
         for (int i = 0; i < activeDials.Count; i++)
@@ -819,7 +794,7 @@ public class DialsManager : MonoBehaviour
                 activeDials[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
             }
 
-            //scale dial
+            //scale dial            
             activeDials[i].transform.localScale *= scale;
         }
     }
@@ -829,6 +804,46 @@ public class DialsManager : MonoBehaviour
         //USe button manager class to store dial in tray
         ButtonManager.PutDialInTray(dial, menuHandler);
     }
+
+    //helpers
+
+    public static List<GameObject> ActiveDials(GameObject dialsPrefab)
+    {
+        List<GameObject> activeDials = new List<GameObject>();
+        for (int i = 0; i < dialsPrefab.transform.childCount; i++)
+            if (dialsPrefab.transform.GetChild(i).gameObject.activeSelf)
+                activeDials.Add(dialsPrefab.transform.GetChild(i).gameObject);
+
+        return activeDials;
+    }
+
+    public static float DefaultDialScale(List<GameObject> activeDials)
+    { //find out if we ned to scale dials to fit them all in the screen (happens if 7 or more dials)
+        //length of top will be the longest
+        float f = activeDials.Count;
+        //round half of count upwards and convert to int. Mathf.Ceil rounds up. If on a whole number, it doesn't round up //https://docs.unity3d.com/ScriptReference/Mathf.Ceil.html
+        //half of count because there are two rows
+        int longestRow = (int)Mathf.Ceil(f / 2);
+        longestRow *= 300;//300 default step between dials
+
+        GameObject canvasObject = GameObject.FindGameObjectWithTag("Canvas");
+        //if longer than the canvas width
+        //UnityEngine.Debug.Log("longest row = " + longestRow);
+        //UnityEngine.Debug.Log("canvas X = " + canvasObject.GetComponent<RectTransform>().rect.width);
+
+        float scale = 1f;
+        if (longestRow > canvasObject.GetComponent<RectTransform>().rect.width)
+        {
+            //UnityEngine.Debug.Log("row longer than canvas");
+
+            //use this ratio for all positional calculations
+            scale = canvasObject.GetComponent<RectTransform>().rect.width / longestRow;
+
+        }
+
+        return scale;
+    }
+
 
 
 }

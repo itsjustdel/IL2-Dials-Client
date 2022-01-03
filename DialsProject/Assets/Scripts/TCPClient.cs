@@ -17,9 +17,12 @@ public class TCPClient : MonoBehaviour {
 
 	public MenuHandler menuHandler;
 	public RotateNeedle rN;
-	//user settings	
+
+	//user settings		
 
 	public bool connected = false;
+	public float autoScanTimeScale = 1f;
+	public float standardFixedTime = 0.02f;
 	public bool autoScan = false;
 	public bool hostFound;
 	public bool tcpReceived = false;
@@ -64,7 +67,7 @@ public class TCPClient : MonoBehaviour {
 
     public void FixedUpdate()
 	{
-		//wait for as econd before scanning
+		//wait before scanning
 		if (menuHandler.stopwatch.ElapsedMilliseconds < 5)
 			return;
 
@@ -86,23 +89,34 @@ public class TCPClient : MonoBehaviour {
 
 		//check if we should autoscan
 		//if ipaddress is empty, then we should
-		if (string.IsNullOrEmpty( userIP))
+		if (string.IsNullOrEmpty(userIP))
 		{
 			autoScan = true;
-			//if we are autoscanning, we don't need to use socket timeout time
-			//socketTimeoutTime = 5;
 		}
 		else
 		{
 			autoScan = false;
-			//if we are not autoscanning, set the the timeout time to 5 so we don't bombard the server
-		//	socketTimeoutTime = 5;
-			//remove autoscan debug text field
-			//menuHandler.scanDebug.GetComponent<Text>().text = null;
-
 		}
-		
 
+		//set fixed time depending on whether we are connected or not. This governs how quickly we request data if connected, or how quickly we listen for data on new threads/sockets
+		//setting up new threads and new sockets is cpu intensive, so this needs to be slower
+		if (!connected)
+			Time.fixedDeltaTime = autoScanTimeScale;
+		else
+			Time.fixedDeltaTime = standardFixedTime;
+
+		//tests - overrides online- offline only
+		if (rN != null)
+		{
+			if (rN.airplaneData.tests)
+			{
+				Time.fixedDeltaTime = standardFixedTime;
+				return;
+			}
+		}
+
+
+		//if we got here, request data
 		SendMessage();
 	}
     /// <summary> 	
@@ -130,7 +144,7 @@ public class TCPClient : MonoBehaviour {
 
 				Thread thread = new Thread(() => ListenForData(hostName));
 				thread.IsBackground = true;
-				thread.Start();//does this close automatically?
+				thread.Start();
 
 				//let user know we are scanning	
 				if(autoScan)
