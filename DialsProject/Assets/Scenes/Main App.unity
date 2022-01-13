@@ -7218,6 +7218,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1841085021}
   - component: {fileID: 1841085019}
+  - component: {fileID: 1841085020}
   m_Layer: 0
   m_Name: Networking
   m_TagString: Untagged
@@ -7232,7 +7233,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1841085018}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d4cb023a047d9644946b015ff887fd2, type: 3}
   m_Name: 
@@ -7242,8 +7243,8 @@ MonoBehaviour:
   menuHandler: {fileID: 840226279}
   rN: {fileID: 0}
   connected: 0
-  autoScanTimeScale: 0.1
-  standardFixedTime: 0.02
+  autoScanTimeScale: 2
+  standardFixedTime: 0.5
   autoScan: 0
   hostFound: 0
   tcpReceived: 0
@@ -7258,6 +7259,43 @@ MonoBehaviour:
   socketTimeoutTime: 5
   timer: 5
   connectionTimer: 0
+  handshakeInterval: 3
+  handshakeTimer: 0
+--- !u!114 &1841085020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1841085018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99311bb631c0c6349b7aa489c7e3bae2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildControl: {fileID: 1413319309}
+  iL2GameDataClient: {fileID: 1370128203}
+  menuHandler: {fileID: 840226279}
+  rN: {fileID: 0}
+  connected: 0
+  autoScanTimeScale: 1
+  standardFixedTime: 0.02
+  autoScan: 0
+  hostFound: 0
+  tcpReceived: 0
+  userIP: 
+  portNumber: 11200
+  waitingOnResponse: 0
+  timerOfLastReceived: 0
+  testPrediction: 0
+  hostName: 
+  ip4: 0
+  ip3: 0
+  socketTimeoutTime: 5
+  timer: 5
+  connectionTimer: 0
+  handshakeInterval: 3
+  handshakeTimer: 0
 --- !u!4 &1841085021
 Transform:
   m_ObjectHideFlags: 0

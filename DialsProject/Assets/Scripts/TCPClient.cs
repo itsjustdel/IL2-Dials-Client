@@ -2,10 +2,13 @@ using System;
 //using System.Collections;
 //using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Net;
 //using System.Text;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
+
+using System.Collections;
 //using UnityEngine.Android;
 public class TCPClient : MonoBehaviour {
 
@@ -49,11 +52,15 @@ public class TCPClient : MonoBehaviour {
 	public float timer = 5f;
 	public float connectionTimer = 0f;
 
+	public float handshakeInterval = 3f;
+	public float handshakeTimer = 0f;
 
 	bool localScanAttempted = false;//127.0.0.1 internal loopback scan
 
 	#endregion
+	UdpClient listener;// = new UdpClient(listenPort)
 
+	IPEndPoint listenEndPoint;
 
 
 	void Awake()
@@ -62,10 +69,32 @@ public class TCPClient : MonoBehaviour {
         {
 			//disable client script
 			enabled = false;
-        }		
+        }
+
+		//so if statement fires on first frame
+		handshakeTimer = handshakeInterval;
     }
 
-    public void FixedUpdate()
+
+    private void Start()
+    {
+		//will need to re run this on port change
+		listener = new UdpClient(portNumber);
+		listenEndPoint = new IPEndPoint(IPAddress.Any, portNumber);
+		//start udp sender test
+		//Thread threadListen = new Thread(() => UDPSender());
+		//threadListen.IsBackground = true;
+		//threadListen.Start();//does this close automatically?
+		/*
+		Thread threadListen = new Thread(() => UDPListener());
+		threadListen.IsBackground = true;
+		threadListen.Start();//does this close automatically?
+
+		*/
+
+		StartCoroutine("Listener");
+	}
+	public void Update()
 	{
 		//wait before scanning
 		if (menuHandler.stopwatch.ElapsedMilliseconds < 5)
@@ -116,9 +145,40 @@ public class TCPClient : MonoBehaviour {
 		}
 
 
-		//if we got here, request data
-		SendMessage();
+		//if we got here, request data		
+		//SendMessage();
+
+		
+		if (handshakeTimer - handshakeInterval >= 0 && !waitingOnResponse)
+		{
+			Debug.Log("Started thread");
+		//	Thread thread = new Thread(() => HandShake());
+			//thread.IsBackground = true;
+			//thread.Start();//does this close automatically?
+
+			handshakeTimer = 0f;
+		}
+		else
+			handshakeTimer += Time.deltaTime;
+
+		
+		
+			
 	}
+
+	IEnumerator Listener()
+    {
+
+		while (true)
+		{
+			byte[] receivedData = listener.Receive(ref listenEndPoint);
+			Debug.Log("Decoded data is:");
+			Debug.Log(System.Text.Encoding.ASCII.GetString(receivedData)); //should be "Hello World" sent from above client
+			yield return new WaitForFixedUpdate();
+
+		}
+	}
+
     /// <summary> 	
     /// Setup socket connection. 	
     /// </summary> 	
@@ -179,6 +239,7 @@ public class TCPClient : MonoBehaviour {
 
 			else
             {
+				
 				//Debug.Log("Starting new thread");
 
 				menuHandler.scanDebug.GetComponent<Text>().text = "Attempting Connection: " + userIP.ToString() +" : " + portNumber ;
@@ -186,6 +247,7 @@ public class TCPClient : MonoBehaviour {
 				Thread thread = new Thread(() => ListenForData(hostName));
 				thread.IsBackground = true;
 				thread.Start();//does this close automatically?
+				
 			}
 
 
@@ -219,6 +281,7 @@ public class TCPClient : MonoBehaviour {
 				// Read incoming stream into byte arrary. 					
 				while ((length = stream.Read(bytes, 0, bytes.Length)) != 0) 
 				{
+					Debug.Log("received");
 
 					int p = 0;
 
@@ -286,7 +349,7 @@ public class TCPClient : MonoBehaviour {
 						tcpReceived = true; 
 
 					//keep a track of last receieved time
-					timerOfLastReceived = 0f;
+					timerOfLastReceived = Time.time;
 
 					connected = true;
 					connectionTimer = 0f;
@@ -369,7 +432,7 @@ public class TCPClient : MonoBehaviour {
 		}		  		
 		try 
 		{
-			if(timerOfLastReceived >= socketTimeoutTime)
+			if(Time.time - timerOfLastReceived > socketTimeoutTime)
             {
 				Debug.Log("last received time out, resetting");
 				//stop sending requests to server, and start to look for another server socket. server may have reset
@@ -404,7 +467,7 @@ public class TCPClient : MonoBehaviour {
 				stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);                 
 				//Debug.Log("Client sent his message - should be received by server");
 
-				timerOfLastReceived += Time.fixedDeltaTime;
+				//timerOfLastReceived = Time.time;
 
 				waitingOnResponse = true;
 			}         
@@ -434,6 +497,86 @@ public class TCPClient : MonoBehaviour {
 	
 	}
 
+	////new 
+	///
+
+	void HandShake()
+    {
+		Debug.Log("Handshake");
+		//ping host name and look for a response
+		try
+		{
+			Debug.Log("try");
+			socketConnection = new TcpClient(hostName, portNumber);
+			//array to read stream in to
+			Byte[] bytes = new Byte[1024];
+
+			NetworkStream stream = socketConnection.GetStream();
+			if (stream.CanWrite)
+			{
+				//string clientMessage = "This is a message from one of your clients."; 				
+				// Convert string message to byte array.   
+
+				//evcode 0x01 - instrument data
+				byte[] clientMessageAsByteArray = new byte[1] { 0x01 };// Encoding.ASCII.GetBytes(clientMessage); 				
+																	   // Write byte array to socketConnection stream.                 
+				stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);
+				//Debug.Log("Client sent his message - should be received by server");
+
+				//timerOfLastReceived = Time.time;
+
+				waitingOnResponse = true;
+
+				
+			}
+		}
+		catch
+		{
+			Debug.Log("caught ex");
+		}
+	}
+
+	void UDPSender()
+    {
+		byte[] data = System.Text.Encoding.ASCII.GetBytes("Hello World");
+		string ipAddress = "127.0.0.1";
+		int sendPort = 11200;
+
+		while (true)
+		{
+			try
+			{
+				using (var client = new UdpClient())
+				{
+					IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ipAddress), sendPort);
+					client.Connect(ep);
+					client.Send(data, data.Length);
+				}
+			}
+			catch (Exception ex)
+			{
+				Debug.Log(ex.ToString());
+			}
+		}
+	}
+
+	void UDPListener()
+    {
+		bool done = false;
+		int listenPort = 11200;
+		using (UdpClient listener = new UdpClient(listenPort))
+		{
+			IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Any, listenPort);
+			while (enabled)
+			{
+				byte[] receivedData = listener.Receive(ref listenEndPoint);
+				Debug.Log("Decoded data is:");
+				Debug.Log(System.Text.Encoding.ASCII.GetString(receivedData)); //should be "Hello World" sent from above client
+			}
+		}
+
+
+	}
 
 
 }
