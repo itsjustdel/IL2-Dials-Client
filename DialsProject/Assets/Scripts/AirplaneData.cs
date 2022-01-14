@@ -51,7 +51,7 @@ public class AirplaneData : MonoBehaviour
 
     public BuildControl buildControl;
     public MenuHandler menuHandler;
-    public TCPClient tcpClient;
+    public UDPClient udpClient;
 
     public void Start()
     {
@@ -73,7 +73,7 @@ public class AirplaneData : MonoBehaviour
     {
         
         //checks version and shows message if mismatch (if connected)
-        if (tcpClient.connected)
+        if (udpClient.connected)
         {
             if (serverVersion != clientVersion)
             {

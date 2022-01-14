@@ -29,7 +29,7 @@ public class UDPClient : MonoBehaviour
 	public float standardFixedTime = 0.02f;
 	public bool autoScan = false;
 	public bool hostFound;
-	public bool tcpReceived = false;
+	public bool udpReceived = false;
 
 	//user can insert from menu, if empty, autoscan happens
 	public string userIP;
@@ -38,11 +38,11 @@ public class UDPClient : MonoBehaviour
 	public bool waitingOnResponse;
 
 
-	public float timerOfLastReceived = 0f;
+	public DateTime timerOfLastReceived;
 	public bool testPrediction = false;
 
 	#region private members 	
-	private TcpClient socketConnection;
+	//private TcpClient socketConnection;
 
 
 	public string hostName;
@@ -59,7 +59,7 @@ public class UDPClient : MonoBehaviour
 	bool localScanAttempted = false;//127.0.0.1 internal loopback scan
 
 	#endregion
-	UdpClient listener;// = new UdpClient(listenPort)
+	//UdpClient listener;// = new UdpClient(listenPort)
 
 	Thread threadListen;
 
@@ -90,8 +90,8 @@ public class UDPClient : MonoBehaviour
 		threadListen.IsBackground = true;
 		threadListen.Start();//does this close automatically?
 
-	
 
+		timerOfLastReceived = (DateTime.Now );
 		//StartCoroutine("Listener");
 	}
 
@@ -105,6 +105,14 @@ public class UDPClient : MonoBehaviour
 		if (menuHandler.stopwatch.ElapsedMilliseconds < 5)
 			return;
 
+		//LED control
+		/*
+		//var seconds = (DateTime.Now - timerOfLastReceived).TotalSeconds;
+		if ((DateTime.Now - timerOfLastReceived).TotalSeconds > 5)
+			connected = false;
+		else
+			connected = true;
+		*/
 	}
 
 	void UDPSender()
@@ -133,18 +141,26 @@ public class UDPClient : MonoBehaviour
 
 	void UDPListener()
 	{
-		int listenPort = 11200;
+		int listenPort = portNumber;
 		UdpClient listener = new UdpClient(listenPort);
 		{
 			IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Any, listenPort);
 			while (true)
 			{
-
+				udpReceived = false;
 				byte[] receivedData = listener.Receive(ref listenEndPoint);
 				//Debug.Log("Decoded data is:");
 				//Debug.Log(System.Text.Encoding.ASCII.GetString(receivedData)); //should be "Hello World" sent from above client
 
 				ProcessPackage(receivedData);
+
+				//Debug.Log(receivedData.Length);
+				udpReceived = true;
+				//if(receivedData.Length >0 )
+					timerOfLastReceived = DateTime.Now;// Time.time;
+
+				//
+
 			}
 		}
 	}
@@ -199,8 +215,8 @@ public class UDPClient : MonoBehaviour
 		p += 64;//chosen max string size (by me)
 
 		//save rotation of needles				
-		if (!testPrediction)
-			tcpReceived = true;
+		//if (!testPrediction)
+			//tcpReceived = true;
 		
 	}
 
