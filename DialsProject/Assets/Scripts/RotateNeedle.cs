@@ -10,7 +10,7 @@ public class RotateNeedle : MonoBehaviour
     //
     public BuildControl buildControl;
     public AirplaneData airplaneData;
-    public TCPClient tcpClient;
+    public UDPClient udpClient;
     public float smoothing = 3f;
 
     public GameObject altitudeNeedleSmall;
@@ -36,7 +36,7 @@ public class RotateNeedle : MonoBehaviour
     public List<GameObject> rpmNeedlesSmall = new List<GameObject>();
 
     //public bool tcpReceived = false; //moved to tcpClient, multiple instances of Rotate Needle for each country, only single instance of tcpclient
-    public float lastMessageReceivedTime;//two ways of doing the same thing
+  //  public float lastMessageReceivedTime;//two ways of doing the same thing
     public float previousMessageTime;
     public float maxSpin =1f;
     public float turnAndBankPitchMultiplier = 5f;
@@ -150,46 +150,57 @@ public class RotateNeedle : MonoBehaviour
             Tests();   
             return;
         }
-
-        if (!tcpClient.connected)
+        
+        /*
+        if (!udpClient.connected)
         {
             ResetNeedles();
         }
         else //we are connected
         {
-            if (tcpClient.tcpReceived)
+
+            Debug.Log((DateTime.Now - udpClient.timerOfLastReceived).TotalSeconds);
+            if (udpClient.udpReceived)
             {
-                TCPReceived();
+                UDPReceived();
             }
 
             //check to see if we need to predict or if we received a new update recently
-            else if (Time.time - lastMessageReceivedTime > Time.fixedDeltaTime)//we send and receive on fixed time step
+            
+            else if ((DateTime.Now - udpClient.timerOfLastReceived).TotalSeconds > Time.fixedDeltaTime)//we send and receive on fixed time step
             {
-                PredictTCPEvent();
+                PredictUDPEvent();
             }
         }
 
+        */
+        SavePreviousRotationsAndPositions();
+
+        SetRotationTargets();
+
+
         NeedleRotations();
     }
-    void PredictTCPEvent()
+    void PredictUDPEvent()
     {
-        lastMessageReceivedTime = Time.time;
+        Debug.Log("predicting");
+        //lastMessageReceivedTime = Time.time;
         PredictRotations();        
     }
 
-    void TCPReceived()
+    void UDPReceived()
     {
        // Debug.Log("tcp received");
 
-        previousMessageTime = lastMessageReceivedTime;
-        lastMessageReceivedTime = Time.time;
+       // previousMessageTime = lastMessageReceivedTime;
+        //lastMessageReceivedTime = Time.time;
 
         //called when tcp client receives update
         SavePreviousRotationsAndPositions();
 
         SetRotationTargets();
 
-        tcpClient.tcpReceived = false;
+        //udpClient.udpReceived = false;
 
        
     }
@@ -225,8 +236,8 @@ public class RotateNeedle : MonoBehaviour
                 airplaneData.heading -= speed;
 
         }
-        previousMessageTime = lastMessageReceivedTime;//using?
-        lastMessageReceivedTime = Time.time - Time.deltaTime;
+      //  previousMessageTime = lastMessageReceivedTime;//using?
+        //lastMessageReceivedTime = Time.time - Time.deltaTime;
 
         airplaneData.headingPrevious = airplaneData.heading;
 

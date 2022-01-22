@@ -24,8 +24,8 @@ public class BuildControl : MonoBehaviour
         if (isServer)
             Debug.Log("This is the server");
         
-        if(isClient)
-            Debug.Log("This is the client");
+       // if(isClient)
+       //     Debug.Log("This is the client");
 
         if(isClient && isServer)
         {

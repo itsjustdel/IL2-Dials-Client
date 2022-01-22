@@ -3831,7 +3831,7 @@ MonoBehaviour:
   ipTextField: {fileID: 602204878}
   portTextField: {fileID: 2137997100}
   scanDebug: {fileID: 1052976697}
-  tcpClient: {fileID: 1841085019}
+  udpClient: {fileID: 1841085020}
   dontShowAgain: 0
   dontShowAgainToggle: {fileID: 1006835868}
   ipFieldOpen: 0
@@ -3888,7 +3888,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuHandler: {fileID: 840226279}
-  tcpClient: {fileID: 1841085019}
+  udpClient: {fileID: 1841085020}
   greenOn: {fileID: 1027990658}
   greenOff: {fileID: 566746289}
   redOn: {fileID: 222714434}
@@ -4858,7 +4858,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   airplaneData: {fileID: 1370128203}
   menuHandler: {fileID: 840226279}
-  tcpClient: {fileID: 1841085019}
+  udpClient: {fileID: 1841085020}
   countryDialBoard: {fileID: 0}
   rpmObjects: []
   speedometer: {fileID: 0}
@@ -5993,7 +5993,7 @@ MonoBehaviour:
   rpms: []
   buildControl: {fileID: 1413319309}
   menuHandler: {fileID: 840226279}
-  tcpClient: {fileID: 1841085019}
+  udpClient: {fileID: 1841085020}
 --- !u!4 &1370128204
 Transform:
   m_ObjectHideFlags: 0
@@ -7217,7 +7217,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1841085021}
-  - component: {fileID: 1841085019}
+  - component: {fileID: 1841085020}
   m_Layer: 0
   m_Name: Networking
   m_TagString: Untagged
@@ -7225,7 +7225,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1841085019
+--- !u!114 &1841085020
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7234,7 +7234,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1841085018}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d4cb023a047d9644946b015ff887fd2, type: 3}
+  m_Script: {fileID: 11500000, guid: 99311bb631c0c6349b7aa489c7e3bae2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   buildControl: {fileID: 1413319309}
@@ -7242,7 +7242,7 @@ MonoBehaviour:
   menuHandler: {fileID: 840226279}
   rN: {fileID: 0}
   connected: 0
-  autoScanTimeScale: 0.1
+  autoScanTimeScale: 1
   standardFixedTime: 0.02
   autoScan: 0
   hostFound: 0
@@ -7250,14 +7250,15 @@ MonoBehaviour:
   userIP: 
   portNumber: 11200
   waitingOnResponse: 0
-  timerOfLastReceived: 0
   testPrediction: 0
   hostName: 
-  ip4: 255
-  ip3: 255
+  ip4: 0
+  ip3: 0
   socketTimeoutTime: 5
   timer: 5
   connectionTimer: 0
+  handshakeInterval: 3
+  handshakeTimer: 0
 --- !u!4 &1841085021
 Transform:
   m_ObjectHideFlags: 0

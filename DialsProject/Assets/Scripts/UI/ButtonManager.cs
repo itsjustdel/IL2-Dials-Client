@@ -88,7 +88,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
                 {
                     //it is in the tray
                     //put it back to orignal parent
-                    transform.parent.parent.gameObject.transform.parent = menuHandler.tcpClient.rN.transform;
+                    transform.parent.parent.gameObject.transform.parent = menuHandler.udpClient.rN.transform;
                     //reset scale
                     List<GameObject> dials = DialsManager.ActiveDials(menuHandler.dialsManager.countryDialBoard);
                     float defaultScale = DialsManager.DefaultDialScale(dials);
