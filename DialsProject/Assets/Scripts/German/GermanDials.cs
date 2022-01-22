@@ -118,7 +118,8 @@ public class GermanDials : MonoBehaviour
         if (planeType == "Hs 129 B-2")
             v *= 0.333f;
 
-        Quaternion target = Quaternion.Euler(0, 0, v);
+        float z = Mathf.Clamp(v, -30, 30);
+        Quaternion target = Quaternion.Euler(0, 0, z);
 
         return target;
     }

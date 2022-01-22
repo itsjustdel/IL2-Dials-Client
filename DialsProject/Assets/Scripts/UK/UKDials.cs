@@ -138,6 +138,11 @@ public class UKDials : MonoBehaviour
                 target = Quaternion.Euler(0, 0,  10 + ((v)) + 180);
             else
                  target = Quaternion.Euler(0, 0, -10 + ((v)) + 180);
+
+
+        float z = Mathf.Clamp(target.eulerAngles.z, 140, 220); //could need more work, flicks to each side at some point over 200
+        target = Quaternion.Euler(0, 0, z);
+
         return target;
     }
 

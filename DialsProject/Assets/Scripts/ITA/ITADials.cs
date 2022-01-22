@@ -99,7 +99,8 @@ public class ITADials : MonoBehaviour
 
     public static Quaternion TurnCoordinatorNeedleTarget(float v)
     {
-        Quaternion target = Quaternion.Euler(0, 0, v);
+        float z = Mathf.Clamp(v, -30, 30);
+        Quaternion target = Quaternion.Euler(0, 0, z);
 
         return target;
     }

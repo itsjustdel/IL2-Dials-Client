@@ -448,7 +448,7 @@ public class PlaneDataFromName : AirplaneData
             case "Bf-110 E2":
                 planeAttributes.country = Country.GER;
                 planeAttributes.altimeter = true;
-                
+                planeAttributes.headingIndicator = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.vsiSmall = true;
@@ -919,6 +919,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiSmall = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
+                planeAttributes.turnAndBank = true;
                 planeAttributes.rpmType = RpmType.A;
                 break;
 

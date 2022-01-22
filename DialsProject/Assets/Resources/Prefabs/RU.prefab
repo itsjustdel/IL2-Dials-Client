@@ -1646,7 +1646,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildControl: {fileID: 0}
   airplaneData: {fileID: 0}
-  tcpClient: {fileID: 0}
+  udpClient: {fileID: 0}
   smoothing: 3
   altitudeNeedleSmall: {fileID: 2427977040760218792}
   altitudeNeedleSmallest: {fileID: 0}
@@ -1669,7 +1669,6 @@ MonoBehaviour:
   compassRim: {fileID: 0}
   rpmNeedlesLarge: []
   rpmNeedlesSmall: []
-  lastMessageReceivedTime: 0
   previousMessageTime: 0
   maxSpin: 1
   turnAndBankPitchMultiplier: 84

@@ -364,15 +364,17 @@ public class DialsManager : MonoBehaviour
         Layout layout = JsonUtility.FromJson<Layout>(jsonFoo);
 
         //check for version change
+
         if (layout.version != airplaneData.clientVersion)
         {
             //reset all dials :(
 
+            //only need to do this when I add a new dial? - new dial will be in tray automatically if using a newer version - sohuld be ok just for beta testers
             //set dials to default
-            Debug.Log("Version change detected");
-            DefaultLayouts(countryDialBoard);
+            //Debug.Log("Version change detected");
+            //DefaultLayouts(countryDialBoard);
 
-            return;
+            //return;
         }
 
         //apply to dials/positions        
