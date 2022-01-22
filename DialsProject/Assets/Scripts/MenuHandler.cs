@@ -119,7 +119,7 @@ public class MenuHandler : MonoBehaviour
         //inlcude inactive with bool flag
         ipTextField.GetComponentInParent<InputField>(true).text = udpClient.userIP;
 
-        Debug.Log(udpClient.portNumber);
+        //Debug.Log(udpClient.portNumber);
         if (udpClient.portNumber == 11200 || udpClient.portNumber == 0)
         {
             //set default port number text field to null so unity shows the greyed out placeholder text

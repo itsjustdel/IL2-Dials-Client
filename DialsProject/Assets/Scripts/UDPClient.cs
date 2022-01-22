@@ -30,7 +30,8 @@ public class UDPClient : MonoBehaviour
 	public bool autoScan = false;
 	public bool hostFound;
 	public bool udpReceived = false;
-
+	public int udpTimeout = 2;
+	
 	//user can insert from menu, if empty, autoscan happens
 	public string userIP;
 	//user can overwrite this
@@ -91,7 +92,7 @@ public class UDPClient : MonoBehaviour
 		threadListen.Start();//does this close automatically?
 
 
-		timerOfLastReceived = (DateTime.Now );
+		timerOfLastReceived = DateTime.Now.AddSeconds(-udpTimeout);
 		//StartCoroutine("Listener");
 	}
 
@@ -106,13 +107,19 @@ public class UDPClient : MonoBehaviour
 			return;
 
 		//LED control
-		/*
+		
 		//var seconds = (DateTime.Now - timerOfLastReceived).TotalSeconds;
-		if ((DateTime.Now - timerOfLastReceived).TotalSeconds > 5)
+		
+		double seconds = (DateTime.Now - timerOfLastReceived).TotalSeconds;
+		//Debug.Log("seconds = " + seconds);
+		if (seconds > udpTimeout)
 			connected = false;
 		else
+		{
+		//	Debug.Log("setting true");
 			connected = true;
-		*/
+		}
+		
 	}
 
 	void UDPSender()
@@ -149,23 +156,19 @@ public class UDPClient : MonoBehaviour
 			{
 				udpReceived = false;
 				byte[] receivedData = listener.Receive(ref listenEndPoint);
-				//Debug.Log("Decoded data is:");
-				//Debug.Log(System.Text.Encoding.ASCII.GetString(receivedData)); //should be "Hello World" sent from above client
 
 				ProcessPackage(receivedData);
 
-				//Debug.Log(receivedData.Length);
+				
 				udpReceived = true;
-				//if(receivedData.Length >0 )
-					timerOfLastReceived = DateTime.Now;// Time.time;
 
-				//
+				timerOfLastReceived = DateTime.Now;
 
 			}
 		}
 	}
 
-	void ProcessPackage(Byte[] bytes)
+	void ProcessPackage(byte[] bytes)
     {
 		int p = 0;
 
@@ -176,7 +179,7 @@ public class UDPClient : MonoBehaviour
 		float[] floats = GetFloats(bytes, p, floatArrayLength);
 
 		//check for Nan, infinity etc
-		SanitiseData();
+		DataCheck(floats);
 
 		if (!testPrediction)
 		{
@@ -212,17 +215,20 @@ public class UDPClient : MonoBehaviour
 		//plane type string
 		string planeType = System.Text.Encoding.UTF8.GetString(bytes, p, (int)stringSize);
 		iL2GameDataClient.planeType = planeType;
-		p += 64;//chosen max string size (by me)
+		//p += 64;//chosen max string size (by me)
 
-		//save rotation of needles				
-		//if (!testPrediction)
-			//tcpReceived = true;
-		
 	}
 
-	void SanitiseData()
+	void DataCheck(float[] floats)
     {
-		// check for nan infinity etc
+        // check for nan infinity etc
+        for (int i = 0; i < floats.Length; i++)
+        {
+			if(float.IsNaN( floats[i])  || float.IsInfinity (floats[i]) || float.IsNegativeInfinity(floats[i]))
+            {
+				floats[i] = 0;
+            }
+        }
     }
 
 	static float[] GetFloats(byte[] bytes, int offset, int floatArrayLength)
@@ -237,6 +243,7 @@ public class UDPClient : MonoBehaviour
 		}
 		catch (Exception ex)
 		{
+			Debug.Log("Exceptiom" + ex);
 			return null;
 		}
 
