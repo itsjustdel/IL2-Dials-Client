@@ -28,7 +28,7 @@ public class MenuHandler : MonoBehaviour
     public GameObject ipTextField;
     public GameObject portTextField;
     public GameObject scanDebug;
-    public TCPClient tcpClient;
+    public UDPClient udpClient;
     public bool dontShowAgain;
     public Toggle dontShowAgainToggle;
     public bool ipFieldOpen;
@@ -76,10 +76,11 @@ public class MenuHandler : MonoBehaviour
         }
 
         //load preferences
-        tcpClient.userIP = PlayerPrefs.GetString("IPAddress");
-        tcpClient.hostName = PlayerPrefs.GetString("IPAddress");//flaw in design, why host name and user ip?
-        tcpClient.portNumber = PlayerPrefs.GetInt("PortNumber");
-
+        /*
+        udpClient.userIP = PlayerPrefs.GetString("IPAddress");
+        udpClient.hostName = PlayerPrefs.GetString("IPAddress");//flaw in design, why host name and user ip?
+        udpClient.portNumber = PlayerPrefs.GetInt("PortNumber");
+        */
 
 
         //toggle         
@@ -111,24 +112,24 @@ public class MenuHandler : MonoBehaviour
         }
 
 
-        if (tcpClient.portNumber == 0)
-            tcpClient.portNumber = 11200;
+        if (udpClient.portNumber == 0)
+            udpClient.portNumber = 11200;
 
         //apply to UI
         //inlcude inactive with bool flag
-        ipTextField.GetComponentInParent<InputField>(true).text = tcpClient.userIP;
+        ipTextField.GetComponentInParent<InputField>(true).text = udpClient.userIP;
 
-        Debug.Log(tcpClient.portNumber);
-        if (tcpClient.portNumber == 11200 || tcpClient.portNumber == 0)
+        //Debug.Log(udpClient.portNumber);
+        if (udpClient.portNumber == 11200 || udpClient.portNumber == 0)
         {
             //set default port number text field to null so unity shows the greyed out placeholder text
-            Debug.Log("0");
+            //Debug.Log("0");
             portTextField.GetComponentInParent<InputField>(true).text = null;
         }
         else
         {
-            Debug.Log("1");
-            portTextField.GetComponentInParent<InputField>(true).text = tcpClient.portNumber.ToString();
+            //Debug.Log("1");
+            portTextField.GetComponentInParent<InputField>(true).text = udpClient.portNumber.ToString();
         }
 
 
@@ -361,7 +362,7 @@ public class MenuHandler : MonoBehaviour
         if (string.IsNullOrEmpty(ipAddressText))
         {
             //placeholder text should show and we set ip to empty, when empty, it autoscans
-            tcpClient.userIP = null;
+            udpClient.userIP = null;
             //save to player prefs for next load
             PlayerPrefs.SetString("IPAddress", ipAddressText);
             PlayerPrefs.Save();
@@ -372,34 +373,34 @@ public class MenuHandler : MonoBehaviour
         }
         else
         {
-            //give tcpClient the user Ip
+            //give udpClient the user Ip
             //interface variable
-            tcpClient.userIP = ipAddressText;
+            udpClient.userIP = ipAddressText;
             //code variable
-            tcpClient.hostName = ipAddressText;
+            udpClient.hostName = ipAddressText;
             //save
             PlayerPrefs.SetString("IPAddress", ipAddressText);
             PlayerPrefs.Save();
 
 
             //let user know what's happening
-            //            scanDebug.GetComponent<Text>().text = "Attempting Connection: " + tcpClient.hostName.ToString(); ;
+            //            scanDebug.GetComponent<Text>().text = "Attempting Connection: " + udpClient.hostName.ToString(); ;
 
             Debug.Log("3");
 
         }
 
         //reset autoscan variables
-        tcpClient.ip3 = 0;
-        tcpClient.ip4 = 4;
+        udpClient.ip3 = 0;
+        udpClient.ip4 = 4;
 
         //flag for autoscan pause
         ipFieldOpen = false;
 
-        tcpClient.hostFound = false;
+        udpClient.hostFound = false;
 
 
-        tcpClient.timer = tcpClient.socketTimeoutTime;
+        udpClient.timer = udpClient.socketTimeoutTime;
 
 
     }
@@ -412,7 +413,7 @@ public class MenuHandler : MonoBehaviour
         if (string.IsNullOrEmpty(portText))
         {
             //set to default port
-            tcpClient.portNumber = 11200;
+            udpClient.portNumber = 11200;
 
             //save to player prefs for next load
             PlayerPrefs.SetInt("PortNumber", 11200);
@@ -423,7 +424,7 @@ public class MenuHandler : MonoBehaviour
         {
             //set port to user input
             int parsed = int.Parse(portText);
-            tcpClient.portNumber = parsed;
+            udpClient.portNumber = parsed;
             //save
             PlayerPrefs.SetInt("PortNumber", parsed);
 
@@ -431,15 +432,15 @@ public class MenuHandler : MonoBehaviour
 
         }
 
-        tcpClient.ip3 = 0;
-        tcpClient.ip4 = 4;
+        udpClient.ip3 = 0;
+        udpClient.ip4 = 4;
 
         //flag for autoscan pause
         portFieldOpen = false;
 
-        tcpClient.hostFound = false;
+        udpClient.hostFound = false;
 
-        tcpClient.timer = tcpClient.socketTimeoutTime;
+        udpClient.timer = udpClient.socketTimeoutTime;
     }
 
     public void WelcomeClosed()

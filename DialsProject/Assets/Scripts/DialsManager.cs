@@ -9,7 +9,7 @@ public class DialsManager : MonoBehaviour
     //This class manages the loading and saving of layouts and population of dials on plane change
     public AirplaneData airplaneData;
     public MenuHandler menuHandler;
-    public TCPClient tcpClient;
+    public UDPClient udpClient;
     public GameObject countryDialBoard;
 
     public List<GameObject> rpmObjects = new List<GameObject>();
@@ -241,10 +241,10 @@ public class DialsManager : MonoBehaviour
         {
             //asign variables - can't asign scene variables to prefab in editor
             //asign variables - can't asign scene variables to prefab in editor
-            tcpClient.rN = countryDialBoard.GetComponent<RotateNeedle>();
-            tcpClient.rN.buildControl = GameObject.Find("Build Chooser").GetComponent<BuildControl>();
-            tcpClient.rN.airplaneData = GameObject.Find("Player Plane").GetComponent<AirplaneData>();
-            tcpClient.rN.tcpClient = GameObject.Find("Networking").GetComponent<TCPClient>();
+            udpClient.rN = countryDialBoard.GetComponent<RotateNeedle>();
+            udpClient.rN.buildControl = GameObject.Find("Build Chooser").GetComponent<BuildControl>();
+            udpClient.rN.airplaneData = GameObject.Find("Player Plane").GetComponent<AirplaneData>();
+            udpClient.rN.udpClient = GameObject.Find("Networking").GetComponent<UDPClient>();
 
             //Instantiate RPMs
             rpmObjects.Clear();

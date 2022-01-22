@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class LEDs : MonoBehaviour
 {
     public MenuHandler menuHandler;
-    public TCPClient tcpClient;
+    public UDPClient udpClient;
     public GameObject greenOn;
     public GameObject greenOff;
     public GameObject redOn;
@@ -80,7 +80,7 @@ public class LEDs : MonoBehaviour
         }
 
         //show lights
-        if (tcpClient.connected)
+        if (udpClient.connected)
         {
             greenOn.SetActive(true);
             greenOff.SetActive(false);
