@@ -75,12 +75,7 @@ public class MenuHandler : MonoBehaviour
             PlayerPrefs.DeleteAll();
         }
 
-        //load preferences
-        /*
-        udpClient.userIP = PlayerPrefs.GetString("IPAddress");
-        udpClient.hostName = PlayerPrefs.GetString("IPAddress");//flaw in design, why host name and user ip?
-        udpClient.portNumber = PlayerPrefs.GetInt("PortNumber");
-        */
+
         udpClient.serverAddress = PlayerPrefs.GetString("IPAddress");
         udpClient.portNumber = PlayerPrefs.GetInt("PortNumber");
 
