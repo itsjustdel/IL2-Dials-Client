@@ -153,6 +153,11 @@ public class MenuHandler : MonoBehaviour
     {
         //SlideMask();
 
+        if (Input.GetKey("escape"))
+        {
+            Application.Quit();
+        }
+
         RemoveTitle();
                 
 
@@ -541,6 +546,12 @@ public class MenuHandler : MonoBehaviour
         ActivateCompassTouch();
 
         dialsManager.SaveLayout();
+
+    }
+
+    public void ResetLayout()
+    {
+        dialsManager.DeleteLayout();
 
     }
 

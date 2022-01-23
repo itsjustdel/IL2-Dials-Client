@@ -171,6 +171,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             ScreenTrap(d2);
 
             //make sure icons are 
+            Debug.Log(transform.parent.parent.gameObject.name);
             IconsOn(transform.parent.parent.gameObject);
 
         }
@@ -330,9 +331,9 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         }
     }
 
-    private static void IconsOn(GameObject dialParent)
+    public static void IconsOn(GameObject dialParent)
     {
-        //turn off icons (UI Handlers should be first child)
+        //turn  icons (UI Handlers should be first child)
         for (int j = 0; j < dialParent.transform.GetChild(0).transform.childCount; j++)
         {
             Transform child = dialParent.transform.GetChild(0).transform.GetChild(j);

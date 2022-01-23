@@ -39,7 +39,7 @@ public class DialsManager : MonoBehaviour
         {
             //check if layout panel is open, save and close before we proceed
             //simulate accept click if there was a plane loaded
-            if (menuHandler.layoutOpen && airplaneData.planeAttributes.country != PlaneDataFromName.Country.UNDEFINED)
+            if (menuHandler.layoutOpen && airplaneData.planeAttributes!=null && airplaneData.planeAttributes.country != PlaneDataFromName.Country.UNDEFINED)
                 menuHandler.AcceptLayoutClick();
 
             //construct country and available dials in to planeAttributes class/struct
@@ -640,6 +640,37 @@ public class DialsManager : MonoBehaviour
 
     }
 
+    public void DeleteLayout()
+    {
+        Debug.Log("Deleting = " + airplaneData.planeType);
+        PlayerPrefs.DeleteKey(airplaneData.planeType);
+        //PlayerPrefs.Save();
+
+        
+        //put all dials back to country board
+        for (int i = 0; i < menuHandler.dialsInTray.Count; i++)
+        {
+            menuHandler.dialsInTray[i].transform.parent = countryDialBoard.transform;
+        }
+
+
+        
+
+        //and call default
+        DefaultLayouts(countryDialBoard);
+
+        //make sure all ui is on
+
+        for (int i = 0; i < menuHandler.dialsInTray.Count; i++)
+        {
+            ButtonManager.IconsOn(menuHandler.dialsInTray[i]);
+            
+        }
+        //now reset list
+        menuHandler.dialsInTray.Clear();
+
+    }
+
     void RPMInTray(Layout layout, int i, GameObject rpm)
     {
         //slightly different for multiple dials
@@ -797,7 +828,7 @@ public class DialsManager : MonoBehaviour
             }
 
             //scale dial            
-            activeDials[i].transform.localScale *= scale;
+            activeDials[i].transform.localScale =new Vector3( scale*0.35f, scale * 0.35f, scale * 0.35f);
         }
     }
 
