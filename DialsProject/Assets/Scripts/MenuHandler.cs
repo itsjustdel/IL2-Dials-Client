@@ -373,7 +373,7 @@ public class MenuHandler : MonoBehaviour
 
 
 
-            Debug.Log("2");
+            //Debug.Log("2");
         }
         else
         {
@@ -551,14 +551,14 @@ public class MenuHandler : MonoBehaviour
 
     public void AddLayouButtonClick()
     {
-        Debug.Log("Add layout click");
+        //Debug.Log("Add layout click");
         trayOpen = !trayOpen;
         UpdateLayoutPanel();
     }
 
     public void OpenConnectionsClick()
     {
-        Debug.Log("Connections Click");
+        //Debug.Log("Connections Click");
         menuPanel.SetActive(false);
     
         //show copnnection panel - IP address, port etc
