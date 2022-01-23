@@ -27,6 +27,7 @@ public class UDPClient : MonoBehaviour
 	public bool connected = false;
 	public float autoScanTimeScale = 1f;
 	public float standardFixedTime = 0.02f;
+	public int sendRate = 16;
 	public bool autoScan = false;
 	public bool hostFound;
 	public bool udpReceived = false;
@@ -62,6 +63,8 @@ public class UDPClient : MonoBehaviour
 	#endregion
 	//UdpClient listener;// = new UdpClient(listenPort)
 
+
+	//UdpClient udpClientSender;//listener needs to know what port we are on locally
 	Thread threadListen;
 	Thread threadSender;
 	void Awake()
@@ -90,9 +93,6 @@ public class UDPClient : MonoBehaviour
 		threadSender.Start();//does this close automatically?
 		
 		
-	//	threadListen = new Thread(() => UDPListener());
-	//	threadListen.IsBackground = true;
-	//	threadListen.Start();//does this close automatically?
 		
 
 		timerOfLastReceived = DateTime.Now.AddSeconds(-udpTimeout);
@@ -130,95 +130,73 @@ public class UDPClient : MonoBehaviour
 
 	void UDPSender()
 	{
-		byte[] data = System.Text.Encoding.ASCII.GetBytes("I am the client");
-		string ipAddress = "192.168.1.2";
-		int sendPort = 11200;
+		//create package to send - content arbitary
+		byte[] data = System.Text.Encoding.ASCII.GetBytes("Il-2 Client request");
+		
+		//use standard constructor, if we use params it will bind the port under the ood. Only the server should bind the port
+		var client = new UdpClient();
+		//endpoint where server is listening
+		IPEndPoint ep = new IPEndPoint(IPAddress.Parse("192.168.1.2"), 11200);
+		
+		//create a connection - this will hold until closed
+		client.Connect(ep);
 
-		//UdpClient udpClient = new UdpClient(11200); //this binds! we only want the server to bind the port, not tihs(the client)
-		UdpClient udpClient = new UdpClient();
-		udpClient.Connect("192.168.1.2", 11200);
+		//now we have an end point create a listener on a seperate thread
+		threadListen = new Thread(() => UDPListener(client, ep));
+		threadListen.IsBackground = true;
+		threadListen.Start();
+
+		//Debug.Log("UDP port : " + ((IPEndPoint)client.Client.LocalEndPoint).Port.ToString());
 		try
-		{
-			
+		{			
 			while (true)
 			{
-				
 
+				//Debug.Log("sending");
 				// Sends a message to the host to which you have connected.
 				byte[] sendBytes = System.Text.Encoding.ASCII.GetBytes("Is anybody there?");
 
-				udpClient.Send(sendBytes, sendBytes.Length);
+				client.Send(sendBytes, sendBytes.Length);
 
-
-				//IPEndPoint object will allow us to read datagrams sent from any source.
-				IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
-
-				// Blocks until a message returns on this socket from a remote host.
-				byte[] receiveBytes = udpClient.Receive(ref RemoteIpEndPoint);
-
-				ProcessPackage(receiveBytes);
-
-				udpReceived = true;
-
-				timerOfLastReceived = DateTime.Now;
-
-				string returnData = System.Text.Encoding.ASCII.GetString(receiveBytes);
-
-				// Uses the IPEndPoint object to determine which of these two hosts responded.
-				Debug.Log("This is the message you received " +
-											 returnData.ToString());
-				Debug.Log("This message was sent from " +
-											RemoteIpEndPoint.Address.ToString() +
-											" on their port number " +
-											RemoteIpEndPoint.Port.ToString());
-
-				Thread.Sleep(500);
+				
+				Thread.Sleep(sendRate);
 			}
-
-
-			
 		}
 
 		catch (Exception e)
 		{
 			Console.WriteLine(e.ToString());
-			udpClient.Close();
+			client.Close();
 			//break;
 		}
 
-		udpClient.Close();
+		client.Close();
 	}
 
 
-	void UDPListener()
+	void UDPListener(UdpClient udpClient, IPEndPoint ep)
 	{
-		int listenPort = portNumber;
-		UdpClient listener = new UdpClient(listenPort);
+		try
 		{
+			while (true)
+			{			
+				udpReceived = false;
 
-			try
-			{
-				IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Any, listenPort);
-				while (true)
-				{
-					udpReceived = false;
-					byte[] receivedData = listener.Receive(ref listenEndPoint);
-					Debug.Log(receivedData);
+				//////blocking call
+				byte[] receivedData = udpClient.Receive(ref ep);
 
-					ProcessPackage(receivedData);
+				ProcessPackage(receivedData);
 
+				udpReceived = true;
 
-					udpReceived = true;
+				timerOfLastReceived = DateTime.Now;
 
-					timerOfLastReceived = DateTime.Now;
-
-				}
-			}
-			catch (Exception ex)
-			{
-				Debug.Log(ex.ToString());
 			}
 		}
+		catch (Exception ex)
+		{
+			Debug.Log(ex.ToString());
+		}	
 	}
 
 	void ProcessPackage(byte[] bytes)
