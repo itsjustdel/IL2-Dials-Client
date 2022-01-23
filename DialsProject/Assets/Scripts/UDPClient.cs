@@ -1,29 +1,18 @@
 using System;
-//using System.Collections;
-//using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Net;
-//using System.Text;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 
-using System.Collections;
-//using UnityEngine.Android;
 public class UDPClient : MonoBehaviour
 {
-
-	//class which reads memory and sets values
-	//have seperate for server and clietn so i can test on same pc
+	//class which reads memory and sets values	
 
 	public BuildControl buildControl;
 	public AirplaneData iL2GameDataClient;
-
 	public MenuHandler menuHandler;
 	public RotateNeedle rN;
-
-	//user settings		
-
 	public bool connected = false;
 	public float autoScanTimeScale = 1f;
 	public float standardFixedTime = 0.02f;
@@ -31,134 +20,178 @@ public class UDPClient : MonoBehaviour
 	public bool autoScan = false;
 	public bool hostFound;
 	public bool udpReceived = false;
-	public int udpTimeout = 2;
-	
-	//user can insert from menu, if empty, autoscan happens
-	public string userIP;
-	//user can overwrite this
+	public int udpTimeout = 2;	
 	public int portNumber = 11200;
 	public bool waitingOnResponse;
-
-
 	public DateTime timerOfLastReceived;
 	public bool testPrediction = false;
-
-	#region private members 	
-	//private TcpClient socketConnection;
-
-
-	public string hostName;
+	public string serverAddress;
 	public int ip4;
 	public int ip3;
-
 	public int socketTimeoutTime = 5;
-	public float timer = 5f;
 	public float connectionTimer = 0f;
 
-	public float handshakeInterval = 3f;
-	public float handshakeTimer = 0f;
+	bool localScanAttempted = false;
 
-	bool localScanAttempted = false;//127.0.0.1 internal loopback scan
-
-	#endregion
-	//UdpClient listener;// = new UdpClient(listenPort)
-
-
-	//UdpClient udpClientSender;//listener needs to know what port we are on locally
-	Thread threadListen;
-	Thread threadSender;
-	void Awake()
+	
+	private void Start()
 	{
-		if (buildControl.isServer)
-		{
-			//disable client script
-			enabled = false;
-		}
+		//check if server address is empty, if it is, we must autoscan
+		if(serverAddress == "")
+        {
+			autoScan = true;
+        }
 
-		//so if statement fires on first frame
-		handshakeTimer = handshakeInterval;
-
+		//so if statement catches check on first frame
+		timerOfLastReceived = DateTime.Now.AddSeconds(-udpTimeout);
 	
 	}
 
-
-	private void Start()
-	{
-		//will need to re run this on port change
-	//	listener = new UdpClient(portNumber);
-		//listenEndPoint = new IPEndPoint(IPAddress.Any, portNumber);
-		//start udp sender test
-		threadSender = new Thread(() => UDPSender());
-		threadSender.IsBackground = true;
-		threadSender.Start();//does this close automatically?
-		
-		
-		
-
-		timerOfLastReceived = DateTime.Now.AddSeconds(-udpTimeout);
-		//StartCoroutine("Listener");
-	}
-
-	void OnApplicationQuit()
-	{
-		if(threadSender != null)
-			threadSender.Abort();
-		if(threadListen != null)
-			threadListen.Abort();
-	}
 	public void Update()
 	{
 		//wait before scanning
 		if (menuHandler.stopwatch.ElapsedMilliseconds < 5)
 			return;
 
-		//LED control
-		
-		//var seconds = (DateTime.Now - timerOfLastReceived).TotalSeconds;
-		
+		//set connected flag if timeout
 		double seconds = (DateTime.Now - timerOfLastReceived).TotalSeconds;
-		//Debug.Log("seconds = " + seconds);
+		
 		if (seconds > udpTimeout)
 			connected = false;
 		else
-		{
-		//	Debug.Log("setting true");
 			connected = true;
-		}
-		
+
+		//search for the server and start send/listen threads
+		if(!hostFound)
+			Scan();
 	}
 
-	void UDPSender()
+	void Scan()
+    {		
+		if(autoScan)
+		{
+			//look for local connection before going to wifi
+			if (!localScanAttempted)
+			{
+				serverAddress = "127.0.0.1";
+
+				//first frame we attempt local scan, then on to wifi
+				localScanAttempted = true;
+			}
+			else
+			{
+				serverAddress = "192.168." + ip3.ToString() + "." + ip4.ToString();
+			}
+
+			//start a scanner thread
+			Thread thread = new Thread(() => UDPScanner(serverAddress));
+			thread.IsBackground = true;
+			thread.Start();
+
+			//update UI
+			menuHandler.scanDebug.GetComponent<Text>().text = "Scanning IP: " + serverAddress.ToString(); ;
+
+			if (localScanAttempted)
+			{
+				//push to 255 and move ip3 up
+				ip4++;
+				if (ip4 > 255)
+				{
+					ip3++;
+					ip4 = 0;
+				}
+
+				if (ip3 > 255)
+				{
+					//restart - if people have strange ips they probably know about it and can use direct connection option
+					ip3 = 0;
+					ip4 = 0;
+
+				}
+			}
+		}
+		else
+        {
+			//go straight to ip address in text field from interface			
+
+			menuHandler.scanDebug.GetComponent<Text>().text = "Attempting Connection: " + serverAddress.ToString() + " : " + portNumber;
+			//use value entered by user in ip address text box
+			Thread thread = new Thread(() => UDPScanner(serverAddress));
+			thread.IsBackground = true;
+			thread.Start();
+		}
+	}
+
+	void UDPScanner(string _serverAddress)
+    {
+		//create package to send - content arbitary
+		byte[] data = System.Text.Encoding.ASCII.GetBytes("Il-2 Client request");
+
+		//use standard constructor, if we use params it will bind the port under the ood. Only the server should bind the port
+		var client = new UdpClient();
+		//set quick timerouts on scan thread
+		client.Client.ReceiveTimeout = 100;
+					
+		//endpoint where server is listening
+		IPEndPoint ep = new IPEndPoint(IPAddress.Parse(_serverAddress), portNumber);
+
+		//create a connection - this will hold until closed
+		client.Connect(ep);
+
+		try
+		{
+			// Sends a message to the host to which you have connected.
+			byte[] sendBytes = System.Text.Encoding.ASCII.GetBytes("IL-2 Client");
+					
+			client.Send(sendBytes, sendBytes.Length);
+
+			//////blocking call
+			byte[] receivedData = client.Receive(ref ep);
+			
+			hostFound = true;
+
+			//we have found the server!
+			//start another thread for the data streamer (with no timeout settings)
+			Thread thread = new Thread(() => UDPSender(_serverAddress));
+			thread.IsBackground = true;
+			thread.Start();
+		}
+
+		catch (Exception e)
+		{	
+			client.Close();		
+		}
+	}
+
+
+	void UDPSender(string _serverAddress)
 	{
 		//create package to send - content arbitary
 		byte[] data = System.Text.Encoding.ASCII.GetBytes("Il-2 Client request");
 		
 		//use standard constructor, if we use params it will bind the port under the ood. Only the server should bind the port
 		var client = new UdpClient();
+
 		//endpoint where server is listening
-		IPEndPoint ep = new IPEndPoint(IPAddress.Parse("192.168.1.2"), 11200);
-		
+		IPEndPoint ep = new IPEndPoint(IPAddress.Parse(_serverAddress), portNumber);
 		//create a connection - this will hold until closed
 		client.Connect(ep);
 
 		//now we have an end point create a listener on a seperate thread
-		threadListen = new Thread(() => UDPListener(client, ep));
-		threadListen.IsBackground = true;
-		threadListen.Start();
+		Thread thread = new Thread(() => UDPListener(client, ep));
+		thread.IsBackground = true;
+		thread.Start();
 
 		//Debug.Log("UDP port : " + ((IPEndPoint)client.Client.LocalEndPoint).Port.ToString());
 		try
 		{			
 			while (true)
 			{
-
-				//Debug.Log("sending");
-				// Sends a message to the host to which you have connected.
-				byte[] sendBytes = System.Text.Encoding.ASCII.GetBytes("Is anybody there?");
+				// Sends a message to the host to which we have connected.
+				byte[] sendBytes = System.Text.Encoding.ASCII.GetBytes("IL-2 Client");
 
 				client.Send(sendBytes, sendBytes.Length);
 
-				
 				Thread.Sleep(sendRate);
 			}
 		}
@@ -167,7 +200,6 @@ public class UDPClient : MonoBehaviour
 		{
 			Console.WriteLine(e.ToString());
 			client.Close();
-			//break;
 		}
 
 		client.Close();

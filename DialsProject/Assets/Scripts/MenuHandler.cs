@@ -81,6 +81,8 @@ public class MenuHandler : MonoBehaviour
         udpClient.hostName = PlayerPrefs.GetString("IPAddress");//flaw in design, why host name and user ip?
         udpClient.portNumber = PlayerPrefs.GetInt("PortNumber");
         */
+        udpClient.serverAddress = PlayerPrefs.GetString("IPAddress");
+        udpClient.portNumber = PlayerPrefs.GetInt("PortNumber");
 
 
         //toggle         
@@ -117,7 +119,7 @@ public class MenuHandler : MonoBehaviour
 
         //apply to UI
         //inlcude inactive with bool flag
-        ipTextField.GetComponentInParent<InputField>(true).text = udpClient.userIP;
+        ipTextField.GetComponentInParent<InputField>(true).text = udpClient.serverAddress;
 
         //Debug.Log(udpClient.portNumber);
         if (udpClient.portNumber == 11200 || udpClient.portNumber == 0)
@@ -357,12 +359,14 @@ public class MenuHandler : MonoBehaviour
 
     public void IPAddressChanged()
     {
-        Debug.Log("IP changed");
+       // Debug.Log("IP changed");
         string ipAddressText = ipTextField.GetComponent<Text>().text;
         if (string.IsNullOrEmpty(ipAddressText))
         {
+            //go back to autoscan 
+            udpClient.autoScan = true;
             //placeholder text should show and we set ip to empty, when empty, it autoscans
-            udpClient.userIP = null;
+            udpClient.serverAddress= null;
             //save to player prefs for next load
             PlayerPrefs.SetString("IPAddress", ipAddressText);
             PlayerPrefs.Save();
@@ -373,11 +377,14 @@ public class MenuHandler : MonoBehaviour
         }
         else
         {
+            //direct attempt from user
+            udpClient.autoScan = false;
+
             //give udpClient the user Ip
             //interface variable
-            udpClient.userIP = ipAddressText;
+            udpClient.serverAddress = ipAddressText;
             //code variable
-            udpClient.hostName = ipAddressText;
+            udpClient.serverAddress = ipAddressText;
             //save
             PlayerPrefs.SetString("IPAddress", ipAddressText);
             PlayerPrefs.Save();
@@ -390,9 +397,11 @@ public class MenuHandler : MonoBehaviour
 
         }
 
+
         //reset autoscan variables
         udpClient.ip3 = 0;
-        udpClient.ip4 = 4;
+        udpClient.ip4 = 4; ;
+
 
         //flag for autoscan pause
         ipFieldOpen = false;
@@ -400,7 +409,7 @@ public class MenuHandler : MonoBehaviour
         udpClient.hostFound = false;
 
 
-        udpClient.timer = udpClient.socketTimeoutTime;
+       // udpClient.timer = udpClient.socketTimeoutTime;
 
 
     }
@@ -440,7 +449,7 @@ public class MenuHandler : MonoBehaviour
 
         udpClient.hostFound = false;
 
-        udpClient.timer = udpClient.socketTimeoutTime;
+        //udpClient.timer = udpClient.socketTimeoutTime;
     }
 
     public void WelcomeClosed()
