@@ -411,7 +411,7 @@ public class MenuHandler : MonoBehaviour
 
     public void PortChanged()
     {
-        Debug.Log("Port changed");
+        //Debug.Log("Port changed");
 
         string portText = portTextField.GetComponent<Text>().text;
         if (string.IsNullOrEmpty(portText))

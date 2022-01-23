@@ -64,6 +64,8 @@ public class UDPClient : MonoBehaviour
 		//search for the server and start send/listen threads
 		if(!hostFound)
 			Scan();
+		else
+			menuHandler.scanDebug.GetComponent<Text>().text = "Connected: " + serverAddress.ToString() + " : " + portNumber;
 	}
 
 	void Scan()
