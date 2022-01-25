@@ -10,4 +10,7 @@ Displays flight data on a replica dashboard on a second screen or tablet/phone
 https://github.com/itsjustdel/IL2-Dials-Server
 
 ## Release
+
 https://dellywelly.itch.io/il-2-dials-client-windows
+
+![uk a](https://user-images.githubusercontent.com/45520351/151064622-7186c265-2391-4f0d-b016-d8900f654a08.png)
