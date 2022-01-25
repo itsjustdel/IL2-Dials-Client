@@ -4,10 +4,7 @@
 ![VFEX3z](https://user-images.githubusercontent.com/45520351/151053750-5e95be44-932c-4e19-a274-a53da8d04cfa.png)
 
 # IL2-Dials-Client
-Receives data from UDP stream and displays flight data on a replica dashboard on a second screen or tablet/phone
-
-## IL-2 Dials Server Github
-https://github.com/itsjustdel/IL2-Dials-Server
+Receives data from [IL-2 Dials Server](https://github.com/itsjustdel/IL2-Dials-Server) UDP stream and displays cockpit instruments on a second screen or tablet/phone
 
 ## Release
 
