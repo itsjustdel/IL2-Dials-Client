@@ -15,14 +15,14 @@ Available on Google Play Store and Windows
 [Google Play Store](]https://play.google.com/store/apps/details?id=com.DellyWellySoftware.Il2Dials)
 [Windows Client](https://dellywelly.itch.io/il-2-dials-client-windows)
 
-## Media
-### UK Dials
+### Screenshots
+#### UK Dials
 ![uk a](https://user-images.githubusercontent.com/45520351/151064622-7186c265-2391-4f0d-b016-d8900f654a08.png)
-### US Dials
+#### US Dials
 ![US A](https://user-images.githubusercontent.com/45520351/151064921-39bd1ef8-c5a8-4c49-b43f-3ca2f2178ddb.png)
-### Russian Dials
+#### Russian Dials
 ![ru a](https://user-images.githubusercontent.com/45520351/151065190-8026d18a-d132-4896-ace5-ef4946d12569.png)
-### German Dials
+#### German Dials
 ![ger a](https://user-images.githubusercontent.com/45520351/151065382-cf50beb2-62cb-4e10-bda9-ad91aa2838b8.png)
-### Italian Dials
+#### Italian Dials
 ![ita a](https://user-images.githubusercontent.com/45520351/151065396-6c8b39b9-dfc9-4f0e-ba44-3e791f8ae2f0.png)
