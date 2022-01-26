@@ -4,11 +4,16 @@
 ![VFEX3z](https://user-images.githubusercontent.com/45520351/151053750-5e95be44-932c-4e19-a274-a53da8d04cfa.png)
 
 # IL2-Dials-Client
-Receives data from [IL-2 Dials Server](https://github.com/itsjustdel/IL2-Dials-Server) UDP stream and displays cockpit instruments on a second screen or tablet/phone
+Receives data from [IL-2 Dials Server](https://github.com/itsjustdel/IL2-Dials-Server) UDP stream and displays cockpit instruments on a second screen or tablet/phone.
+
+This ongoing project aims to replicate the instrument panels of the aircraft of World War 2 as represented in the flight sim IL-2 Sturmovik. Challenges included accurately modelling over 60 dials, creating an intuitive language agnostic interface, and displaying the data received over wifi smoothly.
+This app has made me focus on creating a polished interface, and has furthered my 3D modeling skills.
+
+Available on Google Play Store and Windows
 
 ## Release
-
-https://dellywelly.itch.io/il-2-dials-client-windows
+[Google Play Store](]https://play.google.com/store/apps/details?id=com.DellyWellySoftware.Il2Dials)
+[Windows Client](https://dellywelly.itch.io/il-2-dials-client-windows)
 
 ## Media
 ### UK Dials
