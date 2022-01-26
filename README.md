@@ -12,7 +12,8 @@ This app has made me focus on creating a polished interface, and has furthered m
 Available on Google Play Store and Windows
 
 ## Release
-[Google Play Store](]https://play.google.com/store/apps/details?id=com.DellyWellySoftware.Il2Dials)
+[Google Play Store](https://play.google.com/store/apps/details?id=com.DellyWellySoftware.Il2Dials)
+
 [Windows Client](https://dellywelly.itch.io/il-2-dials-client-windows)
 
 ### Screenshots
