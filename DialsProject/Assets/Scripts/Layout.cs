@@ -7,6 +7,13 @@ public class Layout
 {
     //class used for saving layout positions to player prefs with JSON
     public float version;
+    public bool slave;
+    //if slave, window will have id
+    public string id;
+    public int windowWidth;
+    public int windowHeight;
+    public int windowX;
+    public int windowY;
 
     public string planeType;
     public Vector2 speedoPos;

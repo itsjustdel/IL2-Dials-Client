@@ -3973,6 +3973,77 @@ MonoBehaviour:
   startFadeIn: 0
   fadeInProgress: 0
   fadeInComplete: 0
+--- !u!1 &890992136
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 890992138}
+  - component: {fileID: 890992137}
+  - component: {fileID: 890992139}
+  - component: {fileID: 890992140}
+  m_Layer: 0
+  m_Name: Debug
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &890992137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 890992136}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a731236a5e86f04c9da24bc2fbcef81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &890992138
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 890992136}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 940.084, y: 171.56944, z: -266.57104}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &890992139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 890992136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b918f2185abce54694c53281ba4d193, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &890992140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 890992136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f67dc9080ae8b24cbbe89e88e8b8d31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  savePos: 0
+  setPos: 0
 --- !u!1 &921007983
 GameObject:
   m_ObjectHideFlags: 0
@@ -4935,6 +5006,7 @@ MonoBehaviour:
   menuHandler: {fileID: 840226279}
   udpClient: {fileID: 1841085020}
   countryDialBoard: {fileID: 0}
+  slaveManager: {fileID: 1841085019}
   rpmObjects: []
   speedometer: {fileID: 0}
 --- !u!4 &1111493066
@@ -6182,7 +6254,7 @@ MonoBehaviour:
   testPlane: {fileID: 0}
   clientVersion: 0.42
   serverVersion: 0
-  planeType: 
+  planeType: UK A
   planeTypePrevious: 
   country: 5
   altitude: 0
@@ -7485,6 +7557,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   createNew: 0
+  slave: 0
+  id: 
+  monintorNumber: -1
 --- !u!114 &1841085020
 MonoBehaviour:
   m_ObjectHideFlags: 0
