@@ -13,16 +13,13 @@ public class LoadManager : MonoBehaviour
         //first of all empty trays
         ButtonManager.EmptyTrays(menuHandler);
 
-        //are we master client or slave 
+        //to find the correct layout look through all keys in registry matching this client's id
+        int id = dialsManager.slaveManager.id;
+        //Layout layout =
+        GetLayout(id);
 
-        if(dialsManager.slaveManager.slave)
-        {
-            Slave();
-        }
-        else
-        {
-            MasterClient(airplaneData,dialsManager,menuHandler);
-        }      
+        //ScaleAndPositions(dialsManager, menuHandler, layout);
+
     }
 
     private static void MasterClient(AirplaneData airplaneData, DialsManager dialsManager, MenuHandler menuHandler)
@@ -61,8 +58,7 @@ public class LoadManager : MonoBehaviour
             {
                 //spawn client window with arguments so it knows it is slave
                 //on startup the slave will check for layout info itself
-                UnityEngine.Debug.Log("Spawning Slave");
-                SpawnSlaves(layout);
+                
                 //we are finished with this key, move to next element in loop
                 continue;
             }
@@ -72,22 +68,45 @@ public class LoadManager : MonoBehaviour
         }
     }
 
-    private static void SpawnSlaves(Layout layout)
+    private static void GetLayout(int id, AirplaneData airplaneData)
     {
-        //craete id and pass as arg
-        string args = "Slave " + System.DateTime.Now.ToString("hh.mm.ss.ffffff");
+        //get all player prefs that start with this plane type
+        string[] keys = PlayerPrefsHelper.GetRegistryValues();
+        
+        foreach (string key in keys)
+        {
+            //layout keys are saved with id then plane type e.g (0 il2 mod 1942), (1 spitfire-123)
+            string[] subs = key.Split(' ');
 
-        var process = Process.GetCurrentProcess();
-        string fullPath = process.MainModule.FileName;
+            UnityEngine.Debug.Log("Sub 0 = " + subs[0]);
+            //we are looking for a layout
+            if(subs[0] == "layout")
+            {
+                //we are looking for matching client ids
+                if (int.Parse( subs[1] ) == id)
+                {
+                    //_h3923205751 = 12 chars
+                    string planeType = "";
+                    //start after "layout" and client number "0" or "1"
+                    int start = subs[0].Length + subs[1].Length + 2; //2 spaces
+                    for (int i = start; i < key.Length - 12; i++)
+                    {
+                        planeType += key[i];
+                    }
 
-        var myProcess = new Process();
+                    //we are looking to match the plane type with the game data
+                    if(airplaneData.planeType == planeType)
+                    {
+                        //load layout from value in string! -----------------------
+                    }
 
-        //window size and position
+                }
+            }
+        }
 
-        myProcess.StartInfo.FileName = fullPath;
-        myProcess.StartInfo.Arguments = args;
-        myProcess.Start();
+        //grab layout from key 
     }
+
 
     private static string[] GetKeys(AirplaneData airplaneData)
     {
@@ -97,9 +116,7 @@ public class LoadManager : MonoBehaviour
         List<string> planeKeys = new List<string>();
         foreach (string key in keys)
         {
-            //look for matching plane type
-            //matching keys can be in form "planeType" or "planeType xxxxx" (if slave)
-            //we want all of these
+            //layout keys are saved  with id then plane type e.g (0 il2 mod 1942), (1 spitfire-123)
             string[] subs = key.Split(' ');
 
             if (subs[0] == airplaneData.planeType)
@@ -112,19 +129,18 @@ public class LoadManager : MonoBehaviour
         return keys;
     }
 
-    private static void Slave()
-    {
-
-    }
 
     private static void ScaleAndPositions(DialsManager dialsManager, MenuHandler menuHandler, Layout layout)
     {
-        //first apply window positin from save layout
+        //first apply window positin from save layout - doing on display manager now
 
-        int width = layout.windowWidth;
-        int height = layout.windowHeight;
+        //int width = layout.windowWidth;
+        //int height = layout.windowHeight;
         // Screen.SetResolution(width, height, false);
-        Display.displays[1].SetParams(width, height, 1, 1);
+        //Display.displays[1].SetParams(width, height, 1, 1);
+
+        //set window position! - needed for master?
+        //DisplayManager.SetWindowPosition(DisplayManager.GetActiveWindow(),layout.rect.Left, layout.rect.Top);//pass to launch on myProcess?
         //save window scale
 
         //apply to dials/positions        

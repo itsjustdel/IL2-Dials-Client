@@ -35,18 +35,22 @@ public class PlaceWindow : MonoBehaviour
 
     public bool savePos;
     public bool setPos;
+    RECT prevRECT;
     RECT rect;
 
     
 
-    public void GetPosition(IntPtr hwnd)
+    public RECT GetPosition(IntPtr hwnd)
     {
-        rect = new RECT();
-        GetWindowRect(hwnd, out rect);
+        //rect = new RECT();
+        RECT _rect = new RECT();
+        GetWindowRect(hwnd, out _rect);
 
-        Debug.ClearDeveloperConsole();
-        Debug.Log("Top = " + rect.Top);
-        Debug.Log("Left = " + rect.Left);
+        //Debug.ClearDeveloperConsole();
+        //Debug.Log("Top = " + rect.Top);
+        //Debug.Log("Left = " + rect.Left);
+
+        return _rect;
     }
 
     public static void SetPosition(int x, int y, int resX = 0, int resY = 0)
@@ -57,12 +61,59 @@ public class PlaceWindow : MonoBehaviour
         
     }
 
+    private void Start()
+    {
+        //check for window position key in player pref
+        //unpack rect
+        string jsonFoo = PlayerPrefs.GetString("WindowPos");
+        if (System.String.IsNullOrEmpty(jsonFoo))
+        {
+            Debug.Log("No window pos key found");
+        }
+        else
+        {
+            Debug.Log("Setting window pos on load");
+            rect = JsonUtility.FromJson<RECT>(jsonFoo);
+            //set window position!
+            SetPosition(rect.Left, rect.Top);//pass to launch on myProcess?
+        }
+
+
+    }
+
 
     // Use this for initialization
     void Update()
     {
 
-        if(savePos)
+        
+
+        prevRECT = rect;
+
+        rect = GetPosition(GetActiveWindow()); //think about active window
+
+        if(prevRECT.Top != rect.Top || prevRECT.Bottom != rect.Bottom || prevRECT.Left != rect.Left || prevRECT.Right != rect.Right )
+        {
+            Debug.Log("Detected window change");
+            //save new window info to player prefs
+            //if master client
+            //test, master client
+            //master client is base player prefs
+            //save window pos
+
+            //pack with json utility
+            string jsonFoo = JsonUtility.ToJson(rect);
+
+            //save packed string to player preferences (unity)
+            //
+            string key = "WindowPos";
+
+            PlayerPrefs.SetString(key, jsonFoo);
+            PlayerPrefs.Save();
+        }
+
+
+        if (savePos)
         {
             GetPosition(GetActiveWindow());
             savePos = false;

@@ -13,7 +13,16 @@ public class PlayerPrefsHelper : MonoBehaviour
 
         //add editor? https://github.dev/sabresaurus/PlayerPrefsEditor/blob/main/Editor/PlayerPrefsEditor.cs -- a how to
 
-        Microsoft.Win32.RegistryKey registryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\" + companyName + "\\" + productName);
+        //TOD add if editor string op
+
+
+        Microsoft.Win32.RegistryKey registryKey;
+
+#if UNITY_EDITOR
+       registryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Unity\\UnityEditor\\DellyWellySoftware\\IL-2 Dials");
+#elif UNITY_STANDALONE_WIN
+       registryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\" + companyName + "\\" + productName);
+#endif
 
         //grab all keyss
         string[] valueNames = registryKey.GetValueNames();

@@ -9,11 +9,9 @@ public class Layout
     public float version;
     public bool slave;
     //if slave, window will have id
-    public string id;
-    public int windowWidth;
-    public int windowHeight;
-    public int windowX;
-    public int windowY;
+    public int id;
+
+    public DisplayManager.RECT rect = new DisplayManager.RECT();
 
     public string planeType;
     public Vector2 speedoPos;

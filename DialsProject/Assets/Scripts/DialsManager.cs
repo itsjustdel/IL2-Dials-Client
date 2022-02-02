@@ -354,17 +354,7 @@ public class DialsManager : MonoBehaviour
         //save version to cover for updates
         layout.version = airplaneData.clientVersion;
 
-        //which display?
-        //string display_number = Regex.Match(screen.DeviceName, @"\d+").Value;
-        //Console.WriteLine($"Display Number = {display_number} isPrimary= {screen.Primary}");
-        //save window position
-
-        List<DisplayManager.DISPLAY_DEVICE> ddd = DisplayManager.Devices();
-
-
-
         //look for dial on dashboard - original parent
-
         if (!menuHandler.dialsInTray.Contains(speedometer))
         {
             layout.speedoPos = speedometer.GetComponent<RectTransform>().anchoredPosition;
@@ -483,9 +473,14 @@ public class DialsManager : MonoBehaviour
         //pack with json utility
         string jsonFoo = JsonUtility.ToJson(layout);
 
+        //save master/client id as first char in string, then save plane name
+
+        Debug.Log("saving layout");
+        
         //save packed string to player preferences (unity)
         //save with id to know if user addded a a second window - if no id, save only plane name ( this will be the master client)
-        string key = slaveManager.id == "" ? airplaneData.planeType : airplaneData.planeType + " " + slaveManager.id;
+        string key = "layout " + slaveManager.id + " " + airplaneData.planeType;
+        Debug.Log("saving key = " + key);
 
         PlayerPrefs.SetString(key, jsonFoo);
         PlayerPrefs.Save();

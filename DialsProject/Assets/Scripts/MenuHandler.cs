@@ -640,4 +640,11 @@ public class MenuHandler : MonoBehaviour
         }
     }
 
+
+    public void AddSlaveWindow()
+    {
+
+        Debug.Log("Adding Slave");
+        SlaveManager.SpawnNewSlave();
+    }
 }
