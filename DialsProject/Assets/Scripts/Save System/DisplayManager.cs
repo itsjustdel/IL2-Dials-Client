@@ -25,7 +25,7 @@ public class DisplayManager : MonoBehaviour
 
     //imported functions
     [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
-    private static extern bool SetWindowPos(IntPtr hwnd, int hWndInsertAfter, int x, int Y, int cx, int cy, int wFlags);
+    public static extern bool SetWindowPos(IntPtr hwnd, int hWndInsertAfter, int x, int Y, int cx, int cy, int wFlags);
     [DllImport("user32.dll", EntryPoint = "FindWindow")]
     private static extern IntPtr FindWindow(System.String className, System.String windowName);
     [DllImport("user32.dll")]
@@ -45,21 +45,35 @@ public class DisplayManager : MonoBehaviour
     RECT prevRECT;
     RECT rect;
 
-    private void Awake()
-    {
-//        enabled = false;
-
-  //      StartCoroutine(Wait());
-    }
 
     private void Start()
     {
-        Set();
+        //save in new key isFullscreen if full screen or not - unity overrides this
+       //if(PlayerPrefs.get)
+        //apply in Set()
+
+
+        Set(slaveManager.id.ToString());
+        SetFullscreen();
         //
     }
-    void Set()
+    private void SetFullscreen()
     {
-        string jsonFoo = PlayerPrefs.GetString("WindowInfo " + slaveManager.id.ToString());
+        string isFullscreen = PlayerPrefs.GetString("Fullscreen" + " " + slaveManager.id.ToString());
+        UnityEngine.Debug.Log("Is full screen = " + isFullscreen);
+
+        if (isFullscreen == "True")
+        {
+            Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
+        }
+        else
+            Screen.fullScreenMode = FullScreenMode.Windowed;
+    }
+
+
+    public void Set(string id)
+    {
+        string jsonFoo = PlayerPrefs.GetString("WindowInfo " + id);
         if (System.String.IsNullOrEmpty(jsonFoo))
         {
             UnityEngine.Debug.Log("No window pos key found");
@@ -76,17 +90,8 @@ public class DisplayManager : MonoBehaviour
             int height = rect.Bottom - rect.Top;
             SetWindowPos(ProcessHelper.GetProcessHandle(Process.GetCurrentProcess().Id), 0, x, y, width, height, width * height == 0 ? 1 : 0);
         }
-
-        enabled = true;
     }
 
-    IEnumerator Wait()
-    {
-        yield return new WaitForSeconds(1);
-
-        Set();
-       
-    }
 
 
     // Use this for initialization
@@ -94,8 +99,6 @@ public class DisplayManager : MonoBehaviour
     {
         //needed every frame?
         IntPtr mainPtr = ProcessHelper.GetProcessHandle(Process.GetCurrentProcess().Id);// GetActiveWindow();// ProcessHelper.GetProcessHandle(Process.GetCurrentProcess().Id);
-
-        //UnityEngine.Debug.Log("h = " + mainPtr);
 
         prevRECT = rect;
         rect = GetPosition(mainPtr); //think about active window
@@ -120,10 +123,14 @@ public class DisplayManager : MonoBehaviour
             string key = "WindowInfo " + slaveManager.id.ToString();
 
             PlayerPrefs.SetString(key, jsonFoo);
+            //save if fullscreen too
+            PlayerPrefs.SetString("Fullscreen" + " " + id.ToString(),  Screen.fullScreen.ToString());
             PlayerPrefs.Save();
 
-        
         }
+
+
+        
 
 
         if (savePos)

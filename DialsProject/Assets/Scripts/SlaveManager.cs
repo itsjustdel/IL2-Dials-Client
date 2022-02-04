@@ -14,8 +14,8 @@ public class SlaveManager : MonoBehaviour
     public int monintorNumber = -1;
 
 
-    [DllImport("user32.dll")]
-    static extern IntPtr GetForegroundWindow();
+    [DllImport("user32.dll", SetLastError = true)]
+    internal static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
     // Start is called before the first frame update
 
     //when a slave is launched by the master, the master sets its window size and position
@@ -62,19 +62,6 @@ public class SlaveManager : MonoBehaviour
         }
     }
 
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-        //UnityEngine.Debug.ClearDeveloperConsole();
-        //IntPtr handle = GetForegroundWindow();
-    }
-
-
-  
-
-
     //new slave
     public static void SpawnNewSlave()
     {
@@ -84,7 +71,7 @@ public class SlaveManager : MonoBehaviour
         int id = PlayerPrefs.GetInt("slaves");
         id++;
         PlayerPrefs.SetInt("slaves", id);
-        UnityEngine.Debug.Log("Slaves = " + id);
+        //UnityEngine.Debug.Log("Slaves = " + id);
 
         string args = "Slave " + id;// System.DateTime.Now.ToString("hh.mm.ss.ffffff");
 
@@ -92,9 +79,6 @@ public class SlaveManager : MonoBehaviour
         string fullPath = process.MainModule.FileName;
 
         var myProcess = new Process();
-
-        //window size and position -ise when loading
-        //DisplayManager.SetWindowPosition(myProcess.MainWindowHandle, layout.rect.Top, layout.rect.Left);
 
         myProcess.StartInfo.FileName = fullPath;
         myProcess.StartInfo.Arguments = args;
@@ -103,23 +87,48 @@ public class SlaveManager : MonoBehaviour
 
     public static void SpawnOldSlave(int id)
     {
-        UnityEngine.Debug.Log("Spawnding Old slave, id = " + id);
-
-        string args = "Slave " + id;// System.DateTime.Now.ToString("hh.mm.ss.ffffff");
+        string args = "Slave " + id;
 
         var process = Process.GetCurrentProcess();
         string fullPath = process.MainModule.FileName;
 
         var myProcess = new Process();
 
-        //window size and position -ise when loading
-        //DisplayManager.SetWindowPosition(myProcess.MainWindowHandle, layout.rect.Top, layout.rect.Left);
+     
+        //window size and position -ise when loading - 
+        //SetWindowPos(myProcess.MainWindowHandle, layout.rect.Top, layout.rect.Left);
 
         myProcess.StartInfo.FileName = fullPath;
         myProcess.StartInfo.Arguments = args;
         myProcess.Start();
+
+        
     }
 
+    //unused 
+    static void WaitAndMove(Process myProcess, string id)
+    {
+        //use id to get window info + id from player prefs
+        string jsonFoo = PlayerPrefs.GetString("WindowInfo " + id);
+        if (System.String.IsNullOrEmpty(jsonFoo))
+        {
+            UnityEngine.Debug.Log("No window pos key found");
+        }
+        else
+        {
+            UnityEngine.Debug.Log("Setting window pos on load");
+            DisplayManager.RECT rect = JsonUtility.FromJson<DisplayManager.RECT>(jsonFoo);
+            //set window position!
 
+            int x = rect.Left;
+            int y = rect.Top;
+            int width = rect.Right - rect.Left;
+            int height = rect.Bottom - rect.Top;
+
+
+            MoveWindow(myProcess.MainWindowHandle, x, y, width, height, true);
+        }
+;
+    }
 
 }

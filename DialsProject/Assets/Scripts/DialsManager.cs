@@ -482,6 +482,7 @@ public class DialsManager : MonoBehaviour
         string key = "layout " + slaveManager.id + " " + airplaneData.planeType;
         Debug.Log("saving key = " + key);
 
+
         PlayerPrefs.SetString(key, jsonFoo);
         PlayerPrefs.Save();
 

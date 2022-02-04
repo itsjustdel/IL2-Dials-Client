@@ -16,59 +16,18 @@ public class LoadManager : MonoBehaviour
         //to find the correct layout look through all keys in registry matching this client's id
         int id = dialsManager.slaveManager.id;
         //Layout layout =
-        GetLayout(id);
+        Layout layout = GetLayout(id,airplaneData);
 
-        //ScaleAndPositions(dialsManager, menuHandler, layout);
 
-    }
-
-    private static void MasterClient(AirplaneData airplaneData, DialsManager dialsManager, MenuHandler menuHandler)
-    {
-        //master client spawns other slave windows
-
-        //get all registry keys/ where user profiles are saved
-        string[] keys = GetKeys(airplaneData);
-        //spawn window at position in key for all slaves
-
-        //build layout for each key we have found
-        foreach (string key in keys)
-        {
-            //grab layout data if available from player prefs
-            string jsonFoo = PlayerPrefs.GetString(key);
-            if (System.String.IsNullOrEmpty(jsonFoo))
-            {
-                //no save data, no extra slaves
-                //set dials to default on master client and return
-                DefaultLayouts(dialsManager.countryDialBoard);
-                return;
-            }
-
-            //continue if there is a pref file
-
-            //rebuild json
-            Layout layout = JsonUtility.FromJson<Layout>(jsonFoo);
-
-            //check for version change?
-            if (layout.version != airplaneData.clientVersion)
-            {
-            }
-
-            //check if slave
-            if(layout.slave)
-            {
-                //spawn client window with arguments so it knows it is slave
-                //on startup the slave will check for layout info itself
-                
-                //we are finished with this key, move to next element in loop
-                continue;
-            }
-
-            //if we are the master - load the layout for this window ( and position of window)
+        if (layout != null)
             ScaleAndPositions(dialsManager, menuHandler, layout);
-        }
+        else
+            DefaultLayouts(dialsManager.countryDialBoard);
+
     }
 
-    private static void GetLayout(int id, AirplaneData airplaneData)
+
+    private static Layout GetLayout(int id, AirplaneData airplaneData)
     {
         //get all player prefs that start with this plane type
         string[] keys = PlayerPrefsHelper.GetRegistryValues();
@@ -97,51 +56,26 @@ public class LoadManager : MonoBehaviour
                     //we are looking to match the plane type with the game data
                     if(airplaneData.planeType == planeType)
                     {
-                        //load layout from value in string! -----------------------
+                        UnityEngine.Debug.Log("found plane type");
+                        //load layout from key
+                        string jsonFoo = PlayerPrefs.GetString(key);
+                        //and rebuild layout
+                        Layout layout = JsonUtility.FromJson<Layout>(jsonFoo);
+                        return layout;
+
                     }
 
                 }
             }
         }
 
-        //grab layout from key 
+        return null;
     }
 
-
-    private static string[] GetKeys(AirplaneData airplaneData)
-    {
-        //get all player prefs that start with this plane type
-        string[] keys = PlayerPrefsHelper.GetRegistryValues();
-
-        List<string> planeKeys = new List<string>();
-        foreach (string key in keys)
-        {
-            //layout keys are saved  with id then plane type e.g (0 il2 mod 1942), (1 spitfire-123)
-            string[] subs = key.Split(' ');
-
-            if (subs[0] == airplaneData.planeType)
-            {
-                //this is one of the keys we want
-                planeKeys.Add(key);
-            }
-        }
-
-        return keys;
-    }
 
 
     private static void ScaleAndPositions(DialsManager dialsManager, MenuHandler menuHandler, Layout layout)
     {
-        //first apply window positin from save layout - doing on display manager now
-
-        //int width = layout.windowWidth;
-        //int height = layout.windowHeight;
-        // Screen.SetResolution(width, height, false);
-        //Display.displays[1].SetParams(width, height, 1, 1);
-
-        //set window position! - needed for master?
-        //DisplayManager.SetWindowPosition(DisplayManager.GetActiveWindow(),layout.rect.Left, layout.rect.Top);//pass to launch on myProcess?
-        //save window scale
 
         //apply to dials/positions        
         dialsManager.speedometer.GetComponent<RectTransform>().anchoredPosition = layout.speedoPos;
