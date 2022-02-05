@@ -431,7 +431,7 @@ public class RotateNeedle : MonoBehaviour
 
         //smallest altutude (if UK)
 
-        if (airplaneData.country == AirplaneData.Country.UK)
+        if (airplaneData.planeAttributes.country == Country.UK)
         {
             difference = quaternionsAltitudeSmallest[0].eulerAngles.z - quaternionsAltitudeSmallest[1].eulerAngles.z;
             //keep moving at client send rate at previous known step           
@@ -518,14 +518,14 @@ public class RotateNeedle : MonoBehaviour
         }
 
         //artificial horizon ITA plane
-        if (artificialHorizonPlane != null && airplaneData.planeAttributes.country == AirplaneData.Country.ITA)
+        if (artificialHorizonPlane != null && airplaneData.planeAttributes.country == Country.ITA)
         {
             difference = quaternionsArtificialHorizonPlane[0].eulerAngles.z - quaternionsArtificialHorizonPlane[1].eulerAngles.z;
             artificialHorizonRotationPlaneTarget *= Quaternion.Euler(0, 0, difference);
         }
 
         //artificial horizon GER needle
-        if (artificialHorizonPlane != null && airplaneData.planeAttributes.country == AirplaneData.Country.GER)
+        if (artificialHorizonPlane != null && airplaneData.planeAttributes.country == Country.GER)
         {
             difference = quaternionsArtificialHorizonNeedle[0].eulerAngles.z - quaternionsArtificialHorizonNeedle[1].eulerAngles.z;
             artificialHorizonNeedleTarget *= Quaternion.Euler(0, 0, difference);
@@ -566,22 +566,22 @@ public class RotateNeedle : MonoBehaviour
 
         AltimeterTargets();
 
-        HeadingTarget(airplaneData.country);
+        HeadingTarget(airplaneData.planeAttributes.country);
 
-        TurnAndBankTargets(airplaneData.country);
+        TurnAndBankTargets(airplaneData.planeAttributes.country);
 
-        TurnCoordinatorTarget(airplaneData.country);
+        TurnCoordinatorTarget(airplaneData.planeAttributes.country);
 
-        VSITarget(airplaneData.country);
+        VSITarget(airplaneData.planeAttributes.country);
 
-        RepeaterCompassTarget(airplaneData.country);
+        RepeaterCompassTarget(airplaneData.planeAttributes.country);
 
-        ArtificialHorizonTargets(airplaneData.country);
+        ArtificialHorizonTargets(airplaneData.planeAttributes.country);
 
-        RPMTarget(airplaneData.country);
+        RPMTarget(airplaneData.planeAttributes.country);
     }
 
-    void RPMTarget(AirplaneData.Country country)
+    void RPMTarget(Country country)
     {
      
         for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
@@ -589,7 +589,7 @@ public class RotateNeedle : MonoBehaviour
             switch (country)
             {
                 //RU
-                case (AirplaneData.Country.RU):
+                case (Country.RU):
                     if (airplaneData.planeAttributes.rpmType == RpmType.A)
                     {
                         rpmLargeTargets[i] = RussianDials.RPMALargeTarget(airplaneData.rpms[i]);
@@ -608,7 +608,7 @@ public class RotateNeedle : MonoBehaviour
                     break;
                     
                 //GER
-                case (AirplaneData.Country.GER):
+                case (Country.GER):
                     if (airplaneData.planeAttributes.rpmType == RpmType.A)
                     {
                         rpmLargeTargets[i] = GermanDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
@@ -627,7 +627,7 @@ public class RotateNeedle : MonoBehaviour
                     break;
                 
                //US
-               case (AirplaneData.Country.US):
+               case (Country.US):
                     if (airplaneData.planeAttributes.rpmType == RpmType.A)
                     {
                         rpmLargeTargets[i] = USDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
@@ -657,7 +657,7 @@ public class RotateNeedle : MonoBehaviour
                         break;
 
                     
-           case (AirplaneData.Country.UK):
+           case (Country.UK):
                if (airplaneData.planeAttributes.rpmType == RpmType.A)
                {
                    //A Taret is first needle
@@ -671,7 +671,7 @@ public class RotateNeedle : MonoBehaviour
                }
                break;
 
-           case (AirplaneData.Country.ITA):
+           case (Country.ITA):
 
                if (airplaneData.planeAttributes.rpmType == RpmType.A)
                {
@@ -685,14 +685,14 @@ public class RotateNeedle : MonoBehaviour
         
     }
 
-    void ArtificialHorizonTargets(AirplaneData.Country country)
+    void ArtificialHorizonTargets(Country country)
     {
         switch (country)
         {
             //no RU
 
             //GER
-            case (AirplaneData.Country.GER):
+            case (Country.GER):
                 //rotation // roll
                 artificialHorizonRotationTarget = GermanDials.ArtificialHorizon(airplaneData.roll, artificialHorizonRollMod);
 
@@ -707,7 +707,7 @@ public class RotateNeedle : MonoBehaviour
 
 
             //US
-            case (AirplaneData.Country.US):
+            case (Country.US):
                 //rotation // roll
                
                 artificialHorizonRotationTarget = USDials.ArtificialHorizonRotation(airplaneData.roll, artificialHorizonRollMod);
@@ -722,7 +722,7 @@ public class RotateNeedle : MonoBehaviour
                 
                 break;
 
-            case (AirplaneData.Country.UK):
+            case (Country.UK):
 
                 artificialHorizonRotationTarget = UKDials.ArtificialHorizonRotation(airplaneData.roll, artificialHorizonRollMod);
 
@@ -732,7 +732,7 @@ public class RotateNeedle : MonoBehaviour
                 artificialHorizonChevronTarget = UKDials.ArtificialHorizonChevronRotation(airplaneData.roll, artificialHorizonRollMod);
                 break;
 
-            case (AirplaneData.Country.ITA):
+            case (Country.ITA):
 
                 //rotation of plane
                 artificialHorizonRotationPlaneTarget = ITADials.ArtificialHorizonRotation(airplaneData.roll, artificialHorizonRollMod);
@@ -743,10 +743,10 @@ public class RotateNeedle : MonoBehaviour
         }
     }
 
-    void RepeaterCompassTarget(AirplaneData.Country country)
+    void RepeaterCompassTarget(Country country)
     {
 
-        if (country == AirplaneData.Country.GER)
+        if (country == Country.GER)
         {
             if (airplaneData.planeAttributes.repeaterCompass)
             {
@@ -762,20 +762,20 @@ public class RotateNeedle : MonoBehaviour
             }
         }
 
-        else if (country == AirplaneData.Country.US)
+        else if (country == Country.US)
             repeaterCompassTarget = USDials.RepeaterCompassTarget(airplaneData.heading);
 
-        else if (country == AirplaneData.Country.UK)
+        else if (country == Country.UK)
             repeaterCompassTarget = UKDials.RepeaterCompassTarget(airplaneData.heading);
 
 
     }
     
-    void VSITarget(AirplaneData.Country country)
+    void VSITarget(Country country)
     {
         switch (country)
         {
-            case (AirplaneData.Country.RU):
+            case (Country.RU):
                 if(airplaneData.planeAttributes.vsiLarge)
                     vsiNeedleTarget = RussianDials.VerticalSpeedTargetLarge(airplaneData.verticalSpeed);
                 
@@ -784,7 +784,7 @@ public class RotateNeedle : MonoBehaviour
 
                 break;
 
-            case (AirplaneData.Country.GER):
+            case (Country.GER):
 
                 if (airplaneData.planeAttributes.vsiLarge)
                 {
@@ -808,27 +808,27 @@ public class RotateNeedle : MonoBehaviour
                 break;
 
             //these countries only have one vsi (so far)
-            case (AirplaneData.Country.US):
+            case (Country.US):
                 vsiNeedleTarget = USDials.VerticalSpeedTarget(airplaneData.verticalSpeed,animationCurveVSI);
                 break;
 
-            case (AirplaneData.Country.UK):
+            case (Country.UK):
                 vsiNeedleTarget = UKDials.VerticalSpeedTarget(airplaneData.verticalSpeed);
                 break;
 
-            case (AirplaneData.Country.ITA):
+            case (Country.ITA):
                 vsiNeedleTarget = ITADials.VerticalSpeedTarget(airplaneData.verticalSpeed);
                 break;
 
         }
     }
 
-    void TurnCoordinatorTarget(AirplaneData.Country country)
+    void TurnCoordinatorTarget(Country country)
     {
 
         switch (country)
         {
-            case (AirplaneData.Country.RU):
+            case (Country.RU):
                 //RU
                 //pendulum needle
                 turnCoordinatorNeedleTarget = RussianDials.TurnCoordinatorNeedleTarget(airplaneData.turnCoordinatorNeedle, turnCoordinaterNeedleMod);
@@ -837,7 +837,7 @@ public class RotateNeedle : MonoBehaviour
                 turnCoordinatorBallTarget = RussianDials.TurnCoordinatorBallTarget(airplaneData.turnCoordinatorBall);
                 break;
 
-            case (AirplaneData.Country.GER):
+            case (Country.GER):
                 //RU
                 //pendulum needle
                 turnCoordinatorNeedleTarget = GermanDials.TurnCoordinatorNeedleTarget(airplaneData.turnCoordinatorNeedle,airplaneData.planeType);
@@ -846,7 +846,7 @@ public class RotateNeedle : MonoBehaviour
                 turnCoordinatorBallTarget = GermanDials.TurnCoordinatorBallTarget(airplaneData.turnCoordinatorBall,turnCoordinaterBallMod);
                 break;
 
-            case (AirplaneData.Country.US):
+            case (Country.US):
                 if(airplaneData.planeType == "A-20B")
                     turnCoordinatorNeedleTarget = USDials.TurnCoordinatorNeedleTarget(airplaneData.turnCoordinatorNeedle, true);
                 else 
@@ -857,7 +857,7 @@ public class RotateNeedle : MonoBehaviour
                 break;
 
 
-            case (AirplaneData.Country.UK):
+            case (Country.UK):
                 turnCoordinatorNeedleTarget = UKDials.TurnCoordinatorNeedleTarget(airplaneData.turnCoordinatorNeedle, turnCoordinaterNeedleMod);
 
                 //second needle        
@@ -865,7 +865,7 @@ public class RotateNeedle : MonoBehaviour
                 break;
 
 
-            case (AirplaneData.Country.ITA):
+            case (Country.ITA):
                 turnCoordinatorNeedleTarget = ITADials.TurnCoordinatorNeedleTarget(airplaneData.turnCoordinatorNeedle);
 
                 //second needle        
@@ -877,13 +877,13 @@ public class RotateNeedle : MonoBehaviour
     }
 
     //turn and bank is dial with artifical horizon and slip together
-    void TurnAndBankTargets(AirplaneData.Country country)
+    void TurnAndBankTargets(Country country)
     {
         //plane or background pos
 
         switch (country)
         {
-            case (AirplaneData.Country.RU): 
+            case (Country.RU): 
                 //note russian is quite different - more like an artifical horizon with plane moving instead of horizon
                 turnAndBankPlanePositionTarget = RussianDials.TurnAndBankPlanePosition(airplaneData.pitch, turnAndBankPitchMultiplier);
 
@@ -895,7 +895,7 @@ public class RotateNeedle : MonoBehaviour
                 break;
 
                 // with slip?
-            case (AirplaneData.Country.GER):
+            case (Country.GER):
                 turnAndBankPlanePositionTarget = GermanDials.TurnAndBankPlanePosition(airplaneData.pitch, turnAndBankPitchMultiplier);
 
                 turnAndBankPlaneRotationTarget = GermanDials.TurnAndBankPlaneRotation(airplaneData.roll, airplaneData.pitch, turnAndBankRollMultiplier, turnAndBankRollMultiplier);
@@ -910,28 +910,28 @@ public class RotateNeedle : MonoBehaviour
         
     }
 
-    void HeadingTarget(AirplaneData.Country country)
+    void HeadingTarget(Country country)
     {
         
         switch (country)
         {
-            case (AirplaneData.Country.RU):
+            case (Country.RU):
                 headingIndicatorTarget = RussianDials.HeadingIndicatorPosition(airplaneData.heading,trackLength);
                 break;
 
-            case (AirplaneData.Country.GER):
+            case (Country.GER):
                 headingIndicatorTarget = GermanDials.HeadingIndicatorPosition(airplaneData.heading,trackLength);
                 break;
 
-            case (AirplaneData.Country.US):
+            case (Country.US):
                 headingIndicatorTarget = USDials.HeadingIndicatorPosition(airplaneData.heading, trackLength);
                 break;
 
-            case (AirplaneData.Country.UK):
+            case (Country.UK):
                 headingIndicatorTarget = UKDials.HeadingIndicatorPosition(airplaneData.heading ,trackLength);
                 break;
 
-            case (AirplaneData.Country.ITA):
+            case (Country.ITA):
                 headingIndicatorTarget = ITADials.HeadingIndicatorPosition(airplaneData.heading, trackLength);
                 break;
         }
@@ -947,10 +947,10 @@ public class RotateNeedle : MonoBehaviour
 
         //if mini needle
         if (altitudeNeedleSmallest != null)
-            altitudeSmallestTarget = AltitudeTargetSmallest(airplaneData.country, airplaneData.altitude);
+            altitudeSmallestTarget = AltitudeTargetSmallest(airplaneData.planeAttributes.country, airplaneData.altitude);
 
-        altitudeSmallTarget = AltitudeTargetSmall(airplaneData.country, airplaneData.altitude);
-        altitudeLargeTarget = AltitudeTargetLarge(airplaneData.country, airplaneData.altitude);
+        altitudeSmallTarget = AltitudeTargetSmall(airplaneData.planeAttributes.country, airplaneData.altitude);
+        altitudeLargeTarget = AltitudeTargetLarge(airplaneData.planeAttributes.country, airplaneData.altitude);
 
         PressureReferenceTargets();
     }
@@ -962,34 +962,34 @@ public class RotateNeedle : MonoBehaviour
         //MmhgStart();
 
         //set where we are rotating to
-        mmhgTarget = AtmosphericPressure(airplaneData.country, airplaneData.mmhg);
+        mmhgTarget = AtmosphericPressure(airplaneData.planeAttributes.country, airplaneData.mmhg);
 
     }
 
-    static Quaternion AtmosphericPressure(AirplaneData.Country country, float unit)
+    static Quaternion AtmosphericPressure(Country country, float unit)
     {
         Quaternion target = Quaternion.identity;
 
         //each country has slightly different dials, we need to work out rotations individually for each
         switch (country)
         {
-            case AirplaneData.Country.RU:
+            case Country.RU:
                 target = RussianDials.MmhgTarget(unit);
                 break;
 
-            case AirplaneData.Country.GER:
+            case Country.GER:
                 target = GermanDials.MmhgTarget(unit);
                 break;
 
-            case AirplaneData.Country.US:
+            case Country.US:
                 target = USDials.MmhgTarget(unit);
                 break;
 
-            case AirplaneData.Country.UK:
+            case Country.UK:
                 target = UKDials.MmhgTarget(unit);
                 break;
 
-            case AirplaneData.Country.ITA:
+            case Country.ITA:
                 target = ITADials.MmhgTarget(unit);
                 break;
         }
@@ -1003,59 +1003,59 @@ public class RotateNeedle : MonoBehaviour
        
 
         //each country has slightly different dials, we need to work out rotations individually for each
-        switch (rN.airplaneData.country)
+        switch (rN.airplaneData.planeAttributes.country)
         {
-            case AirplaneData.Country.RU:
+            case Country.RU:
                 rN.airspeedTarget = RussianDials.AirspeedTarget(rN.airplaneData.airspeed);
                 break;
 
-            case AirplaneData.Country.GER:
+            case Country.GER:
                 rN.airspeedTarget = GermanDials.AirspeedTarget(rN.airplaneData.airspeed);
                 break;
 
-            case AirplaneData.Country.US:
+            case Country.US:
                 if(rN.airplaneData.planeAttributes.speedometer == Speedometer.A)
                     rN.airspeedTarget = USDials.AirspeedTargetA(rN.airplaneData.airspeed);
                 else
                     rN.airspeedTarget = USDials.AirspeedTargetB(rN.airplaneData.airspeed,rN.airplaneData.scalar0, rN.airplaneData.scalar1);
                 break;
 
-            case AirplaneData.Country.UK:
+            case Country.UK:
                 rN.airspeedTarget = UKDials.AirspeedTarget(rN.airplaneData.airspeed);
                 break;
 
-            case AirplaneData.Country.ITA:
+            case Country.ITA:
                 rN.airspeedTarget = ITADials.AirspeedTarget(rN.airplaneData.airspeed);
                 break;
         }
          
     }
 
-    static Quaternion AltitudeTargetLarge(AirplaneData.Country country, float altitude)
+    static Quaternion AltitudeTargetLarge(Country country, float altitude)
     {
         Quaternion target = Quaternion.identity;
 
         //each country has slightly different dials, we need to work out rotations individually for each
         switch (country)
         {
-            case AirplaneData.Country.RU:
+            case Country.RU:
                 
                 target = RussianDials.AltitudeTargetLarge(altitude);
                 break;
 
-            case AirplaneData.Country.GER:
+            case Country.GER:
                 target = GermanDials.AltitudeTargetLarge(altitude);
                 break;
 
-            case AirplaneData.Country.US:
+            case Country.US:
                 target= USDials.AltitudeTargetLarge(altitude);
                 break;
 
-            case AirplaneData.Country.UK:
+            case Country.UK:
                 target = UKDials.AltitudeTargetLarge(altitude);
                 break;
 
-            case AirplaneData.Country.ITA:
+            case Country.ITA:
                 target = ITADials.AltitudeTargetLarge(altitude);
                 break;
         }
@@ -1064,30 +1064,30 @@ public class RotateNeedle : MonoBehaviour
         return target;
     }
 
-    static Quaternion AltitudeTargetSmall(AirplaneData.Country country, float altitude)
+    static Quaternion AltitudeTargetSmall(Country country, float altitude)
     {
         Quaternion target = Quaternion.identity;
 
         //each country has slightly different dials, we need to work out rotations individually for each
         switch (country)
         {
-            case AirplaneData.Country.RU:
+            case Country.RU:
                 target = RussianDials.AltitudeTargetSmall(altitude);
                 break;
 
-            case AirplaneData.Country.GER:
+            case Country.GER:
                 target = GermanDials.AltitudeTargetSmall(altitude);
                 break;
 
-            case AirplaneData.Country.US:
+            case Country.US:
                 target = USDials.AltitudeTargetSmall(altitude);
                 break;
 
-            case AirplaneData.Country.UK:
+            case Country.UK:
                 target = UKDials.AltitudeTargetSmall(altitude);
                 break;
 
-            case AirplaneData.Country.ITA:
+            case Country.ITA:
                 target = ITADials.AltitudeTargetSmall(altitude);
                 break;
         }
@@ -1096,7 +1096,7 @@ public class RotateNeedle : MonoBehaviour
         return target;
     }
 
-    static Quaternion AltitudeTargetSmallest(AirplaneData.Country country, float altitude)
+    static Quaternion AltitudeTargetSmallest(Country country, float altitude)
     {
         Quaternion target = Quaternion.identity;
 
@@ -1105,11 +1105,11 @@ public class RotateNeedle : MonoBehaviour
         {
             //only UK has smallest dial
 
-            case AirplaneData.Country.UK:
+            case Country.UK:
                 target = UKDials.AltitudeTargetSmallest(altitude);
                 break;
 
-            case AirplaneData.Country.US:
+            case Country.US:
                 target = USDials.AltitudeTargetSmallest(altitude);
                 break;
         }
@@ -1247,7 +1247,7 @@ public class RotateNeedle : MonoBehaviour
 
 
         //now rework target
-        HeadingTarget(airplaneData.country);
+        HeadingTarget(airplaneData.planeAttributes.country);
 
 
         return false;

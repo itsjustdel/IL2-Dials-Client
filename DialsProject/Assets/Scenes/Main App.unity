@@ -157,6 +157,7 @@ RectTransform:
   - {fileID: 539695571}
   - {fileID: 1496750911}
   - {fileID: 1454853629}
+  - {fileID: 825121604}
   m_Father: {fileID: 530817049}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4481,7 +4482,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &794077231
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4528,7 +4529,140 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 582f59c4585968849b428ad301d8c9fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menuPanel: {fileID: 28181940}
   planeDropdown: {fileID: 1278647518}
+--- !u!1 &825121603
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 825121604}
+  - component: {fileID: 825121607}
+  - component: {fileID: 825121606}
+  - component: {fileID: 825121605}
+  m_Layer: 5
+  m_Name: All Layouts Button
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &825121604
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 825121603}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_Children: []
+  m_Father: {fileID: 28181941}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -329.5, y: 135.1}
+  m_SizeDelta: {x: 50, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &825121605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 825121603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 825121606}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 840226279}
+        m_TargetAssemblyTypeName: MenuHandler, Assembly-CSharp
+        m_MethodName: ShowFlagsPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &825121606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 825121603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.88235295, g: 0.88235295, b: 0.83137256, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: f7d3c536c3ffd5048836266675507357, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &825121607
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 825121603}
+  m_CullTransparentMesh: 1
 --- !u!1 &840226278
 GameObject:
   m_ObjectHideFlags: 0
@@ -4572,6 +4706,7 @@ MonoBehaviour:
   connectionPanel: {fileID: 368603625}
   layoutPanel: {fileID: 355420192}
   layoutButton: {fileID: 501954026}
+  flagsPanel: {fileID: 794077230}
   connectionsButton: {fileID: 539695570}
   ledParent: {fileID: 1515710651}
   ipTextField: {fileID: 602204878}
@@ -4606,7 +4741,9 @@ MonoBehaviour:
   startLEDFade: 5
   startMissionGlowFade: 10
   idleTimer: 0
+  anyMenuOpen: 0
   layoutOpen: 0
+  planeTypeBeforeLayoutPanel: 
 --- !u!4 &840226280
 Transform:
   m_ObjectHideFlags: 0
@@ -5739,6 +5876,7 @@ MonoBehaviour:
   udpClient: {fileID: 1841085020}
   countryDialBoard: {fileID: 0}
   slaveManager: {fileID: 1142282480}
+  openLayoutOnLoad: 0
   rpmObjects: []
   speedometer: {fileID: 0}
 --- !u!4 &1111493066
@@ -6046,9 +6184,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PlaneDropdown, Assembly-CSharp
-        m_MethodName: OnBack
+      - m_Target: {fileID: 794077233}
+        m_TargetAssemblyTypeName: FlagButtons, Assembly-CSharp
+        m_MethodName: backPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6829,6 +6967,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e20a90d9f7f1b7468fa1ee40a9f5fc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menuHandler: {fileID: 840226278}
+  blurPanel: {fileID: 1463458166}
+  airplaneData: {fileID: 1370128203}
+  flagSelectorObject: {fileID: 794077230}
   planeNameList:
   - test0 (to)
   - test1 (t1)
@@ -7308,9 +7450,8 @@ MonoBehaviour:
   testPlane: {fileID: 0}
   clientVersion: 0.42
   serverVersion: 0
-  planeType: UK A
+  planeType: 
   planeTypePrevious: 
-  country: 5
   altitude: 0
   mmhg: 0
   airspeed: 0
@@ -7435,7 +7576,7 @@ GameObject:
   - component: {fileID: 1454853631}
   - component: {fileID: 1454853630}
   m_Layer: 5
-  m_Name: Test Button
+  m_Name: Add Screen Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7457,7 +7598,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -118}
+  m_AnchoredPosition: {x: 79.9, y: -118}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1454853630

@@ -5,11 +5,15 @@ using UnityEngine.UI;
 using System.Linq;
 public class PlaneDropdown : MonoBehaviour
 {
-
+    public MenuHandler menuHandler;
+    public GameObject blurPanel;
+    public AirplaneData airplaneData;
+    public GameObject flagSelectorObject;
     public List<string> planeNameList = new List<string>() { "test0 (to)", "test1 (t1)" };
 
     private List<string> RuPlanes = new List<string>()
     {
+        "I-16 type 24",
         "LaGG-3 ser.29",
         "Il-2 mod.1941",
         "Il-2 mod.1941",
@@ -17,8 +21,7 @@ public class PlaneDropdown : MonoBehaviour
         "Il-2 mod.1943",
         "Yak-1 ser.69",
         "Pe-2 ser.87",
-        "La-5 ser.8",
-        "I-16 type 24",
+        "La-5 ser.8",       
         "MiG-3 ser.24",
         "Pe-2 ser.35",
         "Yak-1 ser.127",
@@ -31,18 +34,18 @@ public class PlaneDropdown : MonoBehaviour
 
     private List<string> UkPlanes = new List<string>()
     {
+        "Hurricane Mk.II",
         "Spitfire Mk.Vb",
         "Spitfire Mk.IXe",
-        "Tempest Mk.V ser.2",
-        "Hurricane Mk.II",
+        "Tempest Mk.V ser.2",        
         "Spitfire Mk.XIV",
         "Typhoon Mk.Ib"
     };
 
     private List<string> UsPlanes = new List<string>()
     {
-        "P-40E-1",
         "A-20B",
+        "P-40E-1",
         "P-39L-1",
         "P-47D-28",
         "P-51D-15",
@@ -53,13 +56,13 @@ public class PlaneDropdown : MonoBehaviour
 
     private List<string> GerPlanes = new List<string>()
     {
+        "Bf 109 E-7",
         "Bf 109 F-4",
         "Ju-87 D3",
         "Bf 109 G-2",
         "FW 190 A3",
         "He 111 H-6",
-        "Ju-52/3m g4e",
-        "Bf 109 E-7",
+        "Ju-52/3m g4e",        
         "Bf-110 E2",
         "Bf 109 F-2",
         "Ju-88 A4",
@@ -84,10 +87,11 @@ public class PlaneDropdown : MonoBehaviour
 
     public Dropdown dropdown;
     // Start is called before the first frame update
-    
 
-    void Start()
+
+    private void Start()
     {
+    
         RuPlanes.Sort();
         UkPlanes.Sort();
         UsPlanes.Sort();
@@ -128,8 +132,6 @@ public class PlaneDropdown : MonoBehaviour
         }
     }
 
-
-
     public void onValueChanged()
     {
         dropdown.transform.GetChild(0).GetComponent<Text>().text = dropdown.transform.GetChild(0).GetComponent<Text>().text.ToUpper();
@@ -137,13 +139,25 @@ public class PlaneDropdown : MonoBehaviour
 
     public void OnPlaneAccept()
     {
+        //save so we know where to go back to after layout close
+        menuHandler.planeTypeBeforeLayoutPanel = airplaneData.planeType;
 
         Debug.Log("Plane accepted = " + dropdown.options[dropdown.value].text);
+        //force plane change
+        airplaneData.planeType = dropdown.options[dropdown.value].text;
+        //flag to let airplane data know we are in layout options
+        //close the panel
+        this.gameObject.SetActive(false);
+
+        //let dials manager know when it notices a plane change to open layout panel
+        airplaneData.menuHandler.dialsManager.openLayoutOnLoad = true;
     }
 
     public void OnBack()
     {
         Debug.Log("On back");
+        flagSelectorObject.SetActive(true);
+        this.gameObject.SetActive(false);
     }
 }
 

@@ -2,6 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public enum Country
+{
+    RU,
+    GER,
+    US,
+    UK,
+    ITA,
+    UNDEFINED
+
+}
+
 public enum RpmType
 {
     A,

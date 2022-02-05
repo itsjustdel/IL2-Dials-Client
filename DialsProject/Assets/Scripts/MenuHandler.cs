@@ -20,6 +20,7 @@ public class MenuHandler : MonoBehaviour
     public GameObject connectionPanel;
     public GameObject layoutPanel;
     public GameObject layoutButton;
+    public GameObject flagsPanel;
 
 
     
@@ -63,8 +64,10 @@ public class MenuHandler : MonoBehaviour
     //idle timer
     public float idleTimer;
     private Vector3 mousePos;
+    
+    public bool anyMenuOpen;
     public  bool layoutOpen;
-
+    public string planeTypeBeforeLayoutPanel;
 
     public void Start()
     {
@@ -161,7 +164,7 @@ public class MenuHandler : MonoBehaviour
         RemoveTitle();
                 
 
-        if (airplaneData.country != AirplaneData.Country.UNDEFINED)
+        if (airplaneData.planeAttributes != null && airplaneData.planeAttributes.country != Country.UNDEFINED)
             RemoveTitle();
         else
             EnableTitle();
@@ -308,6 +311,7 @@ public class MenuHandler : MonoBehaviour
 
     public void MenuButtonClicked()
     {
+        anyMenuOpen = true;
 
         if(!connectionPanel.activeInHierarchy && !menuPanel.activeInHierarchy)
         {
@@ -491,14 +495,14 @@ public class MenuHandler : MonoBehaviour
 
     public void OpenLayoutClick()
     {
-        //Debug.Log("Layout Click");
+        Debug.Log("Layout Click");
         layoutOpen = true;
         
         //check for plane - can only organise if plane loaded
-        if(airplaneData.country == AirplaneData.Country.UNDEFINED)
+        if(airplaneData.planeAttributes.country == Country.UNDEFINED)
         {
             layoutWarningMessage.SetActive(true);
-            //Debug.Log("Layout Warning message");
+            Debug.Log("Layout Warning message");
             return;
         }
         else
@@ -531,6 +535,22 @@ public class MenuHandler : MonoBehaviour
 
     public void AcceptLayoutClick()
     {
+        
+        //check if we should get rid of loaded panel
+        if (airplaneData.planeType == planeTypeBeforeLayoutPanel)
+        {
+            //we are still on the correct plane
+
+            Debug.Log("Same plane after layout close");
+        }
+        else
+        {
+            Debug.Log("Changing back after layout close");
+            //set back
+            airplaneData.planeType = planeTypeBeforeLayoutPanel;
+        }
+        
+
         //go back to main page
         layoutPanel.SetActive(false);
         //turn icon handlers off 
@@ -541,6 +561,7 @@ public class MenuHandler : MonoBehaviour
         ledParent.SetActive(true);
 
         layoutOpen = false;
+        anyMenuOpen = false;
 
         //turn compasses back on 
         ActivateCompassTouch();
@@ -611,15 +632,10 @@ public class MenuHandler : MonoBehaviour
 
     }
 
-    private void TurnHandlersOn()
-    {
-        //check if in tray?
-
+    public void TurnHandlersOn()
+    {   
         
         GameObject[] UIhandlers = GameObject.FindGameObjectsWithTag("UIHandler");
-
-        
-
 
         for (int i = 0; i < UIhandlers.Length; i++)
         {
@@ -646,5 +662,11 @@ public class MenuHandler : MonoBehaviour
 
         Debug.Log("Adding Slave");
         SlaveManager.SpawnNewSlave();
+    }
+
+    public void ShowFlagsPanel()
+    {
+        menuPanel.SetActive(false);
+        flagsPanel.SetActive(true);
     }
 }

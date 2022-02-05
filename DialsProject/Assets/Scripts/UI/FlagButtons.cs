@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FlagButtons : MonoBehaviour
 {
+    public GameObject menuPanel;
     public PlaneDropdown planeDropdown;
     // Start is called before the first frame update
     void Start()
@@ -24,6 +25,16 @@ public class FlagButtons : MonoBehaviour
         //show flag panel
         planeDropdown.gameObject.SetActive(true);
         //and hide this
+        this.gameObject.SetActive(false);
+        
+
+
+    }
+
+    public void backPressed()
+    {
+        //go back to menu panel
+        menuPanel.SetActive(true);
         this.gameObject.SetActive(false);
     }
 }

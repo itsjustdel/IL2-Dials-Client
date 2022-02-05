@@ -11,6 +11,9 @@ public class DialsManager : MonoBehaviour
     public GameObject countryDialBoard;
     public SlaveManager slaveManager;
 
+    //flagged from open layout button press
+    public bool openLayoutOnLoad;
+
     public List<GameObject> rpmObjects = new List<GameObject>();
     public GameObject speedometer;
 
@@ -38,19 +41,25 @@ public class DialsManager : MonoBehaviour
         {
             //check if layout panel is open, save and close before we proceed
             //simulate accept click if there was a plane loaded
-            if (menuHandler.layoutOpen && airplaneData.planeAttributes!=null && airplaneData.planeAttributes.country != PlaneDataFromName.Country.UNDEFINED)
+
+            
+            if (menuHandler.layoutOpen && airplaneData.planeAttributes!=null && airplaneData.planeAttributes.country != Country.UNDEFINED)
                 menuHandler.AcceptLayoutClick();
 
             //construct country and available dials in to planeAttributes class/struct
             airplaneData.planeAttributes = PlaneDataFromName.AttributesFromName(airplaneData.planeType);
 
-            if (airplaneData.planeAttributes.country == PlaneDataFromName.Country.UNDEFINED)
+            if (airplaneData.planeAttributes.country == Country.UNDEFINED)
+            {
+                //remove dial board if any 
+                //remove any existing dials board prefab in scene
+                if (countryDialBoard != null)                    
+                    Destroy(countryDialBoard);
+
                 return;
+            }
 
-            //set as its own public variable to expose in hierarchy (in unity) for testing ease
-            airplaneData.country = airplaneData.planeAttributes.country;
-
-            SwitchDialBoardFromCountry(airplaneData.country);
+            SwitchDialBoardFromCountry(airplaneData.planeAttributes.country);
 
             //switch off any unavailable dials to this plane
             DeactivateUnavailableDials(countryDialBoard, airplaneData.planeType, airplaneData.planeAttributes, rpmObjects);
@@ -73,6 +82,17 @@ public class DialsManager : MonoBehaviour
                 menuHandler.ledParent.SetActive(true);
 
                 menuHandler.layoutOpen = false;
+            }
+
+            //once laoded, check to see it it was loaded from the layout dropdown
+
+            if (openLayoutOnLoad)
+            {
+                //flagged from open 
+                Debug.Log("open layout on load");
+                Debug.Log("air country = " + airplaneData.planeAttributes.country);
+                menuHandler.OpenLayoutClick();
+                openLayoutOnLoad = false;
             }
         }
     }
@@ -144,7 +164,7 @@ public class DialsManager : MonoBehaviour
                 }
 
 
-                if (planeAttributes.country == AirplaneData.Country.RU)
+                if (planeAttributes.country == Country.RU)
                 {
                     if (planeAttributes.rpmType == RpmType.A)
                     {
@@ -154,7 +174,7 @@ public class DialsManager : MonoBehaviour
 
 
                     //pe-2
-                    if (planeAttributes.country == AirplaneData.Country.RU && planeAttributes.rpmType == RpmType.C)
+                    if (planeAttributes.country == Country.RU && planeAttributes.rpmType == RpmType.C)
                     {
                         GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
                         countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
@@ -162,7 +182,7 @@ public class DialsManager : MonoBehaviour
 
                 }
 
-                if (planeAttributes.country == AirplaneData.Country.US)
+                if (planeAttributes.country == Country.US)
                 {
                     if (planeAttributes.rpmType == RpmType.A || planeAttributes.rpmType == RpmType.D)
                     {
@@ -192,7 +212,7 @@ public class DialsManager : MonoBehaviour
 
     }
 
-    public void SwitchDialBoardFromCountry(AirplaneData.Country country)
+    public void SwitchDialBoardFromCountry(Country country)
     {
         //change dials depending on what value we received from the networking component
 
@@ -205,28 +225,28 @@ public class DialsManager : MonoBehaviour
 
         switch (country)
         {
-            case AirplaneData.Country.RU:
+            case Country.RU:
                 //countryDials[0].SetActive(true);
                 GameObject RUprefab = Resources.Load("Prefabs/RU") as GameObject;
                 countryDialBoard = GameObject.Instantiate(RUprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
 
-            case AirplaneData.Country.GER:
+            case Country.GER:
                 GameObject GERprefab = Resources.Load("Prefabs/GER") as GameObject;
                 countryDialBoard = GameObject.Instantiate(GERprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
 
-            case AirplaneData.Country.US:
+            case Country.US:
                 GameObject USprefab = Resources.Load("Prefabs/US") as GameObject;
                 countryDialBoard = GameObject.Instantiate(USprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
 
-            case AirplaneData.Country.UK:
+            case Country.UK:
                 GameObject UKprefab = Resources.Load("Prefabs/UK") as GameObject;
                 countryDialBoard = GameObject.Instantiate(UKprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
 
-            case AirplaneData.Country.ITA:
+            case Country.ITA:
                 GameObject ITAprefab = Resources.Load("Prefabs/ITA") as GameObject;
                 countryDialBoard = GameObject.Instantiate(ITAprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
