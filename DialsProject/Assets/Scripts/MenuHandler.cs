@@ -496,10 +496,11 @@ public class MenuHandler : MonoBehaviour
     public void OpenLayoutClick()
     {
         Debug.Log("Layout Click");
+        Debug.Log("airplane data = " + airplaneData);
         layoutOpen = true;
         
         //check for plane - can only organise if plane loaded
-        if(airplaneData.planeAttributes.country == Country.UNDEFINED)
+        if(airplaneData.planeAttributes == null || airplaneData.planeAttributes.country == Country.UNDEFINED)
         {
             layoutWarningMessage.SetActive(true);
             Debug.Log("Layout Warning message");
@@ -542,14 +543,16 @@ public class MenuHandler : MonoBehaviour
             //we are still on the correct plane
 
             Debug.Log("Same plane after layout close");
+         //   airplaneData.planeType = planeTypeBeforeLayoutPanel;
         }
         else
         {
             Debug.Log("Changing back after layout close");
             //set back
-            airplaneData.planeType = planeTypeBeforeLayoutPanel;
+        //    airplaneData.planeType = planeTypeBeforeLayoutPanel;
         }
-        
+
+        airplaneData.planeType = planeTypeBeforeLayoutPanel;
 
         //go back to main page
         layoutPanel.SetActive(false);

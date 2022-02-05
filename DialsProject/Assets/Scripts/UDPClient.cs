@@ -277,10 +277,14 @@ public class UDPClient : MonoBehaviour
 		//plane type string size
 		uint stringSize = BitConverter.ToUInt32(bytes, p);
 		p += sizeof(uint);
+
+
+		
 		//plane type string
 		string planeType = System.Text.Encoding.UTF8.GetString(bytes, p, (int)stringSize);
-		iL2GameDataClient.planeType = planeType;
-		//p += 64;//chosen max string size (by me)
+		//using setter method so we can check menu status before chaning plane name
+		iL2GameDataClient.setPlaneType(planeType);
+		
 
 	}
 

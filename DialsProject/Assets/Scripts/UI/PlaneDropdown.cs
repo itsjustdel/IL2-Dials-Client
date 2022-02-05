@@ -143,14 +143,23 @@ public class PlaneDropdown : MonoBehaviour
         menuHandler.planeTypeBeforeLayoutPanel = airplaneData.planeType;
 
         Debug.Log("Plane accepted = " + dropdown.options[dropdown.value].text);
-        //force plane change
-        airplaneData.planeType = dropdown.options[dropdown.value].text;
-        //flag to let airplane data know we are in layout options
+        if (airplaneData.planeType == dropdown.options[dropdown.value].text)
+        {         
+            //edit already loaded plane - just "click" layout button
+            menuHandler.OpenLayoutClick();
+
+        }
+        else
+        {
+            //force plane change
+            airplaneData.planeType = dropdown.options[dropdown.value].text;
+
+            //let dials manager know when it notices a plane change to open layout panel
+            airplaneData.menuHandler.dialsManager.openLayoutOnLoad = true;
+        }
+
         //close the panel
         this.gameObject.SetActive(false);
-
-        //let dials manager know when it notices a plane change to open layout panel
-        airplaneData.menuHandler.dialsManager.openLayoutOnLoad = true;
     }
 
     public void OnBack()

@@ -36,7 +36,8 @@ public class DialsManager : MonoBehaviour
 
     void CheckForPlaneChange()
     {
-        // if we detect a plance change
+
+        // if we detect a plane change
         if (airplaneData.planeType != airplaneData.planeTypePrevious)
         {
             //check if layout panel is open, save and close before we proceed
@@ -84,7 +85,7 @@ public class DialsManager : MonoBehaviour
                 menuHandler.layoutOpen = false;
             }
 
-            //once laoded, check to see it it was loaded from the layout dropdown
+            //once loaded, check to see it it was loaded from the layout dropdown
 
             if (openLayoutOnLoad)
             {
