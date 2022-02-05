@@ -42,19 +42,29 @@ public class LoadManager : MonoBehaviour
             if(subs[0] == "layout")
             {
                 //we are looking for matching client ids
+                UnityEngine.Debug.Log("sub = " + int.Parse(subs[1]) + " id " + id);
+                    
                 if (int.Parse( subs[1] ) == id)
                 {
-                    //_h3923205751 = 12 chars
+                    UnityEngine.Debug.Log("found id");
+                    
+                    //_h3923205751 = 12 chars - not always!
                     string planeType = "";
                     //start after "layout" and client number "0" or "1"
                     int start = subs[0].Length + subs[1].Length + 2; //2 spaces
-                    for (int i = start; i < key.Length - 12; i++)
+                    for (int i = start; i < key.Length-1; i++)
                     {
+                        //look for handle "_h" - we don't need values after key[x] is a char so do conversion                        
+                        if (key[i].ToString() == "_" && key[i + 1].ToString() == "h")
+                            break;
+                        
                         planeType += key[i];
                     }
 
+                    UnityEngine.Debug.Log("plane type = " + planeType);
+
                     //we are looking to match the plane type with the game data
-                    if(airplaneData.planeType == planeType)
+                    if (airplaneData.planeType == planeType)
                     {
                         UnityEngine.Debug.Log("found plane type");
                         //load layout from key

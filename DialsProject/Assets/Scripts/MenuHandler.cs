@@ -537,22 +537,7 @@ public class MenuHandler : MonoBehaviour
     public void AcceptLayoutClick()
     {
         
-        //check if we should get rid of loaded panel
-        if (airplaneData.planeType == planeTypeBeforeLayoutPanel)
-        {
-            //we are still on the correct plane
-
-            Debug.Log("Same plane after layout close");
-         //   airplaneData.planeType = planeTypeBeforeLayoutPanel;
-        }
-        else
-        {
-            Debug.Log("Changing back after layout close");
-            //set back
-        //    airplaneData.planeType = planeTypeBeforeLayoutPanel;
-        }
-
-        airplaneData.planeType = planeTypeBeforeLayoutPanel;
+        //
 
         //go back to main page
         layoutPanel.SetActive(false);
@@ -570,6 +555,24 @@ public class MenuHandler : MonoBehaviour
         ActivateCompassTouch();
 
         dialsManager.SaveLayout();
+
+        //alter plane name after we saved
+        // check if we should get rid of loaded panel
+        if (airplaneData.planeType == planeTypeBeforeLayoutPanel)
+        {
+            //we are still on the correct plane
+
+            Debug.Log("Same plane after layout close");
+            //   airplaneData.planeType = planeTypeBeforeLayoutPanel;
+        }
+        else
+        {
+            Debug.Log("Changing back after layout close");
+            //set back
+            //    airplaneData.planeType = planeTypeBeforeLayoutPanel;
+        }
+
+        airplaneData.planeType = planeTypeBeforeLayoutPanel;
 
     }
 
