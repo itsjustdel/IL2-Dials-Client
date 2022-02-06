@@ -16,6 +16,7 @@ public class MenuHandler : MonoBehaviour
     public GameObject serverMessagePanel;
     public GameObject blurPanel;
     public GameObject menuPanel;
+    public GameObject displayPanel;
     public GameObject menuButton;
     public GameObject connectionPanel;
     public GameObject layoutPanel;
@@ -661,13 +662,11 @@ public class MenuHandler : MonoBehaviour
             UIhandlers[i].GetComponent<Image>().enabled = false;
         }
     }
-
-
-    public void AddSlaveWindow()
+    public void OpenDisplayPanel()
     {
+        menuPanel.SetActive(false);
+        displayPanel.SetActive(true);
 
-        Debug.Log("Adding Slave");
-        SlaveManager.SpawnNewSlave();
     }
 
     public void ShowFlagsPanel()

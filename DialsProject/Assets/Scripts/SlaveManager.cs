@@ -8,6 +8,8 @@ using System.Runtime.InteropServices;
 public class SlaveManager : MonoBehaviour
 {
     public AirplaneData airplaneData;
+    public GameObject menuPanel;
+    public GameObject displayPanel;
     public bool createNew;
     public bool slave = false;
     public int id;
@@ -41,9 +43,9 @@ public class SlaveManager : MonoBehaviour
 
                 slave = true;
             }
-         
 
-            id = int.Parse( args[2] );
+
+            id = int.Parse(args[2]);
             UnityEngine.Debug.Log("id = " + id);
 
         }
@@ -51,29 +53,82 @@ public class SlaveManager : MonoBehaviour
         {
             UnityEngine.Debug.Log("This is the master");
             //the master spawns all slave windows on startup
-            //the amount of slavesuser has crated is stored in player prefs
-            int slaves = PlayerPrefs.GetInt("slaves");
-            for (int i = 0; i < slaves; i++)
+            string[] keys = PlayerPrefsHelper.GetRegistryValues();            
+            foreach (string key in keys)
             {
-                //spawn a client window for each slave and pass the id (will be plus 1 of index - master is 0)
-                SpawnOldSlave(i + 1);
-            }
+                //layout keys are saved with id then plane type e.g (0 il2 mod 1942), (1 spitfire-123)
+                string[] subs = key.Split(' ');
 
+                //we are looking for window Info keys
+                if (subs[0] == "windowInfo")
+                {
+                    //strip id number from registry key which has _hxxxxxxx after it
+                    string idString = "";
+                    int start = subs[0].Length + 1;
+                    for (int i = start; i < key.Length - 1; i++)
+                    {
+                        //look for handle "_h" - we don't need values after key[x] is a char so do conversion                        
+                        if (key[i].ToString() == "_" && key[i + 1].ToString() == "h")
+                            break;
+
+                        idString += key[i];
+                    }
+
+                    int _id = int.Parse(idString);
+
+                    //use this if to spawn a previous slave
+                    SpawnOldSlave(_id);
+                }
+            }
         }
     }
 
     //new slave
-    public static void SpawnNewSlave()
+    public  void SpawnNewSlave()
     {
 
         //create id and pass as arg
-        //id is slave count + 1
-        int id = PlayerPrefs.GetInt("slaves");
-        id++;
-        PlayerPrefs.SetInt("slaves", id);
-        //UnityEngine.Debug.Log("Slaves = " + id);
+        //find the highest previous id - all salves have a windowInfo key attached find them
+        //get all player prefs that start with this plane type
+        string[] keys = PlayerPrefsHelper.GetRegistryValues();
+        int highest = 0;
+        foreach (string key in keys)
+        {
+            //layout keys are saved with id then plane type e.g (0 il2 mod 1942), (1 spitfire-123)
+            string[] subs = key.Split(' ');
 
-        string args = "Slave " + id;// System.DateTime.Now.ToString("hh.mm.ss.ffffff");
+            //we are looking for a layout etc
+            if (subs[0] == "layout" || subs[0] == "fullscreen" || subs[0] == "windowInfo")
+            {
+
+                //strip id number from registry key which has _hxxxxxxx after it
+                string idString = "";
+                int start = subs[0].Length + 1;
+                for (int i = start; i < key.Length - 1; i++)
+                {
+                    //look for handle "_h" - we don't need values after key[x] is a char so do conversion                        
+                    if (key[i].ToString() == "_" && key[i + 1].ToString() == "h")
+                        break;
+
+                    idString += key[i];
+                }
+
+                int _id = int.Parse(idString);
+                if (_id > highest)
+                    highest = _id;
+
+            }
+        }
+
+        UnityEngine.Debug.Log("highest id = " + highest);
+
+        //id is slave count + 1
+        //int id = PlayerPrefs.GetInt("slaves");
+        //id++;
+        //PlayerPrefs.SetInt("slaves", id);
+        //UnityEngine.Debug.Log("Slaves = " + id);
+        highest += 1;
+        string args = "Slave " + highest.ToString();// System.DateTime.Now.ToString("hh.mm.ss.ffffff");
 
         var process = Process.GetCurrentProcess();
         string fullPath = process.MainModule.FileName;
@@ -95,40 +150,65 @@ public class SlaveManager : MonoBehaviour
         var myProcess = new Process();
 
      
-        //window size and position -ise when loading - 
+        //window size and position -use when loading - 
         //SetWindowPos(myProcess.MainWindowHandle, layout.rect.Top, layout.rect.Left);
 
         myProcess.StartInfo.FileName = fullPath;
         myProcess.StartInfo.Arguments = args;
         myProcess.Start();
-
-        
+                
     }
 
-    //unused 
-    static void WaitAndMove(Process myProcess, string id)
+    public void AddSlaveWindow()
     {
-        //use id to get window info + id from player prefs
-        string jsonFoo = PlayerPrefs.GetString("WindowInfo " + id);
-        if (System.String.IsNullOrEmpty(jsonFoo))
-        {
-            UnityEngine.Debug.Log("No window pos key found");
-        }
-        else
-        {
-            UnityEngine.Debug.Log("Setting window pos on load");
-            DisplayManager.RECT rect = JsonUtility.FromJson<DisplayManager.RECT>(jsonFoo);
-            //set window position!
-
-            int x = rect.Left;
-            int y = rect.Top;
-            int width = rect.Right - rect.Left;
-            int height = rect.Bottom - rect.Top;
-
-
-            MoveWindow(myProcess.MainWindowHandle, x, y, width, height, true);
-        }
-;
+       SpawnNewSlave();
     }
 
+    public void DeleteScreen()
+    {
+        if(id == 0)
+        {
+            UnityEngine.Debug.Log("Can't delete main client");
+        //    return;
+        }
+
+        //get all player prefs that start with this plane type
+        string[] keys = PlayerPrefsHelper.GetRegistryValues();
+
+        foreach (string key in keys)
+        {
+            //layout keys are saved with id then plane type e.g (0 il2 mod 1942), (1 spitfire-123)
+            string[] subs = key.Split(' ');
+
+            //we are looking for a layout etc
+            if (subs[0] == "layout" || subs[0] == "fullscreen" || subs[0] == "windowInfo")
+            {            
+
+                //strip id number from registry key which has _hxxxxxxx after it
+                string idString = "";
+                int start = subs[0].Length + 1;
+                for (int i = start; i < key.Length - 1; i++)
+                {
+                    //look for handle "_h" - we don't need values after key[x] is a char so do conversion                        
+                    if (key[i].ToString() == "_" && key[i + 1].ToString() == "h")
+                        break;
+
+                    idString += key[i];
+                }
+
+                if (int.Parse(idString) == id)
+                {
+                    string keyToDelete = subs[0] + " " + idString;
+                    UnityEngine.Debug.Log("deleting key = " + keyToDelete);
+                    PlayerPrefs.DeleteKey(keyToDelete);
+                }
+            }
+        }
+
+        //and close the app
+        Application.Quit();
+
+    }
+
+  
 }

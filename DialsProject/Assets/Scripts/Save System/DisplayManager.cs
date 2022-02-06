@@ -7,6 +7,8 @@ using System.Diagnostics;
 public class DisplayManager : MonoBehaviour
 {
     public SlaveManager slaveManager;
+    public GameObject menuPanel;
+    public GameObject displayManagerPanel;
 
     //https://answers.unity.com/questions/13523/is-there-a-way-to-set-the-position-of-a-standalone.html
 
@@ -48,10 +50,6 @@ public class DisplayManager : MonoBehaviour
 
     private void Start()
     {
-        //save in new key isFullscreen if full screen or not - unity overrides this
-       //if(PlayerPrefs.get)
-        //apply in Set()
-
 
         Set(slaveManager.id.ToString());
         SetFullscreen();
@@ -59,7 +57,7 @@ public class DisplayManager : MonoBehaviour
     }
     private void SetFullscreen()
     {
-        string isFullscreen = PlayerPrefs.GetString("Fullscreen" + " " + slaveManager.id.ToString());
+        string isFullscreen = PlayerPrefs.GetString("fullscreen" + " " + slaveManager.id.ToString());
         UnityEngine.Debug.Log("Is full screen = " + isFullscreen);
 
         if (isFullscreen == "True")
@@ -70,10 +68,9 @@ public class DisplayManager : MonoBehaviour
             Screen.fullScreenMode = FullScreenMode.Windowed;
     }
 
-
     public void Set(string id)
     {
-        string jsonFoo = PlayerPrefs.GetString("WindowInfo " + id);
+        string jsonFoo = PlayerPrefs.GetString("windowInfo " + id);
         if (System.String.IsNullOrEmpty(jsonFoo))
         {
             UnityEngine.Debug.Log("No window pos key found");
@@ -92,8 +89,6 @@ public class DisplayManager : MonoBehaviour
         }
     }
 
-
-
     // Use this for initialization
     void Update()
     {
@@ -105,10 +100,7 @@ public class DisplayManager : MonoBehaviour
 
         if (prevRECT.Top != rect.Top || prevRECT.Bottom != rect.Bottom || prevRECT.Left != rect.Left || prevRECT.Right != rect.Right)
         {
-
-
             UnityEngine.Debug.Log("Detected window change");
-
             
             //save new window info to player prefs
             //attach to slave id
@@ -119,19 +111,15 @@ public class DisplayManager : MonoBehaviour
 
             //save packed string to player preferences (unity)
             //
-        //will save master as 0 and slaves as id number
-            string key = "WindowInfo " + slaveManager.id.ToString();
+            //will save master as 0 and slaves as id number
+            string key = "windowInfo " + slaveManager.id.ToString();
 
             PlayerPrefs.SetString(key, jsonFoo);
             //save if fullscreen too
-            PlayerPrefs.SetString("Fullscreen" + " " + id.ToString(),  Screen.fullScreen.ToString());
+            PlayerPrefs.SetString("fullscreen" + " " + id.ToString(),  Screen.fullScreen.ToString());
             PlayerPrefs.Save();
 
         }
-
-
-        
-
 
         if (savePos)
         {
@@ -140,84 +128,71 @@ public class DisplayManager : MonoBehaviour
         }
         if (setPos)
         {
-           // SetWindowPosition(mainPtr, rect.Left, rect.Top);
             setPos = false;
         }
 
-        //SetPosition(0, 0);
     }
-
-    /*
-    public static void SetWindowPosition(IntPtr windowHandle, int x, int y)
-    {
-        //double check active window with name string check?
-        //use named string rename slaves? and close on change
-        int resX = 0;
-        int resY = 0;
-        SetWindowPos(windowHandle, 0, x, y, resX, resY, resX * resY == 0 ? 1 : 0);
-
-    }
-    */
-
-
     public static RECT GetPosition(IntPtr hwnd)
     {
-        //rect = new RECT();
         RECT _rect = new RECT();
         GetWindowRect(hwnd, out _rect);
-
-        //Debug.ClearDeveloperConsole();
-        //Debug.Log("Top = " + rect.Top);
-        //Debug.Log("Left = " + rect.Left);
 
         return _rect;
     }
 
-    public static class ProcessHelper
+
+    public void onBackClick()
     {
-        private static class Win32
-        {
-            internal const uint GwOwner = 4;
-
-            internal delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
-
-            [DllImport("User32.dll", CharSet = CharSet.Auto)]
-            internal static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
-
-            [DllImport("User32.dll", CharSet = CharSet.Auto)]
-            internal static extern int GetWindowThreadProcessId(IntPtr hWnd, out IntPtr lpdwProcessId);
-
-            [DllImport("User32.dll", CharSet = CharSet.Auto)]
-            internal static extern IntPtr GetWindow(IntPtr hWnd, uint uCmd);
-
-            [DllImport("User32.dll", CharSet = CharSet.Auto)]
-            internal static extern bool IsWindowVisible(IntPtr hWnd);
-        }
-
-        public static IntPtr GetProcessHandle(int processId)
-        {
-            IntPtr processPtr = IntPtr.Zero;
-
-            Win32.EnumWindows((hWnd, lParam) =>
-            {
-                IntPtr pid;
-                Win32.GetWindowThreadProcessId(hWnd, out pid);
-
-                if (pid == lParam &&
-                    Win32.IsWindowVisible(hWnd) &&
-                    Win32.GetWindow(hWnd, Win32.GwOwner) == IntPtr.Zero)
-                {
-                    processPtr = hWnd;
-                    return false;
-                }
-
-                return true;
-
-            }, new IntPtr(processId));
-
-            return processPtr;
-        }
+        displayManagerPanel.SetActive(false);
+        menuPanel.SetActive(true);
     }
+
 #endif
 
+}
+
+public static class ProcessHelper
+{
+    private static class Win32
+    {
+        internal const uint GwOwner = 4;
+
+        internal delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+
+        [DllImport("User32.dll", CharSet = CharSet.Auto)]
+        internal static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
+
+        [DllImport("User32.dll", CharSet = CharSet.Auto)]
+        internal static extern int GetWindowThreadProcessId(IntPtr hWnd, out IntPtr lpdwProcessId);
+
+        [DllImport("User32.dll", CharSet = CharSet.Auto)]
+        internal static extern IntPtr GetWindow(IntPtr hWnd, uint uCmd);
+
+        [DllImport("User32.dll", CharSet = CharSet.Auto)]
+        internal static extern bool IsWindowVisible(IntPtr hWnd);
+    }
+
+    public static IntPtr GetProcessHandle(int processId)
+    {
+        IntPtr processPtr = IntPtr.Zero;
+
+        Win32.EnumWindows((hWnd, lParam) =>
+        {
+            IntPtr pid;
+            Win32.GetWindowThreadProcessId(hWnd, out pid);
+
+            if (pid == lParam &&
+                Win32.IsWindowVisible(hWnd) &&
+                Win32.GetWindow(hWnd, Win32.GwOwner) == IntPtr.Zero)
+            {
+                processPtr = hWnd;
+                return false;
+            }
+
+            return true;
+
+        }, new IntPtr(processId));
+
+        return processPtr;
+    }
 }
