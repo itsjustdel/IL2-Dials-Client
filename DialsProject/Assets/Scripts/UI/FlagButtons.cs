@@ -24,6 +24,7 @@ public class FlagButtons : MonoBehaviour
         planeDropdown.PopulateDropdown(planeDropdown.dropdown, buttonObject.name);
         //show flag panel
         planeDropdown.gameObject.SetActive(true);
+        
         //and hide this
         this.gameObject.SetActive(false);
         

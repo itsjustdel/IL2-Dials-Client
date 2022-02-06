@@ -76,8 +76,10 @@ public class SlaveManager : MonoBehaviour
 
                     int _id = int.Parse(idString);
 
-                    //use this if to spawn a previous slave
-                    SpawnOldSlave(_id);
+                    //0 is the master
+                    if(_id > 0)
+                        //use this if to spawn a previous slave
+                        SpawnOldSlave(_id);
                 }
             }
         }

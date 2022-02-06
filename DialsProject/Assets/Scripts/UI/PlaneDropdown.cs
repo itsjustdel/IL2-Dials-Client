@@ -21,7 +21,7 @@ public class PlaneDropdown : MonoBehaviour
         "Il-2 mod.1943",
         "Yak-1 ser.69",
         "Pe-2 ser.87",
-        "La-5 ser.8",       
+        "La-5 ser.8",
         "MiG-3 ser.24",
         "Pe-2 ser.35",
         "Yak-1 ser.127",
@@ -37,7 +37,7 @@ public class PlaneDropdown : MonoBehaviour
         "Hurricane Mk.II",
         "Spitfire Mk.Vb",
         "Spitfire Mk.IXe",
-        "Tempest Mk.V ser.2",        
+        "Tempest Mk.V ser.2",
         "Spitfire Mk.XIV",
         "Typhoon Mk.Ib"
     };
@@ -62,7 +62,7 @@ public class PlaneDropdown : MonoBehaviour
         "Bf 109 G-2",
         "FW 190 A3",
         "He 111 H-6",
-        "Ju-52/3m g4e",        
+        "Ju-52/3m g4e",
         "Bf-110 E2",
         "Bf 109 F-2",
         "Ju-88 A4",
@@ -89,22 +89,38 @@ public class PlaneDropdown : MonoBehaviour
     // Start is called before the first frame update
 
 
+
+    public void Awake()
+    {
+
+        Debug.Log("Sorting");
+        SortLists();
+    }
     private void Start()
     {
-    
-        RuPlanes.Sort();
-        UkPlanes.Sort();
-        UsPlanes.Sort();
-        GerPlanes.Sort();
-        //italy only has 1 plane!
-
 
         //set label to upper
         dropdown.transform.GetChild(0).GetComponent<Text>().text = dropdown.transform.GetChild(0).GetComponent<Text>().text.ToUpper();
     }
 
+    public void SortLists()
+    {
+        RuPlanes.Sort();
+        UkPlanes.Sort();
+        UsPlanes.Sort();
+        GerPlanes.Sort();
+
+ 
+    }
+
     public void PopulateDropdown(Dropdown dropdown, string country)
-    {       
+    {
+        RuPlanes.Sort();
+        UkPlanes.Sort();
+        UsPlanes.Sort();
+        GerPlanes.Sort();
+
+
         dropdown.ClearOptions();
 
         switch(country)
