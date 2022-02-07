@@ -597,6 +597,12 @@ public class MenuHandler : MonoBehaviour
     
         //show copnnection panel - IP address, port etc
         connectionPanel.SetActive(true);
+
+        //start animation
+
+
+        connectionPanel.GetComponent<PanelAnimator>().animateUp = true;
+        connectionPanel.GetComponent<PanelAnimator>().animationTarget = 4000;
     }
 
     public void UpdateLayoutPanel()
