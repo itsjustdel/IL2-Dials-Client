@@ -6,6 +6,9 @@ using System.Diagnostics;
 
 public class LoadManager : MonoBehaviour
 {
+    public static int step = 500;
+    public static float scaleOverall = .6f;
+
     public static void LoadLayout(AirplaneData airplaneData, DialsManager dialsManager)
     {
         MenuHandler menuHandler = GameObject.FindGameObjectWithTag("MenuObject").GetComponent<MenuHandler>();
@@ -238,7 +241,7 @@ public class LoadManager : MonoBehaviour
         //round half of count upwards and convert to int. Mathf.Ceil rounds up. If on a whole number, it doesn't round up //https://docs.unity3d.com/ScriptReference/Mathf.Ceil.html
         //half of count because there are two rows
         int longestRow = (int)Mathf.Ceil(f / 2);
-        longestRow *= 300;//300 default step between dials
+        longestRow *= LoadManager.step;//step default step between dials
 
         GameObject canvasObject = GameObject.FindGameObjectWithTag("Canvas");
         //if longer than the canvas width
@@ -281,14 +284,14 @@ public class LoadManager : MonoBehaviour
             {
                 //0 0
                 //150 1
-                //300 2
+                //step 2
 
-                int x = ((int)((activeDials.Count - 1) / 2)) * -150;
+                int x = ((int)((activeDials.Count - 1) / 2)) * -LoadManager.step / 2;
                 //then add step
-                int step = 300 * (i);
+                int step = LoadManager.step * (i);
                 x += step;
 
-                int y = 150;
+                int y = LoadManager.step / 2;
 
                 //scale and round and convert to int for position
                 float xFloat = x * scale;
@@ -306,12 +309,12 @@ public class LoadManager : MonoBehaviour
                 //use "odd" to nudge in to position
                 int diff = activeDials.Count - 1 + odd - (activeDials.Count / 2);
                 int x = ((int)(diff));
-                x *= -150;
+                x *= -LoadManager.step/2;
                 //then add step
-                int step = 300 * (i - (activeDials.Count / 2));
+                int step = LoadManager.step * (i - (activeDials.Count / 2));
                 x += step;
 
-                int y = -150;
+                int y = -LoadManager.step / 2;
 
                 //scale and round and convert to int 
                 float xFloat = x * scale;
@@ -323,7 +326,7 @@ public class LoadManager : MonoBehaviour
             }
 
             //scale dial            
-            activeDials[i].transform.localScale = new Vector3(scale * 0.35f, scale * 0.35f, scale * 0.35f);
+            activeDials[i].transform.localScale = new Vector3(scale * scaleOverall, scale * scaleOverall, scale * scaleOverall);
         }
     }
 }

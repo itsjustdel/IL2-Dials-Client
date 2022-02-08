@@ -113,7 +113,7 @@ public class AirplaneData : MonoBehaviour
     internal void setPlaneType(string planeType)
     {
         //do not set if menu open
-        if (!menuHandler.anyMenuOpen)
+        if (!menuHandler.layoutOpen)
             this.planeType = planeType;
     }
 }
