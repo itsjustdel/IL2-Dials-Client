@@ -13,6 +13,7 @@ public class UDPClient : MonoBehaviour
 	public AirplaneData iL2GameDataClient;
 	public MenuHandler menuHandler;
 	public RotateNeedle rN;
+	public SlaveManager slaveManager;
 	public bool connected = false;
 	public float autoScanTimeScale = 1f;
 	public float standardFixedTime = 0.02f;
@@ -145,7 +146,8 @@ public class UDPClient : MonoBehaviour
 			// Sends a message to the host to which you have connected.
 			byte[] sendBytes = System.Text.Encoding.ASCII.GetBytes("IL-2 Client");
 					
-			client.Send(sendBytes, sendBytes.Length);
+			//if(!slaveManager.slave)
+				client.Send(sendBytes, sendBytes.Length);
 
 			//////blocking call
 			byte[] receivedData = client.Receive(ref ep);

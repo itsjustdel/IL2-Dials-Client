@@ -10,10 +10,13 @@ public class SlaveManager : MonoBehaviour
     public AirplaneData airplaneData;
     public GameObject menuPanel;
     public GameObject displayPanel;
+    public GameObject confirmObject;
+    public GameObject masterClientText;
     public bool createNew;
     public bool slave = false;
     public int id;
     public int monintorNumber = -1;
+    
 
 
     [DllImport("user32.dll", SetLastError = true)]
@@ -99,8 +102,8 @@ public class SlaveManager : MonoBehaviour
             //layout keys are saved with id then plane type e.g (0 il2 mod 1942), (1 spitfire-123)
             string[] subs = key.Split(' ');
 
-            //we are looking for a layout etc
-            if (subs[0] == "layout" || subs[0] == "fullscreen" || subs[0] == "windowInfo")
+            //we are looking for a key to find the highest id
+            if  (subs[0] == "windowInfo")
             {
 
                 //strip id number from registry key which has _hxxxxxxx after it
@@ -122,15 +125,8 @@ public class SlaveManager : MonoBehaviour
             }
         }
 
-        UnityEngine.Debug.Log("highest id = " + highest);
-
-        //id is slave count + 1
-        //int id = PlayerPrefs.GetInt("slaves");
-        //id++;
-        //PlayerPrefs.SetInt("slaves", id);
-        //UnityEngine.Debug.Log("Slaves = " + id);
         highest += 1;
-        string args = "Slave " + highest.ToString();// System.DateTime.Now.ToString("hh.mm.ss.ffffff");
+        string args = "Slave " + highest.ToString();
 
         var process = Process.GetCurrentProcess();
         string fullPath = process.MainModule.FileName;
@@ -212,5 +208,24 @@ public class SlaveManager : MonoBehaviour
 
     }
 
-  
+    public void DeleteConfirm()
+    {
+        if (slave)
+            confirmObject.SetActive(true);
+        else
+            masterClientText.SetActive(true);
+            
+    }
+
+
+    public void ScreensPanelBack()
+    {
+        displayPanel.SetActive(false);
+        menuPanel.SetActive(true);
+
+        //reset text
+        confirmObject.SetActive(false);
+        masterClientText.SetActive(false);
+    }
+
 }

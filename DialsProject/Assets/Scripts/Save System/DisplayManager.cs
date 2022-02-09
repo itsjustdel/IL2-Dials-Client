@@ -8,7 +8,7 @@ public class DisplayManager : MonoBehaviour
 {
     public SlaveManager slaveManager;
     public GameObject menuPanel;
-    public GameObject displayManagerPanel;
+    //public GameObject displayManagerPanel;
 
     //https://answers.unity.com/questions/13523/is-there-a-way-to-set-the-position-of-a-standalone.html
 
@@ -28,15 +28,6 @@ public class DisplayManager : MonoBehaviour
     //imported functions
     [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
     public static extern bool SetWindowPos(IntPtr hwnd, int hWndInsertAfter, int x, int Y, int cx, int cy, int wFlags);
-    [DllImport("user32.dll", EntryPoint = "FindWindow")]
-    private static extern IntPtr FindWindow(System.String className, System.String windowName);
-    [DllImport("user32.dll")]
-    private static extern IntPtr GetForegroundWindow();
-    [System.Runtime.InteropServices.DllImport("user32.dll")]
-    public static extern System.IntPtr GetActiveWindow();
-
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern IntPtr GetCurrentProcess();
 
     [DllImport("user32.dll")]
     static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
@@ -86,6 +77,7 @@ public class DisplayManager : MonoBehaviour
             int width = rect.Right - rect.Left;
             int height = rect.Bottom - rect.Top;
             SetWindowPos(ProcessHelper.GetProcessHandle(Process.GetCurrentProcess().Id), 0, x, y, width, height, width * height == 0 ? 1 : 0);
+            
         }
     }
 
@@ -93,7 +85,8 @@ public class DisplayManager : MonoBehaviour
     void Update()
     {
         //needed every frame?
-        IntPtr mainPtr = ProcessHelper.GetProcessHandle(Process.GetCurrentProcess().Id);// GetActiveWindow();// ProcessHelper.GetProcessHandle(Process.GetCurrentProcess().Id);
+        IntPtr mainPtr =  ProcessHelper.GetProcessHandle(Process.GetCurrentProcess().Id);
+        //IntPtr mainPtr = slaveManager.handle;
 
         prevRECT = rect;
         rect = GetPosition(mainPtr); //think about active window
@@ -140,12 +133,6 @@ public class DisplayManager : MonoBehaviour
         return _rect;
     }
 
-
-    public void onBackClick()
-    {
-        displayManagerPanel.SetActive(false);
-        menuPanel.SetActive(true);
-    }
 
 #endif
 

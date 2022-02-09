@@ -697,9 +697,5 @@ public class MenuHandler : MonoBehaviour
         menuPanel.SetActive(true);
     }
 
-    public void ScreensPanelBack()
-    {
-        screensPanel.SetActive(false);
-        menuPanel.SetActive(true);
-    }
+  
 }
