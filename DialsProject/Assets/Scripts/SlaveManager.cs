@@ -31,9 +31,9 @@ public class SlaveManager : MonoBehaviour
     {
         string[] args = Environment.GetCommandLineArgs();
 
-        UnityEngine.Debug.Log("args = ");
-        foreach(string s in args)
-            UnityEngine.Debug.Log(s);
+   //     UnityEngine.Debug.Log("args = ");
+     //   foreach(string s in args)
+       //     UnityEngine.Debug.Log(s);
 
 
         //get args and save them to public variables for easy access
@@ -42,19 +42,19 @@ public class SlaveManager : MonoBehaviour
         {
             if (args[1] == "Slave")
             {
-                UnityEngine.Debug.Log("This is a slave");
+             //   UnityEngine.Debug.Log("This is a slave");
 
                 slave = true;
             }
 
 
             id = int.Parse(args[2]);
-            UnityEngine.Debug.Log("id = " + id);
+   //         UnityEngine.Debug.Log("id = " + id);
 
         }
         else
         {
-            UnityEngine.Debug.Log("This is the master");
+           // UnityEngine.Debug.Log("This is the master");
             //the master spawns all slave windows on startup
             string[] keys = PlayerPrefsHelper.GetRegistryValues();            
             foreach (string key in keys)
@@ -89,7 +89,7 @@ public class SlaveManager : MonoBehaviour
     }
 
     //new slave
-    public  void SpawnNewSlave()
+    public void SpawnNewSlave()
     {
 
         //create id and pass as arg

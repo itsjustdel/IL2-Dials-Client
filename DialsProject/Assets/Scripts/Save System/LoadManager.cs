@@ -9,14 +9,43 @@ public class LoadManager : MonoBehaviour
     public static int step = 500;
     public static float scaleOverall = .6f;
 
-    public static void MigrateLayoutsToNewVersion()
+    public static void MigrateLayoutsToNewVersion(int clientId)
     {
+        //called on load
+        //look for all keys matching any plane name
+        List<string> allPlanes = new List<string>();
+        allPlanes.AddRange(PlaneLists.UkPlanes);
+        allPlanes.AddRange(PlaneLists.UsPlanes);
+        allPlanes.AddRange(PlaneLists.GerPlanes);
+        allPlanes.AddRange(PlaneLists.RuPlanes);
+        allPlanes.AddRange(PlaneLists.ItaPlanes);
 
-        string[] keys = PlayerPrefsHelper.GetRegistryValues();
-
-        foreach (string key in keys)
+        foreach(string planeType in allPlanes)
         {
-            string[] subs = key.Split(' ');
+            string key = PlayerPrefs.GetString(planeType);
+            if (key != "")
+            {
+                //we have found an old key
+                //rebuild and save using new method
+                Layout layout = JsonUtility.FromJson<Layout>(key);
+
+
+                //pack with json utility
+                string jsonFoo = JsonUtility.ToJson(layout);
+
+                //save packed string to player preferences (unity)
+                //save with id to know if user addded a a second window - if no id, save only plane name ( this will be the master client)
+                key = "layout " + clientId.ToString() + " " + planeType;
+                
+                PlayerPrefs.SetString(key, jsonFoo);
+                PlayerPrefs.Save();
+
+
+                //now remove old key
+                PlayerPrefs.DeleteKey(key);
+
+                //layout updated!
+            }
         }
     }
 
@@ -56,11 +85,11 @@ public class LoadManager : MonoBehaviour
             if(subs[0] == "layout")
             {
                 //we are looking for matching client ids
-                UnityEngine.Debug.Log("sub = " + int.Parse(subs[1]) + " id " + id);
+                //UnityEngine.Debug.Log("sub = " + int.Parse(subs[1]) + " id " + id);
                     
                 if (int.Parse( subs[1] ) == id)
                 {
-                    UnityEngine.Debug.Log("found id");
+                  // UnityEngine.Debug.Log("found id");
                     
                     //_h3923205751 = 12 chars - not always!
                     string planeType = "";
@@ -75,12 +104,12 @@ public class LoadManager : MonoBehaviour
                         planeType += key[i];
                     }
 
-                    UnityEngine.Debug.Log("plane type = " + planeType);
+                  //  UnityEngine.Debug.Log("plane type = " + planeType);
 
                     //we are looking to match the plane type with the game data
                     if (airplaneData.planeType == planeType)
                     {
-                        UnityEngine.Debug.Log("found plane type");
+                       // UnityEngine.Debug.Log("found plane type");
                         //load layout from key
                         string jsonFoo = PlayerPrefs.GetString(key);
                         //and rebuild layout

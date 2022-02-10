@@ -49,7 +49,7 @@ public class DisplayManager : MonoBehaviour
     private void SetFullscreen()
     {
         string isFullscreen = PlayerPrefs.GetString("fullscreen" + " " + slaveManager.id.ToString());
-        UnityEngine.Debug.Log("Is full screen = " + isFullscreen);
+        //UnityEngine.Debug.Log("Is full screen = " + isFullscreen);
 
         if (isFullscreen == "True")
         {
@@ -68,7 +68,7 @@ public class DisplayManager : MonoBehaviour
         }
         else
         {
-            UnityEngine.Debug.Log("Setting window pos on load");
+         //   UnityEngine.Debug.Log("Setting window pos on load");
             rect = JsonUtility.FromJson<RECT>(jsonFoo);
             //set window position!
 

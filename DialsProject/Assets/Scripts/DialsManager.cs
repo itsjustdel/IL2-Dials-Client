@@ -20,7 +20,8 @@ public class DialsManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        //migrate any old layouts to new save system
+        LoadManager.MigrateLayoutsToNewVersion(slaveManager.id);
     }
 
     // Update is called once per frame
