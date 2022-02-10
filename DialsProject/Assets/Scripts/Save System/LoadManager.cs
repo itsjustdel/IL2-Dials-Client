@@ -9,6 +9,17 @@ public class LoadManager : MonoBehaviour
     public static int step = 500;
     public static float scaleOverall = .6f;
 
+    public static void MigrateLayoutsToNewVersion()
+    {
+
+        string[] keys = PlayerPrefsHelper.GetRegistryValues();
+
+        foreach (string key in keys)
+        {
+            string[] subs = key.Split(' ');
+        }
+    }
+
     public static void LoadLayout(AirplaneData airplaneData, DialsManager dialsManager)
     {
         MenuHandler menuHandler = GameObject.FindGameObjectWithTag("MenuObject").GetComponent<MenuHandler>();
@@ -40,7 +51,7 @@ public class LoadManager : MonoBehaviour
             //layout keys are saved with id then plane type e.g (0 il2 mod 1942), (1 spitfire-123)
             string[] subs = key.Split(' ');
 
-            UnityEngine.Debug.Log("Sub 0 = " + subs[0]);
+            //UnityEngine.Debug.Log("Sub 0 = " + subs[0]);
             //we are looking for a layout
             if(subs[0] == "layout")
             {
