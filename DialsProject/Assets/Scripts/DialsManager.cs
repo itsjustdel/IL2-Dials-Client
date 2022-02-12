@@ -29,33 +29,33 @@ public class DialsManager : MonoBehaviour
 
 
         //update previous so we can detect a change on next update
-        airplaneData.planeTypePrevious = airplaneData.planeType;
+         planeTypePrevious =  planeType;
     }
 
 
     void CheckForPlaneChange()
     {
         // if we detect a plance change
-        if (airplaneData.planeType != airplaneData.planeTypePrevious)
+        if ( planeType !=  planeTypePrevious)
         {
             //check if layout panel is open, save and close before we proceed
             //simulate accept click if there was a plane loaded
-            if (menuHandler.layoutOpen && airplaneData.planeAttributes != null && airplaneData.planeAttributes.country != PlaneDataFromName.Country.UNDEFINED)
+            if (menuHandler.layoutOpen &&  planeAttributes != null &&  planeAttributes.country != PlaneDataFromName.Country.UNDEFINED)
                 menuHandler.AcceptLayoutClick();
 
             //construct country and available dials in to planeAttributes class/struct
-            airplaneData.planeAttributes = PlaneDataFromName.AttributesFromName(airplaneData.planeType);
+             planeAttributes = PlaneDataFromName.AttributesFromName( planeType);
 
-            if (airplaneData.planeAttributes.country == PlaneDataFromName.Country.UNDEFINED)
+            if ( planeAttributes.country == PlaneDataFromName.Country.UNDEFINED)
                 return;
 
             //set as its own public variable to expose in hierarchy (in unity) for testing ease
-            airplaneData.country = airplaneData.planeAttributes.country;
+             country =  planeAttributes.country;
 
-            SwitchDialBoardFromCountry(airplaneData.country);
+            SwitchDialBoardFromCountry( country);
 
             //switch off any unavailable dials to this plane
-            DeactivateUnavailableDials(countryDialBoard, airplaneData.planeType, airplaneData.planeAttributes, rpmObjects);
+            DeactivateUnavailableDials(countryDialBoard,  planeType,  planeAttributes, rpmObjects);
 
             //asign correct needle to rotate scripts depending on what plane we have loaded
             AsignNeedles();
@@ -83,13 +83,13 @@ public class DialsManager : MonoBehaviour
     {
         //rpm markings
         //p47 28 needs one red removed
-        if (airplaneData.planeType == "P-47D-28")
+        if ( planeType == "P-47D-28")
         {
             countryDialBoard.transform.Find("RPM D 0").Find("Markings").Find("Red 2.7").gameObject.SetActive(false);
         }
 
         //only the B has a red mark, so disable the one on the the "p51 D"
-        if (airplaneData.planeType == "P-51D-15")
+        if ( planeType == "P-51D-15")
         {
             countryDialBoard.transform.Find("RPM C 0").Find("Markings").Find("Red 3").gameObject.SetActive(false);
         }
@@ -98,13 +98,13 @@ public class DialsManager : MonoBehaviour
 
     void AsignNeedles()
     {
-        AsignSpeedometer(airplaneData.planeAttributes, countryDialBoard);
+        AsignSpeedometer( planeAttributes, countryDialBoard);
 
-        AsignVSI(airplaneData.planeAttributes, countryDialBoard);
+        AsignVSI( planeAttributes, countryDialBoard);
 
-        AsignRPM(airplaneData.planeAttributes, countryDialBoard);
+        AsignRPM( planeAttributes, countryDialBoard);
 
-        AsignManifold(airplaneData.planeAttributes, countryDialBoard);
+        AsignManifold( planeAttributes, countryDialBoard);
     }
 
     //POOSIBLE NEW CLASS FROM HERE?
@@ -138,7 +138,7 @@ public class DialsManager : MonoBehaviour
 
         for (int i = 0; i < rpmObjects.Count; i++)
         {
-            //  if (planeAttributes.country == AirplaneData.Country.RU)
+            //  if (planeAttributes.country ==  Country.RU)
             {
                 //Primary needle - most planes have this
                 if (rpmObjects[i].transform.Find("Needle Large") != null)
@@ -148,7 +148,7 @@ public class DialsManager : MonoBehaviour
                 }
 
 
-                if (planeAttributes.country == AirplaneData.Country.RU)
+                if (planeAttributes.country ==  Country.RU)
                 {
                     if (planeAttributes.rpmType == DialVariant.A)
                     {
@@ -158,7 +158,7 @@ public class DialsManager : MonoBehaviour
 
 
                     //pe-2
-                    if (planeAttributes.country == AirplaneData.Country.RU && planeAttributes.rpmType == DialVariant.C)
+                    if (planeAttributes.country ==  Country.RU && planeAttributes.rpmType == DialVariant.C)
                     {
                         GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
                         countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
@@ -166,7 +166,7 @@ public class DialsManager : MonoBehaviour
 
                 }
 
-                if (planeAttributes.country == AirplaneData.Country.US)
+                if (planeAttributes.country ==  Country.US)
                 {
                     if (planeAttributes.rpmType == DialVariant.A || planeAttributes.rpmType == DialVariant.D)
                     {
@@ -211,7 +211,7 @@ public class DialsManager : MonoBehaviour
 
     }
 
-    public void SwitchDialBoardFromCountry(AirplaneData.Country country)
+    public void SwitchDialBoardFromCountry(Country country)
     {
         //change dials depending on what value we received from the networking component
 
@@ -224,28 +224,28 @@ public class DialsManager : MonoBehaviour
 
         switch (country)
         {
-            case AirplaneData.Country.RU:
+            case  Country.RU:
                 //countryDials[0].SetActive(true);
                 GameObject RUprefab = Resources.Load("Prefabs/RU") as GameObject;
                 countryDialBoard = GameObject.Instantiate(RUprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
 
-            case AirplaneData.Country.GER:
+            case  Country.GER:
                 GameObject GERprefab = Resources.Load("Prefabs/GER") as GameObject;
                 countryDialBoard = GameObject.Instantiate(GERprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
 
-            case AirplaneData.Country.US:
+            case  Country.US:
                 GameObject USprefab = Resources.Load("Prefabs/US") as GameObject;
                 countryDialBoard = GameObject.Instantiate(USprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
 
-            case AirplaneData.Country.UK:
+            case  Country.UK:
                 GameObject UKprefab = Resources.Load("Prefabs/UK") as GameObject;
                 countryDialBoard = GameObject.Instantiate(UKprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
 
-            case AirplaneData.Country.ITA:
+            case  Country.ITA:
                 GameObject ITAprefab = Resources.Load("Prefabs/ITA") as GameObject;
                 countryDialBoard = GameObject.Instantiate(ITAprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
@@ -267,12 +267,12 @@ public class DialsManager : MonoBehaviour
             //Instantiate RPMs
             rpmObjects.Clear();
             //is this condition true ? yes : no
-            string rpmString = airplaneData.planeAttributes.rpmType.ToString();// == DialVariant.A ? "A" : "B";
+            string rpmString =  planeAttributes.rpmType.ToString();// == DialVariant.A ? "A" : "B";
             if (countryDialBoard.transform.Find("RPM " + rpmString) != null)
             {
                 //find prefab outside of loop
                 GameObject rpm = countryDialBoard.transform.Find("RPM " + rpmString).gameObject;
-                for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
+                for (int i = 0; i <  planeAttributes.engines; i++)
                 {
                     //create instance variable if we need to duplicate
                     GameObject rpmInstance = rpm;
@@ -284,7 +284,7 @@ public class DialsManager : MonoBehaviour
                         rpmInstance = Instantiate(rpm, rpm.transform.position, Quaternion.identity, countryDialBoard.transform);
 
                     }
-                    rpmInstance.transform.name = "RPM " + airplaneData.planeAttributes.rpmType.ToString() + " " + i.ToString();
+                    rpmInstance.transform.name = "RPM " +  planeAttributes.rpmType.ToString() + " " + i.ToString();
 
                     rpmObjects.Add(rpmInstance);
                 }
@@ -294,12 +294,12 @@ public class DialsManager : MonoBehaviour
 
             manifoldObjects.Clear();
             //is this condition true ? yes : no
-            string manifoldString = airplaneData.planeAttributes.manifoldType.ToString();// == DialVariant.A ? "A" : "B";
+            string manifoldString =  planeAttributes.manifoldType.ToString();// == DialVariant.A ? "A" : "B";
             if (countryDialBoard.transform.Find("Manifold " + rpmString) != null)
             {
                 //find prefab outside of loop
                 GameObject manifold = countryDialBoard.transform.Find("Manifold " + rpmString).gameObject;
-                for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
+                for (int i = 0; i <  planeAttributes.engines; i++)
                 {
                     //create instance variable if we need to duplicate
                     GameObject manifoldInstance = manifold;
@@ -311,7 +311,7 @@ public class DialsManager : MonoBehaviour
                         manifoldInstance = Instantiate(manifold, manifold.transform.position, Quaternion.identity, countryDialBoard.transform);
 
                     }
-                    manifoldInstance.transform.name = "Manifold " + airplaneData.planeAttributes.manifoldType.ToString() + " " + i.ToString();
+                    manifoldInstance.transform.name = "Manifold " +  planeAttributes.manifoldType.ToString() + " " + i.ToString();
 
                     manifoldObjects.Add(manifoldInstance);
                 }
@@ -407,7 +407,7 @@ public class DialsManager : MonoBehaviour
         ButtonManager.EmptyTrays(menuHandler);
 
         //grab layout data if available from player prefs
-        string jsonFoo = PlayerPrefs.GetString(airplaneData.planeType);
+        string jsonFoo = PlayerPrefs.GetString( planeType);
         if (System.String.IsNullOrEmpty(jsonFoo))
         {
 
@@ -423,7 +423,7 @@ public class DialsManager : MonoBehaviour
 
         //check for version change
 
-        if (layout.version != airplaneData.clientVersion)
+        if (layout.version !=  clientVersion)
         {
             //reset all dials :(
 
@@ -576,10 +576,10 @@ public class DialsManager : MonoBehaviour
     {
         //use class to write with json // https://forum.unity.com/threads/how-would-i-do-the-following-in-playerprefs.397516/#post-2595609
         Layout layout = new Layout();
-        layout.planeType = airplaneData.planeType;
+        layout.planeType =  planeType;
 
         //save version to cover for updates
-        layout.version = airplaneData.clientVersion;
+        layout.version =  clientVersion;
 
         //look for dial on dashboard - original parent        
 
@@ -718,15 +718,15 @@ public class DialsManager : MonoBehaviour
         string jsonFoo = JsonUtility.ToJson(layout);
 
         //save packed string to player preferences (unity)
-        PlayerPrefs.SetString(airplaneData.planeType, jsonFoo);
+        PlayerPrefs.SetString( planeType, jsonFoo);
         PlayerPrefs.Save();
 
     }
 
     public void DeleteLayout()
     {
-        Debug.Log("Deleting = " + airplaneData.planeType);
-        PlayerPrefs.DeleteKey(airplaneData.planeType);
+        Debug.Log("Deleting = " +  planeType);
+        PlayerPrefs.DeleteKey( planeType);
         //PlayerPrefs.Save();
 
 

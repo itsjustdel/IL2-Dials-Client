@@ -6,6 +6,17 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 
+public enum Country
+{
+    RU,
+    GER,
+    US,
+    UK,
+    ITA,
+    UNDEFINED
+
+}
+
 public class AirplaneData : MonoBehaviour
 {
     public bool tests;
@@ -16,16 +27,7 @@ public class AirplaneData : MonoBehaviour
 
     public float clientVersion = 0.3f; //manually update this
     public float serverVersion;
-    public enum Country
-    {
-        RU,
-        GER,
-        US,
-        UK,
-        ITA,
-        UNDEFINED
 
-    }
 
     public string planeType;
     public string planeTypePrevious;
@@ -93,25 +95,25 @@ public class AirplaneData : MonoBehaviour
         }
     }
 
-    public static int CountryIndexFromEnum(AirplaneData.Country country)
+    public static int CountryIndexFromEnum(Country country)
     {
         //child position in hierarchy
         int countryIndex = 0;
         switch (country)
         {
-            case AirplaneData.Country.RU:
+            case Country.RU:
                 countryIndex = 0;
                 break;
-            case AirplaneData.Country.GER:
+            case Country.GER:
                 countryIndex = 1;
                 break;
-            case AirplaneData.Country.US:
+            case Country.US:
                 countryIndex = 2;
                 break;
-            case AirplaneData.Country.UK:
+            case Country.UK:
                 countryIndex = 3;
                 break;
-            case AirplaneData.Country.ITA:
+            case Country.ITA:
                 countryIndex = 4;
                 break;
         }
