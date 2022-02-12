@@ -40,7 +40,7 @@ public class DialsManager : MonoBehaviour
         {
             //check if layout panel is open, save and close before we proceed
             //simulate accept click if there was a plane loaded
-            if (menuHandler.layoutOpen && airplaneData.planeAttributes != null && airplaneData.planeAttributes.country != PlaneDataFromName.Country.UNDEFINED)
+            if (menuHandler.layoutOpen && airplaneData.planeAttributes != null && airplaneData.planeAttributes.country != Country.UNDEFINED)
                 menuHandler.AcceptLayoutClick();
 
             //construct country and available dials in to planeAttributes class/struct
@@ -576,7 +576,7 @@ public class DialsManager : MonoBehaviour
     {
         //use class to write with json // https://forum.unity.com/threads/how-would-i-do-the-following-in-playerprefs.397516/#post-2595609
         Layout layout = new Layout();
-        layout.planeType =  planeType;
+        layout.planeType =  airplaneData.planeType;
 
         //save version to cover for updates
         layout.version = airplaneData.clientVersion;
