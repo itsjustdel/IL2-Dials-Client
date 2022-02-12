@@ -344,4 +344,18 @@ public class GermanDials : MonoBehaviour
 
         return target;
     }
+
+
+    public static Quaternion ManifoldTarget(float manifold, float scalar, float scalar2)
+    {
+        float m = manifold * scalar + scalar2; 
+
+        
+        Quaternion target = Quaternion.Euler(0, 0, m);
+
+        Debug.Log(m);
+
+        return target;
+    }
+
 }

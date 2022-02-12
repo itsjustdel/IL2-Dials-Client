@@ -240,7 +240,7 @@ public class UDPClient : MonoBehaviour
 		int p = 0;
 
 		//set length sent from server	
-		int floatArrayLength = 14;
+		int floatArrayLength = 17;
 		int floatArrayLengthBytes = 4 * floatArrayLength; //4 bytes for float * array length
 														  //float array
 		float[] floats = GetFloats(bytes, p, floatArrayLength);
@@ -266,8 +266,12 @@ public class UDPClient : MonoBehaviour
 			iL2GameDataClient.turnCoordinatorNeedle = floats[8];
 			iL2GameDataClient.rpms[0] = floats[9];
 			iL2GameDataClient.rpms[1] = floats[10];
-			iL2GameDataClient.rpms[2] = floats[12];
-			iL2GameDataClient.rpms[3] = floats[13]; //support for 4 engines (you never know!)
+			iL2GameDataClient.rpms[2] = floats[11];
+			iL2GameDataClient.rpms[3] = floats[12]; //support for 4 engines (you never know!)
+			iL2GameDataClient.manifolds[0] = floats[13];
+			iL2GameDataClient.manifolds[1] = floats[14];
+			iL2GameDataClient.manifolds[2] = floats[15];
+			iL2GameDataClient.manifolds[3] = floats[16]; //support for 4 engines (you never know!)
 		}
 		p += floatArrayLengthBytes;
 
