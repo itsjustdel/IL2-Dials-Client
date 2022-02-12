@@ -40,11 +40,13 @@ public class DialsManager : MonoBehaviour
 
     void CheckForPlaneChange()
     {
-        // if we detect a plance change
+        // if we detect a plane change
         if (airplaneData.planeType != airplaneData.planeTypePrevious)
         {
             //check if layout panel is open, save and close before we proceed
             //simulate accept click if there was a plane loaded
+
+
             if (menuHandler.layoutOpen && airplaneData.planeAttributes != null && airplaneData.planeAttributes.country != Country.UNDEFINED)
                 menuHandler.AcceptLayoutClick();
 
@@ -52,12 +54,16 @@ public class DialsManager : MonoBehaviour
             airplaneData.planeAttributes = PlaneDataFromName.AttributesFromName(airplaneData.planeType);
 
             if (airplaneData.planeAttributes.country == Country.UNDEFINED)
+            {
+                //remove dial board if any 
+                //remove any existing dials board prefab in scene
+                if (countryDialBoard != null)
+                    Destroy(countryDialBoard);
+
                 return;
+            }
 
-            //set as its own public variable to expose in hierarchy (in unity) for testing ease
-            airplaneData.country = airplaneData.planeAttributes.country;
-
-            SwitchDialBoardFromCountry(airplaneData.country);
+            SwitchDialBoardFromCountry(airplaneData.planeAttributes.country);
 
             //switch off any unavailable dials to this plane
             DeactivateUnavailableDials(countryDialBoard, airplaneData.planeType, airplaneData.planeAttributes, rpmObjects);
@@ -68,7 +74,7 @@ public class DialsManager : MonoBehaviour
             Markings(airplaneData);
 
             if (countryDialBoard != null)
-                LoadLayout();
+                LoadManager.LoadLayout(airplaneData, this);
             else
             //close layout
             {
@@ -80,6 +86,17 @@ public class DialsManager : MonoBehaviour
                 menuHandler.ledParent.SetActive(true);
 
                 menuHandler.layoutOpen = false;
+            }
+
+            //once loaded, check to see it it was loaded from the layout dropdown
+
+            if (openLayoutOnLoad)
+            {
+                //flagged from open 
+                Debug.Log("open layout on load");
+                Debug.Log("air country = " + airplaneData.planeAttributes.country);
+                menuHandler.OpenLayoutClick();
+                openLayoutOnLoad = false;
             }
         }
     }

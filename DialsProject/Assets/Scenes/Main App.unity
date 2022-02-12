@@ -6661,12 +6661,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   airplaneData: {fileID: 1370128203}
   menuHandler: {fileID: 840226279}
+  slaveManager: {fileID: 1142282480}
   udpClient: {fileID: 1841085020}
   countryDialBoard: {fileID: 0}
-  slaveManager: {fileID: 1142282480}
-  openLayoutOnLoad: 0
   rpmObjects: []
+  manifoldObjects: []
   speedometer: {fileID: 0}
+  openLayoutOnLoad: 0
 --- !u!4 &1111493066
 Transform:
   m_ObjectHideFlags: 0
@@ -8482,6 +8483,7 @@ MonoBehaviour:
   serverVersion: 0
   planeType: 
   planeTypePrevious: 
+  country: 0
   altitude: 0
   mmhg: 0
   airspeed: 0
@@ -8495,6 +8497,7 @@ MonoBehaviour:
   headingPrevious: 0
   headingPreviousPrevious: 0
   rpms: []
+  manifolds: []
   buildControl: {fileID: 1413319309}
   menuHandler: {fileID: 840226279}
   udpClient: {fileID: 1841085020}
