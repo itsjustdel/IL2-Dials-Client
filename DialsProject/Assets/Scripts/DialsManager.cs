@@ -762,7 +762,7 @@ public class DialsManager : MonoBehaviour
 
 
         //and call default
-        DefaultLayouts(countryDialBoard);
+        LoadManager.DefaultLayouts(countryDialBoard);
 
         //make sure all ui is on
 
