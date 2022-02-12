@@ -49,6 +49,7 @@ public class AirplaneData : MonoBehaviour
     public float headingPrevious;
     public float headingPreviousPrevious;
     public List<float> rpms;
+    public List<float> manifolds;
 
 
     public BuildControl buildControl;
@@ -59,6 +60,7 @@ public class AirplaneData : MonoBehaviour
     {
         //initialise list with empty
         rpms = new List<float> { 0f, 0f, 0f, 0f };
+        manifolds = new List<float> { 0f, 0f, 0f, 0f };
     }
 
     //fixed update is enough for checking status
