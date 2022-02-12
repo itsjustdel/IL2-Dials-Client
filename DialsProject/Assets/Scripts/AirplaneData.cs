@@ -16,13 +16,22 @@ public class AirplaneData : MonoBehaviour
 
     public float clientVersion = 0.3f; //manually update this
     public float serverVersion;
-  
+    public enum Country
+    {
+        RU,
+        GER,
+        US,
+        UK,
+        ITA,
+        UNDEFINED
+
+    }
 
     public string planeType;
     public string planeTypePrevious;
-    //public Country country = Country.RU;
+    public Country country = Country.RU;
     //stores name avaialble dials
-    
+
     public PlaneDataFromName.PlaneAttributes planeAttributes;
 
     public float altitude;
@@ -38,7 +47,6 @@ public class AirplaneData : MonoBehaviour
     public float headingPrevious;
     public float headingPreviousPrevious;
     public List<float> rpms;
-    public List<float> manifolds;
 
 
     public BuildControl buildControl;
@@ -49,8 +57,7 @@ public class AirplaneData : MonoBehaviour
     {
         //initialise list with empty
         rpms = new List<float> { 0f, 0f, 0f, 0f };
-        manifolds = new List<float> { 0f, 0f, 0f, 0f };
-}
+    }
 
     //fixed update is enough for checking status
     void FixedUpdate()
@@ -58,13 +65,13 @@ public class AirplaneData : MonoBehaviour
         //check client version against incoming server message
         CheckVersion();
 
-        
+
     }
 
 
     void CheckVersion()
     {
-        
+
         //checks version and shows message if mismatch (if connected)
         if (udpClient.connected)
         {
@@ -86,25 +93,25 @@ public class AirplaneData : MonoBehaviour
         }
     }
 
-    public static int CountryIndexFromEnum(Country country)
+    public static int CountryIndexFromEnum(AirplaneData.Country country)
     {
         //child position in hierarchy
         int countryIndex = 0;
         switch (country)
         {
-            case Country.RU:
+            case AirplaneData.Country.RU:
                 countryIndex = 0;
                 break;
-            case Country.GER:
+            case AirplaneData.Country.GER:
                 countryIndex = 1;
                 break;
-            case Country.US:
+            case AirplaneData.Country.US:
                 countryIndex = 2;
                 break;
-            case Country.UK:
+            case AirplaneData.Country.UK:
                 countryIndex = 3;
                 break;
-            case Country.ITA:
+            case AirplaneData.Country.ITA:
                 countryIndex = 4;
                 break;
         }
@@ -112,10 +119,4 @@ public class AirplaneData : MonoBehaviour
         return countryIndex;
     }
 
-    internal void setPlaneType(string planeType)
-    {
-        //do not set if menu open
-        if (!menuHandler.layoutOpen)
-            this.planeType = planeType;
-    }
 }
