@@ -90,8 +90,8 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
                     //put it back to orignal parent
                     transform.parent.parent.gameObject.transform.parent = menuHandler.udpClient.rN.transform;
                     //reset scale
-                    List<GameObject> dials = DialsManager.ActiveDials(menuHandler.dialsManager.countryDialBoard);
-                    float defaultScale = DialsManager.DefaultDialScale(dials);
+                    List<GameObject> dials = LoadManager.ActiveDials(menuHandler.dialsManager.countryDialBoard);
+                    float defaultScale = LoadManager.DefaultDialScale(dials);
                     //defauly scale in prefab is 0.35f, factor this in
                     defaultScale *= 0.35f;
                     rectTransform.localScale = new Vector3(defaultScale, defaultScale, 1f);
@@ -232,7 +232,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         if (menuHandler.dialsInTray.Contains(transform.parent.parent.gameObject))
         {
             //using same functions as when we load the dials to find out what size they are by default
-            float defaultScale = DialsManager.DefaultDialScale( DialsManager.ActiveDials(menuHandler.dialsManager.countryDialBoard) );
+            float defaultScale = LoadManager.DefaultDialScale(LoadManager.ActiveDials(menuHandler.dialsManager.countryDialBoard) );
             rectTransform.localScale = new Vector3(defaultScale, defaultScale, 1f);
         }
 

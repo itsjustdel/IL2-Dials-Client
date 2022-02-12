@@ -13,6 +13,7 @@ public class UDPClient : MonoBehaviour
 	public AirplaneData iL2GameDataClient;
 	public MenuHandler menuHandler;
 	public RotateNeedle rN;
+	public SlaveManager slaveManager;
 	public bool connected = false;
 	public float autoScanTimeScale = 1f;
 	public float standardFixedTime = 0.02f;
@@ -145,7 +146,8 @@ public class UDPClient : MonoBehaviour
 			// Sends a message to the host to which you have connected.
 			byte[] sendBytes = System.Text.Encoding.ASCII.GetBytes("IL-2 Client");
 					
-			client.Send(sendBytes, sendBytes.Length);
+			//if(!slaveManager.slave)
+				client.Send(sendBytes, sendBytes.Length);
 
 			//////blocking call
 			byte[] receivedData = client.Receive(ref ep);
@@ -238,7 +240,7 @@ public class UDPClient : MonoBehaviour
 		int p = 0;
 
 		//set length sent from server	
-		int floatArrayLength = 14;
+		int floatArrayLength = 17;
 		int floatArrayLengthBytes = 4 * floatArrayLength; //4 bytes for float * array length
 														  //float array
 		float[] floats = GetFloats(bytes, p, floatArrayLength);
@@ -264,8 +266,12 @@ public class UDPClient : MonoBehaviour
 			iL2GameDataClient.turnCoordinatorNeedle = floats[8];
 			iL2GameDataClient.rpms[0] = floats[9];
 			iL2GameDataClient.rpms[1] = floats[10];
-			iL2GameDataClient.rpms[2] = floats[12];
-			iL2GameDataClient.rpms[3] = floats[13]; //support for 4 engines (you never know!)
+			iL2GameDataClient.rpms[2] = floats[11];
+			iL2GameDataClient.rpms[3] = floats[12]; //support for 4 engines (you never know!)
+			iL2GameDataClient.manifolds[0] = floats[13];
+			iL2GameDataClient.manifolds[1] = floats[14];
+			iL2GameDataClient.manifolds[2] = floats[15];
+			iL2GameDataClient.manifolds[3] = floats[16]; //support for 4 engines (you never know!)
 		}
 		p += floatArrayLengthBytes;
 
@@ -277,10 +283,14 @@ public class UDPClient : MonoBehaviour
 		//plane type string size
 		uint stringSize = BitConverter.ToUInt32(bytes, p);
 		p += sizeof(uint);
+
+
+		
 		//plane type string
 		string planeType = System.Text.Encoding.UTF8.GetString(bytes, p, (int)stringSize);
-		iL2GameDataClient.planeType = planeType;
-		//p += 64;//chosen max string size (by me)
+		//using setter method so we can check menu status before chaning plane name
+		iL2GameDataClient.setPlaneType(planeType);
+		
 
 	}
 

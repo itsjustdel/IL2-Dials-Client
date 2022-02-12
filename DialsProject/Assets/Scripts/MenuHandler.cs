@@ -16,13 +16,16 @@ public class MenuHandler : MonoBehaviour
     public GameObject serverMessagePanel;
     public GameObject blurPanel;
     public GameObject menuPanel;
+    public GameObject displayPanel;
     public GameObject menuButton;
     public GameObject connectionPanel;
     public GameObject layoutPanel;
     public GameObject layoutButton;
+    public GameObject flagsPanel;
+    public GameObject screensPanel;
+    public GameObject planeDropdownPanel;
 
 
-    
     public GameObject connectionsButton;
     public GameObject ledParent;
     public GameObject ipTextField;
@@ -63,8 +66,9 @@ public class MenuHandler : MonoBehaviour
     //idle timer
     public float idleTimer;
     private Vector3 mousePos;
+    
     public  bool layoutOpen;
-
+    public string planeTypeBeforeLayoutPanel;
 
     public void Start()
     {
@@ -161,7 +165,7 @@ public class MenuHandler : MonoBehaviour
         RemoveTitle();
                 
 
-        if (airplaneData.country != AirplaneData.Country.UNDEFINED)
+        if (airplaneData.planeAttributes != null && airplaneData.planeAttributes.country != Country.UNDEFINED)
             RemoveTitle();
         else
             EnableTitle();
@@ -309,16 +313,8 @@ public class MenuHandler : MonoBehaviour
     public void MenuButtonClicked()
     {
 
-        if(!connectionPanel.activeInHierarchy && !menuPanel.activeInHierarchy)
-        {
-            //everything closed, open menu panel
-            //Debug.Log("Opening menu from closed");
-            menuPanel.SetActive(true);
-            blurPanel.SetActive(true);
-        }
 
-
-        else if (menuPanel.activeInHierarchy)
+        if (menuPanel.activeInHierarchy)
         {
             //close from main main menu 
             //Debug.Log("Closing from main menu");
@@ -338,7 +334,21 @@ public class MenuHandler : MonoBehaviour
             blurPanel.SetActive(false);
             layoutWarningMessage.SetActive(false);
         }        
-
+        else if(screensPanel.activeInHierarchy)
+        {
+            screensPanel.SetActive(false);
+            blurPanel.SetActive(false);
+        }
+        else if(flagsPanel.activeInHierarchy)
+        {
+            flagsPanel.SetActive(false);
+            blurPanel.SetActive(false);
+        }
+        else if (planeDropdownPanel.activeInHierarchy)
+        {
+            planeDropdownPanel.SetActive(false);
+            blurPanel.SetActive(false);
+        }
         else if (layoutOpen)
         {
             //leaving layout screen
@@ -350,8 +360,15 @@ public class MenuHandler : MonoBehaviour
             layoutWarningMessage.SetActive(false);
 
         }
-       
-            
+        else
+        {
+            //everything closed, open menu panel
+            //Debug.Log("Opening menu from closed");
+            menuPanel.SetActive(true);
+            blurPanel.SetActive(true);
+        }
+
+
         //blurPanel.SetActive(!blurPanel.activeSelf);
         //menuPanel.SetActive(!menuPanel.activeSelf);
         //connectionPanel.SetActive(false);
@@ -437,7 +454,7 @@ public class MenuHandler : MonoBehaviour
             //save
             PlayerPrefs.SetInt("PortNumber", parsed);
 
-            Debug.Log("6");
+           // Debug.Log("6");
 
         }
 
@@ -491,14 +508,15 @@ public class MenuHandler : MonoBehaviour
 
     public void OpenLayoutClick()
     {
-        //Debug.Log("Layout Click");
+        Debug.Log("Layout Click");
+        Debug.Log("airplane data = " + airplaneData);
         layoutOpen = true;
         
         //check for plane - can only organise if plane loaded
-        if(airplaneData.country == AirplaneData.Country.UNDEFINED)
+        if(airplaneData.planeAttributes == null || airplaneData.planeAttributes.country == Country.UNDEFINED)
         {
             layoutWarningMessage.SetActive(true);
-            //Debug.Log("Layout Warning message");
+            Debug.Log("Layout Warning message");
             return;
         }
         else
@@ -531,6 +549,9 @@ public class MenuHandler : MonoBehaviour
 
     public void AcceptLayoutClick()
     {
+        
+        //
+
         //go back to main page
         layoutPanel.SetActive(false);
         //turn icon handlers off 
@@ -538,6 +559,7 @@ public class MenuHandler : MonoBehaviour
 
         //tunr menu button and leds back on
         menuButton.SetActive(true);
+        menuPanel.SetActive(true);
         ledParent.SetActive(true);
 
         layoutOpen = false;
@@ -546,6 +568,24 @@ public class MenuHandler : MonoBehaviour
         ActivateCompassTouch();
 
         dialsManager.SaveLayout();
+
+        //alter plane name after we saved
+        // check if we should get rid of loaded panel
+        if (airplaneData.planeType == planeTypeBeforeLayoutPanel)
+        {
+            //we are still on the correct plane
+
+            Debug.Log("Same plane after layout close");
+            //   airplaneData.planeType = planeTypeBeforeLayoutPanel;
+        }
+        else
+        {
+            Debug.Log("Changing back after layout close");
+            //set back
+            //    airplaneData.planeType = planeTypeBeforeLayoutPanel;
+        }
+
+        airplaneData.planeType = planeTypeBeforeLayoutPanel;
 
     }
 
@@ -569,6 +609,10 @@ public class MenuHandler : MonoBehaviour
     
         //show copnnection panel - IP address, port etc
         connectionPanel.SetActive(true);
+
+        //start animation?
+        //connectionPanel.GetComponent<PanelAnimator>().animateUp = true;
+        //connectionPanel.GetComponent<PanelAnimator>().animationTarget = 4000;
     }
 
     public void UpdateLayoutPanel()
@@ -611,15 +655,10 @@ public class MenuHandler : MonoBehaviour
 
     }
 
-    private void TurnHandlersOn()
-    {
-        //check if in tray?
-
+    public void TurnHandlersOn()
+    {   
         
         GameObject[] UIhandlers = GameObject.FindGameObjectsWithTag("UIHandler");
-
-        
-
 
         for (int i = 0; i < UIhandlers.Length; i++)
         {
@@ -639,5 +678,24 @@ public class MenuHandler : MonoBehaviour
             UIhandlers[i].GetComponent<Image>().enabled = false;
         }
     }
+    public void OpenDisplayPanel()
+    {
+        menuPanel.SetActive(false);
+        displayPanel.SetActive(true);
 
+    }
+
+    public void ShowFlagsPanel()
+    {
+        menuPanel.SetActive(false);
+        flagsPanel.SetActive(true);
+    }
+
+    public void ConnectionPanelBack()
+    {
+        connectionPanel.SetActive(false);
+        menuPanel.SetActive(true);
+    }
+
+  
 }

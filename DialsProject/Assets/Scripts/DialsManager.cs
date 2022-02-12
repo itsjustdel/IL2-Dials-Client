@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
 public class DialsManager : MonoBehaviour
 {
     //This class manages the loading and saving of layouts and population of dials on plane change
@@ -11,6 +9,10 @@ public class DialsManager : MonoBehaviour
     public MenuHandler menuHandler;
     public UDPClient udpClient;
     public GameObject countryDialBoard;
+    public SlaveManager slaveManager;
+
+    //flagged from open layout button press
+    public bool openLayoutOnLoad;
 
     public List<GameObject> rpmObjects = new List<GameObject>();
     public GameObject speedometer;
@@ -18,7 +20,8 @@ public class DialsManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        //migrate any old layouts to new save system
+        LoadManager.MigrateLayoutsToNewVersion(slaveManager.id);
     }
 
     // Update is called once per frame
@@ -34,24 +37,31 @@ public class DialsManager : MonoBehaviour
 
     void CheckForPlaneChange()
     {
-        // if we detect a plance change
+
+        // if we detect a plane change
         if (airplaneData.planeType != airplaneData.planeTypePrevious)
         {
             //check if layout panel is open, save and close before we proceed
             //simulate accept click if there was a plane loaded
-            if (menuHandler.layoutOpen && airplaneData.planeAttributes!=null && airplaneData.planeAttributes.country != PlaneDataFromName.Country.UNDEFINED)
+
+            
+            if (menuHandler.layoutOpen && airplaneData.planeAttributes!=null && airplaneData.planeAttributes.country != Country.UNDEFINED)
                 menuHandler.AcceptLayoutClick();
 
             //construct country and available dials in to planeAttributes class/struct
             airplaneData.planeAttributes = PlaneDataFromName.AttributesFromName(airplaneData.planeType);
 
-            if (airplaneData.planeAttributes.country == PlaneDataFromName.Country.UNDEFINED)
+            if (airplaneData.planeAttributes.country == Country.UNDEFINED)
+            {
+                //remove dial board if any 
+                //remove any existing dials board prefab in scene
+                if (countryDialBoard != null)                    
+                    Destroy(countryDialBoard);
+
                 return;
+            }
 
-            //set as its own public variable to expose in hierarchy (in unity) for testing ease
-            airplaneData.country = airplaneData.planeAttributes.country;
-
-            SwitchDialBoardFromCountry(airplaneData.country);
+            SwitchDialBoardFromCountry(airplaneData.planeAttributes.country);
 
             //switch off any unavailable dials to this plane
             DeactivateUnavailableDials(countryDialBoard, airplaneData.planeType, airplaneData.planeAttributes, rpmObjects);
@@ -62,7 +72,7 @@ public class DialsManager : MonoBehaviour
             Markings(airplaneData);
 
             if (countryDialBoard != null)
-                LoadLayout();
+                LoadManager.LoadLayout(airplaneData, this);
             else
             //close layout
             {
@@ -74,6 +84,17 @@ public class DialsManager : MonoBehaviour
                 menuHandler.ledParent.SetActive(true);
 
                 menuHandler.layoutOpen = false;
+            }
+
+            //once loaded, check to see it it was loaded from the layout dropdown
+
+            if (openLayoutOnLoad)
+            {
+                //flagged from open 
+                Debug.Log("open layout on load");
+                Debug.Log("air country = " + airplaneData.planeAttributes.country);
+                menuHandler.OpenLayoutClick();
+                openLayoutOnLoad = false;
             }
         }
     }
@@ -145,7 +166,7 @@ public class DialsManager : MonoBehaviour
                 }
 
 
-                if (planeAttributes.country == AirplaneData.Country.RU)
+                if (planeAttributes.country == Country.RU)
                 {
                     if (planeAttributes.rpmType == RpmType.A)
                     {
@@ -155,7 +176,7 @@ public class DialsManager : MonoBehaviour
 
 
                     //pe-2
-                    if (planeAttributes.country == AirplaneData.Country.RU && planeAttributes.rpmType == RpmType.C)
+                    if (planeAttributes.country == Country.RU && planeAttributes.rpmType == RpmType.C)
                     {
                         GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
                         countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
@@ -163,7 +184,7 @@ public class DialsManager : MonoBehaviour
 
                 }
 
-                if (planeAttributes.country == AirplaneData.Country.US)
+                if (planeAttributes.country == Country.US)
                 {
                     if (planeAttributes.rpmType == RpmType.A || planeAttributes.rpmType == RpmType.D)
                     {
@@ -193,7 +214,7 @@ public class DialsManager : MonoBehaviour
 
     }
 
-    public void SwitchDialBoardFromCountry(AirplaneData.Country country)
+    public void SwitchDialBoardFromCountry(Country country)
     {
         //change dials depending on what value we received from the networking component
 
@@ -206,28 +227,28 @@ public class DialsManager : MonoBehaviour
 
         switch (country)
         {
-            case AirplaneData.Country.RU:
+            case Country.RU:
                 //countryDials[0].SetActive(true);
                 GameObject RUprefab = Resources.Load("Prefabs/RU") as GameObject;
                 countryDialBoard = GameObject.Instantiate(RUprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
 
-            case AirplaneData.Country.GER:
+            case Country.GER:
                 GameObject GERprefab = Resources.Load("Prefabs/GER") as GameObject;
                 countryDialBoard = GameObject.Instantiate(GERprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
 
-            case AirplaneData.Country.US:
+            case Country.US:
                 GameObject USprefab = Resources.Load("Prefabs/US") as GameObject;
                 countryDialBoard = GameObject.Instantiate(USprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
 
-            case AirplaneData.Country.UK:
+            case Country.UK:
                 GameObject UKprefab = Resources.Load("Prefabs/UK") as GameObject;
                 countryDialBoard = GameObject.Instantiate(UKprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
 
-            case AirplaneData.Country.ITA:
+            case Country.ITA:
                 GameObject ITAprefab = Resources.Load("Prefabs/ITA") as GameObject;
                 countryDialBoard = GameObject.Instantiate(ITAprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
@@ -339,183 +360,23 @@ public class DialsManager : MonoBehaviour
 
     }
 
-    public void LoadLayout()
-    {
-        MenuHandler menuHandler = GameObject.FindGameObjectWithTag("MenuObject").GetComponent<MenuHandler>();
-
-        //Save layout is in MenuHandler
-
-        //first of all empty trays
-        ButtonManager.EmptyTrays(menuHandler);
-
-        //grab layout data if available from player prefs
-        string jsonFoo = PlayerPrefs.GetString(airplaneData.planeType);
-        if (System.String.IsNullOrEmpty(jsonFoo))
-        {
-
-            //set dials to default
-            DefaultLayouts(countryDialBoard);
-            return;
-        }
-
-        //continue if there is a pref file
-
-        //rebuild json
-        Layout layout = JsonUtility.FromJson<Layout>(jsonFoo);
-
-        //check for version change
-
-        if (layout.version != airplaneData.clientVersion)
-        {
-            //reset all dials :(
-
-            //only need to do this when I add a new dial? - new dial will be in tray automatically if using a newer version - sohuld be ok just for beta testers
-            //set dials to default
-            //Debug.Log("Version change detected");
-            //DefaultLayouts(countryDialBoard);
-
-            //return;
-        }
-
-        //apply to dials/positions        
-        speedometer.GetComponent<RectTransform>().anchoredPosition = layout.speedoPos;
-        speedometer.GetComponent<RectTransform>().localScale = new Vector3(layout.speedoScale, layout.speedoScale, 1f);
-
-        if (layout.speedoInTray)
-            AddToTrayOnLoad(speedometer, menuHandler);
-
-        GameObject altimeter = countryDialBoard.transform.Find("Altimeter").gameObject;
-        altimeter.GetComponent<RectTransform>().anchoredPosition = layout.altPos;
-        altimeter.GetComponent<RectTransform>().localScale = new Vector3(layout.altScale, layout.altScale, 1f);
-
-        if (layout.altimeterInTray)
-            AddToTrayOnLoad(altimeter, menuHandler);
-
-        if (countryDialBoard.transform.Find("Heading Indicator") != null)
-        {
-            GameObject headingIndicator = countryDialBoard.transform.Find("Heading Indicator").gameObject;
-            headingIndicator.GetComponent<RectTransform>().anchoredPosition = layout.headingPos;
-            headingIndicator.GetComponent<RectTransform>().localScale = new Vector3(layout.headingScale, layout.headingScale, 1f);
-
-            if (layout.headingIndicatorInTray)
-                AddToTrayOnLoad(headingIndicator, menuHandler);
-        }
-
-        if (countryDialBoard.transform.Find("Turn And Bank") != null)
-        {
-            GameObject turnAndBank = countryDialBoard.transform.Find("Turn And Bank").gameObject;
-            turnAndBank.GetComponent<RectTransform>().anchoredPosition = layout.turnAndBankPos;
-            turnAndBank.GetComponent<RectTransform>().localScale = new Vector3(layout.turnAndBankScale, layout.turnAndBankScale, 1f);
-
-            if (layout.turnAndBankInTray)
-                AddToTrayOnLoad(turnAndBank, menuHandler);
-
-        }
-
-        if (countryDialBoard.transform.Find("Turn Coordinator") != null)
-        {
-
-            GameObject turnIndicator = countryDialBoard.transform.Find("Turn Coordinator").gameObject;
-            turnIndicator.GetComponent<RectTransform>().anchoredPosition = layout.turnIndicatorPos;
-            turnIndicator.GetComponent<RectTransform>().localScale = new Vector3(layout.turnIndicatorScale, layout.turnIndicatorScale, 1f);
-
-            if (layout.turnIndicatorInTray)
-                AddToTrayOnLoad(turnIndicator, menuHandler);
-        }
-
-        //both vsi share the same variable - only one vsi per plane
-
-        if (countryDialBoard.transform.Find("VSI Smallest") != null)
-        {
-
-            GameObject vsi = countryDialBoard.transform.Find("VSI Smallest").gameObject;
-            vsi.GetComponent<RectTransform>().anchoredPosition = layout.vsiSmallestPos;
-            vsi.GetComponent<RectTransform>().localScale = new Vector3(layout.vsiSmallestScale, layout.vsiSmallestScale, 1f);
-
-            if (layout.vsiSmallestInTray)
-                AddToTrayOnLoad(vsi, menuHandler);
-        }
-
-        if (countryDialBoard.transform.Find("VSI Small") != null)
-        {
-
-            GameObject vsi = countryDialBoard.transform.Find("VSI Small").gameObject;
-            vsi.GetComponent<RectTransform>().anchoredPosition = layout.vsiSmallPos;
-            vsi.GetComponent<RectTransform>().localScale = new Vector3(layout.vsiSmallScale, layout.vsiSmallScale, 1f);
-
-            if (layout.vsiSmallInTray)
-                AddToTrayOnLoad(vsi, menuHandler);
-        }
-
-        //both vsi share the same variable - only one vsi per plane
-        if (countryDialBoard.transform.Find("VSI Large") != null)
-        {
-
-            GameObject vsi = countryDialBoard.transform.Find("VSI Large").gameObject;
-            vsi.GetComponent<RectTransform>().anchoredPosition = layout.vsiLargePos;
-            vsi.GetComponent<RectTransform>().localScale = new Vector3(layout.vsiLargeScale, layout.vsiLargeScale, 1f);
-
-            if (layout.vsiLargeInTray)
-                AddToTrayOnLoad(vsi, menuHandler);
-        }
-
-        if (countryDialBoard.transform.Find("Artificial Horizon") != null)
-        {
-
-            GameObject artificialHorizon = countryDialBoard.transform.Find("Artificial Horizon").gameObject;
-            artificialHorizon.GetComponent<RectTransform>().anchoredPosition = layout.artificialHorizonPos;
-            artificialHorizon.GetComponent<RectTransform>().localScale = new Vector3(layout.artificialHorizonScale, layout.artificialHorizonScale, 1f);
-
-            if (layout.artificialHorizonInTray)
-                AddToTrayOnLoad(artificialHorizon, menuHandler);
-        }
-
-        if (countryDialBoard.transform.Find("Repeater Compass") != null)
-        {
-
-            GameObject repeaterCompass = countryDialBoard.transform.Find("Repeater Compass").gameObject;
-            repeaterCompass.GetComponent<RectTransform>().anchoredPosition = layout.repeaterCompassPos;
-            repeaterCompass.GetComponent<RectTransform>().localScale = new Vector3(layout.repeaterCompassScale, layout.repeaterCompassScale, 1f);
-
-            if (layout.repeaterCompassInTray)
-                AddToTrayOnLoad(repeaterCompass, menuHandler);
-        }
-
-        if (countryDialBoard.transform.Find("Repeater Compass Alternate") != null)
-        {
-            GameObject repeaterCompassAlternate = countryDialBoard.transform.Find("Repeater Compass Alternate").gameObject;
-            //using non alternate variables because we won't have two compasses 
-            repeaterCompassAlternate.GetComponent<RectTransform>().anchoredPosition = layout.repeaterCompassAlternatePos;
-            repeaterCompassAlternate.GetComponent<RectTransform>().localScale = new Vector3(layout.repeaterCompassAlternateScale, layout.repeaterCompassAlternateScale, 1f);
-
-            if (layout.repeaterCompassAlternateInTray)
-                AddToTrayOnLoad(repeaterCompassAlternate, menuHandler);
-        }
-
-
-        for (int i = 0; i < rpmObjects.Count; i++)
-        {
-            rpmObjects[i].GetComponent<RectTransform>().anchoredPosition = layout.rpmPos[i];
-            rpmObjects[i].GetComponent<RectTransform>().localScale = new Vector3(layout.rpmScale[i], layout.rpmScale[i], 1f);
-
-            if (layout.rpmInTray[i])
-                AddToTrayOnLoad(rpmObjects[i], menuHandler);
-        }
-
-    }
+    
 
     public void SaveLayout()
     {
         //use class to write with json // https://forum.unity.com/threads/how-would-i-do-the-following-in-playerprefs.397516/#post-2595609
         Layout layout = new Layout();
+        
+        //is this a slaved client?        
+        layout.slave = slaveManager.slave;
+        layout.id = slaveManager.id;        
+
         layout.planeType = airplaneData.planeType;
 
         //save version to cover for updates
         layout.version = airplaneData.clientVersion;
 
-        //look for dial on dashboard - original parent        
-
-
+        //look for dial on dashboard - original parent
         if (!menuHandler.dialsInTray.Contains(speedometer))
         {
             layout.speedoPos = speedometer.GetComponent<RectTransform>().anchoredPosition;
@@ -634,8 +495,17 @@ public class DialsManager : MonoBehaviour
         //pack with json utility
         string jsonFoo = JsonUtility.ToJson(layout);
 
+        //save master/client id as first char in string, then save plane name
+
+        Debug.Log("saving layout");
+        
         //save packed string to player preferences (unity)
-        PlayerPrefs.SetString(airplaneData.planeType, jsonFoo);
+        //save with id to know if user addded a a second window - if no id, save only plane name ( this will be the master client)
+        string key = "layout " + slaveManager.id + " " + airplaneData.planeType;
+        Debug.Log("saving key = " + key);
+
+
+        PlayerPrefs.SetString(key, jsonFoo);
         PlayerPrefs.Save();
 
     }
@@ -657,7 +527,7 @@ public class DialsManager : MonoBehaviour
         
 
         //and call default
-        DefaultLayouts(countryDialBoard);
+        LoadManager.DefaultLayouts(countryDialBoard);
 
         //make sure all ui is on
 
@@ -765,118 +635,7 @@ public class DialsManager : MonoBehaviour
 
 
 
-    static void DefaultLayouts(GameObject dialsPrefab)
-    {
-        //Programtically sort default layouts, so if there is an update, i don't need to create a prefab layout
-
-        //organise dials depending on how many are available
-        //we need to know the total amount of active dials before we continue
-        List<GameObject> activeDials = ActiveDials(dialsPrefab);
-
-        float scale = DefaultDialScale(activeDials);
-
-        //split in to two rows, if odd number, put more on the top
-        for (int i = 0; i < activeDials.Count; i++)
-        {
-            //ternary statement            
-            int odd = activeDials.Count % 2 != 0 ? 1 : 0;
-
-            //if odd, we will add one extra to the top row
-            if (i < activeDials.Count / 2 + odd)
-            {
-                //0 0
-                //150 1
-                //300 2
-
-                int x = ((int)((activeDials.Count - 1) / 2)) * -150;
-                //then add step
-                int step = 300 * (i);
-                x += step;
-
-                int y = 150;
-
-                //scale and round and convert to int for position
-                float xFloat = x * scale;
-                x = (int)(Mathf.Round(xFloat));
-                float yFloat = y * scale;
-                y = (int)(Mathf.Round(yFloat));
-
-                activeDials[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
-
-
-            }
-            else
-            {
-                //starting point //from whats left 
-                //use "odd" to nudge in to position
-                int diff = activeDials.Count - 1 + odd - (activeDials.Count / 2);
-                int x = ((int)(diff));
-                x *= -150;
-                //then add step
-                int step = 300 * (i - (activeDials.Count / 2));
-                x += step;
-
-                int y = -150;
-
-                //scale and round and convert to int 
-                float xFloat = x * scale;
-                x = (int)(Mathf.Round(xFloat));
-                float yFloat = y * scale;
-                y = (int)(Mathf.Round(yFloat));
-
-                activeDials[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
-            }
-
-            //scale dial            
-            activeDials[i].transform.localScale =new Vector3( scale*0.35f, scale * 0.35f, scale * 0.35f);
-        }
-    }
-
-    void AddToTrayOnLoad(GameObject dial, MenuHandler menuHandler)
-    {
-        //USe button manager class to store dial in tray
-        ButtonManager.PutDialInTray(dial, menuHandler);
-    }
-
     //helpers
-
-    public static List<GameObject> ActiveDials(GameObject dialsPrefab)
-    {
-        List<GameObject> activeDials = new List<GameObject>();
-        for (int i = 0; i < dialsPrefab.transform.childCount; i++)
-            if (dialsPrefab.transform.GetChild(i).gameObject.activeSelf)
-                activeDials.Add(dialsPrefab.transform.GetChild(i).gameObject);
-
-        return activeDials;
-    }
-
-    public static float DefaultDialScale(List<GameObject> activeDials)
-    { //find out if we ned to scale dials to fit them all in the screen (happens if 7 or more dials)
-        //length of top will be the longest
-        float f = activeDials.Count;
-        //round half of count upwards and convert to int. Mathf.Ceil rounds up. If on a whole number, it doesn't round up //https://docs.unity3d.com/ScriptReference/Mathf.Ceil.html
-        //half of count because there are two rows
-        int longestRow = (int)Mathf.Ceil(f / 2);
-        longestRow *= 300;//300 default step between dials
-
-        GameObject canvasObject = GameObject.FindGameObjectWithTag("Canvas");
-        //if longer than the canvas width
-        //UnityEngine.Debug.Log("longest row = " + longestRow);
-        //UnityEngine.Debug.Log("canvas X = " + canvasObject.GetComponent<RectTransform>().rect.width);
-
-        float scale = 1f;
-        if (longestRow > canvasObject.GetComponent<RectTransform>().rect.width)
-        {
-            //UnityEngine.Debug.Log("row longer than canvas");
-
-            //use this ratio for all positional calculations
-            scale = canvasObject.GetComponent<RectTransform>().rect.width / longestRow;
-
-        }
-
-        return scale;
-    }
-
 
 
 }
