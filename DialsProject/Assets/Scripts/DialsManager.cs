@@ -17,6 +17,10 @@ public class DialsManager : MonoBehaviour
     public List<GameObject> manifoldObjects = new List<GameObject>();
     public GameObject speedometer;
 
+
+    //flagged from open layout button press
+    public bool openLayoutOnLoad;
+
     // Start is called before the first frame update
     void Start()
     {

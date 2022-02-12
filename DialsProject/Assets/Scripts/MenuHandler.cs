@@ -8,9 +8,9 @@ public class MenuHandler : MonoBehaviour
 {
     public AirplaneData airplaneData;
     public DialsManager dialsManager;
-    
+
     public bool deletePrefs = false;
-    public GameObject title;    
+    public GameObject title;
     public GameObject missionStart;
     public GameObject welcomePanel;
     public GameObject serverMessagePanel;
@@ -52,8 +52,8 @@ public class MenuHandler : MonoBehaviour
 
 
     //opening animations
-  
-    public float slideSpeed = 1f;    
+
+    public float slideSpeed = 1f;
     private Color missionStartColor;
     private Color titleColor;
     private bool glowDirection;
@@ -66,8 +66,8 @@ public class MenuHandler : MonoBehaviour
     //idle timer
     public float idleTimer;
     private Vector3 mousePos;
-    
-    public  bool layoutOpen;
+
+    public bool layoutOpen;
     public string planeTypeBeforeLayoutPanel;
 
     public void Start()
@@ -105,7 +105,7 @@ public class MenuHandler : MonoBehaviour
         {
             //hello!
             welcomePanel.SetActive(true);
-            
+
             blurPanel.SetActive(true);
             //buttons and leds
             ledParent.SetActive(false);
@@ -148,7 +148,7 @@ public class MenuHandler : MonoBehaviour
         titleColor = title.GetComponent<Image>().color;
         titleColor.a = 0;
         title.GetComponent<Image>().color = titleColor;
-        
+
 
 
     }
@@ -163,7 +163,7 @@ public class MenuHandler : MonoBehaviour
         }
 
         RemoveTitle();
-                
+
 
         if (airplaneData.planeAttributes != null && airplaneData.planeAttributes.country != Country.UNDEFINED)
             RemoveTitle();
@@ -183,7 +183,7 @@ public class MenuHandler : MonoBehaviour
 
         IdleTimer();
 
-        
+
     }
 
 
@@ -208,19 +208,19 @@ public class MenuHandler : MonoBehaviour
         if (Input.GetButtonDown("Fire1"))
         {
             idleTimer = 0f;
-        }    
+        }
 
         //update for next frame
         mousePos = Input.mousePosition;
 
-        if(idleTimer == 0f)
+        if (idleTimer == 0f)
         {
             Color color = menuButton.GetComponent<Image>().color;
             color.a = 1f;// * Time.deltaTime;
             menuButton.GetComponent<Image>().color = color;
         }
 
-        if(idleTimer > 10f)
+        if (idleTimer > 10f)
         {
             int fadeInSpeed = 10;
             Color color = menuButton.GetComponent<Image>().color;
@@ -241,14 +241,14 @@ public class MenuHandler : MonoBehaviour
         title.SetActive(true);
         missionStart.SetActive(true);
     }
-       
+
     void TitleFade()
     {
-        
+
 
         if (titleColor.a < 1f)
         {
-          
+
             //alpha starts at 0 in hierarchy so it fades in to view
 
             titleColor.a += Time.deltaTime * titleFadeSpeed;
@@ -257,23 +257,23 @@ public class MenuHandler : MonoBehaviour
         else
         {
 
-            if(stopwatch.ElapsedMilliseconds > startLEDFade*1000)
+            if (stopwatch.ElapsedMilliseconds > startLEDFade * 1000)
             {
                 //led script on same object
-                if(!GetComponent<LEDs>().fadeInProgress && !GetComponent<LEDs>().fadeInComplete)                   
+                if (!GetComponent<LEDs>().fadeInProgress && !GetComponent<LEDs>().fadeInComplete)
                     GetComponent<LEDs>().startFadeIn = true;
             }
         }
 
-        
-        
+
+
     }
 
     public void MissionStartGlow()
     {
 
         //wait until slide is finished
-        if (stopwatch.ElapsedMilliseconds < startMissionGlowFade*1000)
+        if (stopwatch.ElapsedMilliseconds < startMissionGlowFade * 1000)
             return;
 
         //missionStartColor = missionStart.GetComponent<Image>().color;
@@ -288,19 +288,19 @@ public class MenuHandler : MonoBehaviour
             missionStartColor.a -= Time.deltaTime * missionGlowSpeed;
         }
 
-        missionStart.GetComponent<Text>().color = missionStartColor; 
+        missionStart.GetComponent<Text>().color = missionStartColor;
 
-        if(missionStartColor.a < 0f)
+        if (missionStartColor.a < 0f)
         {
             missionStartColor.a = 0f;
             glowDirection = !glowDirection;
         }
-        else if(missionStartColor.a > 1f)
+        else if (missionStartColor.a > 1f)
         {
             missionStartColor.a = 1f;
             glowDirection = !glowDirection;
         }
-    }    
+    }
 
     public void InputFieldOpen11()
     {
@@ -324,8 +324,8 @@ public class MenuHandler : MonoBehaviour
             layoutWarningMessage.SetActive(false);
 
         }
-        
-        else if(connectionPanel.activeInHierarchy)
+
+        else if (connectionPanel.activeInHierarchy)
         {
             //close from connection panel
             //Debug.Log("Closing from connection panel");
@@ -333,13 +333,13 @@ public class MenuHandler : MonoBehaviour
             menuPanel.SetActive(false);
             blurPanel.SetActive(false);
             layoutWarningMessage.SetActive(false);
-        }        
-        else if(screensPanel.activeInHierarchy)
+        }
+        else if (screensPanel.activeInHierarchy)
         {
             screensPanel.SetActive(false);
             blurPanel.SetActive(false);
         }
-        else if(flagsPanel.activeInHierarchy)
+        else if (flagsPanel.activeInHierarchy)
         {
             flagsPanel.SetActive(false);
             blurPanel.SetActive(false);
@@ -376,14 +376,14 @@ public class MenuHandler : MonoBehaviour
 
     public void IPAddressChanged()
     {
-       // Debug.Log("IP changed");
+        // Debug.Log("IP changed");
         string ipAddressText = ipTextField.GetComponent<Text>().text;
         if (string.IsNullOrEmpty(ipAddressText))
         {
             //go back to autoscan 
             udpClient.autoScan = true;
             //placeholder text should show and we set ip to empty, when empty, it autoscans
-            udpClient.serverAddress= null;
+            udpClient.serverAddress = null;
             //save to player prefs for next load
             PlayerPrefs.SetString("IPAddress", ipAddressText);
             PlayerPrefs.Save();
@@ -426,7 +426,7 @@ public class MenuHandler : MonoBehaviour
         udpClient.hostFound = false;
 
 
-       // udpClient.timer = udpClient.socketTimeoutTime;
+        // udpClient.timer = udpClient.socketTimeoutTime;
 
 
     }
@@ -454,7 +454,7 @@ public class MenuHandler : MonoBehaviour
             //save
             PlayerPrefs.SetInt("PortNumber", parsed);
 
-           // Debug.Log("6");
+            // Debug.Log("6");
 
         }
 
@@ -497,7 +497,7 @@ public class MenuHandler : MonoBehaviour
         if (dontFire)
             return;
 
-        dontShowAgain = !dontShowAgain;        
+        dontShowAgain = !dontShowAgain;
         //not saving to player prefs
 
         //set pref - ternary to set integer (no bool value in prefs)
@@ -511,9 +511,9 @@ public class MenuHandler : MonoBehaviour
         Debug.Log("Layout Click");
         Debug.Log("airplane data = " + airplaneData);
         layoutOpen = true;
-        
+
         //check for plane - can only organise if plane loaded
-        if(airplaneData.planeAttributes == null || airplaneData.planeAttributes.country == Country.UNDEFINED)
+        if (airplaneData.planeAttributes == null || airplaneData.planeAttributes.country == Country.UNDEFINED)
         {
             layoutWarningMessage.SetActive(true);
             Debug.Log("Layout Warning message");
@@ -529,7 +529,7 @@ public class MenuHandler : MonoBehaviour
         menuButton.SetActive(false);
         ledParent.SetActive(false);
 
-        
+
 
         //turn blur off so we can see what we are doing with the dials
         blurPanel.SetActive(false);
@@ -549,7 +549,7 @@ public class MenuHandler : MonoBehaviour
 
     public void AcceptLayoutClick()
     {
-        
+
         //
 
         //go back to main page
@@ -606,7 +606,7 @@ public class MenuHandler : MonoBehaviour
     {
         //Debug.Log("Connections Click");
         menuPanel.SetActive(false);
-    
+
         //show copnnection panel - IP address, port etc
         connectionPanel.SetActive(true);
 
@@ -620,15 +620,15 @@ public class MenuHandler : MonoBehaviour
         //only show how many blank tray space we need to
         for (int i = 0; i < trayObjects.Count; i++)
         {
-          //  Debug.Log(trayObjects[i].transform.childCount);
-            if(trayObjects[i].transform.childCount != 0)            
+            //  Debug.Log(trayObjects[i].transform.childCount);
+            if (trayObjects[i].transform.childCount != 0)
                 trayObjects[i].SetActive(true);
-            
+
             else
                 trayObjects[i].SetActive(false);
         }
     }
-   
+
     private void DeActivateCompassTouch()
     {
         //remove compass interactiveness
@@ -656,8 +656,8 @@ public class MenuHandler : MonoBehaviour
     }
 
     public void TurnHandlersOn()
-    {   
-        
+    {
+
         GameObject[] UIhandlers = GameObject.FindGameObjectsWithTag("UIHandler");
 
         for (int i = 0; i < UIhandlers.Length; i++)
@@ -665,7 +665,7 @@ public class MenuHandler : MonoBehaviour
             //turn image off, not gameobject, find with tag can't find find inactive objects
 
             //if in tray, don't do this
-            if(!dialsInTray.Contains( UIhandlers[i].transform.parent.parent.gameObject))
+            if (!dialsInTray.Contains(UIhandlers[i].transform.parent.parent.gameObject))
                 UIhandlers[i].GetComponent<Image>().enabled = true;
         }
     }
@@ -697,5 +697,5 @@ public class MenuHandler : MonoBehaviour
         menuPanel.SetActive(true);
     }
 
-  
+
 }
