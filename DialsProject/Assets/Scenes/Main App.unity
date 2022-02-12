@@ -8495,6 +8495,7 @@ MonoBehaviour:
   headingPrevious: 0
   headingPreviousPrevious: 0
   rpms: []
+  manifolds: []
   buildControl: {fileID: 1413319309}
   menuHandler: {fileID: 840226279}
   udpClient: {fileID: 1841085020}
@@ -10457,6 +10458,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1853040845}
   - component: {fileID: 1853040844}
+  - component: {fileID: 1853040846}
   m_Layer: 0
   m_Name: Display Manager
   m_TagString: Untagged
@@ -10494,6 +10496,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1853040846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853040843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5c97eecb530bb14997b46e964661597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1878853877
 GameObject:
   m_ObjectHideFlags: 0
