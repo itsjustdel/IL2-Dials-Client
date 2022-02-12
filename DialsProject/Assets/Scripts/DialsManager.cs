@@ -739,8 +739,17 @@ public class DialsManager : MonoBehaviour
         //pack with json utility
         string jsonFoo = JsonUtility.ToJson(layout);
 
+        //save master/client id as first char in string, then save plane name
+
+        Debug.Log("saving layout");
+
         //save packed string to player preferences (unity)
-        PlayerPrefs.SetString(airplaneData.planeType, jsonFoo);
+        //save with id to know if user addded a a second window - if no id, save only plane name ( this will be the master client)
+        string key = "layout " + slaveManager.id + " " + airplaneData.planeType;
+        Debug.Log("saving key = " + key);
+
+
+        PlayerPrefs.SetString(key, jsonFoo);
         PlayerPrefs.Save();
 
     }
