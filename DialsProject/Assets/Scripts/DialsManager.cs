@@ -9,6 +9,7 @@ public class DialsManager : MonoBehaviour
     //This class manages the loading and saving of layouts and population of dials on plane change
     public AirplaneData airplaneData;
     public MenuHandler menuHandler;
+    public SlaveManager slaveManager;
     public UDPClient udpClient;
     public GameObject countryDialBoard;
 
