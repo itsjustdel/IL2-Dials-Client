@@ -34,9 +34,11 @@ public class RotateNeedle : MonoBehaviour
     public GameObject compassRim;//GER
     public List<GameObject> rpmNeedlesLarge = new List<GameObject>();
     public List<GameObject> rpmNeedlesSmall = new List<GameObject>();
+    public List<GameObject> manifoldNeedlesLarge = new List<GameObject>();
+    public List<GameObject> manifoldNeedlesSmall = new List<GameObject>();
 
     //public bool tcpReceived = false; //moved to tcpClient, multiple instances of Rotate Needle for each country, only single instance of tcpclient
-  //  public float lastMessageReceivedTime;//two ways of doing the same thing
+    //  public float lastMessageReceivedTime;//two ways of doing the same thing
     public float previousMessageTime;
     public float maxSpin =1f;
     public float turnAndBankPitchMultiplier = 5f;
@@ -590,16 +592,16 @@ public class RotateNeedle : MonoBehaviour
             {
                 //RU
                 case (AirplaneData.Country.RU):
-                    if (airplaneData.planeAttributes.rpmType == RpmType.A)
+                    if (airplaneData.planeAttributes.rpmType == DialVariant.A)
                     {
                         rpmLargeTargets[i] = RussianDials.RPMALargeTarget(airplaneData.rpms[i]);
                         rpmSmallTargets[i] = RussianDials.RPMASmallTarget(airplaneData.rpms[i]);
                     }
-                    else if (airplaneData.planeAttributes.rpmType == RpmType.B)
+                    else if (airplaneData.planeAttributes.rpmType == DialVariant.B)
                     {
                         rpmLargeTargets[i] = RussianDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                    else if (airplaneData.planeAttributes.rpmType == RpmType.C)
+                    else if (airplaneData.planeAttributes.rpmType == DialVariant.C)
                     {
                         rpmLargeTargets[i] = RussianDials.RPMCLargeTarget(airplaneData.rpms[i]);
                         rpmSmallTargets[i] = RussianDials.RPMCSmallTarget(airplaneData.rpms[i]);
@@ -609,15 +611,15 @@ public class RotateNeedle : MonoBehaviour
                     
                 //GER
                 case (AirplaneData.Country.GER):
-                    if (airplaneData.planeAttributes.rpmType == RpmType.A)
+                    if (airplaneData.planeAttributes.rpmType == DialVariant.A)
                     {
                         rpmLargeTargets[i] = GermanDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                    else if (airplaneData.planeAttributes.rpmType == RpmType.B)
+                    else if (airplaneData.planeAttributes.rpmType == DialVariant.B)
                     {
                         rpmLargeTargets[i] = GermanDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1, animationCurveRPMA);
                     }
-                    else if (airplaneData.planeAttributes.rpmType == RpmType.C)
+                    else if (airplaneData.planeAttributes.rpmType == DialVariant.C)
                     {
                         rpmLargeTargets[i] = GermanDials.RPMCTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1, animationCurveRPMC);
                     }
@@ -628,26 +630,26 @@ public class RotateNeedle : MonoBehaviour
                 
                //US
                case (AirplaneData.Country.US):
-                    if (airplaneData.planeAttributes.rpmType == RpmType.A)
+                    if (airplaneData.planeAttributes.rpmType == DialVariant.A)
                     {
                         rpmLargeTargets[i] = USDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
                         rpmSmallTargets[i] = USDials.RPMAInnerTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                    else if (airplaneData.planeAttributes.rpmType == RpmType.B)
+                    else if (airplaneData.planeAttributes.rpmType == DialVariant.B)
                     {
                         rpmLargeTargets[i] = USDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                    else if (airplaneData.planeAttributes.rpmType == RpmType.C)
+                    else if (airplaneData.planeAttributes.rpmType == DialVariant.C)
                     {
                         rpmLargeTargets[i] = USDials.RPMCTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                    else if (airplaneData.planeAttributes.rpmType == RpmType.D)
+                    else if (airplaneData.planeAttributes.rpmType == DialVariant.D)
                     {
                         //we can use A for big needle
                         rpmLargeTargets[i] = USDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
                         rpmSmallTargets[i] = USDials.RPMDSmallTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                    else if (airplaneData.planeAttributes.rpmType == RpmType.E)
+                    else if (airplaneData.planeAttributes.rpmType == DialVariant.E)
                     {
                         //note we use hard indexes for rpms and engine lists. P38J is asigend "1 engine" because it only has 1 engine dial
                         rpmLargeTargets[0] = USDials.RPMCTarget(airplaneData.rpms[0], airplaneData.scalar0, airplaneData.scalar1);
@@ -658,13 +660,13 @@ public class RotateNeedle : MonoBehaviour
 
                     
            case (AirplaneData.Country.UK):
-               if (airplaneData.planeAttributes.rpmType == RpmType.A)
+               if (airplaneData.planeAttributes.rpmType == DialVariant.A)
                {
                    //A Taret is first needle
                    rpmLargeTargets[i] = UKDials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1,animationCurveRPMA);
 
                }
-               else if (airplaneData.planeAttributes.rpmType == RpmType.B)
+               else if (airplaneData.planeAttributes.rpmType == DialVariant.B)
                {
                    //"A" Target is first Needle - not the best naming
                    rpmLargeTargets[i] = UKDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
@@ -673,7 +675,7 @@ public class RotateNeedle : MonoBehaviour
 
            case (AirplaneData.Country.ITA):
 
-               if (airplaneData.planeAttributes.rpmType == RpmType.A)
+               if (airplaneData.planeAttributes.rpmType == DialVariant.A)
                {
                    rpmLargeTargets[i] = ITADials.RPMATarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
                }

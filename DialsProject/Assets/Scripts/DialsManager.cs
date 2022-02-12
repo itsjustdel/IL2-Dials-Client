@@ -13,6 +13,7 @@ public class DialsManager : MonoBehaviour
     public GameObject countryDialBoard;
 
     public List<GameObject> rpmObjects = new List<GameObject>();
+    public List<GameObject> manifoldObjects = new List<GameObject>();
     public GameObject speedometer;
 
     // Start is called before the first frame update
@@ -102,6 +103,8 @@ public class DialsManager : MonoBehaviour
         AsignVSI(airplaneData.planeAttributes, countryDialBoard);
 
         AsignRPM(airplaneData.planeAttributes, countryDialBoard);
+
+        AsignManifold(airplaneData.planeAttributes, countryDialBoard);
     }
 
     //POOSIBLE NEW CLASS FROM HERE?
@@ -147,7 +150,7 @@ public class DialsManager : MonoBehaviour
 
                 if (planeAttributes.country == AirplaneData.Country.RU)
                 {
-                    if (planeAttributes.rpmType == RpmType.A)
+                    if (planeAttributes.rpmType == DialVariant.A)
                     {
                         GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
                         countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
@@ -155,7 +158,7 @@ public class DialsManager : MonoBehaviour
 
 
                     //pe-2
-                    if (planeAttributes.country == AirplaneData.Country.RU && planeAttributes.rpmType == RpmType.C)
+                    if (planeAttributes.country == AirplaneData.Country.RU && planeAttributes.rpmType == DialVariant.C)
                     {
                         GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
                         countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
@@ -165,7 +168,7 @@ public class DialsManager : MonoBehaviour
 
                 if (planeAttributes.country == AirplaneData.Country.US)
                 {
-                    if (planeAttributes.rpmType == RpmType.A || planeAttributes.rpmType == RpmType.D)
+                    if (planeAttributes.rpmType == DialVariant.A || planeAttributes.rpmType == DialVariant.D)
                     {
                         GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
                         countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
@@ -173,7 +176,7 @@ public class DialsManager : MonoBehaviour
 
 
                     //p38 J
-                    if (planeAttributes.rpmType == RpmType.E)
+                    if (planeAttributes.rpmType == DialVariant.E)
                     {
                         GameObject needleLeft = rpmObjects[i].transform.Find("Needle Left").gameObject;
                         countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleLeft);
@@ -186,7 +189,22 @@ public class DialsManager : MonoBehaviour
         }
     }
 
-    void AsignSpeedometer(PlaneDataFromName.PlaneAttributes planeAttributes, GameObject countrydialBoard)
+    void AsignManifold(PlaneDataFromName.PlaneAttributes planeAttributes, GameObject countrydialBoard)
+    {
+        //empty lists first
+        countryDialBoard.GetComponent<RotateNeedle>().manifoldNeedlesLarge.Clear();
+        countryDialBoard.GetComponent<RotateNeedle>().manifoldNeedlesSmall.Clear();
+
+
+        for (int i = 0; i < manifoldObjects.Count; i++)
+        {
+            GameObject needleLarge = rpmObjects[i].transform.Find("Needle Large").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().manifoldNeedlesLarge.Add(needleLarge);
+        }
+    }
+
+
+        void AsignSpeedometer(PlaneDataFromName.PlaneAttributes planeAttributes, GameObject countrydialBoard)
     {
         speedometer = GameObject.FindGameObjectWithTag("speedometer");
         countryDialBoard.GetComponent<RotateNeedle>().airspeedNeedle = speedometer.transform.Find("Needle Large").transform.gameObject;
@@ -249,7 +267,7 @@ public class DialsManager : MonoBehaviour
             //Instantiate RPMs
             rpmObjects.Clear();
             //is this condition true ? yes : no
-            string rpmString = airplaneData.planeAttributes.rpmType.ToString();// == RpmType.A ? "A" : "B";
+            string rpmString = airplaneData.planeAttributes.rpmType.ToString();// == DialVariant.A ? "A" : "B";
             if (countryDialBoard.transform.Find("RPM " + rpmString) != null)
             {
                 //find prefab outside of loop
@@ -269,6 +287,33 @@ public class DialsManager : MonoBehaviour
                     rpmInstance.transform.name = "RPM " + airplaneData.planeAttributes.rpmType.ToString() + " " + i.ToString();
 
                     rpmObjects.Add(rpmInstance);
+                }
+            }
+
+            //instantiate manifolds
+            
+            manifoldObjects.Clear();
+            //is this condition true ? yes : no
+            string manifoldString = airplaneData.planeAttributes.manifoldType.ToString();// == DialVariant.A ? "A" : "B";
+            if (countryDialBoard.transform.Find("Manifold " + rpmString) != null)
+            {
+                //find prefab outside of loop
+                GameObject manifold = countryDialBoard.transform.Find("Manifold " + rpmString).gameObject;
+                for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
+                {
+                    //create instance variable if we need to duplicate
+                    GameObject manifoldInstance = manifold;
+                    if (i > 0)
+                    {
+
+
+                        //duplicate if we have more than one engine
+                        manifoldInstance = Instantiate(manifold, manifold.transform.position, Quaternion.identity, countryDialBoard.transform);
+
+                    }
+                    manifoldInstance.transform.name = "Manifold " + airplaneData.planeAttributes.manifoldType.ToString() + " " + i.ToString();
+
+                    manifoldObjects.Add(manifoldInstance);
                 }
             }
         }
@@ -335,6 +380,19 @@ public class DialsManager : MonoBehaviour
         for (int i = 0; i < allRpms.Count; i++)
         {
             allRpms[i].SetActive(false);
+        }
+
+
+        GameObject[] allManifoldsArray = GameObject.FindGameObjectsWithTag("manifold");
+        List<GameObject> allManifolds = new List<GameObject>();
+        allManifolds.AddRange(allManifoldsArray);
+
+        foreach (GameObject manifold in manifoldObjects)
+            allManifolds.Remove(manifold);
+
+        for (int i = 0; i < allManifolds.Count; i++)
+        {
+            allManifolds[i].SetActive(false);
         }
 
     }
@@ -502,6 +560,16 @@ public class DialsManager : MonoBehaviour
                 AddToTrayOnLoad(rpmObjects[i], menuHandler);
         }
 
+
+        for (int i = 0; i < manifoldObjects.Count; i++)
+        {
+            manifoldObjects[i].GetComponent<RectTransform>().anchoredPosition = layout.manifoldPos[i];
+            manifoldObjects[i].GetComponent<RectTransform>().localScale = new Vector3(layout.manifoldScale[i], layout.manifoldScale[i], 1f);
+
+            if (layout.manifoldInTray[i])
+                AddToTrayOnLoad(manifoldObjects[i], menuHandler);
+        }
+
     }
 
     public void SaveLayout()
@@ -631,6 +699,21 @@ public class DialsManager : MonoBehaviour
                 RPMInTray(layout, i, rpmObjects[i]);
         }
 
+        //manifolds
+        for (int i = 0; i < manifoldObjects.Count; i++)
+        {
+            //if on dial board
+            if (manifoldObjects[i].transform.parent == countryDialBoard.transform)
+            {
+                layout.manifoldPos[i] = manifoldObjects[i].GetComponent<RectTransform>().anchoredPosition;
+                layout.manifoldScale[i] = manifoldObjects[i].GetComponent<RectTransform>().localScale.x;
+            }
+            //or in tray
+            else
+                //note - RPMInTray function
+                ManifoldInTray(layout, i, manifoldObjects[i]);
+        }
+
         //pack with json utility
         string jsonFoo = JsonUtility.ToJson(layout);
 
@@ -678,6 +761,16 @@ public class DialsManager : MonoBehaviour
         layout.rpmPos[i] = rpm.GetComponent<RectTransform>().anchoredPosition;
         layout.rpmScale[i] = rpm.GetComponent<RectTransform>().localScale.x;
         layout.rpmInTray[i] = true;
+
+    }
+
+    void ManifoldInTray(Layout layout, int i, GameObject manifold)
+    {
+        //slightly different for multiple dials
+
+        layout.manifoldPos[i] = manifold.GetComponent<RectTransform>().anchoredPosition;
+        layout.manifoldScale[i] = manifold.GetComponent<RectTransform>().localScale.x;
+        layout.manifoldInTray[i] = true;
 
     }
 

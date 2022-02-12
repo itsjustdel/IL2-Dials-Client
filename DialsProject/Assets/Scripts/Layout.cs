@@ -21,9 +21,7 @@ public class Layout
     public Vector2 repeaterCompassPos;
     public Vector2 repeaterCompassAlternatePos;
     public List<Vector2> rpmPos = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
-   // public List<Vector2> rpmBPos = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero };
-
-
+    public List<Vector2> manifoldPos = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
 
     public float speedoScale;
     public float altScale;
@@ -37,7 +35,8 @@ public class Layout
     public float repeaterCompassScale;
     public float repeaterCompassAlternateScale;
     public List<float> rpmScale = new List<float>() { -1f, -1f, -1f, -1f }; //max 4 engines in game?
- //   public List<float> rpmBScale = new List<float>() { 0f, 0f, 0f };
+    public List<float> manifoldScale = new List<float>() { -1f, -1f, -1f, -1f }; //max 4 engines in game?
+
 
 
     public bool speedoInTray;
@@ -52,7 +51,7 @@ public class Layout
     public bool repeaterCompassInTray;
     public bool repeaterCompassAlternateInTray;
     public List<bool> rpmInTray = new List<bool>() {false, false, false, false};
-    //public List<bool> rpmBInTray = new List<bool>() {false, false, false};
+    public List<bool> manifoldInTray = new List<bool>() { false, false, false, false };
 
 
 }
