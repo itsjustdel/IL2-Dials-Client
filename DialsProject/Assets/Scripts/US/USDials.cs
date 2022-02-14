@@ -42,7 +42,7 @@ public class USDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion AirspeedTargetB(float airspeed, float s0, float s1)
+    public static Quaternion AirspeedTargetB(float airspeed)
     {
         if (airspeed == 0)
             return Quaternion.identity;
