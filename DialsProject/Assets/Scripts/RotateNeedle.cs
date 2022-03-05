@@ -224,7 +224,7 @@ public class RotateNeedle : MonoBehaviour
 
 
         //manifolds
-        List<List<Quaternion>> manifoldTargets = DialTargets.ManifoldTarget(airplaneData, airplaneData.planeAttributes.country);
+        List<List<Quaternion>> manifoldTargets = DialTargets.ManifoldTarget(airplaneData, airplaneData.planeAttributes.country, gameObject.GetComponent<CurveContainer>());
         //manifoldSmallTargets = manifoldTargets[0]; //to implement if necessary
         manifoldLargeTargets = manifoldTargets[1];
     }
@@ -250,6 +250,17 @@ public class RotateNeedle : MonoBehaviour
         ArtificialHorizonTranslations();
 
         RPMRotations();
+
+        ManifoldRotations();
+    }
+
+    private void ManifoldRotations()
+    {
+        for (int i = 0; i < rpmNeedlesLarge.Count; i++)
+        {
+            if (manifoldNeedlesLarge[i].gameObject != null)
+                manifoldNeedlesLarge[i].transform.rotation = Quaternion.Slerp(manifoldNeedlesLarge[i].transform.rotation, manifoldLargeTargets[i], Time.deltaTime * smoothing);
+        }
     }
 
     void RPMRotations()

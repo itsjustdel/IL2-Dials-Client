@@ -220,7 +220,7 @@ public class DialsManager : MonoBehaviour
 
         for (int i = 0; i < manifoldObjects.Count; i++)
         {
-            GameObject needleLarge = rpmObjects[i].transform.Find("Needle Large").gameObject;
+            GameObject needleLarge = manifoldObjects[i].transform.Find("Needle Large").gameObject;
             countryDialBoard.GetComponent<RotateNeedle>().manifoldNeedlesLarge.Add(needleLarge);
         }
     }
