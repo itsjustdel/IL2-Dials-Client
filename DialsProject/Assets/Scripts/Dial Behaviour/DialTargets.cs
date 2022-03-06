@@ -11,9 +11,9 @@ public class DialTargets : MonoBehaviour
     {
 
         //locate curve variable using string
-        string strippedName = airplaneData.planeType.Replace(" ", string.Empty).Replace("-", string.Empty).Replace(".", string.Empty);
-        strippedName = "Bf109E7";//test
-        AnimationCurve curve = (AnimationCurve)curveContainer.GetType().GetField(strippedName).GetValue(curveContainer);
+       // string strippedName = airplaneData.planeType.Replace(" ", string.Empty).Replace("-", string.Empty).Replace(".", string.Empty);
+       // strippedName = "Bf109E7";//test
+        //AnimationCurve curve = (AnimationCurve)curveContainer.GetType().GetField(strippedName).GetValue(curveContainer);
 
         List<Quaternion> manifoldSmallTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
         List<Quaternion> manifoldLargeTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
@@ -24,7 +24,7 @@ public class DialTargets : MonoBehaviour
             {
                 case (Country.GER):
                     {
-                        manifoldLargeTargets[i] = GermanDials.ManifoldTarget(airplaneData.manifolds[i], curve, airplaneData.scalar0, airplaneData.scalar1);
+                        manifoldLargeTargets[i] = GermanDials.ManifoldTarget(airplaneData.manifolds[i], airplaneData.scalar0, airplaneData.scalar1);
                         break;
                     }
             }

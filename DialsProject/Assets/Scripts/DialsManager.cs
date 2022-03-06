@@ -24,7 +24,7 @@ public class DialsManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -45,10 +45,11 @@ public class DialsManager : MonoBehaviour
         {
             //check if layout panel is open, save and close before we proceed
             //simulate accept click if there was a plane loaded
-
-
             if (menuHandler.layoutOpen && airplaneData.planeAttributes != null && airplaneData.planeAttributes.country != Country.UNDEFINED)
+            {
+                Debug.Log("forcing menu accept");
                 menuHandler.AcceptLayoutClick();
+            }
 
             //construct country and available dials in to planeAttributes class/struct
             airplaneData.planeAttributes = PlaneDataFromName.AttributesFromName(airplaneData.planeType);
@@ -300,10 +301,10 @@ public class DialsManager : MonoBehaviour
                     GameObject rpmInstance = rpm;
                     if (i > 0)
                     {
-
-
                         //duplicate if we have more than one engine
                         rpmInstance = Instantiate(rpm, rpm.transform.position, Quaternion.identity, countryDialBoard.transform);
+                        //place after found dial
+                        rpmInstance.transform.SetSiblingIndex(rpm.transform.GetSiblingIndex() +1);
 
                     }
                     rpmInstance.transform.name = "RPM " + airplaneData.planeAttributes.rpmType.ToString() + " " + i.ToString();
@@ -317,10 +318,10 @@ public class DialsManager : MonoBehaviour
             manifoldObjects.Clear();
             //is this condition true ? yes : no
             string manifoldString = airplaneData.planeAttributes.manifoldType.ToString();// == DialVariant.A ? "A" : "B";
-            if (countryDialBoard.transform.Find("Manifold " + rpmString) != null)
+            if (countryDialBoard.transform.Find("Manifold " + manifoldString) != null)
             {
                 //find prefab outside of loop
-                GameObject manifold = countryDialBoard.transform.Find("Manifold " + rpmString).gameObject;
+                GameObject manifold = countryDialBoard.transform.Find("Manifold " + manifoldString).gameObject;
                 for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
                 {
                     //create instance variable if we need to duplicate
@@ -328,9 +329,9 @@ public class DialsManager : MonoBehaviour
                     if (i > 0)
                     {
 
-
                         //duplicate if we have more than one engine
                         manifoldInstance = Instantiate(manifold, manifold.transform.position, Quaternion.identity, countryDialBoard.transform);
+                        manifoldInstance.transform.SetSiblingIndex(manifoldInstance.transform.GetSiblingIndex() +1);
 
                     }
                     manifoldInstance.transform.name = "Manifold " + airplaneData.planeAttributes.manifoldType.ToString() + " " + i.ToString();
@@ -419,6 +420,7 @@ public class DialsManager : MonoBehaviour
 
     }
 
+    /*
     public void LoadLayout()
     {
         MenuHandler menuHandler = GameObject.FindGameObjectWithTag("MenuObject").GetComponent<MenuHandler>();
@@ -437,6 +439,7 @@ public class DialsManager : MonoBehaviour
             DefaultLayouts(countryDialBoard);
             return;
         }
+        
 
         //continue if there is a pref file
 
@@ -592,7 +595,10 @@ public class DialsManager : MonoBehaviour
                 AddToTrayOnLoad(manifoldObjects[i], menuHandler);
         }
 
+      
+
     }
+    */
 
     public void SaveLayout()
     {
@@ -889,8 +895,9 @@ public class DialsManager : MonoBehaviour
 
 
 
-    static void DefaultLayouts(GameObject dialsPrefab)
+    void DefaultLayouts(GameObject dialsPrefab)
     {
+        Debug.Log("Defaults");
         //Programtically sort default layouts, so if there is an update, i don't need to create a prefab layout
 
         //organise dials depending on how many are available
@@ -954,6 +961,9 @@ public class DialsManager : MonoBehaviour
             //scale dial            
             activeDials[i].transform.localScale = new Vector3(scale * 0.35f, scale * 0.35f, scale * 0.35f);
         }
+
+        Debug.Log(rpmObjects.Count);
+        Debug.Log(manifoldObjects.Count);
     }
 
     void AddToTrayOnLoad(GameObject dial, MenuHandler menuHandler)

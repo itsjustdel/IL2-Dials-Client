@@ -397,6 +397,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiSmall = true;
                 planeAttributes.headingIndicator = true;// needs new model for gyro combined?
                 planeAttributes.rpmType = DialVariant.B;
+                planeAttributes.manifoldType = DialVariant.A;
                 planeAttributes.engines = 2;
                 break;
 

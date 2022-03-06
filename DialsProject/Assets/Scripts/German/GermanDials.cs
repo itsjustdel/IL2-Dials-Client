@@ -346,25 +346,37 @@ public class GermanDials : MonoBehaviour
     }
 
 
-    public static Quaternion ManifoldTarget(float manifold, AnimationCurve curve, float scalar, float scalar2)
+    public static Quaternion ManifoldTarget(float manifold, float scalar, float scalar2)
     {
-        float m = manifold * scalar + scalar2;
 
-        float highest = 4000f;
-        float percentage = (Mathf.Abs(manifold / highest));
+        //highest 141855
+        //1000 = -0.027
+        //manifold -= 6000;
+
+        float m = 0;
+        if (manifold <= 60000)
+            m = 160;
+        else
+        {
+            m = (manifold - 60000) * -0.00266667f;// scalar + scalar2;
+            m += 160;
+        }
+
+        //float highest = 4000f;
+        //float percentage = (Mathf.Abs(manifold / highest));
 
         //multiply by half a dial of spin (180 degrees)
-        float angleToSpin = curve.Evaluate(percentage);
+        //float angleToSpin = curve.Evaluate(percentage);
         // Debug.Log(angleToSpin);
-        angleToSpin *= -scalar;
+        //angleToSpin *= -scalar;
 
 
-        angleToSpin -= scalar2;
+        //angleToSpin -= scalar2;
 
 
-        Quaternion target = Quaternion.Euler(0, 0, angleToSpin);
+        Quaternion target = Quaternion.Euler(0, 0, m);
 
-        Debug.Log(m);
+        //Debug.Log(m);
 
         return target;
     }

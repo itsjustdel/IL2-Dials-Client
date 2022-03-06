@@ -256,7 +256,7 @@ public class RotateNeedle : MonoBehaviour
 
     private void ManifoldRotations()
     {
-        for (int i = 0; i < rpmNeedlesLarge.Count; i++)
+        for (int i = 0; i < manifoldNeedlesLarge.Count; i++)
         {
             if (manifoldNeedlesLarge[i].gameObject != null)
                 manifoldNeedlesLarge[i].transform.rotation = Quaternion.Slerp(manifoldNeedlesLarge[i].transform.rotation, manifoldLargeTargets[i], Time.deltaTime * smoothing);

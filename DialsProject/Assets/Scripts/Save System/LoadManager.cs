@@ -254,6 +254,15 @@ public class LoadManager : MonoBehaviour
             if (layout.rpmInTray[i])
                 AddToTrayOnLoad(dialsManager.rpmObjects[i], menuHandler);
         }
+
+        for (int i = 0; i < dialsManager.manifoldObjects.Count; i++)
+        {
+            dialsManager.manifoldObjects[i].GetComponent<RectTransform>().anchoredPosition = layout.manifoldPos[i];
+            dialsManager.manifoldObjects[i].GetComponent<RectTransform>().localScale = new Vector3(layout.manifoldScale[i], layout.manifoldScale[i], 1f);
+
+            if (layout.manifoldInTray[i])
+                AddToTrayOnLoad(dialsManager.manifoldObjects[i], menuHandler);
+        }
     }
 
     static void AddToTrayOnLoad(GameObject dial, MenuHandler menuHandler)

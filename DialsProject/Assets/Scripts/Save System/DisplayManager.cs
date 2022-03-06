@@ -13,7 +13,7 @@ public class DisplayManager : MonoBehaviour
     //https://answers.unity.com/questions/13523/is-there-a-way-to-set-the-position-of-a-standalone.html
 
 
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR
+#if UNITY_STANDALONE_WIN// || UNITY_EDITOR
 
 
     [StructLayout(LayoutKind.Sequential)]
