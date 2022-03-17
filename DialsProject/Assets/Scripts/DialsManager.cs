@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
 public class DialsManager : MonoBehaviour
 {
     //This class manages the loading and saving of layouts and population of dials on plane change
@@ -31,7 +29,6 @@ public class DialsManager : MonoBehaviour
     void Update()
     {
         CheckForPlaneChange();
-
 
         //update previous so we can detect a change on next update
         airplaneData.planeTypePrevious = airplaneData.planeType;
@@ -419,186 +416,6 @@ public class DialsManager : MonoBehaviour
         }
 
     }
-
-    /*
-    public void LoadLayout()
-    {
-        MenuHandler menuHandler = GameObject.FindGameObjectWithTag("MenuObject").GetComponent<MenuHandler>();
-
-        //Save layout is in MenuHandler
-
-        //first of all empty trays
-        ButtonManager.EmptyTrays(menuHandler);
-
-        //grab layout data if available from player prefs
-        string jsonFoo = PlayerPrefs.GetString(airplaneData.planeType);
-        if (System.String.IsNullOrEmpty(jsonFoo))
-        {
-
-            //set dials to default
-            DefaultLayouts(countryDialBoard);
-            return;
-        }
-        
-
-        //continue if there is a pref file
-
-        //rebuild json
-        Layout layout = JsonUtility.FromJson<Layout>(jsonFoo);
-
-        //check for version change
-
-        if (layout.version != airplaneData.clientVersion)
-        {
-            //reset all dials :(
-
-            //only need to do this when I add a new dial? - new dial will be in tray automatically if using a newer version - sohuld be ok just for beta testers
-            //set dials to default
-            //Debug.Log("Version change detected");
-            //DefaultLayouts(countryDialBoard);
-
-            //return;
-        }
-
-        //apply to dials/positions        
-        speedometer.GetComponent<RectTransform>().anchoredPosition = layout.speedoPos;
-        speedometer.GetComponent<RectTransform>().localScale = new Vector3(layout.speedoScale, layout.speedoScale, 1f);
-
-        if (layout.speedoInTray)
-            AddToTrayOnLoad(speedometer, menuHandler);
-
-        GameObject altimeter = countryDialBoard.transform.Find("Altimeter").gameObject;
-        altimeter.GetComponent<RectTransform>().anchoredPosition = layout.altPos;
-        altimeter.GetComponent<RectTransform>().localScale = new Vector3(layout.altScale, layout.altScale, 1f);
-
-        if (layout.altimeterInTray)
-            AddToTrayOnLoad(altimeter, menuHandler);
-
-        if (countryDialBoard.transform.Find("Heading Indicator") != null)
-        {
-            GameObject headingIndicator = countryDialBoard.transform.Find("Heading Indicator").gameObject;
-            headingIndicator.GetComponent<RectTransform>().anchoredPosition = layout.headingPos;
-            headingIndicator.GetComponent<RectTransform>().localScale = new Vector3(layout.headingScale, layout.headingScale, 1f);
-
-            if (layout.headingIndicatorInTray)
-                AddToTrayOnLoad(headingIndicator, menuHandler);
-        }
-
-        if (countryDialBoard.transform.Find("Turn And Bank") != null)
-        {
-            GameObject turnAndBank = countryDialBoard.transform.Find("Turn And Bank").gameObject;
-            turnAndBank.GetComponent<RectTransform>().anchoredPosition = layout.turnAndBankPos;
-            turnAndBank.GetComponent<RectTransform>().localScale = new Vector3(layout.turnAndBankScale, layout.turnAndBankScale, 1f);
-
-            if (layout.turnAndBankInTray)
-                AddToTrayOnLoad(turnAndBank, menuHandler);
-
-        }
-
-        if (countryDialBoard.transform.Find("Turn Coordinator") != null)
-        {
-
-            GameObject turnIndicator = countryDialBoard.transform.Find("Turn Coordinator").gameObject;
-            turnIndicator.GetComponent<RectTransform>().anchoredPosition = layout.turnIndicatorPos;
-            turnIndicator.GetComponent<RectTransform>().localScale = new Vector3(layout.turnIndicatorScale, layout.turnIndicatorScale, 1f);
-
-            if (layout.turnIndicatorInTray)
-                AddToTrayOnLoad(turnIndicator, menuHandler);
-        }
-
-        //both vsi share the same variable - only one vsi per plane
-
-        if (countryDialBoard.transform.Find("VSI Smallest") != null)
-        {
-
-            GameObject vsi = countryDialBoard.transform.Find("VSI Smallest").gameObject;
-            vsi.GetComponent<RectTransform>().anchoredPosition = layout.vsiSmallestPos;
-            vsi.GetComponent<RectTransform>().localScale = new Vector3(layout.vsiSmallestScale, layout.vsiSmallestScale, 1f);
-
-            if (layout.vsiSmallestInTray)
-                AddToTrayOnLoad(vsi, menuHandler);
-        }
-
-        if (countryDialBoard.transform.Find("VSI Small") != null)
-        {
-
-            GameObject vsi = countryDialBoard.transform.Find("VSI Small").gameObject;
-            vsi.GetComponent<RectTransform>().anchoredPosition = layout.vsiSmallPos;
-            vsi.GetComponent<RectTransform>().localScale = new Vector3(layout.vsiSmallScale, layout.vsiSmallScale, 1f);
-
-            if (layout.vsiSmallInTray)
-                AddToTrayOnLoad(vsi, menuHandler);
-        }
-
-        //both vsi share the same variable - only one vsi per plane
-        if (countryDialBoard.transform.Find("VSI Large") != null)
-        {
-
-            GameObject vsi = countryDialBoard.transform.Find("VSI Large").gameObject;
-            vsi.GetComponent<RectTransform>().anchoredPosition = layout.vsiLargePos;
-            vsi.GetComponent<RectTransform>().localScale = new Vector3(layout.vsiLargeScale, layout.vsiLargeScale, 1f);
-
-            if (layout.vsiLargeInTray)
-                AddToTrayOnLoad(vsi, menuHandler);
-        }
-
-        if (countryDialBoard.transform.Find("Artificial Horizon") != null)
-        {
-
-            GameObject artificialHorizon = countryDialBoard.transform.Find("Artificial Horizon").gameObject;
-            artificialHorizon.GetComponent<RectTransform>().anchoredPosition = layout.artificialHorizonPos;
-            artificialHorizon.GetComponent<RectTransform>().localScale = new Vector3(layout.artificialHorizonScale, layout.artificialHorizonScale, 1f);
-
-            if (layout.artificialHorizonInTray)
-                AddToTrayOnLoad(artificialHorizon, menuHandler);
-        }
-
-        if (countryDialBoard.transform.Find("Repeater Compass") != null)
-        {
-
-            GameObject repeaterCompass = countryDialBoard.transform.Find("Repeater Compass").gameObject;
-            repeaterCompass.GetComponent<RectTransform>().anchoredPosition = layout.repeaterCompassPos;
-            repeaterCompass.GetComponent<RectTransform>().localScale = new Vector3(layout.repeaterCompassScale, layout.repeaterCompassScale, 1f);
-
-            if (layout.repeaterCompassInTray)
-                AddToTrayOnLoad(repeaterCompass, menuHandler);
-        }
-
-        if (countryDialBoard.transform.Find("Repeater Compass Alternate") != null)
-        {
-            GameObject repeaterCompassAlternate = countryDialBoard.transform.Find("Repeater Compass Alternate").gameObject;
-            //using non alternate variables because we won't have two compasses 
-            repeaterCompassAlternate.GetComponent<RectTransform>().anchoredPosition = layout.repeaterCompassAlternatePos;
-            repeaterCompassAlternate.GetComponent<RectTransform>().localScale = new Vector3(layout.repeaterCompassAlternateScale, layout.repeaterCompassAlternateScale, 1f);
-
-            if (layout.repeaterCompassAlternateInTray)
-                AddToTrayOnLoad(repeaterCompassAlternate, menuHandler);
-        }
-
-
-        for (int i = 0; i < rpmObjects.Count; i++)
-        {
-            rpmObjects[i].GetComponent<RectTransform>().anchoredPosition = layout.rpmPos[i];
-            rpmObjects[i].GetComponent<RectTransform>().localScale = new Vector3(layout.rpmScale[i], layout.rpmScale[i], 1f);
-
-            if (layout.rpmInTray[i])
-                AddToTrayOnLoad(rpmObjects[i], menuHandler);
-        }
-
-
-        for (int i = 0; i < manifoldObjects.Count; i++)
-        {
-            manifoldObjects[i].GetComponent<RectTransform>().anchoredPosition = layout.manifoldPos[i];
-            manifoldObjects[i].GetComponent<RectTransform>().localScale = new Vector3(layout.manifoldScale[i], layout.manifoldScale[i], 1f);
-
-            if (layout.manifoldInTray[i])
-                AddToTrayOnLoad(manifoldObjects[i], menuHandler);
-        }
-
-      
-
-    }
-    */
 
     public void SaveLayout()
     {

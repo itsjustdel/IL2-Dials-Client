@@ -411,6 +411,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiLarge = true; //large for fighters
                 planeAttributes.headingIndicator = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+CA2 - 48 8D 15 6FFD1400     - lea rdx,[RSE.RSE::CAeroplane_Ju523mg4e::`vftable'+1E8] { ("Ju-52/3m g4e") }
@@ -517,6 +518,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.rpmType = DialVariant.C;
+                planeAttributes.manifoldType = DialVariant.C;
                 planeAttributes.engines = 2;
                 break;
 
@@ -706,6 +708,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.rpmType = DialVariant.D;
+                planeAttributes.manifoldType = DialVariant.D;
 
                 break;
 
@@ -749,11 +752,11 @@ public class PlaneDataFromName : AirplaneData
             case "FW 190 D9":
                 planeAttributes.country = Country.GER;
                 planeAttributes.altimeter = true;
-
                 planeAttributes.turnAndBank = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.C;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+DF9 - 48 8D 15 981B0C00     - lea rdx,[RSE.RSE::CAeroplane_P_38J_25::`vftable'+288] { ("P-38J-25") }
@@ -840,6 +843,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.B;
+                planeAttributes.manifoldType = DialVariant.B;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+F0D - 4C 8D 05 ECA40600     - lea r8,[RSE.RSE::CAeroplane_C_47A::`vftable'+210] { ("C-47A") }
@@ -912,6 +916,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.headingIndicator = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.B;
+                planeAttributes.manifoldType = DialVariant.C;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+DDD - 4C 8D 05 6CB00C00     - lea r8,[RSE.RSE::CAeroplane_Po_2_VS::`vftable'+1D0] { ("U-2VS") }

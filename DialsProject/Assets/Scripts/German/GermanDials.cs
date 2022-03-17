@@ -324,19 +324,10 @@ public class GermanDials : MonoBehaviour
 
         //multiply by half a dial of spin (180 degrees)
         float angleToSpin = curve.Evaluate(percentage);
-        // Debug.Log(angleToSpin);
+        
         angleToSpin *= -307;
 
-        //put negative back?
-
-
-        // if (negative)
-        //   angleToSpin *= -1;
-
         angleToSpin -= 180;
-
-        //offset by 90 degrees - vsi starts at 9 0'clock on the dial
-        //verticalSpeed = 90f - angleToSpin;
 
         //set to quaternion
         Quaternion target = Quaternion.Euler(0, 0, angleToSpin);
@@ -346,37 +337,58 @@ public class GermanDials : MonoBehaviour
     }
 
 
-    public static Quaternion ManifoldTarget(float manifold, float scalar, float scalar2)
+    public static Quaternion ManifoldTargetA(float manifold)
     {
-
-        //highest 141855
-        //1000 = -0.027
         //manifold -= 6000;
 
         float m = 0;
         if (manifold <= 60000)
             m = 160;
+        else if (manifold <=180000)
+        {
+            m = (manifold - 60000) * -0.00266667f;
+            m += 160;
+        }
         else
         {
-            m = (manifold - 60000) * -0.00266667f;// scalar + scalar2;
+            m = (manifold - 60000) * -0.00275f;
             m += 160;
         }
 
-        //float highest = 4000f;
-        //float percentage = (Mathf.Abs(manifold / highest));
+        Quaternion target = Quaternion.Euler(0, 0, m);
 
-        //multiply by half a dial of spin (180 degrees)
-        //float angleToSpin = curve.Evaluate(percentage);
-        // Debug.Log(angleToSpin);
-        //angleToSpin *= -scalar;
+        return target;
+    }
 
 
-        //angleToSpin -= scalar2;
-
+    public static Quaternion ManifoldTargetD(float manifold)
+    {
+        float m = 0;
+        if (manifold <= 50000)
+            m = 160;
+        else
+        {
+            m = (manifold - 50000) * -0.0016f;
+            m += 160;
+        }
 
         Quaternion target = Quaternion.Euler(0, 0, m);
 
-        //Debug.Log(m);
+        return target;
+    }
+
+    public static Quaternion ManifoldTargetE(float manifold, float scalar)
+    {
+        float m = 0;
+        if (manifold <= 60000)
+            m = 160;
+        else
+        {
+            m = (manifold - 60000) * -0.002666667f;
+            m += 160;
+        }
+
+        Quaternion target = Quaternion.Euler(0, 0, m);
 
         return target;
     }

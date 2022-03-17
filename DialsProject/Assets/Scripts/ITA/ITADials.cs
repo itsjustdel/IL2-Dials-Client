@@ -142,4 +142,23 @@ public class ITADials : MonoBehaviour
 
         return target;
     }
+
+    public static Quaternion ManifoldTargetA(float manifold, float scalar, float s2)
+    {       
+        //test
+     //   manifold = scalar;
+        
+        float m = 0;
+        if (manifold <= 50000)
+            m = 150;
+        else
+        {
+            m = (manifold - 50000) * -0.002f;
+            m += 150;
+        }
+
+        Quaternion target = Quaternion.Euler(0, 0, m);
+
+        return target;
+    }
 }

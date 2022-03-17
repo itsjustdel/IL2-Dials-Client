@@ -205,4 +205,42 @@ public class RussianDials : MonoBehaviour
 
         return target;
     }
+
+    public static Quaternion ManifoldTargetA(float manifold)
+    {
+        //km/cm2 to mm of Hg
+        manifold *= 7.35592400690826f;        
+        float m = 0;
+        if (manifold <= 300000)
+            m = 115;
+        else 
+        {
+            m = (manifold - 300000) * -0.00026f;
+            m += 115;
+        }
+      
+
+        Quaternion target = Quaternion.Euler(0, 0, m);
+
+        return target;
+    }
+
+    public static Quaternion ManifoldTargetC(float manifold, float scalar)
+    {
+        //km/cm2 to mm of Hg
+        manifold *= 7.35592400690826f;
+        float m = 0;
+        if (manifold <= 300000)
+            m = 135;
+        else
+        {
+            m = (manifold - 300000) * -0.00031f;
+            m += 135;
+        }
+
+
+        Quaternion target = Quaternion.Euler(0, 0, m);
+
+        return target;
+    }
 }

@@ -368,8 +368,44 @@ public class USDials : MonoBehaviour
 
         return target;
     }
-    
 
+    
+    public static Quaternion ManifoldTargetA(float manifold, float scalar)
+    {
+        //US *28.95902519867009 inches of Hg
+        manifold *= 2.895902519867009f;        
+        float m = 0;
+        if (manifold <= 100000)
+            m = 160;
+        else
+        {
+            m = (manifold - 100000) * -0.00084f;
+            m += 160;
+        }
+
+        Quaternion target = Quaternion.Euler(0, 0, m);
+
+        return target;
+    }
+
+    public static Quaternion ManifoldTargetC(float manifold, float scalar)
+    {
+        //US *28.95902519867009 inches of Hg
+        manifold *= 2.895902519867009f;
+        Debug.Log(manifold);
+        float m = 0;
+        if (manifold <= 100000)
+            m = 105;
+        else
+        {
+            m = (manifold - 100000) * -0.00052f;
+            m += 105;
+        }
+
+        Quaternion target = Quaternion.Euler(0, 0, m);
+
+        return target;
+    }
 
 }
 

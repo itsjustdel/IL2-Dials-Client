@@ -103,18 +103,7 @@ public class RotateNeedle : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        /*
-        for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
-        {
-            //fill empty so wecan asign to later
-            rpmLargeTargets.Add(Quaternion.identity);
-            rpmSmallTargets.Add(Quaternion.identity);
-
-            //manifold
-            manifoldLargeTargets.Add(Quaternion.identity);
-        }
-        */
-        //nicer way to initialise list
+        //initialise lists
         rpmSmallTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
         rpmLargeTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
 
@@ -224,8 +213,7 @@ public class RotateNeedle : MonoBehaviour
 
 
         //manifolds
-        List<List<Quaternion>> manifoldTargets = DialTargets.ManifoldTarget(airplaneData, airplaneData.planeAttributes.country, gameObject.GetComponent<CurveContainer>());
-        //manifoldSmallTargets = manifoldTargets[0]; //to implement if necessary
+        List<List<Quaternion>> manifoldTargets = DialTargets.ManifoldTarget(airplaneData, airplaneData.planeAttributes.country);
         manifoldLargeTargets = manifoldTargets[1];
     }
 
