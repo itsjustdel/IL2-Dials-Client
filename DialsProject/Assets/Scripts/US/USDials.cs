@@ -392,7 +392,7 @@ public class USDials : MonoBehaviour
     {
         //US *28.95902519867009 inches of Hg
         manifold *= 2.895902519867009f;
-        Debug.Log(manifold);
+        
         float m = 0;
         if (manifold <= 100000)
             m = 105;

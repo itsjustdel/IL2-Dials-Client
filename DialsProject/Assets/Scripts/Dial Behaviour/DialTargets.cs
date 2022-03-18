@@ -9,10 +9,9 @@ public class DialTargets : MonoBehaviour
 
     public static List<List<Quaternion>> ManifoldTarget(AirplaneData airplaneData, Country country)
     {
-
         List<Quaternion> manifoldSmallTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
         List<Quaternion> manifoldLargeTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
-
+        
         for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
         {
             switch (country)
@@ -33,7 +32,8 @@ public class DialTargets : MonoBehaviour
                 case (Country.GER):                    
                     if (airplaneData.planeAttributes.manifoldType == DialVariant.A
                         || airplaneData.planeAttributes.manifoldType == DialVariant.B
-                            || airplaneData.planeAttributes.manifoldType == DialVariant.C)
+                            || airplaneData.planeAttributes.manifoldType == DialVariant.C
+                                || airplaneData.planeAttributes.manifoldType == DialVariant.F)
                     {
                         
                         manifoldLargeTargets[i] = GermanDials.ManifoldTargetA(airplaneData.manifolds[i]);
@@ -51,6 +51,7 @@ public class DialTargets : MonoBehaviour
                     }
 
                     break;
+
                 case (Country.US):
                     if (airplaneData.planeAttributes.manifoldType == DialVariant.A
                             || airplaneData.planeAttributes.manifoldType == DialVariant.B)
@@ -63,6 +64,15 @@ public class DialTargets : MonoBehaviour
                     {
 
                         manifoldLargeTargets[i] = USDials.ManifoldTargetC(airplaneData.manifolds[i], airplaneData.scalar0);
+                    }
+                    else if (airplaneData.planeAttributes.manifoldType == DialVariant.F)
+                    {
+                        
+                        manifoldLargeTargets[0] = USDials.ManifoldTargetC(airplaneData.manifolds[0], airplaneData.scalar0);
+                        manifoldLargeTargets[1] =  USDials.ManifoldTargetC(airplaneData.manifolds[1], airplaneData.scalar0);
+
+                        //force loop finish
+                        i = airplaneData.planeAttributes.engines + 1;
                     }
                     break;
 
@@ -93,7 +103,6 @@ public class DialTargets : MonoBehaviour
 
     public static List<List<Quaternion>> RPMTarget(AirplaneData airplaneData, Country country, RotateNeedle rotateNeedle )
     {
-        List<List<Quaternion>> rpmTargets = new List<List<Quaternion>>();
         List<Quaternion> rpmLargeTargets = new List<Quaternion>( new Quaternion[airplaneData.planeAttributes.engines]);
         List<Quaternion> rpmSmallTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
 
@@ -162,9 +171,13 @@ public class DialTargets : MonoBehaviour
                     }
                     else if (airplaneData.planeAttributes.rpmType == DialVariant.E)
                     {
-                        //note we use hard indexes for rpms and engine lists. P38J is asigend "1 engine" because it only has 1 engine dial
+                        //p38 - two needles, one dial
+                        //note we use hard indexes for rpms 
                         rpmLargeTargets[0] = USDials.RPMCTarget(airplaneData.rpms[0], airplaneData.scalar0, airplaneData.scalar1);
-                        rpmSmallTargets[0] = USDials.RPMCTarget(airplaneData.rpms[1], airplaneData.scalar0, airplaneData.scalar1);
+                        rpmLargeTargets[1] = USDials.RPMCTarget(airplaneData.rpms[1], airplaneData.scalar0, airplaneData.scalar1);
+
+                        //force loop finish
+                        i = airplaneData.planeAttributes.engines + 1;
                     }
 
                     break;

@@ -557,10 +557,12 @@ public class MenuHandler : MonoBehaviour
         //turn icon handlers off 
         TurnHandlersOff();
 
-        //tunr menu button and leds back on
+        //turn menu button and leds back on
         menuButton.SetActive(true);
         menuPanel.SetActive(true);
         ledParent.SetActive(true);
+        //keep blue, we go back to menuPanel
+        blurPanel.SetActive(true);
 
         layoutOpen = false;
 

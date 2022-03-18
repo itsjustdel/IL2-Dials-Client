@@ -9,6 +9,7 @@ public enum DialVariant
     C,
     D,
     E,
+    F,
     None
 }
 
@@ -397,7 +398,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiSmall = true;
                 planeAttributes.headingIndicator = true;// needs new model for gyro combined?
                 planeAttributes.rpmType = DialVariant.B;
-                planeAttributes.manifoldType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.E;
                 planeAttributes.engines = 2;
                 break;
 
@@ -577,6 +578,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.headingIndicator = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.B;
+                planeAttributes.manifoldType = DialVariant.F;
                 planeAttributes.engines = 2;
                 break;
 
@@ -763,13 +765,14 @@ public class PlaneDataFromName : AirplaneData
             case "P-38J-25":
                 planeAttributes.country = Country.US;
                 planeAttributes.altimeter = true;
-
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
+                planeAttributes.engines = 2;
                 planeAttributes.rpmType = DialVariant.E;
+                planeAttributes.manifoldType = DialVariant.F;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+E9B - 48 8D 15 56E10F00     - lea rdx,[RSE.RSE::CAeroplane_Tempest_Mk_V_ser_2::`vftable'+2E8] { ("Tempest Mk.V ser.2") }
@@ -929,6 +932,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.headingIndicator = true;
                 planeAttributes.turnAndBank = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 break;
 
 

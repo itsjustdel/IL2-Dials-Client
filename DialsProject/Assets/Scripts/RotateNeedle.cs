@@ -253,6 +253,7 @@ public class RotateNeedle : MonoBehaviour
 
     void RPMRotations()
     {
+      
         for (int i = 0; i < rpmNeedlesLarge.Count; i++)
         {
             if (rpmNeedlesLarge[i].gameObject != null)

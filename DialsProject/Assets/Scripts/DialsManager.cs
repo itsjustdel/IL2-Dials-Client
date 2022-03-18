@@ -127,7 +127,7 @@ public class DialsManager : MonoBehaviour
         AsignManifold(airplaneData.planeAttributes, countryDialBoard);
     }
 
-    //POOSIBLE NEW CLASS FROM HERE?
+    
     void AsignVSI(PlaneDataFromName.PlaneAttributes planeAttributes, GameObject countryDialBoard)
     {
         //there are more than one vsi but never more than one at the same time, so we share prefabs
@@ -188,21 +188,26 @@ public class DialsManager : MonoBehaviour
 
                 if (planeAttributes.country ==  Country.US)
                 {
+                    //p38 J
+                    if (airplaneData.planeType == "P-38J-25")
+                    {
+                        if (i == 0)
+                        {
+                            //do both needles and return, p38 has two needles on one dial
+                            GameObject needleLeft = rpmObjects[i].transform.Find("Needle Left").gameObject;
+                            countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleLeft);
+
+                            GameObject needleRight = rpmObjects[i].transform.Find("Needle Right").gameObject;
+                            countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleRight);
+
+                            return;
+                        }
+                    }
+
                     if (planeAttributes.rpmType == DialVariant.A || planeAttributes.rpmType == DialVariant.D)
                     {
                         GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
                         countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
-                    }
-
-
-                    //p38 J
-                    if (planeAttributes.rpmType == DialVariant.E)
-                    {
-                        GameObject needleLeft = rpmObjects[i].transform.Find("Needle Left").gameObject;
-                        countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleLeft);
-
-                        GameObject needleRight = rpmObjects[i].transform.Find("Needle Right").gameObject;
-                        countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleRight);
                     }
                 }
             }
@@ -218,8 +223,24 @@ public class DialsManager : MonoBehaviour
 
         for (int i = 0; i < manifoldObjects.Count; i++)
         {
-            GameObject needleLarge = manifoldObjects[i].transform.Find("Needle Large").gameObject;
-            countryDialBoard.GetComponent<RotateNeedle>().manifoldNeedlesLarge.Add(needleLarge);
+            if (airplaneData.planeType == "P-38J-25" || airplaneData.planeType == "He 111 H-16")
+            {
+                //p38 J or he 111 h16
+                GameObject needleLeft = manifoldObjects[i].transform.Find("Needle Left").gameObject;
+                countryDialBoard.GetComponent<RotateNeedle>().manifoldNeedlesLarge.Add(needleLeft);
+
+                GameObject needleRight = manifoldObjects[i].transform.Find("Needle Right").gameObject;
+                countryDialBoard.GetComponent<RotateNeedle>().manifoldNeedlesLarge.Add(needleRight);
+
+                //both needles asign and jump out of loop (has 2 engines)
+                return;
+             
+            }
+            else
+            {
+                GameObject needleLarge = manifoldObjects[i].transform.Find("Needle Large").gameObject;
+                countryDialBoard.GetComponent<RotateNeedle>().manifoldNeedlesLarge.Add(needleLarge);
+            }
         }
     }
 
@@ -286,13 +307,20 @@ public class DialsManager : MonoBehaviour
 
             //Instantiate RPMs
             rpmObjects.Clear();
-            //is this condition true ? yes : no
-            string rpmString = airplaneData.planeAttributes.rpmType.ToString();// == DialVariant.A ? "A" : "B";
+            
+            string rpmString = airplaneData.planeAttributes.rpmType.ToString();
+
             if (countryDialBoard.transform.Find("RPM " + rpmString) != null)
             {
                 //find prefab outside of loop
                 GameObject rpm = countryDialBoard.transform.Find("RPM " + rpmString).gameObject;
-                for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
+
+                int dialsToInstantiate = airplaneData.planeAttributes.engines;
+                //some plane have two needles one dial, only create one in this instance
+                if (airplaneData.planeType == "P-38J-25")
+                    dialsToInstantiate = 1;
+
+                for (int i = 0; i < dialsToInstantiate; i++)
                 {
                     //create instance variable if we need to duplicate
                     GameObject rpmInstance = rpm;
@@ -304,8 +332,8 @@ public class DialsManager : MonoBehaviour
                         rpmInstance.transform.SetSiblingIndex(rpm.transform.GetSiblingIndex() +1);
 
                     }
-                    rpmInstance.transform.name = "RPM " + airplaneData.planeAttributes.rpmType.ToString() + " " + i.ToString();
 
+                    rpmInstance.transform.name = "RPM " + airplaneData.planeAttributes.rpmType.ToString() + " " + i.ToString();
                     rpmObjects.Add(rpmInstance);
                 }
             }
@@ -313,13 +341,20 @@ public class DialsManager : MonoBehaviour
             //instantiate manifolds
 
             manifoldObjects.Clear();
-            //is this condition true ? yes : no
-            string manifoldString = airplaneData.planeAttributes.manifoldType.ToString();// == DialVariant.A ? "A" : "B";
+            
+            string manifoldString = airplaneData.planeAttributes.manifoldType.ToString();
+
             if (countryDialBoard.transform.Find("Manifold " + manifoldString) != null)
             {
                 //find prefab outside of loop
                 GameObject manifold = countryDialBoard.transform.Find("Manifold " + manifoldString).gameObject;
-                for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
+
+                int dialsToInstantiate = airplaneData.planeAttributes.engines;
+                //some plane have two needles one dial, only create one in this instance
+                if (airplaneData.planeType == "P-38J-25" || airplaneData.planeType == "He 111 H-16")
+                    dialsToInstantiate = 1;
+
+                for (int i = 0; i < dialsToInstantiate; i++)
                 {
                     //create instance variable if we need to duplicate
                     GameObject manifoldInstance = manifold;
@@ -710,84 +745,6 @@ public class DialsManager : MonoBehaviour
         }
     }
 
-
-
-    void DefaultLayouts(GameObject dialsPrefab)
-    {
-        Debug.Log("Defaults");
-        //Programtically sort default layouts, so if there is an update, i don't need to create a prefab layout
-
-        //organise dials depending on how many are available
-        //we need to know the total amount of active dials before we continue
-        List<GameObject> activeDials = ActiveDials(dialsPrefab);
-
-        float scale = DefaultDialScale(activeDials);
-
-        //split in to two rows, if odd number, put more on the top
-        for (int i = 0; i < activeDials.Count; i++)
-        {
-            //ternary statement            
-            int odd = activeDials.Count % 2 != 0 ? 1 : 0;
-
-            //if odd, we will add one extra to the top row
-            if (i < activeDials.Count / 2 + odd)
-            {
-                //0 0
-                //150 1
-                //300 2
-
-                int x = ((int)((activeDials.Count - 1) / 2)) * -150;
-                //then add step
-                int step = 300 * (i);
-                x += step;
-
-                int y = 150;
-
-                //scale and round and convert to int for position
-                float xFloat = x * scale;
-                x = (int)(Mathf.Round(xFloat));
-                float yFloat = y * scale;
-                y = (int)(Mathf.Round(yFloat));
-
-                activeDials[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
-
-
-            }
-            else
-            {
-                //starting point //from whats left 
-                //use "odd" to nudge in to position
-                int diff = activeDials.Count - 1 + odd - (activeDials.Count / 2);
-                int x = ((int)(diff));
-                x *= -150;
-                //then add step
-                int step = 300 * (i - (activeDials.Count / 2));
-                x += step;
-
-                int y = -150;
-
-                //scale and round and convert to int 
-                float xFloat = x * scale;
-                x = (int)(Mathf.Round(xFloat));
-                float yFloat = y * scale;
-                y = (int)(Mathf.Round(yFloat));
-
-                activeDials[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
-            }
-
-            //scale dial            
-            activeDials[i].transform.localScale = new Vector3(scale * 0.35f, scale * 0.35f, scale * 0.35f);
-        }
-
-        Debug.Log(rpmObjects.Count);
-        Debug.Log(manifoldObjects.Count);
-    }
-
-    void AddToTrayOnLoad(GameObject dial, MenuHandler menuHandler)
-    {
-        //USe button manager class to store dial in tray
-        ButtonManager.PutDialInTray(dial, menuHandler);
-    }
 
     //helpers
 
