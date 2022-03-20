@@ -93,7 +93,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
                     List<GameObject> dials = LoadManager.ActiveDials(menuHandler.dialsManager.countryDialBoard);
                     float defaultScale = LoadManager.DefaultDialScale(dials);
                     //defauly scale in prefab is 0.35f, factor this in
-                    defaultScale *= 0.35f;
+                    defaultScale *= LoadManager.scaleOverall;
                     rectTransform.localScale = new Vector3(defaultScale, defaultScale, 1f);
 
                     //remove from tray list
@@ -138,7 +138,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         else
         {
             //dragging to move arrows
-            compassTarget = getCompassTarget(eventData);
+            compassTarget = GetCompassTarget(eventData);
 
         }
 
@@ -200,7 +200,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         
     }
 
-    Quaternion getCompassTarget(PointerEventData eventData)
+    Quaternion GetCompassTarget(PointerEventData eventData)
     {
         // Get Angle in Radians
         float AngleRad = Mathf.Atan2(eventData.position.y - transform.position.y, eventData.position.x - transform.position.x);
@@ -220,7 +220,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             //one time to click to move arrows on compass
             //Debug.Log("Compass Pointer Click");           
 
-            compassTarget = getCompassTarget(eventData);
+            compassTarget = GetCompassTarget(eventData);
         }
 
         //Debug.Log("OnPointerDown");

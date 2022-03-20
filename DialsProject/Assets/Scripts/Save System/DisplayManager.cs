@@ -41,10 +41,28 @@ public class DisplayManager : MonoBehaviour
 
     private void Start()
     {
-
         Set(slaveManager.id.ToString());
         SetFullscreen();
         //
+    }
+
+    public static void RemoveUnityScreenManager()
+    {
+        //take control fo the window sizing etc by deleting any registry entries unity adds
+        string[] keys = PlayerPrefsHelper.GetRegistryValues();
+
+        foreach (string key in keys)
+        {
+            //layout keys are saved with id then plane type e.g (0 il2 mod 1942), (1 spitfire-123)
+            string[] subs = key.Split(' ');
+
+            //UnityEngine.Debug.Log("Sub 0 = " + subs[0]);
+            //we are looking for a layout
+            if (subs[0] == "Screenmanager")
+            {
+                PlayerPrefs.DeleteKey(key);
+            }
+        }
     }
     private void SetFullscreen()
     {
@@ -84,6 +102,9 @@ public class DisplayManager : MonoBehaviour
     // Use this for initialization
     void Update()
     {
+
+        RemoveUnityScreenManager();
+
         //needed every frame?
         IntPtr mainPtr =  ProcessHelper.GetProcessHandle(Process.GetCurrentProcess().Id);
         //IntPtr mainPtr = slaveManager.handle;
@@ -118,10 +139,12 @@ public class DisplayManager : MonoBehaviour
         {
             GetPosition(mainPtr);
             savePos = false;
+            
         }
         if (setPos)
         {
             setPos = false;
+            
         }
 
     }

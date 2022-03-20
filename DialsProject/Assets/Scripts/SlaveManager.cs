@@ -134,7 +134,7 @@ public class SlaveManager : MonoBehaviour
         var myProcess = new Process();
 
         myProcess.StartInfo.FileName = fullPath;
-        myProcess.StartInfo.Arguments = args;
+        myProcess.StartInfo.Arguments = args;     
         myProcess.Start();
     }
 

@@ -91,7 +91,6 @@ public class PlaneDataFromName : AirplaneData
             //RSE.RSE::CCockpitInstruments::simulation+19B0 - 48 8D 15 D9F61200     - lea rdx,[RSE.RSE::CAeroplane_Il_2_m_42::`vftable'+1E8] { ("Il-2 mod.1942") }
             case "Il-2 mod.1942":
                 planeAttributes.country = Country.RU;
-
                 planeAttributes.altimeter = true;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.turnCoordinator = true;
@@ -104,7 +103,6 @@ public class PlaneDataFromName : AirplaneData
             //RSE.RSE::CCockpitInstruments::simulation+19CB - 48 8D 15 96ED0900     - lea rdx,[RSE.RSE::CAeroplane_Il_2_m_43::`vftable'+1E8] { ("Il-2 mod.1943") }
             case "Il-2 mod.1943":
                 planeAttributes.country = Country.RU;
-
                 planeAttributes.altimeter = true;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.turnCoordinator = true;
@@ -189,9 +187,9 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiSmall = true;
                 planeAttributes.headingIndicator = true;// needs new model for gyro combined?
-                planeAttributes.rpmType = DialVariant.B;
-                planeAttributes.manifoldType = DialVariant.E;
                 planeAttributes.engines = 2;
+                planeAttributes.rpmType = DialVariant.B;
+                planeAttributes.manifoldType = DialVariant.E;                
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+2199 - 48 8D 15 80B41400     - lea rdx,[RSE.RSE::CAeroplane_MC_202_s8::`vftable'+1E8] { ("MC 202 s8") }
@@ -262,6 +260,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiLarge = true;//fighter
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.rpmType = DialVariant.B;
+                planeAttributes.manifoldType = DialVariant.B;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+C51 - 48 8D 15 88A51600     - lea rdx,[RSE.RSE::CAeroplane_MiG_3_ser_24::`vftable'+1C0] { ("MiG-3 ser.24") }
@@ -307,9 +306,9 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
-                planeAttributes.rpmType = DialVariant.C;
-                planeAttributes.manifoldType = DialVariant.C;
                 planeAttributes.engines = 2;
+                planeAttributes.rpmType = DialVariant.C;
+                planeAttributes.manifoldType = DialVariant.C;                
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+1FB - 48 8D 15 5E751000     - lea rdx,[RSE.RSE::CAeroplane_Yak_1_ser_127::`vftable'+1E8] { ("Yak-1 ser.127") }
@@ -373,7 +372,6 @@ public class PlaneDataFromName : AirplaneData
             //RSE.RSE::CCockpitInstruments::simulation+CBD - 48 8D 15 7C330F00     - lea rdx,[RSE.RSE::CAeroplane_Spitfire_Mk_Vb::`vftable'+210] { ("Spitfire Mk.Vb") }
             case "Spitfire Mk.Vb":
                 planeAttributes.country = Country.UK;
-
                 planeAttributes.altimeter = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.headingIndicator = true;
@@ -381,6 +379,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+CD8 - 48 8D 15 D9EC0800     - lea rdx,[RSE.RSE::CAeroplane_Hs_129_B2::`vftable'+2E8] { ("Hs 129 B-2") }
@@ -398,7 +397,6 @@ public class PlaneDataFromName : AirplaneData
             //RSE.RSE::CCockpitInstruments::simulation+CFC - 4C 8D 05 9D5E0300     - lea r8,[RSE.RSE::CAeroplane_A_20_B::`vftable'+2E0] { ("A-20B") }
             case "A-20B":
                 planeAttributes.country = Country.US;
-
                 planeAttributes.altimeter = true;
                 planeAttributes.speedometer = Speedometer.B;
                 planeAttributes.headingIndicator = true;
@@ -407,20 +405,20 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiLarge = true;
                 planeAttributes.engines = 2;
                 planeAttributes.rpmType = DialVariant.A;
-                
+                planeAttributes.manifoldType = DialVariant.A;                
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+D83 - 4C 8D 05 6EAF0C00     - lea r8,[RSE.RSE::CAeroplane_P_39L_1::`vftable'+210] { ("P-39L-1") }
             case "P-39L-1":
                 planeAttributes.country = Country.US;
                 planeAttributes.altimeter = true;
-
                 planeAttributes.headingIndicator = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.C;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+D29 - 48 8D 15 C0DE1000     - lea rdx,[RSE.RSE::CAeroplane_Yak_7B_ser_36::`vftable'+2C0] { ("Yak-7B ser.36") }
@@ -467,7 +465,6 @@ public class PlaneDataFromName : AirplaneData
             //RSE.RSE::CCockpitInstruments::simulation+DA9 - 48 8D 15 58B90E00     - lea rdx,[RSE.RSE::CAeroplane_Spitfire_Mk_IXe::`vftable'+2E8] { ("Spitfire Mk.IXe") }
             case "Spitfire Mk.IXe":
                 planeAttributes.country = Country.UK;
-
                 planeAttributes.altimeter = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.headingIndicator = true;
@@ -475,6 +472,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.B;
+                planeAttributes.manifoldType = DialVariant.B;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+27A - 48 8D 15 FFF10700     - lea rdx,[RSE.RSE::CAeroplane_FW_190_A8::`vftable'+2C0] { ("FW 190 A8") }
@@ -493,13 +491,11 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.country = Country.US;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.altimeter = true;
-
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.rpmType = DialVariant.D;
                 planeAttributes.manifoldType = DialVariant.D;
-
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+E65 - 48 8D 15 044A0500     - lea rdx,[RSE.RSE::CAeroplane_Bf_109_K4::`vftable'+310] { ("Bf 109 K-4") }
@@ -517,13 +513,13 @@ public class PlaneDataFromName : AirplaneData
             case "P-51D-15":
                 planeAttributes.country = Country.US;
                 planeAttributes.altimeter = true;
-
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.rpmType = DialVariant.C;
+                planeAttributes.manifoldType = DialVariant.E;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+5778 - 48 8D 15 09890A00     - lea rdx,[RSE.RSE::CAeroplane_Me_262_A::`vftable'+260] { ("Me 262 A") }
@@ -567,7 +563,6 @@ public class PlaneDataFromName : AirplaneData
             case "Tempest Mk.V ser.2":
                 planeAttributes.country = Country.UK;
                 planeAttributes.altimeter = true;
-
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator = true;
@@ -615,19 +610,18 @@ public class PlaneDataFromName : AirplaneData
             case "P-47D-22":
                 planeAttributes.country = Country.US;
                 planeAttributes.altimeter = true;
-
                 planeAttributes.headingIndicator = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.rpmType = DialVariant.D;
+                planeAttributes.manifoldType = DialVariant.D;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+EE9 - 48 8D 15 C85E0900     - lea rdx,[RSE.RSE::CAeroplane_Hurricane_Mk_II::`vftable'+2E8] { ("Hurricane Mk.II") }
             case "Hurricane Mk.II":
                 planeAttributes.country = Country.UK;
                 planeAttributes.altimeter = true;
-
                 planeAttributes.headingIndicator = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.vsiLarge = true;
@@ -654,13 +648,13 @@ public class PlaneDataFromName : AirplaneData
             case "P-51B-5":
                 planeAttributes.country = Country.US;
                 planeAttributes.altimeter = true;
-
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.rpmType = DialVariant.C;
+                planeAttributes.manifoldType = DialVariant.E;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+F66 - 48 8D 15 530F0500     - lea rdx,[RSE.RSE::CAeroplane_Bf_109_G6_Late::`vftable'+310] { ("Bf 109 G-6 Late") }
@@ -677,13 +671,13 @@ public class PlaneDataFromName : AirplaneData
             case "Spitfire Mk.XIV":
                 planeAttributes.country = Country.UK;
                 planeAttributes.altimeter = true;
-
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator = true;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.B;
+                planeAttributes.manifoldType = DialVariant.B;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+263 - 48 8D 15 0EC40700     - lea rdx,[RSE.RSE::CAeroplane_FW_190_A6::`vftable'+8] { ("FW 190 A6") }
@@ -700,7 +694,6 @@ public class PlaneDataFromName : AirplaneData
             case "Typhoon Mk.Ib":
                 planeAttributes.country = Country.UK;
                 planeAttributes.altimeter = true;
-
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.vsiLarge = true;
                 planeAttributes.turnCoordinator = true;
@@ -725,24 +718,32 @@ public class PlaneDataFromName : AirplaneData
 
             //RSE.RSE::CCockpitInstruments::simulation+5A79 - 48 8D 15 50250400     - lea rdx,[RSE.RSE::CAeroplane_Ar_234_B2::`vftable'+238] { ("Ar 234 B-2") }
             case "Ar 234 B-2":
+                planeAttributes.country = Country.GER;
                 planeAttributes.altimeter = true;
                 planeAttributes.turnAndBank = true;
-                planeAttributes.vsiSmall = true;
-                planeAttributes.turnCoordinator = true;
+                planeAttributes.vsiLarge = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.artificialHorizon = true;
                 planeAttributes.headingIndicator = true;
                 planeAttributes.turnAndBank = true;
                 planeAttributes.engines = 2;
-                planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.rpmType = DialVariant.D;
                 planeAttributes.manifoldType = DialVariant.None;
                 break;
-
-            //RSE.RSE::CAeroplane::getPlaneType+40B - 48 8D 05 26102100     - lea rax,[RSE.RSE::CCockpitInstruments::s_homingDeviceRefreshPeriod+14C8] { ("CAeroplane_Ju_88_C6") }
+                            
             //RSE.RSE::CCockpitInstruments::simulation+5FD5 - 48 8D 15 645A0C00     - lea rdx,[RSE.RSE::CAeroplane_Ju_88_C6::`vftable'+238] { ("Ju-88 C6") }
             case"Ju-88 C6":
-                //TODO -- 
-                planeAttributes.manifoldType = DialVariant.None;
+                planeAttributes.country = Country.GER;
+                planeAttributes.altimeter = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.vsiSmall = true;
+                planeAttributes.headingIndicator = true;
+                planeAttributes.artificialHorizon = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.engines = 2;
+                planeAttributes.rpmType = DialVariant.B;
+                planeAttributes.manifoldType = DialVariant.E;
                 break;
-
 
             default:
                 planeAttributes.country = Country.UNDEFINED;

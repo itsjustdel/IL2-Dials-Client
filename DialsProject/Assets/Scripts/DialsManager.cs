@@ -625,9 +625,6 @@ public class DialsManager : MonoBehaviour
             menuHandler.dialsInTray[i].transform.parent = countryDialBoard.transform;
         }
 
-
-
-
         //and call default
         LoadManager.DefaultLayouts(countryDialBoard);
 
@@ -638,8 +635,16 @@ public class DialsManager : MonoBehaviour
             ButtonManager.IconsOn(menuHandler.dialsInTray[i]);
 
         }
+
         //now reset list
         menuHandler.dialsInTray.Clear();
+
+        //turn trays off, they will be empty now
+        for (int i = 0; i < menuHandler.trayObjects.Count; i++)
+        {
+            menuHandler.trayObjects[i].SetActive(false);
+
+        }
 
     }
 

@@ -45,6 +45,7 @@ public class LoadManager : MonoBehaviour
                 PlayerPrefs.DeleteKey(key);
 
                 //layout updated!
+                UnityEngine.Debug.Log("Layout upgraded");
             }
         }
     }
@@ -72,6 +73,9 @@ public class LoadManager : MonoBehaviour
 
     private static Layout GetLayout(int id, AirplaneData airplaneData)
     {
+        //check if layouts need upgraded to new version
+        //MigrateLayoutsToNewVersion(id); --not working
+
         //get all player prefs that start with this plane type
         string[] keys = PlayerPrefsHelper.GetRegistryValues();
         
