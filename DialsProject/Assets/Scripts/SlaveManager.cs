@@ -29,6 +29,11 @@ public class SlaveManager : MonoBehaviour
 
     void Start()
     {
+
+#if UNITY_ANDROID
+        return;
+#endif
+
         string[] args = Environment.GetCommandLineArgs();
 
    //     UnityEngine.Debug.Log("args = ");

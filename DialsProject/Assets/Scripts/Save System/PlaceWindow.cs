@@ -9,7 +9,7 @@ public class PlaceWindow : MonoBehaviour
     //https://answers.unity.com/questions/13523/is-there-a-way-to-set-the-position-of-a-standalone.html
 
 
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR
+#if UNITY_STANDALONE_WIN && UNITY_EDITOR || UNITY_STANDALONE_WIN
 
 
     [StructLayout(LayoutKind.Sequential)]

@@ -599,12 +599,17 @@ public class DialsManager : MonoBehaviour
 
         //save master/client id as first char in string, then save plane name
 
-        Debug.Log("saving layout");
+        //Debug.Log("saving layout");
 
         //save packed string to player preferences (unity)
         //save with id to know if user addded a a second window - if no id, save only plane name ( this will be the master client)
+#if UNITY_ANDROID
+        string key = airplaneData.planeType;
+#else
         string key = "layout " + slaveManager.id + " " + airplaneData.planeType;
-        Debug.Log("saving key = " + key);
+#endif
+
+        //Debug.Log("saving key = " + key);
 
 
         PlayerPrefs.SetString(key, jsonFoo);

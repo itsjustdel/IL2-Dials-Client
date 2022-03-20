@@ -59,8 +59,11 @@ public class LoadManager : MonoBehaviour
 
         //to find the correct layout look through all keys in registry matching this client's id
         int id = dialsManager.slaveManager.id;
-        //Layout layout =
+#if UNITY_ANDROID
+        Layout layout = GetLayoutAndroid(airplaneData);
+#else
         Layout layout = GetLayout(id,airplaneData);
+#endif
 
 
         if (layout != null)
@@ -68,6 +71,14 @@ public class LoadManager : MonoBehaviour
         else
             DefaultLayouts(dialsManager.countryDialBoard);
 
+    }
+
+    private static Layout GetLayoutAndroid(AirplaneData airplaneData)
+    {        
+        string jsonFoo = PlayerPrefs.GetString(airplaneData.planeType);
+        //and rebuild layout
+        Layout layout = JsonUtility.FromJson<Layout>(jsonFoo);
+        return layout;        
     }
 
 
