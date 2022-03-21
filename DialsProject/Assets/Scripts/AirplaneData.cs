@@ -31,7 +31,6 @@ public class AirplaneData : MonoBehaviour
 
     public string planeType;
     public string planeTypePrevious;
-    public Country country = Country.RU;
     //stores name avaialble dials
 
     public PlaneDataFromName.PlaneAttributes planeAttributes;

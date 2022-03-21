@@ -7,7 +7,7 @@ public class UKDials : MonoBehaviour
     public static Quaternion AirspeedTarget(float airspeed)
     {
         if (airspeed == 0)
-            return Quaternion.identity;
+            return Quaternion.Euler(0, 0, -180);//60 at 220;
 
         //airspeed dial has two gears
         Quaternion target = Quaternion.identity;

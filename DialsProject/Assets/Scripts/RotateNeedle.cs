@@ -184,7 +184,7 @@ public class RotateNeedle : MonoBehaviour
     public void SetRotationTargets()
     {
         //initial refactoring, could go further, lots of parameters
-        airspeedTarget = DialTargets.AirspeedTarget(airplaneData.country, airplaneData.airspeed, airplaneData.planeAttributes.speedometer);
+        airspeedTarget = DialTargets.AirspeedTarget(airplaneData.planeAttributes.country, airplaneData.airspeed, airplaneData.planeAttributes.speedometer);
 
         altitudeLargeTarget = DialTargets.AltimeterTargets(ref altitudeSmallTarget,ref altitudeSmallestTarget, altitudeNeedleSmallest, airplaneData);
 

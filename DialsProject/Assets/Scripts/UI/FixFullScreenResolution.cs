@@ -10,6 +10,7 @@ namespace UnityLibrary
 {
     public class FixFullScreenResolution : MonoBehaviour
     {
+#if !UNITY_ANDROID
         int maxWidth = 1280;
         int maxHeight = 720;
 
@@ -23,6 +24,8 @@ namespace UnityLibrary
 
         void Start()
         {
+
+
             Resolution[] resolutions = Screen.resolutions;
 
             // pick max resolution for full size
@@ -73,5 +76,6 @@ namespace UnityLibrary
                 fullscreenFixed = false;
             }
         }
+#endif
     }
 }
