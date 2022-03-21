@@ -169,20 +169,18 @@ public class SlaveManager : MonoBehaviour
 
     public void DeleteScreen()
     {
-        if(id == 0)
-        {
-            UnityEngine.Debug.Log("Can't delete main client");
-        //    return;
-        }
-
+        
         //get all player prefs that start with this plane type
         string[] keys = PlayerPrefsHelper.GetRegistryValues();
 
+        //UnityEngine.Debug.Log(keys);        
+
         foreach (string key in keys)
         {
+            UnityEngine.Debug.Log(key);
             //layout keys are saved with id then plane type e.g (0 il2 mod 1942), (1 spitfire-123)
             string[] subs = key.Split(' ');
-
+            UnityEngine.Debug.Log("ln 183");
             //we are looking for a layout etc
             if (subs[0] == "layout" || subs[0] == "fullscreen" || subs[0] == "windowInfo")
             {            
@@ -190,6 +188,7 @@ public class SlaveManager : MonoBehaviour
                 //strip id number from registry key which has _hxxxxxxx after it
                 string idString = "";
                 int start = subs[0].Length + 1;
+                UnityEngine.Debug.Log("ln 191");
                 for (int i = start; i < key.Length - 1; i++)
                 {
                     //look for handle "_h" - we don't need values after key[x] is a char so do conversion                        
@@ -198,17 +197,25 @@ public class SlaveManager : MonoBehaviour
 
                     idString += key[i];
                 }
-
-                if (int.Parse(idString) == id)
+                UnityEngine.Debug.Log("id string = " + idString);
+                UnityEngine.Debug.Log("ln 200");
+                
+                
+                string[] subsIdString = idString.Split(' ');
+                int parsed = int.Parse(subsIdString[0]);
+                if (parsed == id)
                 {
+                    UnityEngine.Debug.Log("ln 204");
                     string keyToDelete = subs[0] + " " + idString;
                     UnityEngine.Debug.Log("deleting key = " + keyToDelete);
                     PlayerPrefs.DeleteKey(keyToDelete);
                 }
+                UnityEngine.Debug.Log("ln 213");
             }
         }
 
         //and close the app
+        UnityEngine.Debug.Log("should close now");
         Application.Quit();
 
     }

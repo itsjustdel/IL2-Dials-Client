@@ -15,20 +15,19 @@ public class PlayerPrefsHelper : MonoBehaviour
 
         //TOD add if editor string op
 
-#if UNITY_EDITOR  && !UNITY_ANDROID 
+#if UNITY_EDITOR && !UNITY_ANDROID
         Microsoft.Win32.RegistryKey registryKey;
         registryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Unity\\UnityEditor\\DellyWellySoftware\\IL-2 Dials");
         string[] valueNames = registryKey.GetValueNames();
         return valueNames;
 
 #elif UNITY_STANDALONE_WIN
+        
         Microsoft.Win32.RegistryKey registryKey;
        registryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\" + companyName + "\\" + productName);
        string[] valueNames = registryKey.GetValueNames();
        return valueNames;
 #endif
 
-
-        return null;
     }
 }
