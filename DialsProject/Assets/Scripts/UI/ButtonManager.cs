@@ -156,22 +156,21 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         {
             Vector2 d2 = rectTransform.anchoredPosition;
 
+
             //snap
             int snap = 10;
 
             d2.x = Mathf.Round(d2.x / snap) * snap;
             d2.y = Mathf.Round(d2.y / snap) * snap;
 
-            d2.x = Mathf.Clamp(d2.x, Screen.width * -.5f, Screen.width * .5f);
-            float ySize = Screen.height * .5f + rectTransform.rect.height;
-            d2.y = Mathf.Clamp(d2.y, Screen.height * -.5f - rectTransform.rect.height, rectTransform.rect.height * canvas.scaleFactor);//bottom, top
-            rectTransform.anchoredPosition = d2;
+            //  d2.x = Mathf.Clamp(d2.x, Screen.width * -.5f, Screen.width * .5f);
+            //  float ySize = Screen.height * .5f + rectTransform.rect.height;
+            //  d2.y = Mathf.Clamp(d2.y, Screen.height * -.5f - rectTransform.rect.height, rectTransform.rect.height * canvas.scaleFactor);//bottom, top
+             rectTransform.anchoredPosition = ScreenTrap(d2);
 
-            //trap in screen
-            ScreenTrap(d2);
 
             //make sure icons are 
-            Debug.Log(transform.parent.parent.gameObject.name);
+            //Debug.Log(transform.parent.parent.gameObject.name);
             IconsOn(transform.parent.parent.gameObject);
 
         }
@@ -259,21 +258,21 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             navArrowDown = false;
     }
 
-    public void ScreenTrap(  Vector2 d2 )
+    public Vector2 ScreenTrap(  Vector2 d2 )
     {
-        //use canvas height, dial panel size and dial panel scale to find edge of screen
-        float bottom = canvas.GetComponent<RectTransform>().rect.height * -.5f + rectTransform.rect.height * .5f * rectTransform.localScale.y;
-        //addspace for menu button/leds?
-        //bottom += 50;
-        float top = canvas.GetComponent<RectTransform>().rect.height * .5f - rectTransform.rect.height * .5f * rectTransform.localScale.x;
-        d2.y = Mathf.Clamp(d2.y, bottom, top);
+        RectTransform rectTransformParent = transform.parent.parent.GetComponent<RectTransform>();
+        //400 because face width is 100 and face scale is 8. Move half of that out
+        float minWidth = canvas.GetComponent<RectTransform>().rect.width * -.5f + rectTransformParent.localScale.x * 400;
+        float maxWidth = canvas.GetComponent<RectTransform>().rect.width * .5f - rectTransformParent.localScale.x * 400;
 
-        //width
-        float left = canvas.GetComponent<RectTransform>().rect.width * -.5f + rectTransform.rect.width * .5f * rectTransform.localScale.x;
-        float right = canvas.GetComponent<RectTransform>().rect.width * .5f - rectTransform.rect.width * .5f * rectTransform.localScale.x;
-        d2.x = Mathf.Clamp(d2.x, left, right);
+        
+        float minHeight = canvas.GetComponent<RectTransform>().rect.height * -.5f + rectTransformParent.localScale.x * 400;
+        float maxHeight = canvas.GetComponent<RectTransform>().rect.height * .5f - rectTransformParent.localScale.x * 400; 
 
-        rectTransform.anchoredPosition = d2;
+        d2.x = Mathf.Clamp(d2.x, minWidth, maxWidth);
+        d2.y = Mathf.Clamp(d2.y, minHeight, maxHeight);
+
+        return d2;
     }
 
 
