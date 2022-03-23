@@ -444,7 +444,7 @@ public class MenuHandler : MonoBehaviour
             //save to player prefs for next load
             PlayerPrefs.SetInt("PortNumber", 11200);
 
-            Debug.Log("4");
+          //  Debug.Log("4");
         }
         else
         {

@@ -337,14 +337,22 @@ public class GermanDials : MonoBehaviour
     }
 
 
-    public static Quaternion ManifoldTargetA(float manifold)
+    public static Quaternion ManifoldTargetA(float manifold, string planeType)
     {
-        //manifold -= 6000;
+        //planes need nudged, not consistent to manifold value
+        if (planeType == "Bf 109 E-7" || planeType == "Bf-110 E2")
+            manifold *= 1.0225f;
+        else
+            manifold *= 0.9875f;
 
         float m = 0;
         if (manifold <= 60000)
             m = 160;
-        else if (manifold <=180000)
+
+        else if (manifold > 180000)
+            m = -160;
+
+        else if (manifold <= 180000)
         {
             m = (manifold - 60000) * -0.00266667f;
             m += 160;
@@ -363,6 +371,7 @@ public class GermanDials : MonoBehaviour
 
     public static Quaternion ManifoldTargetD(float manifold)
     {
+        
         float m = 0;
         if (manifold <= 50000)
             m = 160;

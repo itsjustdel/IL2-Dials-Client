@@ -144,10 +144,9 @@ public class ITADials : MonoBehaviour
     }
 
     public static Quaternion ManifoldTargetA(float manifold, float scalar, float s2)
-    {       
-        //test
-     //   manifold = scalar;
-        
+    {
+        //in gamerotations differ from pure data from game
+        manifold *= 1.0225f;
         float m = 0;
         if (manifold <= 50000)
             m = 150;

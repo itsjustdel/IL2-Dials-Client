@@ -31,7 +31,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     private Quaternion compassTarget;
 
     private float minScale = 0.1f;
-    private float maxScale = .75f;
+    private float maxScale = 2f;
 
     
 

@@ -389,7 +389,7 @@ public class USDials : MonoBehaviour
     }
 
     public static Quaternion ManifoldTargetC(float manifold, float scalar)
-    {
+    {       
         //US *28.95902519867009 inches of Hg
         manifold *= 2.895902519867009f;
         
