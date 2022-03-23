@@ -157,60 +157,58 @@ public class DialsManager : MonoBehaviour
 
 
         for (int i = 0; i < rpmObjects.Count; i++)
-        {
-            //  if (planeAttributes.country ==  Country.RU)
+        {           
+            //Primary needle - most planes have this
+            if (rpmObjects[i].transform.Find("Needle Large") != null)
             {
-                //Primary needle - most planes have this
-                if (rpmObjects[i].transform.Find("Needle Large") != null)
+                GameObject needleLarge = rpmObjects[i].transform.Find("Needle Large").gameObject;
+                countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleLarge);
+            }
+
+
+            if (planeAttributes.country ==  Country.RU)
+            {
+                if (planeAttributes.rpmType == DialVariant.A)
                 {
-                    GameObject needleLarge = rpmObjects[i].transform.Find("Needle Large").gameObject;
-                    countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleLarge);
+                    GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
+                    countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
                 }
 
 
-                if (planeAttributes.country ==  Country.RU)
+                //pe-2
+                if (planeAttributes.country ==  Country.RU && planeAttributes.rpmType == DialVariant.C)
                 {
-                    if (planeAttributes.rpmType == DialVariant.A)
-                    {
-                        GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
-                        countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
-                    }
-
-
-                    //pe-2
-                    if (planeAttributes.country ==  Country.RU && planeAttributes.rpmType == DialVariant.C)
-                    {
-                        GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
-                        countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
-                    }
-
+                    GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
+                    countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
                 }
 
-                if (planeAttributes.country ==  Country.US)
+            }
+
+            if (planeAttributes.country ==  Country.US)
+            {
+                //p38 J
+                if (airplaneData.planeType == "P-38J-25")
                 {
-                    //p38 J
-                    if (airplaneData.planeType == "P-38J-25")
+                    if (i == 0)
                     {
-                        if (i == 0)
-                        {
-                            //do both needles and return, p38 has two needles on one dial
-                            GameObject needleLeft = rpmObjects[i].transform.Find("Needle Left").gameObject;
-                            countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleLeft);
+                        //do both needles and return, p38 has two needles on one dial
+                        GameObject needleLeft = rpmObjects[i].transform.Find("Needle Left").gameObject;
+                        countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleLeft);
 
-                            GameObject needleRight = rpmObjects[i].transform.Find("Needle Right").gameObject;
-                            countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleRight);
+                        GameObject needleRight = rpmObjects[i].transform.Find("Needle Right").gameObject;
+                        countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleRight);
 
-                            return;
-                        }
+                        return;
                     }
+                }
 
-                    if (planeAttributes.rpmType == DialVariant.A || planeAttributes.rpmType == DialVariant.D)
-                    {
-                        GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
-                        countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
-                    }
+                if (planeAttributes.rpmType == DialVariant.A || planeAttributes.rpmType == DialVariant.D)
+                {
+                    GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
+                    countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
                 }
             }
+            
         }
     }
 
@@ -223,7 +221,7 @@ public class DialsManager : MonoBehaviour
 
         for (int i = 0; i < manifoldObjects.Count; i++)
         {
-            if (airplaneData.planeType == "P-38J-25" || airplaneData.planeType == "He 111 H-16")
+            if (airplaneData.planeType == "P-38J-25" || airplaneData.planeType == "He 111 H-16" || airplaneData.planeType == "Hs 129 B-2")
             {
                 //p38 J or he 111 h16
                 GameObject needleLeft = manifoldObjects[i].transform.Find("Needle Left").gameObject;
@@ -351,7 +349,7 @@ public class DialsManager : MonoBehaviour
 
                 int dialsToInstantiate = airplaneData.planeAttributes.engines;
                 //some plane have two needles one dial, only create one in this instance
-                if (airplaneData.planeType == "P-38J-25" || airplaneData.planeType == "He 111 H-16")
+                if (airplaneData.planeType == "P-38J-25" || airplaneData.planeType == "He 111 H-16" || airplaneData.planeType == "Hs 129 B-2")
                     dialsToInstantiate = 1;
 
                 for (int i = 0; i < dialsToInstantiate; i++)

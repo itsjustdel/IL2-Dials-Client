@@ -27,7 +27,12 @@ public class PlayerPrefsHelper : MonoBehaviour
        registryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\" + companyName + "\\" + productName);
        string[] valueNames = registryKey.GetValueNames();
        return valueNames;
+
+#else
+        return null;
 #endif
+
+
 
     }
 }

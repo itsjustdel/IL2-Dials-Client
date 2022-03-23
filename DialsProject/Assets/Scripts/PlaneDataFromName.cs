@@ -391,7 +391,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiSmall = true;
                 planeAttributes.engines = 2;
                 planeAttributes.rpmType = DialVariant.A;
-                planeAttributes.manifoldType = DialVariant.B;
+                planeAttributes.manifoldType = DialVariant.F;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+CFC - 4C 8D 05 9D5E0300     - lea r8,[RSE.RSE::CAeroplane_A_20_B::`vftable'+2E0] { ("A-20B") }

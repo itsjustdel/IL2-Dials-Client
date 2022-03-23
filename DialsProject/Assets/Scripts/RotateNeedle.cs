@@ -12,6 +12,7 @@ public class RotateNeedle : MonoBehaviour
     public AirplaneData airplaneData;
     public UDPClient udpClient;
     public float smoothing = 3f;
+    public float manifoldSmoothing = 1f;
 
     public GameObject altitudeNeedleSmall;
     public GameObject altitudeNeedleSmallest;//UK//US
@@ -247,7 +248,7 @@ public class RotateNeedle : MonoBehaviour
         for (int i = 0; i < manifoldNeedlesLarge.Count; i++)
         {
             if (manifoldNeedlesLarge[i].gameObject != null)
-                manifoldNeedlesLarge[i].transform.rotation = Quaternion.Slerp(manifoldNeedlesLarge[i].transform.rotation, manifoldLargeTargets[i], Time.deltaTime * smoothing);
+                manifoldNeedlesLarge[i].transform.rotation = Quaternion.Slerp(manifoldNeedlesLarge[i].transform.rotation, manifoldLargeTargets[i], Time.deltaTime * manifoldSmoothing);
         }
     }
 

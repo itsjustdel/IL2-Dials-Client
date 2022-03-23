@@ -36,18 +36,16 @@ public class DialTargets : MonoBehaviour
                                 || airplaneData.planeAttributes.manifoldType == DialVariant.F)
                     {
                         
-                        manifoldLargeTargets[i] = GermanDials.ManifoldTargetA(airplaneData.manifolds[i], airplaneData.planeType);
+                        manifoldLargeTargets[i] = GermanDials.ManifoldTargetA(airplaneData.manifolds[i], airplaneData.planeType, airplaneData.scalar0);
                     }
 
                     else if (airplaneData.planeAttributes.manifoldType == DialVariant.D)
-                    {
-                        
-                        manifoldLargeTargets[i] = GermanDials.ManifoldTargetD(airplaneData.manifolds[i]);
+                    {                        
+                        manifoldLargeTargets[i] = GermanDials.ManifoldTargetD(airplaneData.manifolds[i], airplaneData.planeType, airplaneData.scalar0);
                     }
                     else if (airplaneData.planeAttributes.manifoldType == DialVariant.E)
                     {
-
-                        manifoldLargeTargets[i] = GermanDials.ManifoldTargetE(airplaneData.manifolds[i], airplaneData.scalar0);
+                        manifoldLargeTargets[i] = GermanDials.ManifoldTargetE(airplaneData.manifolds[i], airplaneData.planeType, airplaneData.scalar0);
                     }
 
                     break;
@@ -60,20 +58,12 @@ public class DialTargets : MonoBehaviour
                     }
                     else if (airplaneData.planeAttributes.manifoldType == DialVariant.C
                             || airplaneData.planeAttributes.manifoldType == DialVariant.D
-                               || airplaneData.planeAttributes.manifoldType == DialVariant.E)
+                               || airplaneData.planeAttributes.manifoldType == DialVariant.E
+                                    || airplaneData.planeAttributes.manifoldType == DialVariant.F)
                     {
 
                         manifoldLargeTargets[i] = USDials.ManifoldTargetC(airplaneData.manifolds[i], airplaneData.scalar0);
-                    }
-                    else if (airplaneData.planeAttributes.manifoldType == DialVariant.F)
-                    {
-                        
-                        manifoldLargeTargets[0] = USDials.ManifoldTargetC(airplaneData.manifolds[0], airplaneData.scalar0);
-                        manifoldLargeTargets[1] =  USDials.ManifoldTargetC(airplaneData.manifolds[1], airplaneData.scalar0);
-
-                        //force loop finish
-                        i = airplaneData.planeAttributes.engines + 1;
-                    }
+                    }                  
                     break;
 
                 case (Country.UK):
@@ -94,7 +84,6 @@ public class DialTargets : MonoBehaviour
                         manifoldLargeTargets[i] = ITADials.ManifoldTargetA(airplaneData.manifolds[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
                     break;
-
             }
         }
 
