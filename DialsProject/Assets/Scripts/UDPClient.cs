@@ -10,7 +10,7 @@ public class UDPClient : MonoBehaviour
 	//class which reads memory and sets values	
 
 	public BuildControl buildControl;
-	public AirplaneData iL2GameDataClient;
+	public AirplaneData airplaneData;
 	public MenuHandler menuHandler;
 	public RotateNeedle rN;
 	public SlaveManager slaveManager;
@@ -240,7 +240,7 @@ public class UDPClient : MonoBehaviour
 		int p = 0;
 
 		//set length sent from server	
-		int floatArrayLength = 17;
+		int floatArrayLength = 18;
 		int floatArrayLengthBytes = 4 * floatArrayLength; //4 bytes for float * array length
 														  //float array
 		float[] floats = GetFloats(bytes, p, floatArrayLength);
@@ -251,33 +251,34 @@ public class UDPClient : MonoBehaviour
 		if (!testPrediction)
 		{
 			//set Il2 game data for client
-			iL2GameDataClient.altitude = floats[0];
-			iL2GameDataClient.mmhg = floats[1];
-			iL2GameDataClient.airspeed = floats[2];
+			airplaneData.altitude = floats[0];
+			airplaneData.mmhg = floats[1];
+			airplaneData.airspeed = floats[2];
 			//save previous heading before asigning new heading - needed for turn co-ordinator needle
-			iL2GameDataClient.headingPreviousPrevious = iL2GameDataClient.headingPrevious;
-			iL2GameDataClient.headingPrevious = iL2GameDataClient.heading;
-			iL2GameDataClient.heading = floats[3];
-			iL2GameDataClient.pitch = floats[4];
-			iL2GameDataClient.rollPrev = iL2GameDataClient.roll;
-			iL2GameDataClient.roll = floats[5];
-			iL2GameDataClient.verticalSpeed = floats[6];
-			iL2GameDataClient.turnCoordinatorBall = floats[7];
-			iL2GameDataClient.turnCoordinatorNeedle = floats[8];
-			iL2GameDataClient.rpms[0] = floats[9];
-			iL2GameDataClient.rpms[1] = floats[10];
-			iL2GameDataClient.rpms[2] = floats[11];
-			iL2GameDataClient.rpms[3] = floats[12]; //support for 4 engines (you never know!)
-			iL2GameDataClient.manifolds[0] = floats[13];
-			iL2GameDataClient.manifolds[1] = floats[14];
-			iL2GameDataClient.manifolds[2] = floats[15];
-			iL2GameDataClient.manifolds[3] = floats[16]; //support for 4 engines (you never know!)
+			airplaneData.headingPreviousPrevious = airplaneData.headingPrevious;
+			airplaneData.headingPrevious = airplaneData.heading;
+			airplaneData.heading = floats[3];
+			airplaneData.pitch = floats[4];
+			airplaneData.rollPrev = airplaneData.roll;
+			airplaneData.roll = floats[5];
+			airplaneData.verticalSpeed = floats[6];
+			airplaneData.turnCoordinatorBall = floats[7];
+			airplaneData.turnCoordinatorNeedle = floats[8];
+			airplaneData.rpms[0] = floats[9];
+			airplaneData.rpms[1] = floats[10];
+			airplaneData.rpms[2] = floats[11];
+			airplaneData.rpms[3] = floats[12]; //support for 4 engines (you never know!)
+			airplaneData.manifolds[0] = floats[13];
+			airplaneData.manifolds[1] = floats[14];
+			airplaneData.manifolds[2] = floats[15];
+			airplaneData.manifolds[3] = floats[16]; //support for 4 engines (you never know!)
+			airplaneData.engineModification = (int)floats[17];
 		}
 		p += floatArrayLengthBytes;
 
 		//version number
 		//receiving server version from stream (server -> client)
-		iL2GameDataClient.serverVersion = BitConverter.ToSingle(bytes, p);
+		airplaneData.serverVersion = BitConverter.ToSingle(bytes, p);
 		p += sizeof(float);
 
 		//plane type string size
@@ -289,7 +290,7 @@ public class UDPClient : MonoBehaviour
 		//plane type string
 		string planeType = System.Text.Encoding.UTF8.GetString(bytes, p, (int)stringSize);
 		//using setter method so we can check menu status before chaning plane name
-		iL2GameDataClient.setPlaneType(planeType);
+		airplaneData.setPlaneType(planeType);
 		
 
 	}

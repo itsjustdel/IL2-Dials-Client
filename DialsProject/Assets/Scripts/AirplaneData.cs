@@ -49,7 +49,7 @@ public class AirplaneData : MonoBehaviour
     public float headingPreviousPrevious;
     public List<float> rpms;
     public List<float> manifolds;
-
+    public int engineModification;
 
     public BuildControl buildControl;
     public MenuHandler menuHandler;
