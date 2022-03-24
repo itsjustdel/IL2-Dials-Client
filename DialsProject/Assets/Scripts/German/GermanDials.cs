@@ -337,30 +337,36 @@ public class GermanDials : MonoBehaviour
     }
 
 
-    public static Quaternion ManifoldTargetA(float manifold, string planeType, float s)
+    public static Quaternion ManifoldTargetA(float manifold, string planeType, int engineMod, float s)
     {
         //planes need nudged, not consistent to manifold value
         if (planeType == "Bf 109 E-7" || planeType == "Bf-110 E2")
-            manifold *= 1.0225f;        
+            manifold *= 1.0225f;
         else
             manifold *= 0.9875f;
 
+
+        //account for different engines
+        float upperLimit = 180000;        
+        if (planeType == "Bf 109 K-4" && engineMod == 1)
+            upperLimit = 200000;
+
         float m = 0;
         if (manifold <= 60000)
-            m = 160;
+            m = 166.156f;
 
-      //  else if (manifold > 180000)
-        //    m = -160;
+        else if (upperLimit == 180000 && manifold > upperLimit)
+            m = -166.156f;
 
-        else if (manifold <= 180000)
+        else if (manifold <= upperLimit)
         {
-            m = (manifold - 60000) * -0.00266667f;
-            m += 160;
+            m = (manifold - 60000) * -0.002766667f;
+            m += 166.156f;
         }
         else
         {
             m = (manifold - 60000) * -0.00275f;
-            m += 160;
+            m += 166.156f;
         }
 
         Quaternion target = Quaternion.Euler(0, 0, m);
@@ -395,7 +401,7 @@ public class GermanDials : MonoBehaviour
             m = 160;
         else
         {
-            m = (manifold - 60000) * -0.002666667f;
+            m = (manifold - 60000) * -0.002766667f;
             m += 160;
         }
 

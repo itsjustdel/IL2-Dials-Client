@@ -36,7 +36,7 @@ public class DialTargets : MonoBehaviour
                                 || airplaneData.planeAttributes.manifoldType == DialVariant.F)
                     {
                         
-                        manifoldLargeTargets[i] = GermanDials.ManifoldTargetA(airplaneData.manifolds[i], airplaneData.planeType, airplaneData.scalar0);
+                        manifoldLargeTargets[i] = GermanDials.ManifoldTargetA(airplaneData.manifolds[i], airplaneData.planeType,airplaneData.engineModification, airplaneData.scalar0);
                     }
 
                     else if (airplaneData.planeAttributes.manifoldType == DialVariant.D)
