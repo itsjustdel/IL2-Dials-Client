@@ -63,6 +63,7 @@ public static class PlaneLists
         "FW 190 A3",
         "FW 190 A5",
         "FW 190 A6",
+        "FW 190 A8",
         "FW 190 D9",
         "He 111 H-6",                       
         "He 111 H-16",
