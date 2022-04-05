@@ -262,7 +262,14 @@ public class UKDials : MonoBehaviour
         //UK =  read manifold, minus 101325.00, divide by 6894.76
         //manifold -= 101325f; //air pressure
         //manifold /= 6894.76f; // pascal
+
+        //some strange behaviour on low values
+        if (manifold <= -7)
+            manifold = -8.2f;
+
         float m = 0;
+
+
         if (manifold <= 8)
         {
             m = manifold * -11;
@@ -289,7 +296,12 @@ public class UKDials : MonoBehaviour
         // manifold -= 101325f; //air pressure
         // manifold /= 6894.76f; // pascal
 
+        //some strange behaviour on low values
+        if (manifold <= -7)
+            manifold = -8.2f;
+
         float m = 0;
+
         if (manifold <= 4)
         {
             m = manifold * -15;

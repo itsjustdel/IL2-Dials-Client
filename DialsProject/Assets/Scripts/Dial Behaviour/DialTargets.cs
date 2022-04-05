@@ -17,14 +17,25 @@ public class DialTargets : MonoBehaviour
             switch (country)
             {
                 case (Country.RU):
-                    if (airplaneData.planeAttributes.manifoldType == DialVariant.A
-                            || airplaneData.planeAttributes.manifoldType == DialVariant.B)
+                    if (airplaneData.planeAttributes.manifoldType == DialVariant.A)                            
                     {
                         manifoldLargeTargets[i] = RussianDials.ManifoldTargetA(airplaneData.manifolds[i]);
                     }
+                    if (airplaneData.planeAttributes.manifoldType == DialVariant.B)
+                    {
+                        if (airplaneData.planeType == "Yak-9 ser.1" || airplaneData.planeType == "Yak-9T ser.1")
+                        {
+                            //data found from different source
+                            manifoldLargeTargets[i] = RussianDials.ManifoldTargetB(airplaneData.manifolds[i], airplaneData.scalar0);
+                        }
+                        else
+                        {
+                            //use same rotation as 16 scale
+                            manifoldLargeTargets[i] = RussianDials.ManifoldTargetA(airplaneData.manifolds[i]);
+                        }
+                    }
                     else if (airplaneData.planeAttributes.manifoldType == DialVariant.C)
                     {
-
                         manifoldLargeTargets[i] = RussianDials.ManifoldTargetC(airplaneData.manifolds[i], airplaneData.scalar0);
                     }
                     break;
@@ -57,13 +68,17 @@ public class DialTargets : MonoBehaviour
                         manifoldLargeTargets[i] = USDials.ManifoldTargetA(airplaneData.manifolds[i],airplaneData.scalar0);
                     }
                     else if (airplaneData.planeAttributes.manifoldType == DialVariant.C
-                            || airplaneData.planeAttributes.manifoldType == DialVariant.D
-                               || airplaneData.planeAttributes.manifoldType == DialVariant.E
+                            || airplaneData.planeAttributes.manifoldType == DialVariant.D                               
                                     || airplaneData.planeAttributes.manifoldType == DialVariant.F)
                     {
 
                         manifoldLargeTargets[i] = USDials.ManifoldTargetC(airplaneData.manifolds[i], airplaneData.scalar0);
-                    }                  
+                    }
+                    else if (airplaneData.planeAttributes.manifoldType == DialVariant.E)
+                    {
+
+                        manifoldLargeTargets[i] = USDials.ManifoldTargetE(airplaneData.manifolds[i],airplaneData.engineModification, airplaneData.scalar0);
+                    }
                     break;
 
                 case (Country.UK):

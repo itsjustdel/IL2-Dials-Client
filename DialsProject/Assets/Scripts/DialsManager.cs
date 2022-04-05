@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -71,6 +72,10 @@ public class DialsManager : MonoBehaviour
 
             Markings(airplaneData);
 
+            P51FaceSwitch();
+
+            Hs129B2NeedleSwitch();
+
             if (countryDialBoard != null)
                 LoadManager.LoadLayout(airplaneData, this);
             else
@@ -99,6 +104,15 @@ public class DialsManager : MonoBehaviour
         }
     }
 
+    private void Hs129B2NeedleSwitch()
+    {
+        if (airplaneData.planeType == "Hs 129 B-2")
+        {
+            //needles need re-order so R is underneath
+            manifoldObjects[0].transform.Find("Needle Left").transform.SetSiblingIndex(manifoldObjects[0].transform.childCount-1);
+        }
+    }
+
     void Markings(AirplaneData airplaneData)
     {
         //rpm markings
@@ -113,7 +127,23 @@ public class DialsManager : MonoBehaviour
         {
             countryDialBoard.transform.Find("RPM C 0").Find("Markings").Find("Red 3").gameObject.SetActive(false);
         }
+    }
 
+    void P51FaceSwitch()
+    {
+        //if 150 octane fuel switch
+        if (airplaneData.planeType == "P-51D-15" || airplaneData.planeType == "P-51B-5")
+        {
+            if (airplaneData.engineModification == 1)
+            {
+                for (int i = 0; i < manifoldObjects.Count; i++)
+                {
+                    manifoldObjects[i].transform.Find("Face").gameObject.SetActive(false);
+                    manifoldObjects[i].transform.Find("Face 150").gameObject.SetActive(true);
+                }
+            }
+
+        }
     }
 
     void AsignNeedles()
@@ -364,7 +394,9 @@ public class DialsManager : MonoBehaviour
                         manifoldInstance.transform.SetSiblingIndex(manifoldInstance.transform.GetSiblingIndex() +1);
 
                     }
+
                     manifoldInstance.transform.name = "Manifold " + airplaneData.planeAttributes.manifoldType.ToString() + " " + i.ToString();
+
 
                     manifoldObjects.Add(manifoldInstance);
                 }

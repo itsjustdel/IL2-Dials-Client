@@ -138,11 +138,12 @@ public class UDPClient : MonoBehaviour
 		//endpoint where server is listening
 		IPEndPoint ep = new IPEndPoint(IPAddress.Parse(_serverAddress), portNumber);
 
-		//create a connection - this will hold until closed
-		client.Connect(ep);
-
 		try
 		{
+			//create a connection - this will hold until closed
+			client.Connect(ep);
+
+		
 			// Sends a message to the host to which you have connected.
 			byte[] sendBytes = System.Text.Encoding.ASCII.GetBytes("IL-2 Client");
 					

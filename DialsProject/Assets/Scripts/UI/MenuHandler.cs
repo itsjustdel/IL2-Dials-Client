@@ -24,8 +24,6 @@ public class MenuHandler : MonoBehaviour
     public GameObject flagsPanel;
     public GameObject screensPanel;
     public GameObject planeDropdownPanel;
-
-
     public GameObject connectionsButton;
     public GameObject ledParent;
     public GameObject ipTextField;
@@ -36,8 +34,6 @@ public class MenuHandler : MonoBehaviour
     public Toggle dontShowAgainToggle;
     public bool ipFieldOpen;
     public bool portFieldOpen;
-
-
     public bool trayOpen;
     public GameObject trayParent;
     public List<GameObject> trayObjects;
@@ -367,11 +363,6 @@ public class MenuHandler : MonoBehaviour
             menuPanel.SetActive(true);
             blurPanel.SetActive(true);
         }
-
-
-        //blurPanel.SetActive(!blurPanel.activeSelf);
-        //menuPanel.SetActive(!menuPanel.activeSelf);
-        //connectionPanel.SetActive(false);
     }
 
     public void IPAddressChanged()
@@ -387,10 +378,6 @@ public class MenuHandler : MonoBehaviour
             //save to player prefs for next load
             PlayerPrefs.SetString("IPAddress", ipAddressText);
             PlayerPrefs.Save();
-
-
-
-            //Debug.Log("2");
         }
         else
         {
@@ -405,30 +392,16 @@ public class MenuHandler : MonoBehaviour
             //save
             PlayerPrefs.SetString("IPAddress", ipAddressText);
             PlayerPrefs.Save();
-
-
-            //let user know what's happening
-            //            scanDebug.GetComponent<Text>().text = "Attempting Connection: " + udpClient.hostName.ToString(); ;
-
-            Debug.Log("3");
-
         }
-
 
         //reset autoscan variables
         udpClient.ip3 = 0;
-        udpClient.ip4 = 4; ;
-
+        udpClient.ip4 = 4;
 
         //flag for autoscan pause
         ipFieldOpen = false;
 
         udpClient.hostFound = false;
-
-
-        // udpClient.timer = udpClient.socketTimeoutTime;
-
-
     }
 
     public void PortChanged()

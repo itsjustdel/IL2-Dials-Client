@@ -20,7 +20,7 @@ public class FlagButtons : MonoBehaviour
 
     public void FlagPressed(GameObject buttonObject)
     {
-        Debug.Log(buttonObject.name + " pressed");
+        //Debug.Log(buttonObject.name + " pressed");
         //run start to populate and sort lists
         
         planeDropdown.PopulateDropdown(planeDropdown.dropdown, buttonObject.name);

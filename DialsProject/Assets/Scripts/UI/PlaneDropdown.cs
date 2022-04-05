@@ -58,25 +58,40 @@ public class PlaneDropdown : MonoBehaviour
         {
             case "RU":                
                 dropdown.AddOptions(RuPlanes);
+                //if current plane, set as label for quick option
+                if (RuPlanes.Contains(airplaneData.planeType))
+                    dropdown.value = RuPlanes.IndexOf(airplaneData.planeType);
+
                 break;
 
             case "UK":
                 dropdown.AddOptions(UkPlanes);
+                if (UkPlanes.Contains(airplaneData.planeType))
+                    dropdown.value = UkPlanes.IndexOf(airplaneData.planeType);
                 break;
 
             case "US":
                 dropdown.AddOptions(UsPlanes);
+                if (UsPlanes.Contains(airplaneData.planeType))
+                    dropdown.value = UsPlanes.IndexOf(airplaneData.planeType);
                 break;
 
             case "GER":
                 dropdown.AddOptions(GerPlanes);
+                if (GerPlanes.Contains(airplaneData.planeType))                
+                    dropdown.value = GerPlanes.IndexOf(airplaneData.planeType);
+                
                 break;
 
             case "ITA":
                 dropdown.AddOptions(ItaPlanes);
+                if (ItaPlanes.Contains(airplaneData.planeType))
+                    dropdown.value = ItaPlanes.IndexOf(airplaneData.planeType);
                 break;
 
         }
+
+        
     }
 
     public void onValueChanged()

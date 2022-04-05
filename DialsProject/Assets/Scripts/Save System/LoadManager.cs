@@ -325,8 +325,6 @@ public class LoadManager : MonoBehaviour
         return scale;
     }
 
-
-
     public static void DefaultLayouts(GameObject dialsPrefab)
     {
         //Programtically sort default layouts, so if there is an update, i don't need to create a prefab layout

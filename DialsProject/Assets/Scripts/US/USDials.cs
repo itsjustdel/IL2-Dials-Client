@@ -400,6 +400,33 @@ public class USDials : MonoBehaviour
         return target;
     }
 
+
+
+    public static Quaternion ManifoldTargetE(float manifold, int engineMod, float scalar)
+    {
+        //P 51 
+        float m = 0;
+        if (engineMod == 0)
+        {         
+            if (manifold > 10)
+                m = (manifold - 10) * -5.333333333f;
+
+            m += 100;
+        }
+        else
+        {
+            //150 octane 100 scale
+            if (manifold > 15)
+                m = (manifold - 15) * -4.083333333f;
+
+            m += 56.7129f;
+        }
+
+        Quaternion target = Quaternion.Euler(0, 0, m);
+
+        return target;
+    }
+
 }
 
 
