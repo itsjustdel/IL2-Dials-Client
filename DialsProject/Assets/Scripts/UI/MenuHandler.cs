@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using static PlaneLists;
 
 public class MenuHandler : MonoBehaviour
 {
+
+    
     public AirplaneData airplaneData;
     public DialsManager dialsManager;
 
@@ -660,10 +662,58 @@ public class MenuHandler : MonoBehaviour
 
     }
 
+    public bool InFlight()
+    {
+        bool inFlight = false;
+        switch (airplaneData.planeAttributes.country)
+        {
+            case Country.RU:
+                if (RuPlanes.Contains(airplaneData.planeType))
+                    inFlight = true;
+                break;
+
+            case Country.UK:
+                if (UkPlanes.Contains(airplaneData.planeType))
+                    inFlight = true;
+                break;
+
+            case Country.US:
+                if (UsPlanes.Contains(airplaneData.planeType))
+                    inFlight = true;
+                break;
+
+            case Country.GER:
+                if (GerPlanes.Contains(airplaneData.planeType))
+                    inFlight = true;
+
+                break;
+            case Country.ITA:
+
+                if (ItaPlanes.Contains(airplaneData.planeType))
+                    inFlight = true;
+                break;
+
+        }
+
+        return inFlight;
+    }
+
     public void ShowFlagsPanel()
     {
-        menuPanel.SetActive(false);
-        flagsPanel.SetActive(true);
+        Debug.Log("to flags");
+        bool inFlight = InFlight();
+        Debug.Log("in f = " + inFlight);
+        if (inFlight)
+        {
+            Debug.Log("to layout");
+            //open layout directly with current plane
+            OpenLayoutClick();
+        }
+        else
+        {
+            menuPanel.SetActive(false);
+            flagsPanel.SetActive(true);
+        }
     }
 
     public void ConnectionPanelBack()
