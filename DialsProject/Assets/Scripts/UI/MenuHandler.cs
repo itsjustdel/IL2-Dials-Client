@@ -66,7 +66,8 @@ public class MenuHandler : MonoBehaviour
     private Vector3 mousePos;
 
     public bool layoutOpen;
-    public string planeTypeBeforeLayoutPanel;
+    //public string planeTypeBeforeLayoutPanel;
+    public bool inFlight;
 
     public void Start()
     {
@@ -525,19 +526,11 @@ public class MenuHandler : MonoBehaviour
     public void AcceptLayoutClick()
     {
 
-        //
-
-        //go back to main page
+        //go back to main menu panel
         layoutPanel.SetActive(false);
+
         //turn icon handlers off 
         TurnHandlersOff();
-
-        //turn menu button and leds back on
-        menuButton.SetActive(true);
-        menuPanel.SetActive(true);
-        ledParent.SetActive(true);
-        //keep blue, we go back to menuPanel
-        blurPanel.SetActive(true);
 
         layoutOpen = false;
 
@@ -546,24 +539,25 @@ public class MenuHandler : MonoBehaviour
 
         dialsManager.SaveLayout();
 
-        //alter plane name after we saved
-        // check if we should get rid of loaded panel
-        if (airplaneData.planeType == planeTypeBeforeLayoutPanel)
-        {
-            //we are still on the correct plane
+        //turn menu button and leds back on
+        menuButton.SetActive(true);
+        ledParent.SetActive(true);
 
-            Debug.Log("Same plane after layout close");
-            //   airplaneData.planeType = planeTypeBeforeLayoutPanel;
+        if (inFlight)
+        {
+            //reset flag
+            inFlight = false;            
         }
         else
         {
-            Debug.Log("Changing back after layout close");
-            //set back
-            //    airplaneData.planeType = planeTypeBeforeLayoutPanel;
+            //keep blur, we go back to menuPanel
+            blurPanel.SetActive(true);
+
+            airplaneData.planeType = "";
+                    
+            flagsPanel.SetActive(true);
+        
         }
-
-        airplaneData.planeType = planeTypeBeforeLayoutPanel;
-
     }
 
     public void ResetLayout()
@@ -664,6 +658,9 @@ public class MenuHandler : MonoBehaviour
 
     public bool InFlight()
     {
+        if (airplaneData.planeAttributes == null)
+            return false;
+
         bool inFlight = false;
         switch (airplaneData.planeAttributes.country)
         {
@@ -701,7 +698,7 @@ public class MenuHandler : MonoBehaviour
     public void ShowFlagsPanel()
     {
         Debug.Log("to flags");
-        bool inFlight = InFlight();
+        inFlight = InFlight();
         Debug.Log("in f = " + inFlight);
         if (inFlight)
         {

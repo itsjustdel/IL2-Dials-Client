@@ -102,7 +102,7 @@ public class PlaneDropdown : MonoBehaviour
     public void OnPlaneAccept()
     {
         //save so we know where to go back to after layout close
-        menuHandler.planeTypeBeforeLayoutPanel = airplaneData.planeType;
+        // menuHandler.planeTypeBeforeLayoutPanel = airplaneData.planeType; -- not using
 
         Debug.Log("Plane accepted = " + dropdown.options[dropdown.value].text);
         if (airplaneData.planeType == dropdown.options[dropdown.value].text)
