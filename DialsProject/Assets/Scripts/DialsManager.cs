@@ -15,7 +15,10 @@ public class DialsManager : MonoBehaviour
     public List<GameObject> rpmObjects = new List<GameObject>();
     public List<GameObject> manifoldObjects = new List<GameObject>();
     public GameObject speedometer;
-
+    public GameObject turnCoordinator;
+    public GameObject vsi;
+    public GameObject horizon;
+    public GameObject headingIndicator;
 
     //flagged from open layout button press
     public bool openLayoutOnLoad;
@@ -65,7 +68,7 @@ public class DialsManager : MonoBehaviour
             SwitchDialBoardFromCountry(airplaneData.planeAttributes.country);
 
             //switch off any unavailable dials to this plane
-            DeactivateUnavailableDials(countryDialBoard, airplaneData.planeType, airplaneData.planeAttributes, rpmObjects);
+            DeactivateUnavailableDials(countryDialBoard, airplaneData.planeAttributes, rpmObjects);
 
             //asign correct needle to rotate scripts depending on what plane we have loaded
             AsignNeedles();
@@ -148,37 +151,87 @@ public class DialsManager : MonoBehaviour
 
     void AsignNeedles()
     {
-        AsignSpeedometer(airplaneData.planeAttributes, countryDialBoard);
+        AsignSpeedometer();
 
-        AsignVSI(airplaneData.planeAttributes, countryDialBoard);
+        AsignVSI();
 
-        AsignRPM(airplaneData.planeAttributes, countryDialBoard);
+        AsignRPM();
 
-        AsignManifold(airplaneData.planeAttributes, countryDialBoard);
+        AsignManifold();
+
+        AsignTurnCoordinator();
+
+        AsignHorizon();
+
+        AsignHeadingIndicator();
     }
 
-    
-    void AsignVSI(PlaneDataFromName.PlaneAttributes planeAttributes, GameObject countryDialBoard)
+    private void AsignHeadingIndicator()
     {
-        //there are more than one vsi but never more than one at the same time, so we share prefabs
-        //let the rotate needle script know which needle to turn
-        if (planeAttributes.vsiLarge)
+        if(airplaneData.planeAttributes.country == Country.US)
         {
-            countryDialBoard.GetComponent<RotateNeedle>().vsiNeedle = countryDialBoard.transform.Find("VSI Large").Find("Needle").gameObject;
-        }
+            headingIndicator = GameObject.FindGameObjectWithTag("heading indicator");
+            countryDialBoard.GetComponent<RotateNeedle>().headingIndicator = headingIndicator.transform.Find("Mask").Find("Parent").transform.gameObject;
 
-        else if (planeAttributes.vsiSmall)
-        {
-            countryDialBoard.GetComponent<RotateNeedle>().vsiNeedle = countryDialBoard.transform.Find("VSI Small").Find("Needle").gameObject;
-        }
-
-        else if (planeAttributes.vsiSmallest)
-        {
-            countryDialBoard.GetComponent<RotateNeedle>().vsiNeedle = countryDialBoard.transform.Find("VSI Smallest").Find("Needle").gameObject;
+            if (airplaneData.planeAttributes.headingIndicatorType == DialVariant.B)
+            {
+                
+                countryDialBoard.GetComponent<RotateNeedle>().headingIndicatorBall= headingIndicator.transform.Find("BallParent").transform.gameObject;
+            }
         }
     }
 
-    void AsignRPM(PlaneDataFromName.PlaneAttributes planeAttributes, GameObject countrydialBoard)
+    private void AsignHorizon()
+    {
+        if (airplaneData.planeAttributes.country == Country.US)
+        {
+            horizon = GameObject.FindGameObjectWithTag("horizon");
+            countryDialBoard.GetComponent<RotateNeedle>().artificialHorizon = horizon.transform.Find("Mask").Find("Line").transform.gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().artificialHorizonChevron = horizon.transform.Find("Mask").Find("Roll Mark").transform.gameObject;
+        }
+    }
+
+    private void AsignTurnCoordinator()
+    {
+        if (airplaneData.planeAttributes.country == Country.US)
+        {
+            turnCoordinator = GameObject.FindGameObjectWithTag("turn coordinator");
+            countryDialBoard.GetComponent<RotateNeedle>().turnCoordinatorNeedle = turnCoordinator.transform.Find("NeedleParent").transform.gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().turnCoordinatorBall = turnCoordinator.transform.Find("BallParent").transform.gameObject;
+        }
+    }
+
+    void AsignVSI()
+    {
+
+        if (airplaneData.planeAttributes.country == Country.US)
+        {
+            vsi = GameObject.FindGameObjectWithTag("vsi");
+            countryDialBoard.GetComponent<RotateNeedle>().vsiNeedle = vsi.transform.Find("Needle").transform.gameObject;
+        }
+        else
+        {
+            //there are more than one vsi but never more than one at the same time, so we share prefabs
+            //let the rotate needle script know which needle to turn
+            if (airplaneData.planeAttributes.vsiLarge)
+            {
+                countryDialBoard.GetComponent<RotateNeedle>().vsiNeedle = countryDialBoard.transform.Find("VSI Large").Find("Needle").gameObject;
+            }
+
+            else if (airplaneData.planeAttributes.vsiSmall)
+            {
+                countryDialBoard.GetComponent<RotateNeedle>().vsiNeedle = countryDialBoard.transform.Find("VSI Small").Find("Needle").gameObject;
+            }
+
+            else if (airplaneData.planeAttributes.vsiSmallest)
+            {
+                countryDialBoard.GetComponent<RotateNeedle>().vsiNeedle = countryDialBoard.transform.Find("VSI Smallest").Find("Needle").gameObject;
+            }
+        }
+        
+    }
+
+    void AsignRPM()
     {
         //empty lists first
         countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Clear();
@@ -196,9 +249,9 @@ public class DialsManager : MonoBehaviour
             }
 
 
-            if (planeAttributes.country ==  Country.RU)
+            if (airplaneData.planeAttributes.country ==  Country.RU)
             {
-                if (planeAttributes.rpmType == DialVariant.A)
+                if (airplaneData.planeAttributes.rpmType == DialVariant.A)
                 {
                     GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
                     countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
@@ -206,7 +259,7 @@ public class DialsManager : MonoBehaviour
 
 
                 //pe-2
-                if (planeAttributes.country ==  Country.RU && planeAttributes.rpmType == DialVariant.C)
+                if (airplaneData.planeAttributes.country ==  Country.RU && airplaneData.planeAttributes.rpmType == DialVariant.C)
                 {
                     GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
                     countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
@@ -214,7 +267,7 @@ public class DialsManager : MonoBehaviour
 
             }
 
-            if (planeAttributes.country ==  Country.US)
+            if (airplaneData.planeAttributes.country ==  Country.US)
             {
                 //p38 J
                 if (airplaneData.planeType == "P-38J-25")
@@ -232,7 +285,7 @@ public class DialsManager : MonoBehaviour
                     }
                 }
 
-                if (planeAttributes.rpmType == DialVariant.A || planeAttributes.rpmType == DialVariant.D)
+                if (airplaneData.planeAttributes.rpmType == DialVariant.A || airplaneData.planeAttributes.rpmType == DialVariant.D)
                 {
                     GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
                     countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
@@ -242,7 +295,7 @@ public class DialsManager : MonoBehaviour
         }
     }
 
-    void AsignManifold(PlaneDataFromName.PlaneAttributes planeAttributes, GameObject countrydialBoard)
+    void AsignManifold()
     {
         //empty lists first
         countryDialBoard.GetComponent<RotateNeedle>().manifoldNeedlesLarge.Clear();
@@ -272,12 +325,10 @@ public class DialsManager : MonoBehaviour
         }
     }
 
-
-    void AsignSpeedometer(PlaneDataFromName.PlaneAttributes planeAttributes, GameObject countrydialBoard)
+    void AsignSpeedometer()
     {
         speedometer = GameObject.FindGameObjectWithTag("speedometer");
         countryDialBoard.GetComponent<RotateNeedle>().airspeedNeedle = speedometer.transform.Find("Needle Large").transform.gameObject;
-
     }
 
     public void SwitchDialBoardFromCountry(Country country)
@@ -405,41 +456,24 @@ public class DialsManager : MonoBehaviour
     }
 
     //static to refactor to new class - to do
-    void DeactivateUnavailableDials(GameObject countryDialBoard, string planeName, PlaneDataFromName.PlaneAttributes planeAttributes, List<GameObject> rpmObjects)
+    void DeactivateUnavailableDials(GameObject countryDialBoard, PlaneDataFromName.PlaneAttributes planeAttributes, List<GameObject> rpmObjects)
     {
         //check what dials are available and switch off as needed
 
         GameObject[] speedos = GameObject.FindGameObjectsWithTag("speedometer");
         for (int i = 0; i < speedos.Length; i++)
         {
-            if (speedos[i].name != "Speedometer " + planeAttributes.speedometer.ToString())
+            if (speedos[i].name != "Speedometer " + planeAttributes.speedometerType.ToString())
                 speedos[i].SetActive(false);
 
         }
 
-        if (!planeAttributes.headingIndicator)
-            if (countryDialBoard.transform.Find("Heading Indicator") != null)
-                countryDialBoard.transform.Find("Heading Indicator").gameObject.SetActive(false);
+     
 
         if (!planeAttributes.turnAndBank)
             if (countryDialBoard.transform.Find("Turn And Bank") != null)
                 countryDialBoard.transform.Find("Turn And Bank").gameObject.SetActive(false);
-
-        if (!planeAttributes.turnCoordinator)
-            if (countryDialBoard.transform.Find("Turn Coordinator").gameObject != null)
-                countryDialBoard.transform.Find("Turn Coordinator").gameObject.SetActive(false);
-
-        if (!planeAttributes.vsiSmallest)
-            if (countryDialBoard.transform.Find("VSI Smallest") != null)
-                countryDialBoard.transform.Find("VSI Smallest").gameObject.SetActive(false);
-
-        if (!planeAttributes.vsiSmall)
-            if (countryDialBoard.transform.Find("VSI Small") != null)
-                countryDialBoard.transform.Find("VSI Small").gameObject.SetActive(false);
-
-        if (!planeAttributes.vsiLarge)
-            if (countryDialBoard.transform.Find("VSI Large") != null)
-                countryDialBoard.transform.Find("VSI Large").gameObject.SetActive(false);
+                
 
         if (!planeAttributes.repeaterCompass)
             if (countryDialBoard.transform.Find("Repeater Compass") != null)
@@ -449,10 +483,85 @@ public class DialsManager : MonoBehaviour
             if (countryDialBoard.transform.Find("Repeater Compass Alternate") != null)
                 countryDialBoard.transform.Find("Repeater Compass Alternate").gameObject.SetActive(false);
 
-        if (!planeAttributes.artificialHorizon)
-            if (countryDialBoard.transform.Find("Artificial Horizon") != null)
-                countryDialBoard.transform.Find("Artificial Horizon").gameObject.SetActive(false);
+        //factor! WIP
 
+        //heading indicator
+        if (planeAttributes.country != Country.US)
+        {
+            if (!planeAttributes.headingIndicator)
+                if (countryDialBoard.transform.Find("Heading Indicator") != null)
+                    countryDialBoard.transform.Find("Heading Indicator").gameObject.SetActive(false);
+        }
+        else
+        {
+            GameObject[] headings = GameObject.FindGameObjectsWithTag("heading indicator");
+            for (int i = 0; i < headings.Length; i++)
+            {
+                if (headings[i].name != "Heading Indicator " + planeAttributes.headingIndicatorType.ToString())
+                    headings[i].SetActive(false);
+            }
+        }
+
+            //horizon
+        if (planeAttributes.country != Country.US)
+        {
+            if (!planeAttributes.artificialHorizon)
+                if (countryDialBoard.transform.Find("Artificial Horizon") != null)
+                    countryDialBoard.transform.Find("Artificial Horizon").gameObject.SetActive(false);
+        }
+        else
+        {
+            GameObject[] horizons = GameObject.FindGameObjectsWithTag("horizon");
+            for (int i = 0; i < horizons.Length; i++)
+            {
+                if (horizons[i].name != "Artificial Horizon " + planeAttributes.horizonType.ToString())
+                    horizons[i].SetActive(false);
+            }
+        }
+
+        //turn co-ord
+        if (planeAttributes.country != Country.US)
+        {
+            if (!planeAttributes.turnCoordinator)
+                if (countryDialBoard.transform.Find("Turn Coordinator").gameObject != null)
+                    countryDialBoard.transform.Find("Turn Coordinator").gameObject.SetActive(false);            
+        }
+        else
+        {
+            GameObject[] turnCoordinators = GameObject.FindGameObjectsWithTag("turn coordinator");
+            for (int i = 0; i < turnCoordinators.Length; i++)
+            {
+                if (turnCoordinators[i].name != "Turn Coordinator " + planeAttributes.turnCoordinatorType.ToString())
+                    turnCoordinators[i].SetActive(false);
+            }
+        }
+
+        //vsi
+        if (planeAttributes.country != Country.US)
+        {
+            //old system
+            if (!planeAttributes.vsiSmallest)
+                if (countryDialBoard.transform.Find("VSI Smallest") != null)
+                    countryDialBoard.transform.Find("VSI Smallest").gameObject.SetActive(false);
+
+            if (!planeAttributes.vsiSmall)
+                if (countryDialBoard.transform.Find("VSI Small") != null)
+                    countryDialBoard.transform.Find("VSI Small").gameObject.SetActive(false);
+
+            if (!planeAttributes.vsiLarge)
+                if (countryDialBoard.transform.Find("VSI Large") != null)
+                    countryDialBoard.transform.Find("VSI Large").gameObject.SetActive(false);
+        }
+        else
+        {
+            //new system
+            GameObject[] vsis= GameObject.FindGameObjectsWithTag("vsi");
+            for (int i = 0; i < vsis.Length; i++)
+            {
+                if (vsis[i].name != "VSI " + planeAttributes.vsiType.ToString())
+                    vsis[i].SetActive(false);
+            }
+        }
 
 
         GameObject[] allRpmsArray = GameObject.FindGameObjectsWithTag("rpm");

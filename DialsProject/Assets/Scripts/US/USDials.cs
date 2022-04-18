@@ -1,49 +1,47 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class USDials : MonoBehaviour
 {
-    public static Quaternion AirspeedTargetA(float airspeed)
+
+    internal static Quaternion AirspeedTarget700Scale(float airspeed, AnimationCurve curve, float scalar)
     {
-        if (airspeed == 0)
-            return Quaternion.identity;
 
         if (float.IsNaN(airspeed) || float.IsNegativeInfinity(airspeed) || float.IsPositiveInfinity(airspeed))
             return Quaternion.identity;
 
-        //airspeed dial has two gears
-        Quaternion target = Quaternion.identity;
-
         //convert mph
         airspeed /= 1.609f;
 
-        if (airspeed <= 50)
-		{
-			target = Quaternion.Euler(0, 0, -((airspeed) * Easing.Exponential.In(.825f))); 
-		}
-		else if (airspeed >= 50 && airspeed < 100)
+        if (airspeed < 50)
         {
-			target = Quaternion.Euler(0, 0, -((airspeed -50) * Easing.Exponential.In(.985f)) -15); //Jesus Christi
-        }
-        else if(airspeed >=100 && airspeed < 300)
-        {
-            //100 = 60*
-            //150 = 100*            
-            //200 = 140*
-            //250 = 180
-            target = Quaternion.Euler(0, 0, -((airspeed - 100) * .8f  ) -60);//60* is at 100
+            //set to quaternion
+            return Quaternion.Euler(0, 0, airspeed*-0.3f);
         }
         else
         {
-            target = Quaternion.Euler(0, 0, -((airspeed - 300) * .3f) + 140);//140* is at 300
-        }
+            //-15 .. 23.5
+            //full rotation is 321.5 degrees ( 50 to 700)
 
-        return target;
+            //and work out percentage to use 0-1 scale for curve
+            float percentage = (((airspeed - 50) / 650f));
+            //multiply by half a dial of spin (180 degrees)
+            float angleToSpin = curve.Evaluate(percentage);
+            angleToSpin *= 321.5f;
+            angleToSpin += 15;
+
+            //set to quaternion
+            return Quaternion.Euler(0, 0, -angleToSpin);
+        }
     }
 
-    public static Quaternion AirspeedTargetB(float airspeed)
+    internal static Quaternion AirspeedTargetA20(float airspeed)
     {
+        if (float.IsNaN(airspeed) || float.IsNegativeInfinity(airspeed) || float.IsPositiveInfinity(airspeed))
+            return Quaternion.identity;
+
         if (airspeed == 0)
             return Quaternion.identity;
 
@@ -75,7 +73,40 @@ public class USDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion AltitudeTargetSmall2(float altitude)
+    internal static Quaternion AirspeedTargetP40(float airspeed, float scalar, float scalar1)
+    {
+        if (float.IsNaN(airspeed) || float.IsNegativeInfinity(airspeed) || float.IsPositiveInfinity(airspeed))
+            return Quaternion.identity;
+
+        if (airspeed == 0)
+            return Quaternion.identity;
+
+        //airspeed dial has two gears
+        Quaternion target = Quaternion.identity;
+
+        //convert mph
+        airspeed /= 1.609f;
+
+        if (airspeed <= 50)
+        {
+            target = Quaternion.Euler(0, 0, -(airspeed * .375f));
+        }
+        else if (airspeed <= 150)
+        {
+            target = Quaternion.Euler(0, 0, -((airspeed - 50) * Easing.Exponential.In(1.085f))); //Not quite accurate < 100
+        }
+        else
+        {
+            float r = airspeed - 150f;
+            r *= .46f;
+            r += 180;//where gear starts degrees
+            target = Quaternion.Euler(0, 0, -r);
+        }
+
+        return target;
+    }
+
+    internal static Quaternion AltitudeTargetSmall2(float altitude)
     {
         if (float.IsNaN(altitude))
             return Quaternion.identity;
@@ -89,7 +120,7 @@ public class USDials : MonoBehaviour
 
     }
 
-    public static Quaternion AltitudeTargetSmall(float altitude)
+    internal static Quaternion AltitudeTargetSmall(float altitude)
     {
         //convert to feet
         altitude *= 3.2808f;
@@ -99,7 +130,7 @@ public class USDials : MonoBehaviour
 
     }
 
-    public static Quaternion AltitudeTargetLarge(float altitude)
+    internal static Quaternion AltitudeTargetLarge(float altitude)
     {
         if (float.IsNaN(altitude))
             return Quaternion.identity;
@@ -112,7 +143,7 @@ public class USDials : MonoBehaviour
 
     }
 
-    public static Quaternion AltitudeTargetSmallest(float altitude)
+    internal static Quaternion AltitudeTargetSmallest(float altitude)
     {
         //convert to feet
         altitude *= 3.2808f;
@@ -122,7 +153,7 @@ public class USDials : MonoBehaviour
 
     }
 
-    public static Quaternion MmhgTarget(float mmhg)
+    internal static Quaternion MmhgTarget(float mmhg)
     {
         //mmhg to inches of mercury
         float input = mmhg / 25.4f;
@@ -146,7 +177,7 @@ public class USDials : MonoBehaviour
         
     }
 
-    public static Vector3 HeadingIndicatorPosition(float heading,float trackLength)
+    internal static Vector3 HeadingIndicatorPosition(float heading,float trackLength)
     {
 
         //check for Nan
@@ -166,9 +197,19 @@ public class USDials : MonoBehaviour
         return pos;
     }
 
+    internal static Quaternion HeadingIndicatorBallTarget(float ball, float scalar)
+    {
+        //indicates whether the aircraft is in coordinated flight, showing the slip or skid of the turn. 
+        float z = ball * 150f;
+        z = Mathf.Clamp(z, -3.6f, 3.6f);
+        Quaternion target = Quaternion.Euler(0, 0, z);
+
+        return target;
+    }
+
 
     //turn and bank
-    public static Quaternion TurnAndBankPlaneRotation(float roll, float climb, float rollMultiplier, float climbMultiplier)
+    internal static Quaternion TurnAndBankPlaneRotation(float roll, float climb, float rollMultiplier, float climbMultiplier)
     {
         //rotate plane
         //clamp roll , in game cockpit stop rotation at just under 90 degrees - this happens when roll rate is ~1.7
@@ -183,13 +224,13 @@ public class USDials : MonoBehaviour
         return r;
     }
 
-    public static Vector3 TurnAndBankPlanePosition(float climb, float pitchMultiplier)
+    internal static Vector3 TurnAndBankPlanePosition(float climb, float pitchMultiplier)
     {
         //move plane up and down
         return new Vector3(0, climb * pitchMultiplier, 0);
     }
 
-    public static Quaternion TurnAndBankRollMark(float roll)
+    internal static Quaternion TurnAndBankRollMark(float roll)
     {
         //chevron that spins with roll
         Quaternion t = Quaternion.Euler(0, 0, -(roll));
@@ -200,7 +241,7 @@ public class USDials : MonoBehaviour
 
     //repeater compass
 
-    public static Quaternion RepeaterCompassTarget(float heading)
+    internal static Quaternion RepeaterCompassTarget(float heading)
     {
         //number passed is rotation in rads, pi = 180 degrees
         Quaternion target = Quaternion.Euler(0, 0, -heading * Mathf.Rad2Deg);
@@ -208,7 +249,7 @@ public class USDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion VerticalSpeedTarget(float verticalSpeed,AnimationCurve curve)
+    internal static Quaternion VerticalSpeedTarget(float verticalSpeed,AnimationCurve curve)
     {
        
         //using animation curve to define angle to spin ( component on prefab)
@@ -243,20 +284,7 @@ public class USDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion VerticalSpeedTargetSimple(float verticalSpeed)
-    {
-        //vsi
-        //start at 9 o'clock
-        verticalSpeed = 90f - verticalSpeed * 9f;
-        //clamp to "10"
-        verticalSpeed = Mathf.Clamp(verticalSpeed, -90, 270);
-
-        Quaternion target = Quaternion.Euler(0, 0, verticalSpeed);
-
-        return target;
-    }
-
-    public static Quaternion TurnCoordinatorNeedleTarget(float v, bool flip)
+    internal static Quaternion TurnCoordinatorNeedleTarget(float v, bool flip)
     {
         if (flip)
             v = -v;
@@ -270,7 +298,7 @@ public class USDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion TurnCoordinatorBallTarget(float ball, float multiplier)
+    internal static Quaternion TurnCoordinatorBallTarget(float ball, float multiplier)
     {
         //indicates whether the aircraft is in coordinated flight, showing the slip or skid of the turn. 
         float z = ball * multiplier;
@@ -280,7 +308,7 @@ public class USDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion ArtificialHorizonRotation(float roll, float rollMultiplier)
+    internal static Quaternion ArtificialHorizonRotation(float roll, float rollMultiplier)
     {
         //rotate horizon        
 
@@ -293,13 +321,13 @@ public class USDials : MonoBehaviour
     }
 
 
-    public static Vector3 ArtificialHorizonPosition(float climb, float pitchMultiplier)
+    internal static Vector3 ArtificialHorizonPosition(float climb, float pitchMultiplier)
     {
         //move plane up and down
         return new Vector3(0, climb * pitchMultiplier, 0);
     }
 
-    public static Quaternion ArtificialHorizonChevronRotation(float roll, float rollMultiplier)
+    internal static Quaternion ArtificialHorizonChevronRotation(float roll, float rollMultiplier)
     {
         //rotate horizon        
 
@@ -312,7 +340,7 @@ public class USDials : MonoBehaviour
     }
 
 
-    public static Quaternion RPMATarget(float rpm, float scalar, float scalar2)
+    internal static Quaternion RPMATarget(float rpm, float scalar, float scalar2)
     {
         float r = rpm * -0.36f;
         Quaternion target = Quaternion.Euler(0, 0, r);
@@ -321,7 +349,7 @@ public class USDials : MonoBehaviour
     }
 
     //2nd needle on two needle rpm
-    public static Quaternion RPMAInnerTarget(float rpm, float scalar, float scalar2)
+    internal static Quaternion RPMAInnerTarget(float rpm, float scalar, float scalar2)
     {
         float r = rpm * 0.09f;
         Quaternion target = Quaternion.Euler(0, 0, r);
@@ -331,7 +359,7 @@ public class USDials : MonoBehaviour
 
 
 
-    public static Quaternion RPMBTarget(float rpm, float scalar, float scalar2)
+    internal static Quaternion RPMBTarget(float rpm, float scalar, float scalar2)
     {
         // -0.12275*
         //209.135
@@ -347,7 +375,7 @@ public class USDials : MonoBehaviour
     }
 
 
-    public static Quaternion RPMCTarget(float rpm, float scalar, float scalar2)
+    internal static Quaternion RPMCTarget(float rpm, float scalar, float scalar2)
     {
         // -0.12275*
         //209.135
@@ -361,7 +389,7 @@ public class USDials : MonoBehaviour
 
         return target;
     }
-    public static Quaternion RPMDSmallTarget(float rpm, float scalar, float scalar2)
+    internal static Quaternion RPMDSmallTarget(float rpm, float scalar, float scalar2)
     {
         float r = rpm * -0.036f;
         Quaternion target = Quaternion.Euler(0, 0, r);
@@ -370,7 +398,7 @@ public class USDials : MonoBehaviour
     }
 
     
-    public static Quaternion ManifoldTargetA(float manifold, float scalar)
+    internal static Quaternion ManifoldTargetA(float manifold, float scalar)
     {
         //US *28.95902519867009 inches of Hg
         float m = 0;
@@ -384,7 +412,7 @@ public class USDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion ManifoldTargetC(float manifold, float scalar)
+    internal static Quaternion ManifoldTargetC(float manifold, float scalar)
     {       
         //US *28.95902519867009 inches of Hg
         //manifold *= 2.895902519867009f;
@@ -402,7 +430,7 @@ public class USDials : MonoBehaviour
 
 
 
-    public static Quaternion ManifoldTargetE(float manifold, int engineMod, float scalar)
+    internal static Quaternion ManifoldTargetE(float manifold, int engineMod, float scalar)
     {
         //P 51 
         float m = 0;
@@ -427,6 +455,7 @@ public class USDials : MonoBehaviour
         return target;
     }
 
+    
 }
 
 

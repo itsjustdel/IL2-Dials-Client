@@ -5,8 +5,6 @@ using UnityEngine;
 public class DialTargets : MonoBehaviour
 {
 
-
-
     public static List<List<Quaternion>> ManifoldTarget(AirplaneData airplaneData, Country country)
     {
         List<Quaternion> manifoldSmallTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
@@ -311,7 +309,7 @@ public class DialTargets : MonoBehaviour
         return repeaterCompassTarget;
     }
 
-    public static Quaternion VSITarget(AirplaneData airplaneData,AnimationCurve animationCurveVSI, Country country)
+    public static Quaternion VSITarget(AirplaneData airplaneData, Country country, RotateNeedle rN)
     {
         Quaternion vsiNeedleTarget = Quaternion.identity;
 
@@ -349,9 +347,12 @@ public class DialTargets : MonoBehaviour
 
                 break;
 
-            //these countries only have one vsi (so far)
+            
             case (Country.US):
-                vsiNeedleTarget = USDials.VerticalSpeedTarget(airplaneData.verticalSpeed, animationCurveVSI);
+                if (airplaneData.planeAttributes.vsiType == DialVariant.A)
+                    vsiNeedleTarget = USDials.VerticalSpeedTarget(airplaneData.verticalSpeed, rN.animationCurveVSI);
+                else
+                    vsiNeedleTarget = USDials.VerticalSpeedTarget(airplaneData.verticalSpeed, rN.animationCurveVSIB);
                 break;
 
             case (Country.UK):
@@ -422,6 +423,20 @@ public class DialTargets : MonoBehaviour
 
         return turnCoordinatorNeedleTarget;
 
+    }
+
+    internal static Quaternion HeadingIndicatorBallTarget(AirplaneData airplaneData) 
+    {
+        Quaternion target = Quaternion.identity;
+        switch (airplaneData.planeAttributes.country)
+        {
+            case (Country.US):
+                target = USDials.HeadingIndicatorBallTarget(airplaneData.turnCoordinatorBall, airplaneData.scalar0);
+                break;
+                
+        }
+
+        return target;
     }
 
     //turn and bank is dial with artifical horizon and slip together
@@ -555,7 +570,7 @@ public class DialTargets : MonoBehaviour
 
     }
 
-   public static Quaternion AirspeedTarget(Country country, float airspeed, Speedometer speedoType)
+   public static Quaternion AirspeedTarget(Country country, AirplaneData airplaneData,  RotateNeedle rN)
     {
 
         Quaternion airspeedTarget = Quaternion.identity;
@@ -563,26 +578,29 @@ public class DialTargets : MonoBehaviour
         switch (country)
         {
             case Country.RU:
-                airspeedTarget = RussianDials.AirspeedTarget(airspeed);
+                airspeedTarget = RussianDials.AirspeedTarget(airplaneData.airspeed);
                 break;
 
             case Country.GER:
-                airspeedTarget = GermanDials.AirspeedTarget(airspeed);
+                airspeedTarget = GermanDials.AirspeedTarget(airplaneData.airspeed);
                 break;
 
-            case Country.US:
-                if (speedoType == Speedometer.A)
-                    airspeedTarget = USDials.AirspeedTargetA(airspeed);
-                else
-                    airspeedTarget = USDials.AirspeedTargetB(airspeed);
+            case Country.US:                
+                if (airplaneData.planeAttributes.speedometerType == DialVariant.A || airplaneData.planeAttributes.speedometerType == DialVariant.B || airplaneData.planeAttributes.speedometerType == DialVariant.C)
+                    airspeedTarget = USDials.AirspeedTarget700Scale(airplaneData.airspeed, rN.animationCurveSpeedometerA, airplaneData.scalar0);
+                else if (airplaneData.planeAttributes.speedometerType == DialVariant.D)
+                    airspeedTarget = USDials.AirspeedTargetA20(airplaneData.airspeed);
+                else if (airplaneData.planeAttributes.speedometerType == DialVariant.E)
+                    airspeedTarget = USDials.AirspeedTargetP40(airplaneData.airspeed,airplaneData.scalar0, airplaneData.scalar1);
+
                 break;
 
             case Country.UK:
-                airspeedTarget = UKDials.AirspeedTarget(airspeed);
+                airspeedTarget = UKDials.AirspeedTarget(airplaneData.airspeed);
                 break;
 
             case Country.ITA:
-                airspeedTarget = ITADials.AirspeedTarget(airspeed);
+                airspeedTarget = ITADials.AirspeedTarget(airplaneData.airspeed);
                 break;
         }
 

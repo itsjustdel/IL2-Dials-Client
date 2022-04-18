@@ -22,6 +22,7 @@ public class RotateNeedle : MonoBehaviour
     public GameObject turnAndBankNumberTrack;    
     public GameObject turnAndBankPlane;
     public GameObject headingIndicator;
+    public GameObject headingIndicatorBall;
     public GameObject turnCoordinatorNeedle;
     public GameObject turnCoordinatorBall;
     public GameObject vsiNeedle;
@@ -59,6 +60,7 @@ public class RotateNeedle : MonoBehaviour
     private Quaternion turnAndBankPlaneRotationTarget;    
     private Quaternion turnCoordinatorNeedleTarget;    
     private Quaternion turnCoordinatorBallTarget;
+    private Quaternion headingIndicatorBallTarget;
     private Quaternion vsiNeedleTarget;
     private Quaternion repeaterCompassTarget;
     private Quaternion repeaterCompassAlternateTarget;
@@ -92,11 +94,13 @@ public class RotateNeedle : MonoBehaviour
     public float turnAndBankBallMultiplier = 1f;
 
     public AnimationCurve animationCurveVSI;
-    
+    public AnimationCurve animationCurveVSIB;
+
     public AnimationCurve animationCurveRPMA;
     public AnimationCurve animationCurveRPMB;
     public AnimationCurve animationCurveRPMC;
     public AnimationCurve animationCurveRPMD;
+    public AnimationCurve animationCurveSpeedometerA;
     private bool headingIndicatorTest;
     
 
@@ -185,7 +189,7 @@ public class RotateNeedle : MonoBehaviour
     public void SetRotationTargets()
     {
         //initial refactoring, could go further, lots of parameters
-        airspeedTarget = DialTargets.AirspeedTarget(airplaneData.planeAttributes.country, airplaneData.airspeed, airplaneData.planeAttributes.speedometer);
+        airspeedTarget = DialTargets.AirspeedTarget(airplaneData.planeAttributes.country, airplaneData, this);
 
         altitudeLargeTarget = DialTargets.AltimeterTargets(ref altitudeSmallTarget,ref altitudeSmallestTarget, altitudeNeedleSmallest, airplaneData);
 
@@ -193,13 +197,15 @@ public class RotateNeedle : MonoBehaviour
 
         headingIndicatorTarget = DialTargets.HeadingTarget(airplaneData.planeAttributes.country, airplaneData, trackLength);
 
+        headingIndicatorBallTarget = DialTargets.HeadingIndicatorBallTarget(airplaneData);
+
         turnAndBankPlaneRotationTarget = DialTargets.TurnAndBankTargets(ref turnAndBankPlanePositionTarget, ref turnAndBankNumberTrackTarget, ref turnAndBankBallTarget,
                                                                         airplaneData, turnAndBankPitchMultiplier, turnAndBankRollMultiplier, turnAndBankPlaneXMultiplier,
                                                                         turnAndBankBallMultiplier,airplaneData.planeAttributes.country);
 
         turnCoordinatorNeedleTarget = DialTargets.TurnCoordinatorTarget(ref turnCoordinatorBallTarget, airplaneData, turnCoordinaterNeedleMod,turnCoordinaterBallMod, airplaneData.planeAttributes.country);
 
-        vsiNeedleTarget =  DialTargets.VSITarget(airplaneData,animationCurveVSI, airplaneData.planeAttributes.country);
+        vsiNeedleTarget =  DialTargets.VSITarget(airplaneData, airplaneData.planeAttributes.country, this);
 
         repeaterCompassTarget = DialTargets.RepeaterCompassTarget(ref repeaterCompassAlternateTarget, airplaneData,compassRim, airplaneData.planeAttributes.country);
 
@@ -374,6 +380,12 @@ public class RotateNeedle : MonoBehaviour
             return;
 
         headingIndicator.transform.localPosition = Vector3.Lerp(headingIndicator.transform.localPosition, headingIndicatorTarget, Time.deltaTime * smoothing);
+
+        if(airplaneData.planeAttributes.headingIndicatorType == DialVariant.B)
+        {
+            //a-20 has combined ball and heading indicator
+            headingIndicatorBall.transform.rotation = Quaternion.Slerp(headingIndicatorBall.transform.rotation, headingIndicatorBallTarget, Time.deltaTime * smoothing);
+        }
 
     }
 
