@@ -15,9 +15,9 @@ public class DialsManager : MonoBehaviour
     public List<GameObject> rpmObjects = new List<GameObject>();
     public List<GameObject> manifoldObjects = new List<GameObject>();
     public GameObject speedometer;
-    public GameObject turnCoordinator;
+    public GameObject turnIndicator;
     public GameObject vsi;
-    public GameObject horizon;
+    public GameObject artificialHorizon;
     public GameObject headingIndicator;
 
     //flagged from open layout button press
@@ -185,9 +185,9 @@ public class DialsManager : MonoBehaviour
     {
         if (airplaneData.planeAttributes.country == Country.US)
         {
-            horizon = GameObject.FindGameObjectWithTag("horizon");
-            countryDialBoard.GetComponent<RotateNeedle>().artificialHorizon = horizon.transform.Find("Mask").Find("Line").transform.gameObject;
-            countryDialBoard.GetComponent<RotateNeedle>().artificialHorizonChevron = horizon.transform.Find("Mask").Find("Roll Mark").transform.gameObject;
+            artificialHorizon = GameObject.FindGameObjectWithTag("horizon");
+            countryDialBoard.GetComponent<RotateNeedle>().artificialHorizon = artificialHorizon.transform.Find("Mask").Find("Line").transform.gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().artificialHorizonChevron = artificialHorizon.transform.Find("Mask").Find("Roll Mark").transform.gameObject;
         }
     }
 
@@ -195,9 +195,9 @@ public class DialsManager : MonoBehaviour
     {
         if (airplaneData.planeAttributes.country == Country.US)
         {
-            turnCoordinator = GameObject.FindGameObjectWithTag("turn coordinator");
-            countryDialBoard.GetComponent<RotateNeedle>().turnCoordinatorNeedle = turnCoordinator.transform.Find("NeedleParent").transform.gameObject;
-            countryDialBoard.GetComponent<RotateNeedle>().turnCoordinatorBall = turnCoordinator.transform.Find("BallParent").transform.gameObject;
+            turnIndicator = GameObject.FindGameObjectWithTag("turn coordinator");
+            countryDialBoard.GetComponent<RotateNeedle>().turnCoordinatorNeedle = turnIndicator.transform.Find("NeedleParent").transform.gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().turnCoordinatorBall = turnIndicator.transform.Find("BallParent").transform.gameObject;
         }
     }
 
@@ -600,8 +600,7 @@ public class DialsManager : MonoBehaviour
         //save version to cover for updates
         layout.version = airplaneData.clientVersion;
 
-        //look for dial on dashboard - original parent        
-
+        //look for dial on dashboard - original parent
 
         if (!menuHandler.dialsInTray.Contains(speedometer))
         {
@@ -621,14 +620,30 @@ public class DialsManager : MonoBehaviour
         else
             DialInTray("Altimeter", layout);
 
-
-        if (countryDialBoard.transform.Find("Heading Indicator") != null)
+        if (airplaneData.planeAttributes.country == Country.US)
         {
-            layout.headingPos = countryDialBoard.transform.Find("Heading Indicator").GetComponent<RectTransform>().anchoredPosition;
-            layout.headingScale = countryDialBoard.transform.Find("Heading Indicator").GetComponent<RectTransform>().localScale.x;
+            //new
+            if (!menuHandler.dialsInTray.Contains(headingIndicator))
+            {
+                layout.headingPos = headingIndicator.GetComponent<RectTransform>().anchoredPosition;
+                layout.headingScale = headingIndicator.GetComponent<RectTransform>().localScale.x;
+            }
+            else
+                //if we don't find it, look for it in the tray
+                HeadingIndicatorInTray(layout);
+
         }
         else
-            DialInTray("Heading Indicator", layout);
+        {
+            //old
+            if (countryDialBoard.transform.Find("Heading Indicator") != null)
+            {
+                layout.headingPos = countryDialBoard.transform.Find("Heading Indicator").GetComponent<RectTransform>().anchoredPosition;
+                layout.headingScale = countryDialBoard.transform.Find("Heading Indicator").GetComponent<RectTransform>().localScale.x;
+            }
+            else
+                DialInTray("Heading Indicator", layout);
+        }
 
 
         if (countryDialBoard.transform.Find("Turn And Bank") != null)
@@ -639,51 +654,96 @@ public class DialsManager : MonoBehaviour
         else
             DialInTray("Turn And Bank", layout);
 
-
-        if (countryDialBoard.transform.Find("Turn Coordinator") != null)
+        if (airplaneData.planeAttributes.country == Country.US)
         {
-            layout.turnIndicatorPos = countryDialBoard.transform.Find("Turn Coordinator").GetComponent<RectTransform>().anchoredPosition;
-            layout.turnIndicatorScale = countryDialBoard.transform.Find("Turn Coordinator").GetComponent<RectTransform>().localScale.x;
+            //new
+            if (!menuHandler.dialsInTray.Contains(turnIndicator))
+            {
+
+                layout.turnIndicatorPos= turnIndicator.GetComponent<RectTransform>().anchoredPosition;
+                layout.turnIndicatorScale = turnIndicator.GetComponent<RectTransform>().localScale.x;
+            }
+            else
+                //if we don't find it, look for it in the tray
+                TurnIndicatorInTray(layout);
+
         }
         else
-            DialInTray("Turn Coordinator", layout);
-
-        if (countryDialBoard.transform.Find("VSI Smallest") != null)
         {
-            layout.vsiSmallestPos = countryDialBoard.transform.Find("VSI Smallest").GetComponent<RectTransform>().anchoredPosition;
-            layout.vsiSmallestScale = countryDialBoard.transform.Find("VSI Smallest").GetComponent<RectTransform>().localScale.x;
+            if (countryDialBoard.transform.Find("Turn Coordinator") != null)
+            {
+                layout.turnIndicatorPos = countryDialBoard.transform.Find("Turn Coordinator").GetComponent<RectTransform>().anchoredPosition;
+                layout.turnIndicatorScale = countryDialBoard.transform.Find("Turn Coordinator").GetComponent<RectTransform>().localScale.x;
+            }
+            else
+                DialInTray("Turn Coordinator", layout);
         }
 
-        else
-            DialInTray("VSI Smallest", layout);
 
-
-        if (countryDialBoard.transform.Find("VSI Small") != null)
+        if (airplaneData.planeAttributes.country == Country.US)
         {
-            layout.vsiSmallPos = countryDialBoard.transform.Find("VSI Small").GetComponent<RectTransform>().anchoredPosition;
-            layout.vsiSmallScale = countryDialBoard.transform.Find("VSI Small").GetComponent<RectTransform>().localScale.x;
-        }
-
-        else
-            DialInTray("VSI Small", layout);
-
-
-        if (countryDialBoard.transform.Find("VSI Large") != null)
-        {
-            layout.vsiLargePos = countryDialBoard.transform.Find("VSI Large").GetComponent<RectTransform>().anchoredPosition;
-            layout.vsiLargeScale = countryDialBoard.transform.Find("VSI Large").GetComponent<RectTransform>().localScale.x;
+            //new
+            if (!menuHandler.dialsInTray.Contains(vsi))
+            {
+                layout.vsiPos = vsi.GetComponent<RectTransform>().anchoredPosition;
+                layout.vsiScale = vsi.GetComponent<RectTransform>().localScale.x;
+            }
+            else
+                //if we don't find it, look for it in the tray
+                VSIInTray(layout);
         }
         else
-            DialInTray("VSI Large", layout);
-
-
-        if (countryDialBoard.transform.Find("Artificial Horizon") != null)
         {
-            layout.artificialHorizonPos = countryDialBoard.transform.Find("Artificial Horizon").GetComponent<RectTransform>().anchoredPosition;
-            layout.artificialHorizonScale = countryDialBoard.transform.Find("Artificial Horizon").GetComponent<RectTransform>().localScale.x;
+            if (countryDialBoard.transform.Find("VSI Smallest") != null)
+            {
+                layout.vsiSmallestPos = countryDialBoard.transform.Find("VSI Smallest").GetComponent<RectTransform>().anchoredPosition;
+                layout.vsiSmallestScale = countryDialBoard.transform.Find("VSI Smallest").GetComponent<RectTransform>().localScale.x;
+            }
+            else
+                DialInTray("VSI Smallest", layout);
+
+
+            if (countryDialBoard.transform.Find("VSI Small") != null)
+            {
+                layout.vsiSmallPos = countryDialBoard.transform.Find("VSI Small").GetComponent<RectTransform>().anchoredPosition;
+                layout.vsiSmallScale = countryDialBoard.transform.Find("VSI Small").GetComponent<RectTransform>().localScale.x;
+            }
+            else
+                DialInTray("VSI Small", layout);
+
+
+            if (countryDialBoard.transform.Find("VSI Large") != null)
+            {
+                layout.vsiLargePos = countryDialBoard.transform.Find("VSI Large").GetComponent<RectTransform>().anchoredPosition;
+                layout.vsiLargeScale = countryDialBoard.transform.Find("VSI Large").GetComponent<RectTransform>().localScale.x;
+            }
+            else
+                DialInTray("VSI Large", layout);
+        }
+
+        if (airplaneData.planeAttributes.country == Country.US)
+        {
+            //new
+            if (!menuHandler.dialsInTray.Contains(artificialHorizon))
+            {
+                layout.artificialHorizonPos = artificialHorizon.GetComponent<RectTransform>().anchoredPosition;
+                layout.artificialHorizonScale = artificialHorizon.GetComponent<RectTransform>().localScale.x;
+            }
+            else
+                //if we don't find it, look for it in the tray
+                HorizonInTray(layout);
         }
         else
-            DialInTray("Artificial Horizon", layout);
+        {
+            //old
+            if (countryDialBoard.transform.Find("Artificial Horizon") != null)
+            {
+                layout.artificialHorizonPos = countryDialBoard.transform.Find("Artificial Horizon").GetComponent<RectTransform>().anchoredPosition;
+                layout.artificialHorizonScale = countryDialBoard.transform.Find("Artificial Horizon").GetComponent<RectTransform>().localScale.x;
+            }
+            else
+                DialInTray("Artificial Horizon", layout);
+        }
 
 
         if (countryDialBoard.transform.Find("Repeater Compass") != null)
@@ -756,40 +816,33 @@ public class DialsManager : MonoBehaviour
 
     }
 
-    public void DeleteLayout()
+    private void VSIInTray(Layout layout)
     {
-        Debug.Log("Deleting = " + airplaneData.planeType);
-        PlayerPrefs.DeleteKey(airplaneData.planeType);
-        //PlayerPrefs.Save();
+        layout.vsiPos = vsi.GetComponent<RectTransform>().anchoredPosition;
+        layout.vsiScale = vsi.GetComponent<RectTransform>().localScale.x;
+        layout.vsiInTray = true;
+    }
+
+    private void TurnIndicatorInTray(Layout layout)
+    {
+        layout.turnIndicatorPos= turnIndicator.GetComponent<RectTransform>().anchoredPosition;
+        layout.turnIndicatorScale = turnIndicator.GetComponent<RectTransform>().localScale.x;
+        layout.turnIndicatorInTray = true;
+    }
+
+    private void HorizonInTray(Layout layout)
+    {
+        layout.artificialHorizonPos = artificialHorizon.GetComponent<RectTransform>().anchoredPosition;
+        layout.artificialHorizonScale = artificialHorizon.GetComponent<RectTransform>().localScale.x;
+        layout.artificialHorizonInTray = true;
+    }
 
 
-        //put all dials back to country board
-        for (int i = 0; i < menuHandler.dialsInTray.Count; i++)
-        {
-            menuHandler.dialsInTray[i].transform.parent = countryDialBoard.transform;
-        }
-
-        //and call default
-        LoadManager.DefaultLayouts(countryDialBoard);
-
-        //make sure all ui is on
-
-        for (int i = 0; i < menuHandler.dialsInTray.Count; i++)
-        {
-            ButtonManager.IconsOn(menuHandler.dialsInTray[i]);
-
-        }
-
-        //now reset list
-        menuHandler.dialsInTray.Clear();
-
-        //turn trays off, they will be empty now
-        for (int i = 0; i < menuHandler.trayObjects.Count; i++)
-        {
-            menuHandler.trayObjects[i].SetActive(false);
-
-        }
-
+    private void HeadingIndicatorInTray(Layout layout)
+    {
+        layout.headingPos = headingIndicator.GetComponent<RectTransform>().anchoredPosition;
+        layout.headingScale = headingIndicator.GetComponent<RectTransform>().localScale.x;
+        layout.headingIndicatorInTray = true;
     }
 
     void RPMInTray(Layout layout, int i, GameObject rpm)
@@ -829,8 +882,6 @@ public class DialsManager : MonoBehaviour
         {
             switch (name)
             {
-
-
                 case "Altimeter":
                     layout.altPos = dialsInTray[i].GetComponent<RectTransform>().anchoredPosition;
                     layout.altScale = dialsInTray[i].GetComponent<RectTransform>().localScale.x;
@@ -894,7 +945,41 @@ public class DialsManager : MonoBehaviour
         }
     }
 
+    public void DeleteLayout()
+    {
+        Debug.Log("Deleting = " + airplaneData.planeType);
+        PlayerPrefs.DeleteKey(airplaneData.planeType);
+        //PlayerPrefs.Save();
 
+
+        //put all dials back to country board
+        for (int i = 0; i < menuHandler.dialsInTray.Count; i++)
+        {
+            menuHandler.dialsInTray[i].transform.parent = countryDialBoard.transform;
+        }
+
+        //and call default
+        LoadManager.DefaultLayouts(countryDialBoard);
+
+        //make sure all ui is on
+
+        for (int i = 0; i < menuHandler.dialsInTray.Count; i++)
+        {
+            ButtonManager.IconsOn(menuHandler.dialsInTray[i]);
+
+        }
+
+        //now reset list
+        menuHandler.dialsInTray.Clear();
+
+        //turn trays off, they will be empty now
+        for (int i = 0; i < menuHandler.trayObjects.Count; i++)
+        {
+            menuHandler.trayObjects[i].SetActive(false);
+
+        }
+
+    }
     //helpers
 
     public static List<GameObject> ActiveDials(GameObject dialsPrefab)

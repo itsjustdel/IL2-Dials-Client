@@ -159,14 +159,27 @@ public class LoadManager : MonoBehaviour
         if (layout.altimeterInTray)
             AddToTrayOnLoad(altimeter, menuHandler);
 
-        if (dialsManager.countryDialBoard.transform.Find("Heading Indicator") != null)
+        if (dialsManager.airplaneData.planeAttributes.country == Country.US)
         {
-            GameObject headingIndicator = dialsManager.countryDialBoard.transform.Find("Heading Indicator").gameObject;
-            headingIndicator.GetComponent<RectTransform>().anchoredPosition = layout.headingPos;
-            headingIndicator.GetComponent<RectTransform>().localScale = new Vector3(layout.headingScale, layout.headingScale, 1f);
+            //new
+            dialsManager.headingIndicator.GetComponent<RectTransform>().anchoredPosition = layout.headingPos;
+            dialsManager.headingIndicator.GetComponent<RectTransform>().localScale = new Vector3(layout.headingScale, layout.headingScale, 1f);
 
             if (layout.headingIndicatorInTray)
-                AddToTrayOnLoad(headingIndicator, menuHandler);
+                AddToTrayOnLoad(dialsManager.headingIndicator, menuHandler);
+        }
+        else
+        {
+            //old
+            if (dialsManager.countryDialBoard.transform.Find("Heading Indicator") != null)
+            {
+                GameObject headingIndicator = dialsManager.countryDialBoard.transform.Find("Heading Indicator").gameObject;
+                headingIndicator.GetComponent<RectTransform>().anchoredPosition = layout.headingPos;
+                headingIndicator.GetComponent<RectTransform>().localScale = new Vector3(layout.headingScale, layout.headingScale, 1f);
+
+                if (layout.headingIndicatorInTray)
+                    AddToTrayOnLoad(headingIndicator, menuHandler);
+            }
         }
 
         if (dialsManager.countryDialBoard.transform.Find("Turn And Bank") != null)
@@ -180,62 +193,101 @@ public class LoadManager : MonoBehaviour
 
         }
 
-        if (dialsManager.countryDialBoard.transform.Find("Turn Coordinator") != null)
+        if (dialsManager.airplaneData.planeAttributes.country == Country.US)
         {
-
-            GameObject turnIndicator = dialsManager.countryDialBoard.transform.Find("Turn Coordinator").gameObject;
-            turnIndicator.GetComponent<RectTransform>().anchoredPosition = layout.turnIndicatorPos;
-            turnIndicator.GetComponent<RectTransform>().localScale = new Vector3(layout.turnIndicatorScale, layout.turnIndicatorScale, 1f);
+            //new
+            dialsManager.turnIndicator.GetComponent<RectTransform>().anchoredPosition = layout.turnIndicatorPos;
+            dialsManager.turnIndicator.GetComponent<RectTransform>().localScale = new Vector3(layout.turnIndicatorScale, layout.turnIndicatorScale, 1f);
 
             if (layout.turnIndicatorInTray)
-                AddToTrayOnLoad(turnIndicator, menuHandler);
+                AddToTrayOnLoad(dialsManager.turnIndicator, menuHandler);
+        }
+        else
+        {
+            if (dialsManager.countryDialBoard.transform.Find("Turn Coordinator") != null)
+            {
+
+                GameObject turnIndicator = dialsManager.countryDialBoard.transform.Find("Turn Coordinator").gameObject;
+                turnIndicator.GetComponent<RectTransform>().anchoredPosition = layout.turnIndicatorPos;
+                turnIndicator.GetComponent<RectTransform>().localScale = new Vector3(layout.turnIndicatorScale, layout.turnIndicatorScale, 1f);
+
+                if (layout.turnIndicatorInTray)
+                    AddToTrayOnLoad(turnIndicator, menuHandler);
+            }
         }
 
-        //both vsi share the same variable - only one vsi per plane
-
-        if (dialsManager.countryDialBoard.transform.Find("VSI Smallest") != null)
+        if (dialsManager.airplaneData.planeAttributes.country == Country.US)
         {
+            //new
+            dialsManager.vsi.GetComponent<RectTransform>().anchoredPosition = layout.vsiPos;
+            dialsManager.vsi.GetComponent<RectTransform>().localScale = new Vector3(layout.vsiScale, layout.vsiScale, 1f);
 
-            GameObject vsi = dialsManager.countryDialBoard.transform.Find("VSI Smallest").gameObject;
-            vsi.GetComponent<RectTransform>().anchoredPosition = layout.vsiSmallestPos;
-            vsi.GetComponent<RectTransform>().localScale = new Vector3(layout.vsiSmallestScale, layout.vsiSmallestScale, 1f);
+            if (layout.vsiInTray)
+                AddToTrayOnLoad(dialsManager.vsi, menuHandler);
+        }
+        else
+        {
+            //old
 
-            if (layout.vsiSmallestInTray)
-                AddToTrayOnLoad(vsi, menuHandler);
+            //both vsi share the same variable - only one vsi per plane
+
+            if (dialsManager.countryDialBoard.transform.Find("VSI Smallest") != null)
+            {
+
+                GameObject vsi = dialsManager.countryDialBoard.transform.Find("VSI Smallest").gameObject;
+                vsi.GetComponent<RectTransform>().anchoredPosition = layout.vsiSmallestPos;
+                vsi.GetComponent<RectTransform>().localScale = new Vector3(layout.vsiSmallestScale, layout.vsiSmallestScale, 1f);
+
+                if (layout.vsiSmallestInTray)
+                    AddToTrayOnLoad(vsi, menuHandler);
+            }
+
+            if (dialsManager.countryDialBoard.transform.Find("VSI Small") != null)
+            {
+
+                GameObject vsi = dialsManager.countryDialBoard.transform.Find("VSI Small").gameObject;
+                vsi.GetComponent<RectTransform>().anchoredPosition = layout.vsiSmallPos;
+                vsi.GetComponent<RectTransform>().localScale = new Vector3(layout.vsiSmallScale, layout.vsiSmallScale, 1f);
+
+                if (layout.vsiSmallInTray)
+                    AddToTrayOnLoad(vsi, menuHandler);
+            }
+
+            //both vsi share the same variable - only one vsi per plane
+            if (dialsManager.countryDialBoard.transform.Find("VSI Large") != null)
+            {
+
+                GameObject vsi = dialsManager.countryDialBoard.transform.Find("VSI Large").gameObject;
+                vsi.GetComponent<RectTransform>().anchoredPosition = layout.vsiLargePos;
+                vsi.GetComponent<RectTransform>().localScale = new Vector3(layout.vsiLargeScale, layout.vsiLargeScale, 1f);
+
+                if (layout.vsiLargeInTray)
+                    AddToTrayOnLoad(vsi, menuHandler);
+            }
         }
 
-        if (dialsManager.countryDialBoard.transform.Find("VSI Small") != null)
+        if (dialsManager.airplaneData.planeAttributes.country == Country.US)
         {
-
-            GameObject vsi = dialsManager.countryDialBoard.transform.Find("VSI Small").gameObject;
-            vsi.GetComponent<RectTransform>().anchoredPosition = layout.vsiSmallPos;
-            vsi.GetComponent<RectTransform>().localScale = new Vector3(layout.vsiSmallScale, layout.vsiSmallScale, 1f);
-
-            if (layout.vsiSmallInTray)
-                AddToTrayOnLoad(vsi, menuHandler);
-        }
-
-        //both vsi share the same variable - only one vsi per plane
-        if (dialsManager.countryDialBoard.transform.Find("VSI Large") != null)
-        {
-
-            GameObject vsi = dialsManager.countryDialBoard.transform.Find("VSI Large").gameObject;
-            vsi.GetComponent<RectTransform>().anchoredPosition = layout.vsiLargePos;
-            vsi.GetComponent<RectTransform>().localScale = new Vector3(layout.vsiLargeScale, layout.vsiLargeScale, 1f);
-
-            if (layout.vsiLargeInTray)
-                AddToTrayOnLoad(vsi, menuHandler);
-        }
-
-        if (dialsManager.countryDialBoard.transform.Find("Artificial Horizon") != null)
-        {
-
-            GameObject artificialHorizon = dialsManager.countryDialBoard.transform.Find("Artificial Horizon").gameObject;
-            artificialHorizon.GetComponent<RectTransform>().anchoredPosition = layout.artificialHorizonPos;
-            artificialHorizon.GetComponent<RectTransform>().localScale = new Vector3(layout.artificialHorizonScale, layout.artificialHorizonScale, 1f);
+            //new
+            dialsManager.artificialHorizon.GetComponent<RectTransform>().anchoredPosition = layout.artificialHorizonPos;
+            dialsManager.artificialHorizon.GetComponent<RectTransform>().localScale = new Vector3(layout.artificialHorizonScale, layout.artificialHorizonScale, 1f);
 
             if (layout.artificialHorizonInTray)
-                AddToTrayOnLoad(artificialHorizon, menuHandler);
+                AddToTrayOnLoad(dialsManager.artificialHorizon, menuHandler);
+        }
+        else
+        {
+            //old
+            if (dialsManager.countryDialBoard.transform.Find("Artificial Horizon") != null)
+            {
+
+                GameObject artificialHorizon = dialsManager.countryDialBoard.transform.Find("Artificial Horizon").gameObject;
+                artificialHorizon.GetComponent<RectTransform>().anchoredPosition = layout.artificialHorizonPos;
+                artificialHorizon.GetComponent<RectTransform>().localScale = new Vector3(layout.artificialHorizonScale, layout.artificialHorizonScale, 1f);
+
+                if (layout.artificialHorizonInTray)
+                    AddToTrayOnLoad(artificialHorizon, menuHandler);
+            }
         }
 
         if (dialsManager.countryDialBoard.transform.Find("Repeater Compass") != null)

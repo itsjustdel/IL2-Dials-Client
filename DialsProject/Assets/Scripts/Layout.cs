@@ -14,9 +14,10 @@ public class Layout
     public Vector2 headingPos;
     public Vector2 turnAndBankPos;
     public Vector2 turnIndicatorPos;
-    public Vector2 vsiSmallestPos;
-    public Vector2 vsiSmallPos;
-    public Vector2 vsiLargePos;
+    public Vector2 vsiPos;
+    public Vector2 vsiSmallestPos;//old
+    public Vector2 vsiSmallPos;//old
+    public Vector2 vsiLargePos;//old -- to remove when all countries use new system
     public Vector2 artificialHorizonPos;
     public Vector2 repeaterCompassPos;
     public Vector2 repeaterCompassAlternatePos;
@@ -28,9 +29,10 @@ public class Layout
     public float headingScale;
     public float turnAndBankScale;
     public float turnIndicatorScale;
-    public float vsiSmallestScale;
-    public float vsiSmallScale;
-    public float vsiLargeScale;
+    public float vsiScale;
+    public float vsiSmallestScale;//
+    public float vsiSmallScale;//
+    public float vsiLargeScale;//to remove
     public float artificialHorizonScale;
     public float repeaterCompassScale;
     public float repeaterCompassAlternateScale;
@@ -44,9 +46,10 @@ public class Layout
     public bool headingIndicatorInTray;
     public bool turnAndBankInTray;
     public bool turnIndicatorInTray;
-    public bool vsiSmallestInTray;
-    public bool vsiSmallInTray;
-    public bool vsiLargeInTray;
+    public bool vsiInTray;
+    public bool vsiSmallestInTray;//
+    public bool vsiSmallInTray;//
+    public bool vsiLargeInTray;//to remove
     public bool artificialHorizonInTray;
     public bool repeaterCompassInTray;
     public bool repeaterCompassAlternateInTray;
