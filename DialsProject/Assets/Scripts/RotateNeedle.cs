@@ -13,6 +13,7 @@ public class RotateNeedle : MonoBehaviour
     public UDPClient udpClient;
     public float smoothing = 3f;
     public float manifoldSmoothing = 1f;
+    public float turnNeedleSmoothing = 1f;
 
     public GameObject altitudeNeedleSmall;
     public GameObject altitudeNeedleSmallest;//UK//US
@@ -306,7 +307,7 @@ public class RotateNeedle : MonoBehaviour
     void TurnCoordinatorRotation()
     {
         //Needle        
-        turnCoordinatorNeedle.transform.rotation = Quaternion.Slerp(turnCoordinatorNeedle.transform.rotation, turnCoordinatorNeedleTarget, Time.deltaTime * smoothing);
+        turnCoordinatorNeedle.transform.rotation = Quaternion.Slerp(turnCoordinatorNeedle.transform.rotation, turnCoordinatorNeedleTarget, Time.deltaTime * turnNeedleSmoothing);
 
 
         //Ball

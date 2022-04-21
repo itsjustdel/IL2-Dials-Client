@@ -3822,6 +3822,7 @@ MonoBehaviour:
   udpClient: {fileID: 0}
   smoothing: 3
   manifoldSmoothing: 10
+  turnNeedleSmoothing: 10
   altitudeNeedleSmall: {fileID: 8359517848656314651}
   altitudeNeedleSmallest: {fileID: 343861494130932470}
   altitudeNeedleLarge: {fileID: 384718799925871779}
@@ -3830,6 +3831,7 @@ MonoBehaviour:
   turnAndBankNumberTrack: {fileID: 0}
   turnAndBankPlane: {fileID: 0}
   headingIndicator: {fileID: 2077106439875160391}
+  headingIndicatorBall: {fileID: 0}
   turnCoordinatorNeedle: {fileID: 5724428333620313428}
   turnCoordinatorBall: {fileID: 4853732624792005576}
   vsiNeedle: {fileID: 3410964343312059683}
@@ -3863,6 +3865,12 @@ MonoBehaviour:
   artificialHorizonMultiplier: -100
   turnAndBankBallMultiplier: 1
   animationCurveVSI:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  animationCurveVSIB:
     serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
@@ -3923,6 +3931,12 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   animationCurveRPMD:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  animationCurveSpeedometerA:
     serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
