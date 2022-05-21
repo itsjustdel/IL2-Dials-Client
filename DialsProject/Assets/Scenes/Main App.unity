@@ -6666,6 +6666,7 @@ MonoBehaviour:
   countryDialBoard: {fileID: 0}
   rpmObjects: []
   manifoldObjects: []
+  waterTempObjects: []
   speedometer: {fileID: 0}
   turnIndicator: {fileID: 0}
   vsi: {fileID: 0}
@@ -8485,7 +8486,7 @@ MonoBehaviour:
   testPlane: {fileID: 0}
   clientVersion: 0.52
   serverVersion: 0
-  planeType: 
+  planeType: I-16 type 24
   planeTypePrevious: 
   altitude: 0
   mmhg: 0
@@ -8501,6 +8502,7 @@ MonoBehaviour:
   headingPreviousPrevious: 0
   rpms: []
   manifolds: []
+  waterTemps: []
   engineModification: 0
   buildControl: {fileID: 1413319309}
   menuHandler: {fileID: 840226279}
@@ -10486,6 +10488,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slaveManager: {fileID: 1142282480}
   menuPanel: {fileID: 0}
+  savePos: 0
+  setPos: 0
 --- !u!4 &1853040845
 Transform:
   m_ObjectHideFlags: 0

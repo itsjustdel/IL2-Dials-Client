@@ -49,12 +49,13 @@ public class AirplaneData : MonoBehaviour
     public float headingPreviousPrevious;
     public List<float> rpms;
     public List<float> manifolds;
+    public List<float> waterTemps;
     public int engineModification;
 
     public BuildControl buildControl;
     public MenuHandler menuHandler;
     public UDPClient udpClient;
-    public List<float> waterTemps;
+    
 
     public void Start()
     {

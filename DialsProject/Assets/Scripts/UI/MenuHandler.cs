@@ -154,8 +154,6 @@ public class MenuHandler : MonoBehaviour
 
     public void Update()
     {
-        //SlideMask();
-
         if (Input.GetKey("escape"))
         {
             Application.Quit();
@@ -163,12 +161,10 @@ public class MenuHandler : MonoBehaviour
 
         RemoveTitle();
 
-
         if (airplaneData.planeAttributes != null && airplaneData.planeAttributes.country != Country.UNDEFINED)
             RemoveTitle();
         else
             EnableTitle();
-
 
         if (!welcomePanel.activeInHierarchy)
         {
@@ -181,11 +177,7 @@ public class MenuHandler : MonoBehaviour
         }
 
         IdleTimer();
-
-
     }
-
-
 
     void IdleTimer()
     {

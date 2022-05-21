@@ -39,6 +39,7 @@ public class PlaneDataFromName : AirplaneData
         public DialVariant vsiType = DialVariant.A;
         public DialVariant horizonType = DialVariant.A;
         public DialVariant headingIndicatorType = DialVariant.A;
+        public DialVariant waterTempType = DialVariant.A;
 
         public int engines = 1; //default to 1
 

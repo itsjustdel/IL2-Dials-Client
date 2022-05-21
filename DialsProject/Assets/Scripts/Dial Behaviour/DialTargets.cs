@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -214,6 +215,64 @@ public class DialTargets : MonoBehaviour
         return new List<List<Quaternion>>() { rpmSmallTargets, rpmLargeTargets };
 
 
+    }
+
+    internal static List<Quaternion> WaterTempTargets(AirplaneData airplaneData, Country country)
+    {
+        List<Quaternion> waterTempTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);        
+
+        for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
+        {
+            switch (country)
+            {
+                //RU
+                case (Country.RU):
+                    if (airplaneData.planeAttributes.waterTempType == DialVariant.A)
+                    {
+                        waterTempTargets[i] = RussianDials.WaterTempTargetA(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }            
+
+                    break;
+
+                //GER
+                case (Country.GER):
+                    if (airplaneData.planeAttributes.waterTempType == DialVariant.A)
+                    {
+                       
+                    }
+
+                    break;
+
+                //US
+                case (Country.US):
+                    if (airplaneData.planeAttributes.waterTempType == DialVariant.A)
+                    {
+                      
+                    }
+
+                    break;
+
+
+                case (Country.UK):
+                    if (airplaneData.planeAttributes.waterTempType == DialVariant.A)
+                    {
+
+                    }
+
+                    break;
+
+                case (Country.ITA):
+
+                    if (airplaneData.planeAttributes.waterTempType == DialVariant.A)
+                    {
+                        
+                    }
+                    break;
+
+            }
+        }
+
+        return waterTempTargets;
     }
 
     public static Quaternion ArtificialHorizonTargets(ref Quaternion artificialHorizonNeedleTarget, ref Vector3 artificialHorizonPositionTarget, ref Quaternion artificialHorizonChevronTarget, ref Quaternion artificialHorizonRotationPlaneTarget,

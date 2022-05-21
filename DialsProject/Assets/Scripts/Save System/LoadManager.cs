@@ -330,6 +330,15 @@ public class LoadManager : MonoBehaviour
             if (layout.manifoldInTray[i])
                 AddToTrayOnLoad(dialsManager.manifoldObjects[i], menuHandler);
         }
+
+        for (int i = 0; i < dialsManager.waterTempObjects.Count; i++)
+        {
+            dialsManager.waterTempObjects[i].GetComponent<RectTransform>().anchoredPosition = layout.waterTempPos[i];
+            dialsManager.waterTempObjects[i].GetComponent<RectTransform>().localScale = new Vector3(layout.waterTempScale[i], layout.waterTempScale[i], 1f);
+
+            if (layout.waterTempInTray[i])
+                AddToTrayOnLoad(dialsManager.waterTempObjects[i], menuHandler);
+        }
     }
 
     static void AddToTrayOnLoad(GameObject dial, MenuHandler menuHandler)

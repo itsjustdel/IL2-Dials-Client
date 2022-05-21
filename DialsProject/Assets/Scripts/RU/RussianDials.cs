@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -265,5 +266,12 @@ public class RussianDials : MonoBehaviour
         return target;
     }
 
-  
+    internal static Quaternion WaterTempTargetA(float v, float scalar0, float scalar1)
+    {
+
+        float r = v * -8;
+        Quaternion target = Quaternion.Euler(0, 0, r-48);
+
+        return target;
+    }
 }

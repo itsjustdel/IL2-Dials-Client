@@ -274,7 +274,7 @@ public class UDPClient : MonoBehaviour
 			airplaneData.manifolds[2] = floats[15];
 			airplaneData.manifolds[3] = floats[16]; //support for 4 engines (you never know!)
 			airplaneData.engineModification = (int)floats[17];
-			airplaneData.waterTemps[0] = floats[18] - 273.15f;
+			airplaneData.waterTemps[0] = floats[18] - 273.15f;//kelvin to celcius
 			airplaneData.waterTemps[1] = floats[19] - 273.15f;
 			
 		}

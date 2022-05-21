@@ -39,6 +39,7 @@ public class RotateNeedle : MonoBehaviour
     public List<GameObject> rpmNeedlesSmall = new List<GameObject>();
     public List<GameObject> manifoldNeedlesSmall = new List<GameObject>();
     public List<GameObject> manifoldNeedlesLarge = new List<GameObject>();
+    public List<GameObject> waterTempNeedles = new List<GameObject>();
 
     public float previousMessageTime;
     public float maxSpin =1f;
@@ -46,13 +47,11 @@ public class RotateNeedle : MonoBehaviour
     public float turnAndBankRollMultiplier = 5f;
     public float turnAndBankPlaneXMultiplier = 5f;
 
-
     // -- positions
     private List<Vector3> positionsHeading = new List<Vector3>() { Vector3.zero, Vector3.zero };    //needed?
 
     //  private bool saveForPredictions -- rotations
 
-    //public Quaternion airspeedStart; // -- "Start" needed, just use object transform loation/rotation
     public  Quaternion airspeedTarget;
     private Quaternion altitudeLargeTarget;
     private Quaternion altitudeSmallTarget;
@@ -72,11 +71,11 @@ public class RotateNeedle : MonoBehaviour
     public List<Quaternion> rpmLargeTargets = new List<Quaternion>();
     public  List<Quaternion> rpmSmallTargets = new List<Quaternion>();
     public List<Quaternion> manifoldLargeTargets = new List<Quaternion>();
+    public List<Quaternion> waterTempTargets = new List<Quaternion>();
     private Quaternion turnAndBankBallTarget;
 
     // -- positions
     //heading is on a track, we move along the x, we don't rotate
-    //private Vector3 headingIndicatorStart;
     private Vector3 headingIndicatorTarget;    
     private Vector3 turnAndBankPlanePositionTarget;    
     private Vector3 turnAndBankNumberTrackTarget;
@@ -84,8 +83,7 @@ public class RotateNeedle : MonoBehaviour
 
     // -- modifiers
     public float trackLength = -15.64f;
-    public float trackLengthForSwitch = 200.3f;
-    
+    public float trackLengthForSwitch = 200.3f;    
 
     public float turnCoordinaterNeedleMod = 1f;
     public float turnCoordinaterBallMod = 1f;    
@@ -103,8 +101,6 @@ public class RotateNeedle : MonoBehaviour
     public AnimationCurve animationCurveRPMD;
     public AnimationCurve animationCurveSpeedometerA;
     private bool headingIndicatorTest;
-    
-
 
     // Start is called before the first frame update
     void Start()
@@ -112,12 +108,10 @@ public class RotateNeedle : MonoBehaviour
         //initialise lists
         rpmSmallTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
         rpmLargeTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
-
         manifoldLargeTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
-
-
+        manifoldLargeTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
+        waterTempTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
     }
-
 
     // Update is called once per frame
     void Update()
@@ -126,12 +120,9 @@ public class RotateNeedle : MonoBehaviour
         {
             Tests();   
             return;
-        }
-        
+        }        
 
         SetRotationTargets();
-
-
         NeedleRotations();
     }
 
@@ -167,8 +158,6 @@ public class RotateNeedle : MonoBehaviour
                 airplaneData.heading -= speed;
 
         }
-      //  previousMessageTime = lastMessageReceivedTime;//using?
-        //lastMessageReceivedTime = Time.time - Time.deltaTime;
 
         airplaneData.headingPrevious = airplaneData.heading;
 
@@ -223,6 +212,10 @@ public class RotateNeedle : MonoBehaviour
         //manifolds
         List<List<Quaternion>> manifoldTargets = DialTargets.ManifoldTarget(airplaneData, airplaneData.planeAttributes.country);
         manifoldLargeTargets = manifoldTargets[1];
+
+        //water temps
+        waterTempTargets = DialTargets.WaterTempTargets(airplaneData, airplaneData.planeAttributes.country);
+        
     }
 
     void NeedleRotations()
@@ -248,6 +241,17 @@ public class RotateNeedle : MonoBehaviour
         RPMRotations();
 
         ManifoldRotations();
+
+        WaterTempRotations();
+    }
+
+    private void WaterTempRotations()
+    {
+        for (int i = 0; i < waterTempNeedles.Count; i++)
+        {
+            if (waterTempNeedles[i].gameObject != null)
+                waterTempNeedles[i].transform.rotation = Quaternion.Slerp(waterTempNeedles[i].transform.rotation, waterTempTargets[i], Time.deltaTime * smoothing);
+        }
     }
 
     private void ManifoldRotations()
@@ -260,8 +264,7 @@ public class RotateNeedle : MonoBehaviour
     }
 
     void RPMRotations()
-    {
-      
+    {      
         for (int i = 0; i < rpmNeedlesLarge.Count; i++)
         {
             if (rpmNeedlesLarge[i].gameObject != null)
@@ -273,7 +276,6 @@ public class RotateNeedle : MonoBehaviour
         {
             if (rpmNeedlesSmall[i].gameObject != null)
                 rpmNeedlesSmall[i].transform.rotation = Quaternion.Slerp(rpmNeedlesSmall[i].transform.rotation, rpmSmallTargets[i], Time.deltaTime * smoothing);
-
         }
     }
 
@@ -282,8 +284,7 @@ public class RotateNeedle : MonoBehaviour
         //float d = Mathf.Abs( airspeedTarget.eulerAngles.z - quaternionsAirspeed[0].eulerAngles.z);
        // Debug.Log("air needle");
        if( airspeedNeedle != null)
-            airspeedNeedle.transform.rotation = Quaternion.Slerp(airspeedNeedle.transform.rotation, airspeedTarget, Time.deltaTime * smoothing); 
-        
+            airspeedNeedle.transform.rotation = Quaternion.Slerp(airspeedNeedle.transform.rotation, airspeedTarget, Time.deltaTime * smoothing);         
     }
 
     void AltitudeNeedleRotations()
@@ -308,7 +309,6 @@ public class RotateNeedle : MonoBehaviour
     {
         //Needle        
         turnCoordinatorNeedle.transform.rotation = Quaternion.Slerp(turnCoordinatorNeedle.transform.rotation, turnCoordinatorNeedleTarget, Time.deltaTime * turnNeedleSmoothing);
-
 
         //Ball
         turnCoordinatorBall.transform.rotation = Quaternion.Slerp(turnCoordinatorBall.transform.rotation, turnCoordinatorBallTarget, Time.deltaTime * smoothing); 
@@ -376,7 +376,6 @@ public class RotateNeedle : MonoBehaviour
     {
         HeadingIndicatorSwitch();
 
-        //
         if (float.IsNaN(headingIndicatorTarget.y) || float.IsNaN(headingIndicatorTarget.z))
             return;
 
@@ -387,7 +386,6 @@ public class RotateNeedle : MonoBehaviour
             //a-20 has combined ball and heading indicator
             headingIndicatorBall.transform.rotation = Quaternion.Slerp(headingIndicatorBall.transform.rotation, headingIndicatorBallTarget, Time.deltaTime * smoothing);
         }
-
     }
 
     void TurnAndBankRotations()
