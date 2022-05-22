@@ -268,9 +268,9 @@ public class RussianDials : MonoBehaviour
 
     internal static Quaternion WaterTempTargetA(float v, float scalar0, float scalar1)
     {
-
-        float r = v * -8;
-        Quaternion target = Quaternion.Euler(0, 0, r-48);
+        v = Mathf.Clamp(v, 0, 120);
+        float r = v * -.8f;
+        Quaternion target = Quaternion.Euler(0, 0, r+48);
 
         return target;
     }
