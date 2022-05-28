@@ -274,4 +274,22 @@ public class RussianDials : MonoBehaviour
 
         return target;
     }
+
+    internal static Quaternion WaterTempTargetB(float v, float scalar0, float scalar1)
+    {
+        v = Mathf.Clamp(v, 0, 125);
+        float r = v * -2.4f;
+        Quaternion target = Quaternion.Euler(0, 0, r + 150);
+
+        return target;
+    }
+
+    internal static Quaternion WaterTempTargetC(float v, float scalar0, float scalar1)
+    {
+        v = Mathf.Clamp(v, 0, 160);
+        float r = v * -.6f;
+        Quaternion target = Quaternion.Euler(0, 0, r + 48);
+
+        return target;
+    }
 }

@@ -230,7 +230,15 @@ public class DialTargets : MonoBehaviour
                     if (airplaneData.planeAttributes.waterTempType == DialVariant.A)
                     {
                         waterTempTargets[i] = RussianDials.WaterTempTargetA(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1);
-                    }            
+                    }
+                    else if (airplaneData.planeAttributes.waterTempType == DialVariant.B)
+                    {
+                        waterTempTargets[i] = RussianDials.WaterTempTargetB(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    if (airplaneData.planeAttributes.waterTempType == DialVariant.C)
+                    {
+                        waterTempTargets[i] = RussianDials.WaterTempTargetC(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
 
                     break;
 
