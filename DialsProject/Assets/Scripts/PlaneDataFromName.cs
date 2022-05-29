@@ -789,6 +789,242 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.manifoldType = DialVariant.E;
                 break;
 
+
+            //Flying Circus Vol 1
+            //RSE.RSE::CCockpitInstruments::simulation+3DB5 - 48 8D 15 C4481F00     - lea rdx,[RSE.RSE::CAeroplane_SPAD_XIII_C1::`vftable'+1C8] { ("SPAD XIII.C1") }
+            case "SPAD XIII.C1":
+                planeAttributes.country = Country.UK;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                //planeAttributes.waterTempType = DialVariant.A; //to go in
+               
+                break;
+
+            //RSE.RSE::CCockpitInstruments::simulation+3D86 - 48 8D 15 63D71B00     - lea rdx,[RSE.RSE::CAeroplane_Albatros_D_Va::`vftable'+1C8] { ("Albatros D.Va") }
+            case "Albatros D.Va":
+                planeAttributes.country = Country.GER;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                //planeAttributes.waterTempType = DialVariant.A; //to go in 
+                break;
+
+            //RSE.RSE::CCockpitInstruments::simulation+3DD0 - 48 8D 15 399A1E00     - lea rdx,[RSE.RSE::CAeroplane_Sopwith_Camel::`vftable'+1C8] { ("Sopwith Camel") }
+            case "Sopwith Camel":
+                planeAttributes.country = Country.UK;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                //planeAttributes.waterTempType = DialVariant.A; //to go in 
+                break;
+
+            //RSE.RSE::CCockpitInstruments::simulation+3DEB - 48 8D 15 4E4E1E00     - lea rdx,[RSE.RSE::CAeroplane_Pfalz_D_IIIa::`vftable'+1C8] { ("Pfalz D.IIIa") }
+            case "Pfalz D.IIIa":
+                planeAttributes.country = Country.GER;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                break;
+
+            //RSE.RSE::CCockpitInstruments::simulation+3E06 - 48 8D 15 433F1D00     - lea rdx,[RSE.RSE::CAeroplane_Fokker_D_VII::`vftable'+1C8] { ("Fokker D.VII") }
+            case "Fokker D.VII":
+                planeAttributes.country = Country.GER;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                break;
+
+            //RSE.RSE::CCockpitInstruments::simulation+3E21 - 48 8D 15 18F81C00     - lea rdx,[RSE.RSE::CAeroplane_Fokker_D_VIIF::`vftable'+1C8] { ("Fokker D.VIIF") }
+            case "Fokker D.VIIF":
+                planeAttributes.country = Country.GER;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                break;
+
+            //RSE.RSE::CCockpitInstruments::simulation+3E3C - 48 8D 15 DD811C00     - lea rdx,[RSE.RSE::CAeroplane_Bristol_F_2B_Falcon_II::`vftable'+1C8] { ("Bristol F.2B Falcon II") }
+            case "Bristol F.2B Falcon II":
+                planeAttributes.country = Country.UK;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                break;
+
+            //RSE.RSE::CCockpitInstruments::simulation+3E57 - 48 8D 15 724A1C00     - lea rdx,[RSE.RSE::CAeroplane_Bristol_F_2B_Falcon_III::`vftable'+1C8] { ("Bristol F.2B Falcon III") }
+            case "Bristol F.2B Falcon III":
+                planeAttributes.country = Country.UK;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                break;
+
+            //RSE.RSE::CCockpitInstruments::simulation+3E6E - 48 8D 15 031E1D00     - lea rdx,[RSE.RSE::CAeroplane_Fokker_D_VIII::`vftable'+1A0] { ("Fokker D.VIII") }
+            case "Fokker D.VIII":
+                planeAttributes.country = Country.GER;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                break;
+
+            //RSE.RSE::CCockpitInstruments::simulation+3E85 - 48 8D 15 44751E00     - lea rdx,[RSE.RSE::CAeroplane_Pfalz_D_XII::`vftable'+1C8] { ("Pfalz D.XII") }
+            case "Pfalz D.XII":
+                planeAttributes.country = Country.GER;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                break;
+
+            //RSE.RSE::CCockpitInstruments::simulation+3E9C - 48 8D 15 ED0E1F00     - lea rdx,[RSE.RSE::CAeroplane_SPAD_VII_C1_150HP::`vftable'+1C8] { ("SPAD VII.C1 150HP") }
+            case "SPAD VII.C1 150HP":
+                planeAttributes.country = Country.UK;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                break;
+
+            //RSE.RSE::CCockpitInstruments::simulation+3EB3 - 48 8D 15 163D1F00     - lea rdx,[RSE.RSE::CAeroplane_SPAD_VII_C1_180HP::`vftable'+1C8] { ("SPAD VII.C1 180HP") }
+            case "SPAD VII.C1 180HP":
+                planeAttributes.country = Country.UK;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                break;
+
+            //RSE.RSE::CCockpitInstruments::simulation+3ECA - 48 8D 15 3F471D00     - lea rdx,[RSE.RSE::CAeroplane_Gotha_G5::`vftable'+1F0] { ("Gotha G.V") }
+            case "Gotha G.V":
+                planeAttributes.country = Country.UK;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                break;
+
+            //bregeut
+            //RSE.RSE::CCockpitInstruments::simulation+8DF7 - 48 8D 15 3AB21B00     - lea rdx,[RSE.RSE::CAeroplane_Breguet_14_B2::`vftable'+1F0] { ("Breguet type 14 B.2") }
+            case "Breguet type 14 B.2":
+                planeAttributes.country = Country.UK;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                break;
+
+            //RSE.RSE::CCockpitInstruments::simulation+8E12 - 48 8D 15 C7811D00     - lea rdx,[RSE.RSE::CAeroplane_Handley_Page_400::`vftable'+1F0] { ("Handley Page O/400") }
+            case "Handley Page O/400":
+                planeAttributes.country = Country.UK;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                break;
+
+            //RSE.RSE::CAeroplane::simulation+91C - 48 8D 15 8D1A1F00     - lea rdx,[RSE.RSE::CAeroplane_Sopwith_Dolphin::`vftable'+1C8] { ("Sopwith Dolphin") }
+            case "Sopwith Dolphin":
+                planeAttributes.country = Country.UK;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                //planeAttributes.waterTempType = DialVariant.A; //to go in 
+                break;
+
+            //se 5
+            //RSE.RSE::CCockpitInstruments::simulation+109B - 4C 8D 05 AE9D1F00     - lea r8,[RSE.RSE::CAeroplane_S_E_5a::`vftable'+1C8] { ("S.E.5a") }
+            case "S.E.5a":
+                planeAttributes.country = Country.UK;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                //planeAttributes.waterTempType = DialVariant.A; //to go in 
+                break;
+
+            //RSE.RSE::CAeroplane::simulation+997 - 48 8D 15 32241E00     - lea rdx,[RSE.RSE::CAeroplane_Halberstadt_CL_II_D_IIIa::`vftable'+1C8] { ("Halberstadt CL.II D.IIIa") }
+            case "Halberstadt CL.II D.IIIa":
+                planeAttributes.country = Country.GER;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                //planeAttributes.waterTempType = DialVariant.A; //to go in 
+                break;
+
+            //RSE.RSE::CAeroplane::simulation+9AF - 48 8D 15 8AF31D00     - lea rdx,[RSE.RSE::CAeroplane_Halberstadt_CL_II_D_IIIau::`vftable'+1C8] { ("Halberstadt CL.II D.IIIau") }
+            case "Halberstadt CL.II D.IIIau":
+                planeAttributes.country = Country.GER;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                //planeAttributes.waterTempType = DialVariant.A; //to go in 
+                break;
+            
+            //RSE.RSE::CAeroplane::simulation + C07 - 48 8D 15 627D1E00 - lea rdx,[RSE.RSE::CAeroplane_Nieuport_28::`vftable'+1C8] { ("Nieuport 28.C1") }
+            case "Nieuport 28.C1":
+                planeAttributes.country = Country.GER;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                //planeAttributes.waterTempType = DialVariant.A; //to go in 
+                break;
+                            
+            //RSE.RSE::CAeroplane::simulation+6C3 - 48 8D 15 FE261D00     - lea rdx,[RSE.RSE::CAeroplane_Fokker_Dr_I::`vftable'+1F0] { ("Fokker Dr.I") }
+            case "Fokker Dr.I":
+                planeAttributes.country = Country.GER;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                //planeAttributes.waterTempType = DialVariant.A; //to go in 
+                break;
+
+            //RSE.RSE::CAeroplane::simulation+DA2 - 48 8D 15 6F3D1F00     - lea rdx,[RSE.RSE::CAeroplane_Sopwith_Triplane::`vftable'+1F0] { ("Sopwith Triplane") }
+            case "Sopwith Triplane":
+                planeAttributes.country = Country.UK;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                //planeAttributes.waterTempType = DialVariant.A; //to go in 
+                break;
+
+            //RSE.RSE::CAeroplane::simulation+DD6 - 48 8D 15 93122000     - lea rdx,[RSE.RSE::CCockpitInstruments::s_homingDeviceRefreshPeriod+2870] { ("DFW C.V") }
+            case "DFW C.V":
+                planeAttributes.country = Country.GER;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                //planeAttributes.waterTempType = DialVariant.A; //to go in 
+                break;
+
+            //RSE.RSE::CAeroplane::simulation+CEB - 48 8D 15 E6EA1B00     - lea rdx,[RSE.RSE::CAeroplane_Airco_DH_4::`vftable'+1C8] { ("Airco De Haviland 4") }
+            case "Airco De Haviland 4":
+                planeAttributes.country = Country.UK;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                //planeAttributes.waterTempType = DialVariant.A; //to go in 
+                break;
+
+
+
+
             default:
                 planeAttributes.country = Country.UNDEFINED;
                 break;
