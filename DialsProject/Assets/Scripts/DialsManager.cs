@@ -1006,7 +1006,7 @@ public class DialsManager : MonoBehaviour
         }
 
         //and call default
-        LoadManager.DefaultLayouts(countryDialBoard);
+        Layout.DefaultLayouts(countryDialBoard);
 
         //make sure all ui is on
         for (int i = 0; i < menuHandler.dialsInTray.Count; i++)
@@ -1024,46 +1024,4 @@ public class DialsManager : MonoBehaviour
         }
 
     }
-
-    //helpers
-
-    public static List<GameObject> ActiveDials(GameObject dialsPrefab)
-    {
-        List<GameObject> activeDials = new List<GameObject>();
-        for (int i = 0; i < dialsPrefab.transform.childCount; i++)
-            if (dialsPrefab.transform.GetChild(i).gameObject.activeSelf)
-                activeDials.Add(dialsPrefab.transform.GetChild(i).gameObject);
-
-        return activeDials;
-    }
-
-    public static float DefaultDialScale(List<GameObject> activeDials)
-    { //find out if we ned to scale dials to fit them all in the screen (happens if 7 or more dials)
-        //length of top will be the longest
-        float f = activeDials.Count;
-        //round half of count upwards and convert to int. Mathf.Ceil rounds up. If on a whole number, it doesn't round up //https://docs.unity3d.com/ScriptReference/Mathf.Ceil.html
-        //half of count because there are two rows
-        int longestRow = (int)Mathf.Ceil(f / 2);
-        longestRow *= 300;//300 default step between dials
-
-        GameObject canvasObject = GameObject.FindGameObjectWithTag("Canvas");
-        //if longer than the canvas width
-        //UnityEngine.Debug.Log("longest row = " + longestRow);
-        //UnityEngine.Debug.Log("canvas X = " + canvasObject.GetComponent<RectTransform>().rect.width);
-
-        float scale = 1f;
-        if (longestRow > canvasObject.GetComponent<RectTransform>().rect.width)
-        {
-            //UnityEngine.Debug.Log("row longer than canvas");
-
-            //use this ratio for all positional calculations
-            scale = canvasObject.GetComponent<RectTransform>().rect.width / longestRow;
-
-        }
-
-        return scale;
-    }
-
-
-
 }

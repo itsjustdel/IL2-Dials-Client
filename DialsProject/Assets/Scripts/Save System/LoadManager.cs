@@ -7,7 +7,7 @@ using System.Diagnostics;
 public class LoadManager : MonoBehaviour
 {
     public static int step = 500;
-    public static float scaleOverall = .6f;
+    
 
     public static void MigrateLayoutsToNewVersion(int clientId)
     {
@@ -69,7 +69,7 @@ public class LoadManager : MonoBehaviour
         if (layout != null)
             ScaleAndPositions(dialsManager, menuHandler, layout);
         else
-            DefaultLayouts(dialsManager.countryDialBoard);
+            Layout.DefaultLayouts(dialsManager.countryDialBoard);
 
     }
 
@@ -359,97 +359,4 @@ public class LoadManager : MonoBehaviour
 
 
 
-    public static float DefaultDialScale(List<GameObject> activeDials)
-    { //find out if we ned to scale dials to fit them all in the screen (happens if 7 or more dials)
-        //length of top will be the longest
-        float f = activeDials.Count;
-        //round half of count upwards and convert to int. Mathf.Ceil rounds up. If on a whole number, it doesn't round up //https://docs.unity3d.com/ScriptReference/Mathf.Ceil.html
-        //half of count because there are two rows
-        int longestRow = (int)Mathf.Ceil(f / 2);
-        longestRow *= LoadManager.step;//step default step between dials
-
-        GameObject canvasObject = GameObject.FindGameObjectWithTag("Canvas");
-        //if longer than the canvas width
-        //UnityEngine.Debug.Log("longest row = " + longestRow);
-        //UnityEngine.Debug.Log("canvas X = " + canvasObject.GetComponent<RectTransform>().rect.width);
-
-        float scale = 1f;
-        if (longestRow > canvasObject.GetComponent<RectTransform>().rect.width)
-        {
-            //UnityEngine.Debug.Log("row longer than canvas");
-
-            //use this ratio for all positional calculations
-            scale = canvasObject.GetComponent<RectTransform>().rect.width / longestRow;
-
-        }
-
-        return scale;
-    }
-
-    public static void DefaultLayouts(GameObject dialsPrefab)
-    {
-        //Programtically sort default layouts, so if there is an update, i don't need to create a prefab layout
-
-        //organise dials depending on how many are available
-        //we need to know the total amount of active dials before we continue
-        List<GameObject> activeDials = ActiveDials(dialsPrefab);
-
-        float scale = DefaultDialScale(activeDials);
-
-        //split in to two rows, if odd number, put more on the top
-        for (int i = 0; i < activeDials.Count; i++)
-        {
-            //ternary statement            
-            int odd = activeDials.Count % 2 != 0 ? 1 : 0;
-
-            //if odd, we will add one extra to the top row
-            if (i < activeDials.Count / 2 + odd)
-            {
-                //0 0
-                //150 1
-                //step 2
-
-                int x = ((int)((activeDials.Count - 1) / 2)) * -LoadManager.step / 2;
-                //then add step
-                int step = LoadManager.step * (i);
-                x += step;
-
-                int y = LoadManager.step / 2;
-
-                //scale and round and convert to int for position
-                float xFloat = x * scale;
-                x = (int)(Mathf.Round(xFloat));
-                float yFloat = y * scale;
-                y = (int)(Mathf.Round(yFloat));
-
-                activeDials[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
-
-
-            }
-            else
-            {
-                //starting point //from whats left 
-                //use "odd" to nudge in to position
-                int diff = activeDials.Count - 1 + odd - (activeDials.Count / 2);
-                int x = ((int)(diff));
-                x *= -LoadManager.step/2;
-                //then add step
-                int step = LoadManager.step * (i - (activeDials.Count / 2));
-                x += step;
-
-                int y = -LoadManager.step / 2;
-
-                //scale and round and convert to int 
-                float xFloat = x * scale;
-                x = (int)(Mathf.Round(xFloat));
-                float yFloat = y * scale;
-                y = (int)(Mathf.Round(yFloat));
-
-                activeDials[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
-            }
-
-            //scale dial            
-            activeDials[i].transform.localScale = new Vector3(scale * scaleOverall, scale * scaleOverall, scale * scaleOverall);
-        }
-    }
 }
