@@ -798,8 +798,9 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 //planeAttributes.waterTempType = DialVariant.A; //to go in
-               
+
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+3D86 - 48 8D 15 63D71B00     - lea rdx,[RSE.RSE::CAeroplane_Albatros_D_Va::`vftable'+1C8] { ("Albatros D.Va") }
@@ -809,6 +810,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 //planeAttributes.waterTempType = DialVariant.A; //to go in 
                 break;
 
@@ -819,6 +821,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 //planeAttributes.waterTempType = DialVariant.A; //to go in 
                 break;
 
@@ -829,6 +832,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+3E06 - 48 8D 15 433F1D00     - lea rdx,[RSE.RSE::CAeroplane_Fokker_D_VII::`vftable'+1C8] { ("Fokker D.VII") }
@@ -838,6 +842,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+3E21 - 48 8D 15 18F81C00     - lea rdx,[RSE.RSE::CAeroplane_Fokker_D_VIIF::`vftable'+1C8] { ("Fokker D.VIIF") }
@@ -847,6 +852,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+3E3C - 48 8D 15 DD811C00     - lea rdx,[RSE.RSE::CAeroplane_Bristol_F_2B_Falcon_II::`vftable'+1C8] { ("Bristol F.2B Falcon II") }
@@ -856,6 +862,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+3E57 - 48 8D 15 724A1C00     - lea rdx,[RSE.RSE::CAeroplane_Bristol_F_2B_Falcon_III::`vftable'+1C8] { ("Bristol F.2B Falcon III") }
@@ -865,6 +872,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+3E6E - 48 8D 15 031E1D00     - lea rdx,[RSE.RSE::CAeroplane_Fokker_D_VIII::`vftable'+1A0] { ("Fokker D.VIII") }
@@ -874,6 +882,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+3E85 - 48 8D 15 44751E00     - lea rdx,[RSE.RSE::CAeroplane_Pfalz_D_XII::`vftable'+1C8] { ("Pfalz D.XII") }
@@ -883,6 +892,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+3E9C - 48 8D 15 ED0E1F00     - lea rdx,[RSE.RSE::CAeroplane_SPAD_VII_C1_150HP::`vftable'+1C8] { ("SPAD VII.C1 150HP") }
@@ -892,6 +902,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+3EB3 - 48 8D 15 163D1F00     - lea rdx,[RSE.RSE::CAeroplane_SPAD_VII_C1_180HP::`vftable'+1C8] { ("SPAD VII.C1 180HP") }
@@ -901,6 +912,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+3ECA - 48 8D 15 3F471D00     - lea rdx,[RSE.RSE::CAeroplane_Gotha_G5::`vftable'+1F0] { ("Gotha G.V") }
@@ -910,6 +922,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 break;
 
             //bregeut
@@ -920,6 +933,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+8E12 - 48 8D 15 C7811D00     - lea rdx,[RSE.RSE::CAeroplane_Handley_Page_400::`vftable'+1F0] { ("Handley Page O/400") }
@@ -929,6 +943,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 break;
 
             //RSE.RSE::CAeroplane::simulation+91C - 48 8D 15 8D1A1F00     - lea rdx,[RSE.RSE::CAeroplane_Sopwith_Dolphin::`vftable'+1C8] { ("Sopwith Dolphin") }
@@ -938,6 +953,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 //planeAttributes.waterTempType = DialVariant.A; //to go in 
                 break;
 
@@ -949,6 +965,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 //planeAttributes.waterTempType = DialVariant.A; //to go in 
                 break;
 
@@ -959,6 +976,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 //planeAttributes.waterTempType = DialVariant.A; //to go in 
                 break;
 
@@ -969,6 +987,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 //planeAttributes.waterTempType = DialVariant.A; //to go in 
                 break;
             
@@ -979,6 +998,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 //planeAttributes.waterTempType = DialVariant.A; //to go in 
                 break;
                             
@@ -989,6 +1009,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 //planeAttributes.waterTempType = DialVariant.A; //to go in 
                 break;
 
@@ -999,6 +1020,8 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
+
                 //planeAttributes.waterTempType = DialVariant.A; //to go in 
                 break;
 
@@ -1009,6 +1032,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 //planeAttributes.waterTempType = DialVariant.A; //to go in 
                 break;
 
@@ -1019,6 +1043,8 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
+
                 //planeAttributes.waterTempType = DialVariant.A; //to go in 
                 break;
 
