@@ -82,7 +82,8 @@ public class DialTargets : MonoBehaviour
 
                 case (Country.UK):
                     if (airplaneData.planeAttributes.manifoldType == DialVariant.A
-                            || airplaneData.planeAttributes.manifoldType == DialVariant.B)
+                            || airplaneData.planeAttributes.manifoldType == DialVariant.B
+                                || airplaneData.planeAttributes.manifoldType == DialVariant.D)
                     {
                         manifoldLargeTargets[i] = UKDials.ManifoldTargetA(airplaneData.manifolds[i], airplaneData.scalar0);
                     }
