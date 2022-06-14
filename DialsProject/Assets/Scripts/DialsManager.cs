@@ -253,7 +253,7 @@ public class DialsManager : MonoBehaviour
         countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Clear();
 
         for (int i = 0; i < rpmObjects.Count; i++)
-        {           
+        {
             //Primary needle - most planes have this
             if (rpmObjects[i].transform.Find("Needle Large") != null)
             {
@@ -261,8 +261,8 @@ public class DialsManager : MonoBehaviour
                 countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleLarge);
             }
 
-
-            if (airplaneData.planeAttributes.country ==  Country.RU)
+            //country specific
+            if (airplaneData.planeAttributes.country == Country.RU)
             {
                 if (airplaneData.planeAttributes.rpmType == DialVariant.A)
                 {
@@ -271,8 +271,8 @@ public class DialsManager : MonoBehaviour
                 }
 
 
-                //pe-2
-                if (airplaneData.planeAttributes.country ==  Country.RU && airplaneData.planeAttributes.rpmType == DialVariant.C)
+                //pe-2 
+                if (airplaneData.planeAttributes.country == Country.RU && airplaneData.planeAttributes.rpmType == DialVariant.C)
                 {
                     GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
                     countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
@@ -280,7 +280,7 @@ public class DialsManager : MonoBehaviour
 
             }
 
-            if (airplaneData.planeAttributes.country ==  Country.US)
+            else if (airplaneData.planeAttributes.country == Country.US)
             {
                 //p38 J
                 if (airplaneData.planeType == "P-38J-25")
@@ -303,7 +303,17 @@ public class DialsManager : MonoBehaviour
                     GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
                     countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
                 }
-            }            
+            }
+
+            else if (airplaneData.planeAttributes.country == Country.UK)
+            {
+                //Mosquito
+                if (airplaneData.planeAttributes.rpmType == DialVariant.C)
+                {
+                    GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
+                    countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
+                }
+            }
         }
     }
 

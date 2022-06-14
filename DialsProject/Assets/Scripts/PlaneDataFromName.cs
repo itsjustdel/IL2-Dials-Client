@@ -789,6 +789,21 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.manifoldType = DialVariant.E;
                 break;
 
+            //RSE.RSE::CCockpitInstruments::simulation+574F - 48 8D 15 72AD0E00     - lea rdx,[RSE.RSE::CAeroplane_Mosquito_FB_Mk_VI_s2::`vftable'+2E8] { ("Mosquito F.B. Mk.VI ser.2") }
+            case "Mosquito F.B. Mk.VI ser.2":
+                planeAttributes.country = Country.UK;
+                planeAttributes.altimeter = true;
+                planeAttributes.artificialHorizon = true;
+                planeAttributes.vsiLarge = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.headingIndicator = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.repeaterCompassAlternate = true;
+                planeAttributes.engines = 2;
+                planeAttributes.rpmType = DialVariant.C;
+                planeAttributes.manifoldType = DialVariant.D;
+                break;
+
 
             //Flying Circus Vol 1
             //RSE.RSE::CCockpitInstruments::simulation+3DB5 - 48 8D 15 C4481F00     - lea rdx,[RSE.RSE::CAeroplane_SPAD_XIII_C1::`vftable'+1C8] { ("SPAD XIII.C1") }

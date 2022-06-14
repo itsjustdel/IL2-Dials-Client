@@ -82,7 +82,8 @@ public class DialTargets : MonoBehaviour
 
                 case (Country.UK):
                     if (airplaneData.planeAttributes.manifoldType == DialVariant.A
-                            || airplaneData.planeAttributes.manifoldType == DialVariant.B)
+                            || airplaneData.planeAttributes.manifoldType == DialVariant.B
+                                || airplaneData.planeAttributes.manifoldType == DialVariant.D)
                     {
                         manifoldLargeTargets[i] = UKDials.ManifoldTargetA(airplaneData.manifolds[i], airplaneData.scalar0);
                     }
@@ -197,6 +198,11 @@ public class DialTargets : MonoBehaviour
                     {
                         //"A" Target is first Needle - not the best naming
                         rpmLargeTargets[i] = UKDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    else if (airplaneData.planeAttributes.rpmType == DialVariant.C)
+                    {
+                        rpmLargeTargets[i] = UKDials.RPMCLargeTarget(airplaneData.rpms[i]);
+                        rpmSmallTargets[i] = UKDials.RPMCSmallTarget(airplaneData.rpms[i]);
                     }
                     break;
 
@@ -371,7 +377,12 @@ public class DialTargets : MonoBehaviour
             repeaterCompassTarget = USDials.RepeaterCompassTarget(airplaneData.heading);
 
         else if (country == Country.UK)
+        {
             repeaterCompassTarget = UKDials.RepeaterCompassTarget(airplaneData.heading);
+
+            //Mosquito unique dial
+            repeaterCompassAlternateTarget = UKDials.RepeaterCompassAlternateTarget(airplaneData.heading);
+        }
 
         return repeaterCompassTarget;
     }

@@ -28,6 +28,7 @@ public static class PlaneLists
     public static List<string> UkPlanes = new List<string>()
     {
         "Hurricane Mk.II",
+        "Mosquito F.B. Mk.VI ser.2",
         "Spitfire Mk.Vb",
         "Spitfire Mk.IXe",
         "Tempest Mk.V ser.2",
