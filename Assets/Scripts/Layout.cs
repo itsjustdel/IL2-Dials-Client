@@ -58,4 +58,156 @@ public class Layout
     public List<bool> waterTempInTray = new List<bool>() { false, false, false, false };
 
 
+    public static float DefaultDialScale(List<GameObject> activeDials)
+    {
+        //find out if we ned to scale dials to fit them all in the screen (happens if 7 or more dials)
+        //length of top will be the longest
+        float f = activeDials.Count;
+        //round half of count upwards and convert to int. Mathf.Ceil rounds up. If on a whole number, it doesn't round up //https://docs.unity3d.com/ScriptReference/Mathf.Ceil.html
+        //half of count because there are two rows
+        int longestRow = (int)Mathf.Ceil(f / 2);
+        longestRow *= LoadManager.step;//step default step between dials
+
+        GameObject canvasObject = GameObject.FindGameObjectWithTag("Canvas");
+        //if longer than the canvas width
+        //UnityEngine.Debug.Log("longest row = " + longestRow);
+        //UnityEngine.Debug.Log("canvas X = " + canvasObject.GetComponent<RectTransform>().rect.width);
+
+        float scale = 1f;
+        if (longestRow > canvasObject.GetComponent<RectTransform>().rect.width)
+        {
+            //UnityEngine.Debug.Log("row longer than canvas");
+
+            //use this ratio for all positional calculations
+            scale = canvasObject.GetComponent<RectTransform>().rect.width / longestRow;
+
+        }
+
+        return scale;
+    }
+
+    public static List<GameObject> ActiveDials(GameObject dialsPrefab)
+    {
+        List<GameObject> activeDials = new List<GameObject>();
+        for (int i = 0; i < dialsPrefab.transform.childCount; i++)
+            if (dialsPrefab.transform.GetChild(i).gameObject.activeSelf)
+                activeDials.Add(dialsPrefab.transform.GetChild(i).gameObject);
+
+        return activeDials;
+    }
+
+    public static float scaleOverall = .6f;
+
+    public static void DefaultLayouts(GameObject dialsPrefab)
+    {
+        //find max scale to use for each dial
+
+        //group any 2 engine dials, they need to be beside each other
+        List<GameObject> activeDials = ActiveDials(dialsPrefab);
+        Dictionary<string, List<GameObject>> dials = new Dictionary<string, List<GameObject>>();
+        for (int i = 0; i < activeDials.Count; i++)
+        {
+            //create a new key with a new list if key doesn't exist
+            if (!dials.ContainsKey(activeDials[i].tag))
+            {
+                dials.Add(activeDials[i].tag, new List<GameObject>() { activeDials[i] });
+            }
+            //add to list if key already exists
+            else
+                dials[activeDials[i].tag].Add(activeDials[i]);
+
+        }
+
+        foreach (var kvp in dials)
+        {         
+            Debug.Log(kvp.Key + kvp.Value);
+            List<GameObject> gs = kvp.Value;
+            foreach (var g in gs)
+            {
+                Debug.Log(g.name);
+
+
+            }
+        }
+
+        //find orientation/screen size
+        GameObject canvasObject = GameObject.FindGameObjectWithTag("Canvas");
+        float canvasX = canvasObject.GetComponent<RectTransform>().rect.width;
+        float canvasY = canvasObject.GetComponent<RectTransform>().rect.height;
+
+        Debug.Log(Screen.orientation);
+
+        Debug.Log("x = " + canvasX);
+        Debug.Log("y = " + canvasY);
+
+
+    }
+
+    public static void DefaultLayoutsOld(GameObject dialsPrefab)
+    {
+        //Programtically sort default layouts, so if there is an update, i don't need to create a prefab layout
+
+        //organise dials depending on how many are available
+        //we need to know the total amount of active dials before we continue
+        List<GameObject> activeDials = ActiveDials(dialsPrefab);
+
+        float scale = DefaultDialScale(activeDials);
+
+        //split in to two rows, if odd number, put more on the top
+        for (int i = 0; i < activeDials.Count; i++)
+        {
+            //ternary statement            
+            int odd = activeDials.Count % 2 != 0 ? 1 : 0;
+
+            //if odd, we will add one extra to the top row
+            if (i < activeDials.Count / 2 + odd)
+            {
+                //0 0
+                //150 1
+                //step 2
+
+                int x = ((int)((activeDials.Count - 1) / 2)) * -LoadManager.step / 2;
+                //then add step
+                int step = LoadManager.step * (i);
+                x += step;
+
+                int y = LoadManager.step / 2;
+
+                //scale and round and convert to int for position
+                float xFloat = x * scale;
+                x = (int)(Mathf.Round(xFloat));
+                float yFloat = y * scale;
+                y = (int)(Mathf.Round(yFloat));
+
+                activeDials[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
+
+
+            }
+            else
+            {
+                //starting point //from whats left 
+                //use "odd" to nudge in to position
+                int diff = activeDials.Count - 1 + odd - (activeDials.Count / 2);
+                int x = ((int)(diff));
+                x *= -LoadManager.step / 2;
+                //then add step
+                int step = LoadManager.step * (i - (activeDials.Count / 2));
+                x += step;
+
+                int y = -LoadManager.step / 2;
+
+                //scale and round and convert to int 
+                float xFloat = x * scale;
+                x = (int)(Mathf.Round(xFloat));
+                float yFloat = y * scale;
+                y = (int)(Mathf.Round(yFloat));
+
+                activeDials[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
+            }
+
+            //scale dial            
+            activeDials[i].transform.localScale = new Vector3(scale * scaleOverall, scale * scaleOverall, scale * scaleOverall);
+        }
+    }
+
 }
