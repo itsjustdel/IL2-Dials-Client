@@ -250,10 +250,23 @@ public class DialTargets : MonoBehaviour
 
                 //GER
                 case (Country.GER):
+                    
                     if (airplaneData.planeAttributes.waterTempType == DialVariant.A)
                     {
-                       
+                        waterTempTargets[i] = GermanDials.WaterTempTargetA(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
+                    else if (airplaneData.planeAttributes.waterTempType == DialVariant.B)
+                    {
+                        waterTempTargets[i] = GermanDials.WaterTempTargetB(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    else if (airplaneData.planeAttributes.waterTempType == DialVariant.C)
+                    {
+                        waterTempTargets[i] = GermanDials.WaterTempTargetC(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    else if (airplaneData.planeAttributes.waterTempType == DialVariant.D)
+                    {
+                        waterTempTargets[i] = GermanDials.WaterTempTargetD(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }                    
 
                     break;
 

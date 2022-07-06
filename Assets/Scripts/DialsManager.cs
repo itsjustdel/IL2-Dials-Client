@@ -497,7 +497,7 @@ public class DialsManager : MonoBehaviour
                         waterTempInstance.transform.SetSiblingIndex(waterTempInstance.transform.GetSiblingIndex() + 1);
 
                     }
-                    waterTempInstance.transform.name = "Water Temp " + airplaneData.planeAttributes.manifoldType.ToString() + " " + i.ToString();
+                    waterTempInstance.transform.name = "Water Temp " + airplaneData.planeAttributes.waterTempType.ToString() + " " + i.ToString();
                     waterTempObjects.Add(waterTempInstance);
                 }
             }

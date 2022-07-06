@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -410,4 +411,35 @@ public class GermanDials : MonoBehaviour
         return target;
     }
 
+    internal static Quaternion WaterTempTargetA(float v, float scalar0, float scalar1)
+    {
+        v *= -0.735f;
+        v -= -47.35f;
+        v = Mathf.Clamp(v, -50f, 50f);
+
+        return Quaternion.Euler(0, 0, v);
+    }
+
+    internal static Quaternion WaterTempTargetB(float v, float scalar0, float scalar1)
+    {
+        v *= -.74f;
+        v -= -43.5f;
+        v = Mathf.Clamp(v, -50f, 50f);
+
+        return Quaternion.Euler(0, 0, v);
+    }
+
+    internal static Quaternion WaterTempTargetC(float v, float scalar0, float scalar1)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static Quaternion WaterTempTargetD(float v, float scalar0, float scalar1)
+    {   
+        v *= -0.42f;
+        v -= -33.33334f;        
+        v = Mathf.Clamp(v, -34, 34);
+
+        return Quaternion.Euler(0, 0, v);
+    }
 }
