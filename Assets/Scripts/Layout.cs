@@ -98,7 +98,7 @@ public class Layout
 
     public static float scaleOverall = .6f;
 
-    public static void DefaultLayouts(GameObject dialsPrefab)
+    public static void DefaultLayoutsWIP(GameObject dialsPrefab)
     {
         //find max scale to use for each dial
 
@@ -143,7 +143,7 @@ public class Layout
 
     }
 
-    public static void DefaultLayoutsOld(GameObject dialsPrefab)
+    public static void DefaultLayouts(GameObject dialsPrefab)
     {
         //Programtically sort default layouts, so if there is an update, i don't need to create a prefab layout
 
