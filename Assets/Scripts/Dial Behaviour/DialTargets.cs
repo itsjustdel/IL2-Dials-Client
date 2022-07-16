@@ -223,7 +223,7 @@ public class DialTargets : MonoBehaviour
 
     }
 
-    internal static List<Quaternion> WaterTempTargets(AirplaneData airplaneData, Country country)
+    internal static List<Quaternion> WaterTempTargets(AirplaneData airplaneData, Country country, RotateNeedle rotateNeedle)
     {
         List<Quaternion> waterTempTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);        
 
@@ -274,7 +274,17 @@ public class DialTargets : MonoBehaviour
                 case (Country.US):
                     if (airplaneData.planeAttributes.waterTempType == DialVariant.A)
                     {
-                      
+                        waterTempTargets[i] = USDials.WaterTempTargetA(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    else if (airplaneData.planeAttributes.waterTempType == DialVariant.B)
+                    {
+                        //p38 - two needles, one dial
+                        waterTempTargets[0] = USDials.WaterTempTargetB(airplaneData.waterTemps[0], airplaneData.scalar0, airplaneData.scalar1,true);                                                
+                        waterTempTargets[1] = USDials.WaterTempTargetB(airplaneData.waterTemps[1], airplaneData.scalar0, airplaneData.scalar1,false);
+                    }
+                    else if (airplaneData.planeAttributes.waterTempType == DialVariant.C)
+                    {
+                        waterTempTargets[i] = USDials.WaterTempTargetC(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
 
                     break;
@@ -292,7 +302,7 @@ public class DialTargets : MonoBehaviour
 
                     if (airplaneData.planeAttributes.waterTempType == DialVariant.A)
                     {
-                        
+                        waterTempTargets[i] = ITADials.WaterTempTargetA(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveWaterTempA);
                     }
                     break;
 

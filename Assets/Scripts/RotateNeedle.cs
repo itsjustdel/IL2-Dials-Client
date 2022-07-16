@@ -100,6 +100,7 @@ public class RotateNeedle : MonoBehaviour
     public AnimationCurve animationCurveRPMC;
     public AnimationCurve animationCurveRPMD;
     public AnimationCurve animationCurveSpeedometerA;
+    public AnimationCurve animationCurveWaterTempA;
     private bool headingIndicatorTest;
 
     // Start is called before the first frame update
@@ -214,7 +215,7 @@ public class RotateNeedle : MonoBehaviour
         manifoldLargeTargets = manifoldTargets[1];
 
         //water temps
-        waterTempTargets = DialTargets.WaterTempTargets(airplaneData, airplaneData.planeAttributes.country);
+        waterTempTargets = DialTargets.WaterTempTargets(airplaneData, airplaneData.planeAttributes.country,this);
         
     }
 

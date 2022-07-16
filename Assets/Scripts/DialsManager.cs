@@ -174,10 +174,20 @@ public class DialsManager : MonoBehaviour
         //empty lists first
         countryDialBoard.GetComponent<RotateNeedle>().waterTempNeedles.Clear();
 
+        if (airplaneData.planeType == "P-38J-25")
+        {
+            GameObject needleLargeL = waterTempObjects[0].transform.Find("Needle Large L").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().waterTempNeedles.Add(needleLargeL);
+            GameObject needleLargeR = waterTempObjects[0].transform.Find("Needle Large R").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().waterTempNeedles.Add(needleLargeR);
+
+            return;
+        }
+
         for (int i = 0; i < waterTempObjects.Count; i++)
-        {   
+        {           
             GameObject needleLarge = waterTempObjects[i].transform.Find("Needle Large").gameObject;
-            countryDialBoard.GetComponent<RotateNeedle>().waterTempNeedles.Add(needleLarge);
+            countryDialBoard.GetComponent<RotateNeedle>().waterTempNeedles.Add(needleLarge);           
         }
     }
 
@@ -485,6 +495,8 @@ public class DialsManager : MonoBehaviour
                 GameObject waterTemp = countryDialBoard.transform.Find("Water Temp " + waterTempString).gameObject;
 
                 int dialsToInstantiate = airplaneData.planeAttributes.engines;
+                if (airplaneData.planeType == "P-38J-25")
+                    dialsToInstantiate = 1;
 
                 for (int i = 0; i < dialsToInstantiate; i++)
                 {

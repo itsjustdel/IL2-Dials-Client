@@ -455,7 +455,39 @@ public class USDials : MonoBehaviour
         return target;
     }
 
-    
+    internal static Quaternion WaterTempTargetA(float v, float scalar0, float scalar1)
+    {        
+        v *= -.91f;
+        v -= -91.2f;
+        v = Mathf.Clamp(v, -50f, 50f);
+
+        return Quaternion.Euler(0, 0, v);        
+    }
+
+    internal static Quaternion WaterTempTargetB(float v, float scalar0, float scalar1, bool v2)
+    {
+        v = Mathf.Clamp(v, -80f, 160f);
+        if (!v2)
+        {            
+            v *= -0.56f;
+            v -= 247.5f;
+        }
+        else
+        {
+            v *= 0.56f;
+            v += 247.5f;
+        }
+        return Quaternion.Euler(0, 0, v);
+    }
+
+    internal static Quaternion WaterTempTargetC(float v, float scalar0, float scalar1)
+    {
+        v = Mathf.Clamp(v, -80f, 160f);
+        v *= -0.5f;
+        v -= -19.5f;
+        
+        return Quaternion.Euler(0, 0, v);
+    }
 }
 
 

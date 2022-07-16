@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -157,6 +158,26 @@ public class ITADials : MonoBehaviour
         }
 
         Quaternion target = Quaternion.Euler(0, 0, m);
+
+        return target;
+    }
+
+    internal static Quaternion WaterTempTargetA(float v, float scalar, float scalar1, AnimationCurve curve)
+    {
+        //-315 full needle spin to 3000
+        //and work out percentage to use 0-1 scale for curve
+        float highest = 130;
+        float percentage = (Mathf.Abs(v / highest));
+
+        Debug.Log(percentage);
+
+        //multiply by half a dial of spin (180 degrees)
+        float angleToSpin = curve.Evaluate(percentage);
+
+        angleToSpin *= -294;
+        angleToSpin -= -149;
+
+        Quaternion target = Quaternion.Euler(0, 0, angleToSpin);
 
         return target;
     }

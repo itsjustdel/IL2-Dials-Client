@@ -431,7 +431,12 @@ public class GermanDials : MonoBehaviour
 
     internal static Quaternion WaterTempTargetC(float v, float scalar0, float scalar1)
     {
-        throw new NotImplementedException();
+        v = Mathf.Clamp(v, -30f, 160f);
+        v *= -0.686f;
+        v -= -134;
+        
+
+        return Quaternion.Euler(0, 0, v);
     }
 
     internal static Quaternion WaterTempTargetD(float v, float scalar0, float scalar1)

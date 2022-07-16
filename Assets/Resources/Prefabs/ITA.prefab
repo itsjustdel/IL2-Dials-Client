@@ -966,6 +966,75 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  animationCurveWaterTempA:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.0034756064
+      value: -0.026245117
+      inSlope: 0.14541675
+      outSlope: 0.14541675
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.2325053
+      value: 0.0070596375
+      inSlope: 0.25944462
+      outSlope: 0.25944462
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.40425396
+      value: 0.10261829
+      inSlope: 0.77280664
+      outSlope: 0.77280664
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.8767313
+      outWeight: 0.9299582
+    - serializedVersion: 3
+      time: 0.56298864
+      value: 0.22727725
+      inSlope: 1.1483842
+      outSlope: 1.1483842
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.5838069
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.7674886
+      value: 0.50222445
+      inSlope: 1.6365421
+      outSlope: 1.6365421
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.9196047
+      value: 0.7955954
+      inSlope: 2.2086742
+      outSlope: 2.2086742
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.0017362
+      value: 1
+      inSlope: 2.4887495
+      outSlope: 2.4887495
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1223629976764816563
 GameObject:
   m_ObjectHideFlags: 0
@@ -3949,13 +4018,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4946948863545926344}
-  m_LocalRotation: {x: 0, y: 0, z: -0.258819, w: 0.9659259}
+  m_LocalRotation: {x: 0, y: 0, z: 0.9636305, w: 0.26723844}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 8, y: 8, z: 8}
   m_Children: []
   m_Father: {fileID: 865461258106614081}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -30}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 149}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -5556,7 +5625,7 @@ GameObject:
   - component: {fileID: 865461258106614081}
   m_Layer: 5
   m_Name: Water Temp A
-  m_TagString: rpm
+  m_TagString: water temp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -331,6 +331,7 @@ public class LoadManager : MonoBehaviour
                 AddToTrayOnLoad(dialsManager.manifoldObjects[i], menuHandler);
         }
 
+
         for (int i = 0; i < dialsManager.waterTempObjects.Count; i++)
         {
             dialsManager.waterTempObjects[i].GetComponent<RectTransform>().anchoredPosition = layout.waterTempPos[i];
