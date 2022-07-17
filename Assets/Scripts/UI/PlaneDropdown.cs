@@ -16,6 +16,7 @@ public class PlaneDropdown : MonoBehaviour
     private List<string> UsPlanes;
     private List<string> GerPlanes;
     private List<string> ItaPlanes;
+    private List<string> FrPlanes;
 
     public Dropdown dropdown;
     // Start is called before the first frame update
@@ -49,6 +50,7 @@ public class PlaneDropdown : MonoBehaviour
         GerPlanes = new List<string>(PlaneLists.GerPlanes);
         UkPlanes = new List<string>(PlaneLists.UkPlanes);
         ItaPlanes = new List<string>(PlaneLists.ItaPlanes);
+        FrPlanes = new List<string>(PlaneLists.FrPlanes);
 
         SortLists();
 
@@ -87,6 +89,10 @@ public class PlaneDropdown : MonoBehaviour
                 dropdown.AddOptions(ItaPlanes);
               //  if (ItaPlanes.Contains(airplaneData.planeType))
               //      dropdown.value = ItaPlanes.IndexOf(airplaneData.planeType);
+                break;
+
+            case "FR":
+                dropdown.AddOptions(FrPlanes);
                 break;
 
         }

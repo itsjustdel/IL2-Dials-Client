@@ -80,6 +80,7 @@ public class DialTargets : MonoBehaviour
                     }
                     break;
 
+                case (Country.FR): //switch stacking - OR functionality // FR is a placeholder, uses UK dials
                 case (Country.UK):
                     if (airplaneData.planeAttributes.manifoldType == DialVariant.A
                             || airplaneData.planeAttributes.manifoldType == DialVariant.B
@@ -186,7 +187,7 @@ public class DialTargets : MonoBehaviour
 
                     break;
 
-
+                case (Country.FR):
                 case (Country.UK):
                     if (airplaneData.planeAttributes.rpmType == DialVariant.A)
                     {
@@ -289,11 +290,15 @@ public class DialTargets : MonoBehaviour
 
                     break;
 
-
+                case (Country.FR):
                 case (Country.UK):
                     if (airplaneData.planeAttributes.waterTempType == DialVariant.A)
                     {
-
+                        waterTempTargets[i] = UKDials.WaterTempTargetA(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveWaterTempA);
+                    } 
+                    else if (airplaneData.planeAttributes.waterTempType == DialVariant.B)
+                    {
+                        waterTempTargets[i] = UKDials.WaterTempTargetB(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
 
                     break;
@@ -353,6 +358,7 @@ public class DialTargets : MonoBehaviour
 
                 break;
 
+            case (Country.FR):
             case (Country.UK):
 
                 artificialHorizonRotationTarget = UKDials.ArtificialHorizonRotation(airplaneData.roll, artificialHorizonRollMod);
@@ -399,7 +405,7 @@ public class DialTargets : MonoBehaviour
         else if (country == Country.US)
             repeaterCompassTarget = USDials.RepeaterCompassTarget(airplaneData.heading);
 
-        else if (country == Country.UK)
+        else if (country == Country.UK || country == Country.FR)
         {
             repeaterCompassTarget = UKDials.RepeaterCompassTarget(airplaneData.heading);
 
@@ -456,6 +462,7 @@ public class DialTargets : MonoBehaviour
                     vsiNeedleTarget = USDials.VerticalSpeedTarget(airplaneData.verticalSpeed, rN.animationCurveVSIB);
                 break;
 
+            case (Country.FR):
             case (Country.UK):
                 vsiNeedleTarget = UKDials.VerticalSpeedTarget(airplaneData.verticalSpeed);
                 break;
@@ -504,7 +511,7 @@ public class DialTargets : MonoBehaviour
                 turnCoordinatorBallTarget = USDials.TurnCoordinatorBallTarget(airplaneData.turnCoordinatorBall, turnCoordinatorBallMod);
                 break;
 
-
+            case (Country.FR):
             case (Country.UK):
                 turnCoordinatorNeedleTarget = UKDials.TurnCoordinatorNeedleTarget(airplaneData.turnCoordinatorNeedle, turnCoordinatorNeedleMod);
 
@@ -597,6 +604,7 @@ public class DialTargets : MonoBehaviour
                 headingIndicatorTarget = USDials.HeadingIndicatorPosition(airplaneData.heading, trackLength);
                 break;
 
+            case (Country.FR):
             case (Country.UK):
                 headingIndicatorTarget = UKDials.HeadingIndicatorPosition(airplaneData.heading, trackLength);
                 break;
@@ -658,6 +666,7 @@ public class DialTargets : MonoBehaviour
                 target = USDials.MmhgTarget(unit);
                 break;
 
+            case (Country.FR):
             case Country.UK:
                 target = UKDials.MmhgTarget(unit);
                 break;
@@ -696,6 +705,7 @@ public class DialTargets : MonoBehaviour
 
                 break;
 
+            case (Country.FR):
             case Country.UK:
                 airspeedTarget = UKDials.AirspeedTarget(airplaneData.airspeed);
                 break;
@@ -729,6 +739,7 @@ public class DialTargets : MonoBehaviour
                 target = USDials.AltitudeTargetLarge(altitude);
                 break;
 
+            case (Country.FR):
             case Country.UK:
                 target = UKDials.AltitudeTargetLarge(altitude);
                 break;
@@ -761,6 +772,7 @@ public class DialTargets : MonoBehaviour
                 target = USDials.AltitudeTargetSmall(altitude);
                 break;
 
+            case (Country.FR):
             case Country.UK:
                 target = UKDials.AltitudeTargetSmall(altitude);
                 break;
@@ -783,6 +795,7 @@ public class DialTargets : MonoBehaviour
         {
             //only UK has smallest dial
 
+            case (Country.FR):
             case Country.UK:
                 target = UKDials.AltitudeTargetSmallest(altitude);
                 break;

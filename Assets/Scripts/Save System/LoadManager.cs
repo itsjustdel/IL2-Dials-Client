@@ -6,8 +6,7 @@ using System.Diagnostics;
 
 public class LoadManager : MonoBehaviour
 {
-    public static int step = 500;
-    
+    public static int step = 500;    
 
     public static void MigrateLayoutsToNewVersion(int clientId)
     {
@@ -19,8 +18,9 @@ public class LoadManager : MonoBehaviour
         allPlanes.AddRange(PlaneLists.GerPlanes);
         allPlanes.AddRange(PlaneLists.RuPlanes);
         allPlanes.AddRange(PlaneLists.ItaPlanes);
+        allPlanes.AddRange(PlaneLists.FrPlanes);
 
-        foreach(string planeType in allPlanes)
+        foreach (string planeType in allPlanes)
         {
             string key = PlayerPrefs.GetString(planeType);
             if (key != "")

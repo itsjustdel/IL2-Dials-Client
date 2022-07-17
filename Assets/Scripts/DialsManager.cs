@@ -315,7 +315,7 @@ public class DialsManager : MonoBehaviour
                 }
             }
 
-            else if (airplaneData.planeAttributes.country == Country.UK)
+            else if (airplaneData.planeAttributes.country == Country.UK  || airplaneData.planeAttributes.country == Country.FR)
             {
                 //Mosquito
                 if (airplaneData.planeAttributes.rpmType == DialVariant.C)
@@ -392,6 +392,7 @@ public class DialsManager : MonoBehaviour
                 countryDialBoard = GameObject.Instantiate(USprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
 
+            case Country.FR:
             case  Country.UK:
                 GameObject UKprefab = Resources.Load("Prefabs/UK") as GameObject;
                 countryDialBoard = GameObject.Instantiate(UKprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
@@ -505,10 +506,11 @@ public class DialsManager : MonoBehaviour
                     if (i > 0)
                     {
                         //duplicate if we have more than one engine
-                        waterTempInstance = Instantiate(waterTemp, waterTemp.transform.position, Quaternion.identity, countryDialBoard.transform);
-                        waterTempInstance.transform.SetSiblingIndex(waterTempInstance.transform.GetSiblingIndex() + 1);
+                        waterTempInstance = Instantiate(waterTemp, waterTemp.transform.position, Quaternion.identity, countryDialBoard.transform);                        
 
                     }
+                    //set to last position - getting fiddly with this rpm/manifolds/water temps - need better solution
+                    waterTempInstance.transform.SetSiblingIndex(countryDialBoard.transform.childCount-1);
                     waterTempInstance.transform.name = "Water Temp " + airplaneData.planeAttributes.waterTempType.ToString() + " " + i.ToString();
                     waterTempObjects.Add(waterTempInstance);
                 }

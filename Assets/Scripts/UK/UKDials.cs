@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UKDials : MonoBehaviour
 {
-    public static Quaternion AirspeedTarget(float airspeed)
+    internal static Quaternion AirspeedTarget(float airspeed)
     {
         if (airspeed == 0)
             return Quaternion.Euler(0, 0, -180);//60 at 220;
@@ -27,7 +27,7 @@ public class UKDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion AltitudeTargetSmall(float altitude)
+    internal static Quaternion AltitudeTargetSmall(float altitude)
     {
         //convert to feet
         altitude *= 3.2808f;
@@ -37,7 +37,7 @@ public class UKDials : MonoBehaviour
 
     }
 
-    public static Quaternion AltitudeTargetSmallest(float altitude)
+    internal static Quaternion AltitudeTargetSmallest(float altitude)
     {
         //convert to feet
         altitude *= 3.2808f;
@@ -47,7 +47,7 @@ public class UKDials : MonoBehaviour
 
     }
 
-    public static Quaternion AltitudeTargetLarge(float altitude)
+    internal static Quaternion AltitudeTargetLarge(float altitude)
     {
         //convert to feet
         altitude *= 3.2808f;
@@ -57,7 +57,7 @@ public class UKDials : MonoBehaviour
 
     }
 
-    public static Quaternion MmhgTarget(float mmhg)
+    internal static Quaternion MmhgTarget(float mmhg)
     {
         float input = mmhg * 1.333f;
 
@@ -74,7 +74,7 @@ public class UKDials : MonoBehaviour
         return mmhgTarget;
     }
 
-    public static Vector3 HeadingIndicatorPosition(float heading, float trackLength)
+    internal static Vector3 HeadingIndicatorPosition(float heading, float trackLength)
     {
         //check for Nan
         if (float.IsNaN(heading))
@@ -93,7 +93,7 @@ public class UKDials : MonoBehaviour
         return pos;
     }
 
-    public static Quaternion ArtificialHorizonRotation(float roll, float rollMultiplier)
+    internal static Quaternion ArtificialHorizonRotation(float roll, float rollMultiplier)
     {
         //rotate horizon        
 
@@ -106,13 +106,13 @@ public class UKDials : MonoBehaviour
     }
 
 
-    public static Vector3 ArtificialHorizonPosition(float climb, float pitchMultiplier)
+    internal static Vector3 ArtificialHorizonPosition(float climb, float pitchMultiplier)
     {
         //move plane up and down
         return new Vector3(0, climb * pitchMultiplier, 0);
     }
 
-    public static Quaternion ArtificialHorizonChevronRotation(float roll, float rollMultiplier)
+    internal static Quaternion ArtificialHorizonChevronRotation(float roll, float rollMultiplier)
     {
         //rotate horizon        
 
@@ -124,7 +124,7 @@ public class UKDials : MonoBehaviour
         return t;
     }
 
-    public static Quaternion TurnCoordinatorNeedleTarget(float v, float mod)//bottom needle
+    internal static Quaternion TurnCoordinatorNeedleTarget(float v, float mod)//bottom needle
     {
 
         v *= -.62f; //clamped at 31 in game sp double that?
@@ -146,7 +146,7 @@ public class UKDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion TurnCoordinatorBallTarget(float v, float multiplier)//top needle
+    internal static Quaternion TurnCoordinatorBallTarget(float v, float multiplier)//top needle
     {
         v *= -1000;
 
@@ -169,7 +169,7 @@ public class UKDials : MonoBehaviour
     }
 
 
-    public static Quaternion VerticalSpeedTarget(float verticalSpeed)
+    internal static Quaternion VerticalSpeedTarget(float verticalSpeed)
     {
         //vsi
         //start at 9 o'clock
@@ -186,7 +186,7 @@ public class UKDials : MonoBehaviour
 
     //repeater compass
 
-    public static Quaternion RepeaterCompassTarget(float heading)
+    internal static Quaternion RepeaterCompassTarget(float heading)
     {
         //number passed is rotation in rads, pi = 180 degrees
         Quaternion target = Quaternion.Euler(0, 0, -heading * Mathf.Rad2Deg);
@@ -195,7 +195,7 @@ public class UKDials : MonoBehaviour
     }
 
 
-    public static Quaternion RPMATarget(float rpm, float scalar, float scalar1, AnimationCurve curve)
+    internal static Quaternion RPMATarget(float rpm, float scalar, float scalar1, AnimationCurve curve)
     {
         //-315 full needle spin to 3000
         //and work out percentage to use 0-1 scale for curve
@@ -214,7 +214,7 @@ public class UKDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion RPMBTarget(float rpm, float scalar, float scalar2)
+    internal static Quaternion RPMBTarget(float rpm, float scalar, float scalar2)
     {
         float r;
         
@@ -257,7 +257,7 @@ public class UKDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion RPMCLargeTarget(float rpm)
+    internal static Quaternion RPMCLargeTarget(float rpm)
     {
         float r = rpm * -0.036f;
         Quaternion target = Quaternion.Euler(0, 0, r);
@@ -266,7 +266,7 @@ public class UKDials : MonoBehaviour
     }
 
     //2nd needle on two needle rpm
-    public static Quaternion RPMCSmallTarget(float rpm)
+    internal static Quaternion RPMCSmallTarget(float rpm)
     {
         float r = rpm * -0.36f;
         Quaternion target = Quaternion.Euler(0, 0, r);
@@ -274,7 +274,7 @@ public class UKDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion ManifoldTargetA(float manifold, float scalar)
+    internal static Quaternion ManifoldTargetA(float manifold, float scalar)
     {
         //UK =  read manifold, minus 101325.00, divide by 6894.76
         //manifold -= 101325f; //air pressure
@@ -302,12 +302,10 @@ public class UKDials : MonoBehaviour
 
         Quaternion target = Quaternion.Euler(0, 0, m);
 
-        return target;
-
-      
+        return target;      
     }
 
-    public static Quaternion ManifoldTargetC(float manifold, float scalar, float s2)
+    internal static Quaternion ManifoldTargetC(float manifold, float scalar, float s2)
     {
         //UK =  read manifold, minus 101325.00, divide by 6894.76
         // manifold -= 101325f; //air pressure
@@ -335,11 +333,39 @@ public class UKDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion RepeaterCompassAlternateTarget(float heading)
+    internal static Quaternion RepeaterCompassAlternateTarget(float heading)
     {
         //number passed is rotation in rads, pi = 180 degrees
         Quaternion target = Quaternion.Euler(0, 0, -heading * Mathf.Rad2Deg);
 
         return target;
+    }
+
+    internal static Quaternion WaterTempTargetA(float v, float scalar, float scalar1, AnimationCurve curve)
+    {
+        //and work out percentage to use 0-1 scale for curve
+        float highest = 140;
+        float percentage = (Mathf.Abs(v / highest));
+
+        //Debug.Log(percentage);
+
+        //multiply by half a dial of spin (180 degrees)
+        float angleToSpin = curve.Evaluate(percentage);
+
+        angleToSpin *= -330;
+        angleToSpin -= -180;
+
+        Quaternion target = Quaternion.Euler(0, 0, angleToSpin);
+
+        return target;
+    }
+
+    internal static Quaternion WaterTempTargetB(float v, float scalar0, float scalar1)
+    {        
+        v *= -0.789f;
+        v -= -71;
+        v = Mathf.Clamp(v, -39.33f, 39.33f);
+
+        return Quaternion.Euler(0, 0, v);
     }
 }

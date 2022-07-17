@@ -169,7 +169,7 @@ public class ITADials : MonoBehaviour
         float highest = 130;
         float percentage = (Mathf.Abs(v / highest));
 
-        Debug.Log(percentage);
+        //Debug.Log(percentage);
 
         //multiply by half a dial of spin (180 degrees)
         float angleToSpin = curve.Evaluate(percentage);

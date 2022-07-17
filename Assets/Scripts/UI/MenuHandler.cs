@@ -660,7 +660,7 @@ public class MenuHandler : MonoBehaviour
                 if (RuPlanes.Contains(airplaneData.planeType))
                     inFlight = true;
                 break;
-
+                            
             case Country.UK:
                 if (UkPlanes.Contains(airplaneData.planeType))
                     inFlight = true;
@@ -677,8 +677,12 @@ public class MenuHandler : MonoBehaviour
 
                 break;
             case Country.ITA:
-
                 if (ItaPlanes.Contains(airplaneData.planeType))
+                    inFlight = true;
+                break;
+
+            case Country.FR:
+                if (FrPlanes.Contains(airplaneData.planeType))
                     inFlight = true;
                 break;
 

@@ -13,6 +13,7 @@ public enum Country
     US,
     UK,
     ITA,
+    FR,
     UNDEFINED
 
 }
@@ -97,32 +98,6 @@ public class AirplaneData : MonoBehaviour
             //we are not connected to anything we don't know anything about version numbersd
             menuHandler.ServerMessageClosed();
         }
-    }
-
-    public static int CountryIndexFromEnum(Country country)
-    {
-        //child position in hierarchy
-        int countryIndex = 0;
-        switch (country)
-        {
-            case Country.RU:
-                countryIndex = 0;
-                break;
-            case Country.GER:
-                countryIndex = 1;
-                break;
-            case Country.US:
-                countryIndex = 2;
-                break;
-            case Country.UK:
-                countryIndex = 3;
-                break;
-            case Country.ITA:
-                countryIndex = 4;
-                break;
-        }
-
-        return countryIndex;
     }
 
     internal void setPlaneType(string planeType)

@@ -409,6 +409,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.A;
                 planeAttributes.manifoldType = DialVariant.A;
+                planeAttributes.waterTempType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+CD8 - 48 8D 15 D9EC0800     - lea rdx,[RSE.RSE::CAeroplane_Hs_129_B2::`vftable'+2E8] { ("Hs 129 B-2") }
@@ -517,6 +518,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.B;
                 planeAttributes.manifoldType = DialVariant.B;
+                planeAttributes.waterTempType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+27A - 48 8D 15 FFF10700     - lea rdx,[RSE.RSE::CAeroplane_FW_190_A8::`vftable'+2C0] { ("FW 190 A8") }
@@ -632,6 +634,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.B;
                 planeAttributes.manifoldType = DialVariant.B;
+                planeAttributes.waterTempType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+EBF - 4C 8D 05 8A0C0600     - lea r8,[RSE.RSE::CAeroplane_B_25_D::`vftable'+2B8] { ("B-25D") }
@@ -699,6 +702,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.B;
                 planeAttributes.manifoldType = DialVariant.B;
+                planeAttributes.waterTempType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+F0D - 4C 8D 05 ECA40600     - lea r8,[RSE.RSE::CAeroplane_C_47A::`vftable'+210] { ("C-47A") }
@@ -754,6 +758,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.B;
                 planeAttributes.manifoldType = DialVariant.B;
+                planeAttributes.waterTempType = DialVariant.B;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+263 - 48 8D 15 0EC40700     - lea rdx,[RSE.RSE::CAeroplane_FW_190_A6::`vftable'+8] { ("FW 190 A6") }
@@ -778,6 +783,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.rpmType = DialVariant.B;
                 planeAttributes.manifoldType = DialVariant.C;
+                planeAttributes.waterTempType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+DDD - 4C 8D 05 6CB00C00     - lea r8,[RSE.RSE::CAeroplane_Po_2_VS::`vftable'+1D0] { ("U-2VS") }
@@ -838,13 +844,14 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.engines = 2;
                 planeAttributes.rpmType = DialVariant.C;
                 planeAttributes.manifoldType = DialVariant.D;
+                planeAttributes.waterTempType = DialVariant.A;
                 break;
 
 
             //Flying Circus Vol 1
             //RSE.RSE::CCockpitInstruments::simulation+3DB5 - 48 8D 15 C4481F00     - lea rdx,[RSE.RSE::CAeroplane_SPAD_XIII_C1::`vftable'+1C8] { ("SPAD XIII.C1") }
             case "SPAD XIII.C1":
-                planeAttributes.country = Country.UK;
+                planeAttributes.country = Country.FR;
                 planeAttributes.speedometerType = DialVariant.A;
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
@@ -948,7 +955,7 @@ public class PlaneDataFromName : AirplaneData
 
             //RSE.RSE::CCockpitInstruments::simulation+3E9C - 48 8D 15 ED0E1F00     - lea rdx,[RSE.RSE::CAeroplane_SPAD_VII_C1_150HP::`vftable'+1C8] { ("SPAD VII.C1 150HP") }
             case "SPAD VII.C1 150HP":
-                planeAttributes.country = Country.UK;
+                planeAttributes.country = Country.FR;
                 planeAttributes.speedometerType = DialVariant.A;
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
@@ -958,7 +965,7 @@ public class PlaneDataFromName : AirplaneData
 
             //RSE.RSE::CCockpitInstruments::simulation+3EB3 - 48 8D 15 163D1F00     - lea rdx,[RSE.RSE::CAeroplane_SPAD_VII_C1_180HP::`vftable'+1C8] { ("SPAD VII.C1 180HP") }
             case "SPAD VII.C1 180HP":
-                planeAttributes.country = Country.UK;
+                planeAttributes.country = Country.FR;
                 planeAttributes.speedometerType = DialVariant.A;
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
@@ -979,7 +986,7 @@ public class PlaneDataFromName : AirplaneData
             //bregeut
             //RSE.RSE::CCockpitInstruments::simulation+8DF7 - 48 8D 15 3AB21B00     - lea rdx,[RSE.RSE::CAeroplane_Breguet_14_B2::`vftable'+1F0] { ("Breguet type 14 B.2") }
             case "Breguet type 14 B.2":
-                planeAttributes.country = Country.UK;
+                planeAttributes.country = Country.FR;
                 planeAttributes.speedometerType = DialVariant.A;
                 planeAttributes.altimeter = true;
                 planeAttributes.repeaterCompass = true;
