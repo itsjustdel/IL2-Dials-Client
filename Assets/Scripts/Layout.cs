@@ -39,7 +39,7 @@ public class Layout
     public float repeaterCompassAlternateScale;
     public List<float> rpmScale = new List<float>() { -1f, -1f, -1f, -1f }; //max 4 engines in game?
     public List<float> manifoldScale = new List<float>() { -1f, -1f, -1f, -1f };
-    public List<float> waterTempScale= new List<float>() { -1f, -1f, -1f, -1f };
+    public List<float> waterTempScale = new List<float>() { -1f, -1f, -1f, -1f };
 
     public bool speedoInTray;
     public bool altimeterInTray;
@@ -54,7 +54,7 @@ public class Layout
     public bool repeaterCompassInTray;
     public bool repeaterCompassAlternateInTray;
     public List<bool> rpmInTray = new List<bool>() { false, false, false, false };
-    public List<bool> manifoldInTray = new List<bool>() { false, false, false, false};
+    public List<bool> manifoldInTray = new List<bool>() { false, false, false, false };
     public List<bool> waterTempInTray = new List<bool>() { false, false, false, false };
 
 
@@ -99,143 +99,55 @@ public class Layout
     public static float scaleOverall = .6f;
 
     public static void DefaultLayouts(GameObject dialsPrefab)
-    {
+    {        
         //group any 2 engine dials, they need to be beside each other
         List<GameObject> activeDials = ActiveDials(dialsPrefab);
 
-        //find max scale to use for each dial
         RectTransform rectTransform = GameObject.FindGameObjectWithTag("Canvas").GetComponent<RectTransform>();
-
-        int columns = 8;
-        int rows = 2;
         
-        if (activeDials.Count > 6)
-        {
-            columns = 5;
-            rows = 3;        
-        }
-
-        float parentWidth = rectTransform.rect.width;
-        float parentHeight = rectTransform.rect.height;
+        var t = EdgeColumnsRows(rectTransform.rect.width, rectTransform.rect.height, activeDials.Count);
         
-        Canvas canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
-        
-        //step is what's smaller from the height and width ratios
-        float step = Mathf.Min( parentWidth/ columns, parentHeight / rows);
-        //face - width 100 scale 8 so width = 800
-        float scale = step/800;        
-        float start = -parentWidth * .5f + step * .5f;
-        float x = start;
-        float y = parentHeight*.5f - step*.5f;
+        int rows = Mathf.RoundToInt(t.Item1);
+        int columns = Mathf.RoundToInt(t.Item2);
+        float cellSize = t.Item3;
+        float scale = cellSize / 800;
+        int d = 0;
 
-        int thisRowCount = 0;
+        //what's left over after we place each dial on a row - used to center a row
+        float diff = (rectTransform.rect.width - (cellSize * columns)) * .5f;
 
-        
-        float lastDiff = 0f;
-        for (int i = 0; i < activeDials.Count; i++)
-        {
-            bool newRow = false;
-            if (i + 1 < activeDials.Count
-                    && activeDials[i].tag != "Untagged" 
-                        && activeDials[i].tag == activeDials[i + 1].tag
-                            //next dial's position over screen edge?
-                            && x + step> parentWidth*.5f)
-                newRow = true;
-
-            if (newRow)
-            {
-                Debug.Log("new row at " + activeDials[i].name);
-                x = start;
-                y -= step;
-
-                float diffNewRow = (parentWidth * .5f) / thisRowCount;
-                //move all dials in this row along to center
-                for (int j = 0; j < thisRowCount; j++)
+        for (int i = 0; i < rows; i++)
+        {            
+            for (int j = 0; j < columns; j++)
+            {                
+                if (d > activeDials.Count - 1)
                 {
-                    activeDials[i - 1 - j].GetComponent<RectTransform>().anchoredPosition += new Vector2(diffNewRow, 0);
+                    //last row doesn't have enough dials to make it to the end
+                    //center all in row
+                    for (int p = d-1; p > d-columns; p--)
+                    {
+                        activeDials[p].GetComponent<RectTransform>().anchoredPosition += new Vector2(cellSize * .5f, 0);
+                    }
+                    continue;
                 }
 
-                thisRowCount = 0;                
+                float x = cellSize * j;
+                float y = -cellSize * i;
+                x -= rectTransform.rect.width*.5f - cellSize*.5f;
+                
+                x += diff;
+                
+                y += rectTransform.rect.height*.5f - cellSize*.5f;
+                
+                activeDials[d].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
+                activeDials[d].transform.localScale = new Vector3(scale, scale, 1);
+                
+                d++;
+                
             }
-
-            activeDials[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
-
-            x += step;
-            thisRowCount++;
-            
-            //will next dial be over the edge of the screen?
-            if(x > parentWidth*.5f)
-            {
-                x = start;
-                y -= step;
-                float diff = parentWidth * .5f - x;
-                //move all dials in this row along to center
-                for (int j = 0; j < thisRowCount; j++)
-                {
-                    activeDials[i-j].GetComponent<RectTransform>().anchoredPosition -= new Vector2(diff, 0);
-                }
-
-                thisRowCount = 0;
-                lastDiff = diff;
-            }
-
-            activeDials[i].transform.localScale = new Vector3(scale, scale, scale);
-        }
-
-        //move all dials in this row along to center - note diff polarity swap
-        for (int j = 0; j < thisRowCount; j++)
-        {
-            activeDials[activeDials.Count-1 - j].GetComponent<RectTransform>().anchoredPosition -= new Vector2(lastDiff-step*.5f, 0);
         }
     }
 
-    /*
-     * Dictionary<string, List<GameObject>> dials = new Dictionary<string, List<GameObject>>();
-        for (int i = 0; i < activeDials.Count; i++)
-        {
-            //create a new key with a new list if key doesn't exist
-            if (!dials.ContainsKey(activeDials[i].tag))
-            {
-                dials.Add(activeDials[i].tag, new List<GameObject>() { activeDials[i] });
-            }
-            //add to list if key already exists
-            else
-                dials[activeDials[i].tag].Add(activeDials[i]);
-
-        }
-
-     */
-
-    /// Calculates the optimal side of squares to be fit into a rectangle
-    /// Inputs: x, y: width and height of the available area.
-    ///         n: number of squares to fit
-    /// Returns: the optimal side of the fitted squares
-    private static float FitSquares(float x, float y, int n)
-    {
-        float sx, sy;
-
-        var px = Mathf.Ceil(Mathf.Sqrt(n * x / y));
-        if (Mathf.Floor(px * y / x) * px < n)
-        {
-            sx = y / Mathf.Ceil(px * y / x);
-        }
-        else
-        {
-            sx = x / px;
-        }
-
-        var py = Mathf.Ceil(Mathf.Sqrt(n * y / x));
-        if (Mathf.Floor(py * x / y) * py < n)
-        {
-            sy = x / Mathf.Ceil(x * py / y);
-        }
-        else
-        {
-            sy = y / py;
-        }
-
-        return Mathf.Max(sx, sy);
-    }
 
     public static void DefaultLayoutsOld(GameObject dialsPrefab)
     {
@@ -304,4 +216,51 @@ public class Layout
         }
     }
 
+    //https://math.stackexchange.com/questions/466198/algorithm-to-get-the-maximum-size-of-n-squares-that-fit-into-a-rectangle-with-a
+    //translated form javascript example
+    private static (float,float,float) EdgeColumnsRows(float x, float y, float n){        
+
+        // Compute number of rows and columns, and cell size
+        float ratio = x / y;
+        float ncols_float = Mathf.Sqrt(n * ratio);
+        float nrows_float = n / ncols_float;
+
+        // Find best option filling the whole height
+        float nrows1 = Mathf.Ceil(nrows_float);
+        float ncols1 = Mathf.Ceil(n / nrows1);
+        while (nrows1 * ratio < ncols1)
+        {
+            nrows1++;
+            ncols1 = Mathf.Ceil(n / nrows1);
+        }
+        float cell_size1 = y / nrows1;
+
+        // Find best option filling the whole width
+        float ncols2 = Mathf.Ceil(ncols_float);
+        float nrows2 = Mathf.Ceil(n / ncols2);
+        while (ncols2 < nrows2 * ratio)
+        {
+            ncols2++;
+            nrows2 = Mathf.Ceil(n / ncols2);
+        }
+        float cell_size2 = x / ncols2;
+
+        // Find the best values
+        float nrows, ncols, cell_size;
+        if (cell_size1 < cell_size2)
+        {
+            nrows = nrows2;
+            ncols = ncols2;
+            cell_size = cell_size2;
+        }
+        else
+        {
+            nrows = nrows1;
+            ncols = ncols1;
+            cell_size = cell_size1;
+        }
+        return (nrows,ncols,cell_size);
+    }
+
 }
+

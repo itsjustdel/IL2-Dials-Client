@@ -68,6 +68,9 @@ public class MenuHandler : MonoBehaviour
     public bool layoutOpen;
     //public string planeTypeBeforeLayoutPanel;
     public bool inFlight;
+    public bool trayPulled;
+    public float trayYTarget;
+    public float currentTrayY = 600;
 
     public void Start()
     {
@@ -175,6 +178,15 @@ public class MenuHandler : MonoBehaviour
 
             MissionStartGlow();
         }
+
+        if (!trayPulled)
+            trayYTarget = 1260;
+        else
+            trayYTarget = 810;
+        
+        RectTransform r = trayParent.GetComponent<RectTransform>();
+        r.anchoredPosition = Vector3.Lerp(r.anchoredPosition, new Vector3(0, trayYTarget, 1), Time.deltaTime * 10);
+
 
         IdleTimer();
     }
@@ -715,5 +727,9 @@ public class MenuHandler : MonoBehaviour
         menuPanel.SetActive(true);
     }
 
-
+    public void TrayPulldown()
+    {
+        Debug.Log("pulldown");
+        trayPulled = !trayPulled;
+    }
 }

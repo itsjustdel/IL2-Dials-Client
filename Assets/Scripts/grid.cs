@@ -4,6 +4,8 @@ using System.Collections;
 
 public class grid : MonoBehaviour
 {
+    public float size = 10f;
+    public int m = 5;
 
     private Rect m_LastGraphExtents;
     private static readonly Color kGridMinorColorDark = new Color(0f, 0f, 0f, 0.18f);
@@ -29,9 +31,9 @@ public class grid : MonoBehaviour
         GL.PushMatrix();
         GL.Begin(GL.LINES);
 
-        DrawGridLines(10.0f, kGridMinorColorDark);
+        DrawGridLines(size, kGridMinorColorDark);
 
-        DrawGridLines(50.0f, kGridMajorColorDark);
+        DrawGridLines(size*m, kGridMajorColorDark);
 
         GL.End();
         GL.PopMatrix();
