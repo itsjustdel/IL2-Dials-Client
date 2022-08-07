@@ -66,45 +66,50 @@ public class DialsManager : MonoBehaviour
                 return;
             }
 
-            SwitchDialBoardFromCountry(airplaneData.planeAttributes.country);
+            InstantiateDials();
+        }
+    }
 
-            //switch off any unavailable dials to this plane
-            DeactivateUnavailableDials(countryDialBoard, airplaneData.planeAttributes);
+    private void InstantiateDials()
+    {
+        SwitchDialBoardFromCountry(airplaneData.planeAttributes.country);
 
-            //asign correct needle to rotate scripts depending on what plane we have loaded
-            AsignNeedles();
+        //switch off any unavailable dials to this plane
+        DeactivateUnavailableDials(countryDialBoard, airplaneData.planeAttributes);
 
-            Markings(airplaneData);
+        //asign correct needle to rotate scripts depending on what plane we have loaded
+        AsignNeedles();
 
-            P51FaceSwitch();
+        Markings(airplaneData);
 
-            Hs129B2NeedleSwitch();
+        P51FaceSwitch();
 
-            if (countryDialBoard != null)
-                LoadManager.LoadLayout(airplaneData, this);
-            else
-            //close layout
-            {
-                //go back to main page
-                menuHandler.layoutPanel.SetActive(false);
+        Hs129B2NeedleSwitch();
 
-                //turn menu button and leds back on
-                menuHandler.menuButton.SetActive(true);
-                menuHandler.ledParent.SetActive(true);
+        if (countryDialBoard != null)
+            LoadManager.LoadLayout(airplaneData, this);
+        else
+        //close layout
+        {
+            //go back to main page
+            menuHandler.layoutPanel.SetActive(false);
 
-                menuHandler.layoutOpen = false;
-            }
+            //turn menu button and leds back on
+            menuHandler.menuButton.SetActive(true);
+            menuHandler.ledParent.SetActive(true);
 
-            //once loaded, check to see it it was loaded from the layout dropdown
+            menuHandler.layoutOpen = false;
+        }
 
-            if (openLayoutOnLoad)
-            {
-                //flagged from open 
-                Debug.Log("open layout on load");
-                Debug.Log("air country = " + airplaneData.planeAttributes.country);
-                menuHandler.OpenLayoutClick();
-                openLayoutOnLoad = false;
-            }
+        //once loaded, check to see it it was loaded from the layout dropdown
+
+        if (openLayoutOnLoad)
+        {
+            //flagged from open 
+            Debug.Log("open layout on load");
+            Debug.Log("air country = " + airplaneData.planeAttributes.country);
+            menuHandler.OpenLayoutClick();
+            openLayoutOnLoad = false;
         }
     }
 
@@ -113,7 +118,7 @@ public class DialsManager : MonoBehaviour
         if (airplaneData.planeType == "Hs 129 B-2")
         {
             //needles need re-order so R is underneath
-            manifoldObjects[0].transform.Find("Needle Left").transform.SetSiblingIndex(manifoldObjects[0].transform.childCount-1);
+            manifoldObjects[0].transform.Find("Dial").Find("Needle Left").transform.SetSiblingIndex(manifoldObjects[0].transform.childCount-1);
         }
     }
 
@@ -123,13 +128,13 @@ public class DialsManager : MonoBehaviour
         //p47 28 needs one red removed
         if (airplaneData.planeType == "P-47D-28")
         {
-            countryDialBoard.transform.Find("RPM D 0").Find("Markings").Find("Red 2.7").gameObject.SetActive(false);
+            countryDialBoard.transform.Find("RPM D 0").Find("Dial").Find("Markings").Find("Red 2.7").gameObject.SetActive(false);
         }
 
         //only the B has a red mark, so disable the one on the the "p51 D"
         if (airplaneData.planeType == "P-51D-15")
         {
-            countryDialBoard.transform.Find("RPM C 0").Find("Markings").Find("Red 3").gameObject.SetActive(false);
+            countryDialBoard.transform.Find("RPM C 0").Find("Dial").Find("Markings").Find("Red 3").gameObject.SetActive(false);
         }
     }
 
@@ -142,8 +147,8 @@ public class DialsManager : MonoBehaviour
             {
                 for (int i = 0; i < manifoldObjects.Count; i++)
                 {
-                    manifoldObjects[i].transform.Find("Face").gameObject.SetActive(false);
-                    manifoldObjects[i].transform.Find("Face 150").gameObject.SetActive(true);
+                    manifoldObjects[i].transform.Find("Dial").Find("Face").gameObject.SetActive(false);
+                    manifoldObjects[i].transform.Find("Dial").Find("Face 150").gameObject.SetActive(true);
                 }
             }
 
@@ -176,9 +181,9 @@ public class DialsManager : MonoBehaviour
 
         if (airplaneData.planeType == "P-38J-25")
         {
-            GameObject needleLargeL = waterTempObjects[0].transform.Find("Needle Large L").gameObject;
+            GameObject needleLargeL = waterTempObjects[0].transform.Find("Dial").Find("Needle Large L").gameObject;
             countryDialBoard.GetComponent<RotateNeedle>().waterTempNeedles.Add(needleLargeL);
-            GameObject needleLargeR = waterTempObjects[0].transform.Find("Needle Large R").gameObject;
+            GameObject needleLargeR = waterTempObjects[0].transform.Find("Dial").Find("Needle Large R").gameObject;
             countryDialBoard.GetComponent<RotateNeedle>().waterTempNeedles.Add(needleLargeR);
 
             return;
@@ -186,7 +191,7 @@ public class DialsManager : MonoBehaviour
 
         for (int i = 0; i < waterTempObjects.Count; i++)
         {           
-            GameObject needleLarge = waterTempObjects[i].transform.Find("Needle Large").gameObject;
+            GameObject needleLarge = waterTempObjects[i].transform.Find("Dial").Find("Needle Large").gameObject;
             countryDialBoard.GetComponent<RotateNeedle>().waterTempNeedles.Add(needleLarge);           
         }
     }
@@ -196,12 +201,12 @@ public class DialsManager : MonoBehaviour
         if(airplaneData.planeAttributes.country == Country.US)
         {
             headingIndicator = GameObject.FindGameObjectWithTag("heading indicator");
-            countryDialBoard.GetComponent<RotateNeedle>().headingIndicator = headingIndicator.transform.Find("Mask").Find("Parent").transform.gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().headingIndicator = headingIndicator.transform.Find("Dial").Find("Mask").Find("Parent").transform.gameObject;
 
             if (airplaneData.planeAttributes.headingIndicatorType == DialVariant.B)
             {
                 
-                countryDialBoard.GetComponent<RotateNeedle>().headingIndicatorBall= headingIndicator.transform.Find("BallParent").transform.gameObject;
+                countryDialBoard.GetComponent<RotateNeedle>().headingIndicatorBall= headingIndicator.transform.Find("Dial").Find("BallParent").transform.gameObject;
             }
         }
     }
@@ -211,8 +216,8 @@ public class DialsManager : MonoBehaviour
         if (airplaneData.planeAttributes.country == Country.US)
         {
             artificialHorizon = GameObject.FindGameObjectWithTag("horizon");
-            countryDialBoard.GetComponent<RotateNeedle>().artificialHorizon = artificialHorizon.transform.Find("Mask").Find("Line").transform.gameObject;
-            countryDialBoard.GetComponent<RotateNeedle>().artificialHorizonChevron = artificialHorizon.transform.Find("Mask").Find("Roll Mark").transform.gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().artificialHorizon = artificialHorizon.transform.Find("Dial").Find("Mask").Find("Line").transform.gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().artificialHorizonChevron = artificialHorizon.transform.Find("Dial").Find("Mask").Find("Roll Mark").transform.gameObject;
         }
     }
 
@@ -221,8 +226,8 @@ public class DialsManager : MonoBehaviour
         if (airplaneData.planeAttributes.country == Country.US)
         {
             turnIndicator = GameObject.FindGameObjectWithTag("turn coordinator");
-            countryDialBoard.GetComponent<RotateNeedle>().turnCoordinatorNeedle = turnIndicator.transform.Find("NeedleParent").transform.gameObject;
-            countryDialBoard.GetComponent<RotateNeedle>().turnCoordinatorBall = turnIndicator.transform.Find("BallParent").transform.gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().turnCoordinatorNeedle = turnIndicator.transform.Find("Dial").Find("NeedleParent").transform.gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().turnCoordinatorBall = turnIndicator.transform.Find("Dial").Find("BallParent").transform.gameObject;
         }
     }
 
@@ -232,7 +237,7 @@ public class DialsManager : MonoBehaviour
         if (airplaneData.planeAttributes.country == Country.US)
         {
             vsi = GameObject.FindGameObjectWithTag("vsi");
-            countryDialBoard.GetComponent<RotateNeedle>().vsiNeedle = vsi.transform.Find("Needle").transform.gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().vsiNeedle = vsi.transform.Find("Dial").Find("Needle").transform.gameObject;
         }
         else
         {
@@ -240,17 +245,17 @@ public class DialsManager : MonoBehaviour
             //let the rotate needle script know which needle to turn
             if (airplaneData.planeAttributes.vsiLarge)
             {
-                countryDialBoard.GetComponent<RotateNeedle>().vsiNeedle = countryDialBoard.transform.Find("VSI Large").Find("Needle").gameObject;
+                countryDialBoard.GetComponent<RotateNeedle>().vsiNeedle = countryDialBoard.transform.Find("VSI Large").Find("Dial").Find("Needle").gameObject;
             }
 
             else if (airplaneData.planeAttributes.vsiSmall)
             {
-                countryDialBoard.GetComponent<RotateNeedle>().vsiNeedle = countryDialBoard.transform.Find("VSI Small").Find("Needle").gameObject;
+                countryDialBoard.GetComponent<RotateNeedle>().vsiNeedle = countryDialBoard.transform.Find("VSI Small").Find("Dial").Find("Needle").gameObject;
             }
 
             else if (airplaneData.planeAttributes.vsiSmallest)
             {
-                countryDialBoard.GetComponent<RotateNeedle>().vsiNeedle = countryDialBoard.transform.Find("VSI Smallest").Find("Needle").gameObject;
+                countryDialBoard.GetComponent<RotateNeedle>().vsiNeedle = countryDialBoard.transform.Find("VSI Smallest").Find("Dial").Find("Needle").gameObject;
             }
         }
         
@@ -265,9 +270,9 @@ public class DialsManager : MonoBehaviour
         for (int i = 0; i < rpmObjects.Count; i++)
         {
             //Primary needle - most planes have this
-            if (rpmObjects[i].transform.Find("Needle Large") != null)
+            if (rpmObjects[i].transform.Find("Dial").Find("Needle Large") != null)
             {
-                GameObject needleLarge = rpmObjects[i].transform.Find("Needle Large").gameObject;
+                GameObject needleLarge = rpmObjects[i].transform.Find("Dial").Find("Needle Large").gameObject;
                 countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleLarge);
             }
 
@@ -276,7 +281,7 @@ public class DialsManager : MonoBehaviour
             {
                 if (airplaneData.planeAttributes.rpmType == DialVariant.A)
                 {
-                    GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
+                    GameObject needleSmall = rpmObjects[i].transform.Find("Dial").Find("Needle Small").gameObject;
                     countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
                 }
 
@@ -284,7 +289,7 @@ public class DialsManager : MonoBehaviour
                 //pe-2 
                 if (airplaneData.planeAttributes.country == Country.RU && airplaneData.planeAttributes.rpmType == DialVariant.C)
                 {
-                    GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
+                    GameObject needleSmall = rpmObjects[i].transform.Find("Dial").Find("Needle Small").gameObject;
                     countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
                 }
 
@@ -298,10 +303,10 @@ public class DialsManager : MonoBehaviour
                     if (i == 0)
                     {
                         //do both needles and return, p38 has two needles on one dial
-                        GameObject needleLeft = rpmObjects[i].transform.Find("Needle Left").gameObject;
+                        GameObject needleLeft = rpmObjects[i].transform.Find("Dial").Find("Needle Left").gameObject;
                         countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleLeft);
 
-                        GameObject needleRight = rpmObjects[i].transform.Find("Needle Right").gameObject;
+                        GameObject needleRight = rpmObjects[i].transform.Find("Dial").Find("Needle Right").gameObject;
                         countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleRight);
 
                         return;
@@ -310,7 +315,7 @@ public class DialsManager : MonoBehaviour
 
                 if (airplaneData.planeAttributes.rpmType == DialVariant.A || airplaneData.planeAttributes.rpmType == DialVariant.D)
                 {
-                    GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
+                    GameObject needleSmall = rpmObjects[i].transform.Find("Dial").Find("Needle Small").gameObject;
                     countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
                 }
             }
@@ -320,7 +325,7 @@ public class DialsManager : MonoBehaviour
                 //Mosquito
                 if (airplaneData.planeAttributes.rpmType == DialVariant.C)
                 {
-                    GameObject needleSmall = rpmObjects[i].transform.Find("Needle Small").gameObject;
+                    GameObject needleSmall = rpmObjects[i].transform.Find("Dial").Find("Needle Small").gameObject;
                     countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesSmall.Add(needleSmall);
                 }
             }
@@ -339,10 +344,10 @@ public class DialsManager : MonoBehaviour
             if (airplaneData.planeType == "P-38J-25" || airplaneData.planeType == "He 111 H-16" || airplaneData.planeType == "Hs 129 B-2")
             {
                 //p38 J or he 111 h16
-                GameObject needleLeft = manifoldObjects[i].transform.Find("Needle Left").gameObject;
+                GameObject needleLeft = manifoldObjects[i].transform.Find("Dial").Find("Needle Left").gameObject;
                 countryDialBoard.GetComponent<RotateNeedle>().manifoldNeedlesLarge.Add(needleLeft);
 
-                GameObject needleRight = manifoldObjects[i].transform.Find("Needle Right").gameObject;
+                GameObject needleRight = manifoldObjects[i].transform.Find("Dial").Find("Needle Right").gameObject;
                 countryDialBoard.GetComponent<RotateNeedle>().manifoldNeedlesLarge.Add(needleRight);
 
                 //both needles asign and jump out of loop (has 2 engines)
@@ -351,7 +356,7 @@ public class DialsManager : MonoBehaviour
             }
             else
             {
-                GameObject needleLarge = manifoldObjects[i].transform.Find("Needle Large").gameObject;
+                GameObject needleLarge = manifoldObjects[i].transform.Find("Dial").Find("Needle Large").gameObject;
                 countryDialBoard.GetComponent<RotateNeedle>().manifoldNeedlesLarge.Add(needleLarge);
             }
         }
@@ -360,7 +365,7 @@ public class DialsManager : MonoBehaviour
     void AsignSpeedometer()
     {
         speedometer = GameObject.FindGameObjectWithTag("speedometer");
-        countryDialBoard.GetComponent<RotateNeedle>().airspeedNeedle = speedometer.transform.Find("Needle Large").transform.gameObject;
+        countryDialBoard.GetComponent<RotateNeedle>().airspeedNeedle = speedometer.transform.Find("Dial").Find("Needle Large").transform.gameObject;
     }
 
     public void SwitchDialBoardFromCountry(Country country)
@@ -448,6 +453,16 @@ public class DialsManager : MonoBehaviour
                     rpmInstance.transform.name = "RPM " + airplaneData.planeAttributes.rpmType.ToString() + " " + i.ToString();
                     rpmObjects.Add(rpmInstance);
                 }
+
+                if (dialsToInstantiate == 2) // 3 engine ger plane, no support atm
+                {
+                    for (int i = 0; i < rpmObjects.Count; i++)
+                    {
+                        //engine dials have "L" or "R"
+                        GameObject parent = rpmObjects[i].transform.Find("UI Handlers").GetChild(0).Find("Left Right").gameObject;
+                        parent.transform.GetChild(i).gameObject.SetActive(true);
+                    }
+                }
             }
 
             //instantiate manifolds
@@ -472,17 +487,24 @@ public class DialsManager : MonoBehaviour
                     GameObject manifoldInstance = manifold;
                     if (i > 0)
                     {
-
                         //duplicate if we have more than one engine
                         manifoldInstance = Instantiate(manifold, manifold.transform.position, Quaternion.identity, countryDialBoard.transform);
                         manifoldInstance.transform.SetSiblingIndex(manifoldInstance.transform.GetSiblingIndex() + 1);
-
-                    }
+                    }                    
                     manifoldInstance.transform.name = "Manifold " + airplaneData.planeAttributes.manifoldType.ToString() + " " + i.ToString();
                     manifoldObjects.Add(manifoldInstance);
                 }
-            }
 
+                if (dialsToInstantiate == 2)
+                {
+                    for (int i = 0; i < manifoldObjects.Count; i++)
+                    {
+                        //engine dials have "L" or "R"
+                        GameObject parent = manifoldObjects[i].transform.Find("UI Handlers").GetChild(0).Find("Left Right").gameObject;
+                        parent.transform.GetChild(i).gameObject.SetActive(true);
+                    }
+                }
+            }
 
             //instantiate water temps
 
@@ -513,6 +535,16 @@ public class DialsManager : MonoBehaviour
                     waterTempInstance.transform.SetSiblingIndex(countryDialBoard.transform.childCount-1);
                     waterTempInstance.transform.name = "Water Temp " + airplaneData.planeAttributes.waterTempType.ToString() + " " + i.ToString();
                     waterTempObjects.Add(waterTempInstance);
+                }
+
+                if (dialsToInstantiate == 2) // 3 engine ger plane, no support atm
+                {
+                    for (int i = 0; i < waterTempObjects.Count; i++)
+                    {
+                        //engine dials have "L" or "R"
+                        GameObject parent = waterTempObjects[i].transform.Find("UI Handlers").GetChild(0).Find("Left Right").gameObject;
+                        parent.transform.GetChild(i).gameObject.SetActive(true);
+                    }
                 }
             }
         }    
@@ -672,8 +704,12 @@ public class DialsManager : MonoBehaviour
         //look for dial on dashboard - original parent
         if (!menuHandler.dialsInTray.Contains(speedometer))
         {
+            //parent position containing dial and UI
             layout.speedoPos = speedometer.GetComponent<RectTransform>().anchoredPosition;
-            layout.speedoScale = speedometer.GetComponent<RectTransform>().localScale.x;
+            // but only dial scale, we don't want to alter the UI default scale
+            float s = speedometer.transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
+            Debug.Log("Speedo scale saving " + s);
+            layout.speedoScale = s;
         }
         else
             //if we don't find it, look for it in the tray
@@ -683,7 +719,7 @@ public class DialsManager : MonoBehaviour
         if (countryDialBoard.transform.Find("Altimeter") != null)
         {
             layout.altPos = countryDialBoard.transform.Find("Altimeter").GetComponent<RectTransform>().anchoredPosition;
-            layout.altScale = countryDialBoard.transform.Find("Altimeter").GetComponent<RectTransform>().localScale.x;
+            layout.altScale = countryDialBoard.transform.Find("Altimeter").Find("Dial").GetComponent<RectTransform>().localScale.x;
         }
         else
             DialInTray("Altimeter", layout);
@@ -694,7 +730,7 @@ public class DialsManager : MonoBehaviour
             if (!menuHandler.dialsInTray.Contains(headingIndicator))
             {
                 layout.headingPos = headingIndicator.GetComponent<RectTransform>().anchoredPosition;
-                layout.headingScale = headingIndicator.GetComponent<RectTransform>().localScale.x;
+                layout.headingScale = headingIndicator.transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
             }
             else
                 //if we don't find it, look for it in the tray
@@ -706,7 +742,7 @@ public class DialsManager : MonoBehaviour
             if (countryDialBoard.transform.Find("Heading Indicator") != null)
             {
                 layout.headingPos = countryDialBoard.transform.Find("Heading Indicator").GetComponent<RectTransform>().anchoredPosition;
-                layout.headingScale = countryDialBoard.transform.Find("Heading Indicator").GetComponent<RectTransform>().localScale.x;
+                layout.headingScale = countryDialBoard.transform.Find("Heading Indicator").Find("Dial").GetComponent<RectTransform>().localScale.x;
             }
             else
                 DialInTray("Heading Indicator", layout);
@@ -716,7 +752,7 @@ public class DialsManager : MonoBehaviour
         if (countryDialBoard.transform.Find("Turn And Bank") != null)
         {
             layout.turnAndBankPos = countryDialBoard.transform.Find("Turn And Bank").GetComponent<RectTransform>().anchoredPosition;
-            layout.turnAndBankScale = countryDialBoard.transform.Find("Turn And Bank").GetComponent<RectTransform>().localScale.x;
+            layout.turnAndBankScale = countryDialBoard.transform.Find("Turn And Bank").Find("Dial").GetComponent<RectTransform>().localScale.x;
         }
         else
             DialInTray("Turn And Bank", layout);
@@ -728,7 +764,7 @@ public class DialsManager : MonoBehaviour
             {
 
                 layout.turnIndicatorPos= turnIndicator.GetComponent<RectTransform>().anchoredPosition;
-                layout.turnIndicatorScale = turnIndicator.GetComponent<RectTransform>().localScale.x;
+                layout.turnIndicatorScale = turnIndicator.transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
             }
             else
                 //if we don't find it, look for it in the tray
@@ -739,7 +775,7 @@ public class DialsManager : MonoBehaviour
             if (countryDialBoard.transform.Find("Turn Coordinator") != null)
             {
                 layout.turnIndicatorPos = countryDialBoard.transform.Find("Turn Coordinator").GetComponent<RectTransform>().anchoredPosition;
-                layout.turnIndicatorScale = countryDialBoard.transform.Find("Turn Coordinator").GetComponent<RectTransform>().localScale.x;
+                layout.turnIndicatorScale = countryDialBoard.transform.Find("Turn Coordinator").Find("Dial").GetComponent<RectTransform>().localScale.x;
             }
             else
                 DialInTray("Turn Coordinator", layout);
@@ -761,7 +797,7 @@ public class DialsManager : MonoBehaviour
             if (countryDialBoard.transform.Find("VSI Smallest") != null)
             {
                 layout.vsiSmallestPos = countryDialBoard.transform.Find("VSI Smallest").GetComponent<RectTransform>().anchoredPosition;
-                layout.vsiSmallestScale = countryDialBoard.transform.Find("VSI Smallest").GetComponent<RectTransform>().localScale.x;
+                layout.vsiSmallestScale = countryDialBoard.transform.Find("VSI Smallest").Find("Dial").GetComponent<RectTransform>().localScale.x;
             }
             else
                 DialInTray("VSI Smallest", layout);
@@ -770,7 +806,7 @@ public class DialsManager : MonoBehaviour
             if (countryDialBoard.transform.Find("VSI Small") != null)
             {
                 layout.vsiSmallPos = countryDialBoard.transform.Find("VSI Small").GetComponent<RectTransform>().anchoredPosition;
-                layout.vsiSmallScale = countryDialBoard.transform.Find("VSI Small").GetComponent<RectTransform>().localScale.x;
+                layout.vsiSmallScale = countryDialBoard.transform.Find("VSI Small").Find("Dial").GetComponent<RectTransform>().localScale.x;
             }
             else
                 DialInTray("VSI Small", layout);
@@ -779,7 +815,7 @@ public class DialsManager : MonoBehaviour
             if (countryDialBoard.transform.Find("VSI Large") != null)
             {
                 layout.vsiLargePos = countryDialBoard.transform.Find("VSI Large").GetComponent<RectTransform>().anchoredPosition;
-                layout.vsiLargeScale = countryDialBoard.transform.Find("VSI Large").GetComponent<RectTransform>().localScale.x;
+                layout.vsiLargeScale = countryDialBoard.transform.Find("VSI Large").Find("Dial").GetComponent<RectTransform>().localScale.x;
             }
             else
                 DialInTray("VSI Large", layout);
@@ -791,7 +827,7 @@ public class DialsManager : MonoBehaviour
             if (!menuHandler.dialsInTray.Contains(artificialHorizon))
             {
                 layout.artificialHorizonPos = artificialHorizon.GetComponent<RectTransform>().anchoredPosition;
-                layout.artificialHorizonScale = artificialHorizon.GetComponent<RectTransform>().localScale.x;
+                layout.artificialHorizonScale = artificialHorizon.transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
             }
             else
                 //if we don't find it, look for it in the tray
@@ -803,7 +839,7 @@ public class DialsManager : MonoBehaviour
             if (countryDialBoard.transform.Find("Artificial Horizon") != null)
             {
                 layout.artificialHorizonPos = countryDialBoard.transform.Find("Artificial Horizon").GetComponent<RectTransform>().anchoredPosition;
-                layout.artificialHorizonScale = countryDialBoard.transform.Find("Artificial Horizon").GetComponent<RectTransform>().localScale.x;
+                layout.artificialHorizonScale = countryDialBoard.transform.Find("Artificial Horizon").Find("Dial").GetComponent<RectTransform>().localScale.x;
             }
             else
                 DialInTray("Artificial Horizon", layout);
@@ -813,7 +849,7 @@ public class DialsManager : MonoBehaviour
         if (countryDialBoard.transform.Find("Repeater Compass") != null)
         {
             layout.repeaterCompassPos = countryDialBoard.transform.Find("Repeater Compass").GetComponent<RectTransform>().anchoredPosition;
-            layout.repeaterCompassScale = countryDialBoard.transform.Find("Repeater Compass").GetComponent<RectTransform>().localScale.x;
+            layout.repeaterCompassScale = countryDialBoard.transform.Find("Repeater Compass").Find("Dial").GetComponent<RectTransform>().localScale.x;
         }
         else
             DialInTray("Repeater Compass", layout);
@@ -821,7 +857,7 @@ public class DialsManager : MonoBehaviour
         if (countryDialBoard.transform.Find("Repeater Compass Alternate") != null)
         {
             layout.repeaterCompassAlternatePos = countryDialBoard.transform.Find("Repeater Compass Alternate").GetComponent<RectTransform>().anchoredPosition;
-            layout.repeaterCompassAlternateScale = countryDialBoard.transform.Find("Repeater Compass Alternate").GetComponent<RectTransform>().localScale.x;
+            layout.repeaterCompassAlternateScale = countryDialBoard.transform.Find("Repeater Compass Alternate").Find("Dial").GetComponent<RectTransform>().localScale.x;
         }
         else
             DialInTray("Repeater Compass Alternate", layout);
@@ -831,7 +867,7 @@ public class DialsManager : MonoBehaviour
             if (rpmObjects[i].transform.parent == countryDialBoard.transform)
             {
                 layout.rpmPos[i] = rpmObjects[i].GetComponent<RectTransform>().anchoredPosition;
-                layout.rpmScale[i] = rpmObjects[i].GetComponent<RectTransform>().localScale.x;
+                layout.rpmScale[i] = rpmObjects[i].transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
             }        
             else             
                 RPMInTray(layout, i, rpmObjects[i]);
@@ -843,7 +879,7 @@ public class DialsManager : MonoBehaviour
             if (manifoldObjects[i].transform.parent == countryDialBoard.transform)
             {
                 layout.manifoldPos[i] = manifoldObjects[i].GetComponent<RectTransform>().anchoredPosition;
-                layout.manifoldScale[i] = manifoldObjects[i].GetComponent<RectTransform>().localScale.x;
+                layout.manifoldScale[i] = manifoldObjects[i].transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
             }         
             else
                 ManifoldInTray(layout, i, manifoldObjects[i]);
@@ -855,7 +891,7 @@ public class DialsManager : MonoBehaviour
             if (waterTempObjects[i].transform.parent == countryDialBoard.transform)
             {
                 layout.waterTempPos[i] = waterTempObjects[i].GetComponent<RectTransform>().anchoredPosition;
-                layout.waterTempScale[i] = waterTempObjects[i].GetComponent<RectTransform>().localScale.x;
+                layout.waterTempScale[i] = waterTempObjects[i].transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
             }
             else
                 WaterTempInTray(layout, i, waterTempObjects[i]);
@@ -1020,8 +1056,6 @@ public class DialsManager : MonoBehaviour
     {
         Debug.Log("Deleting = " + airplaneData.planeType);
         PlayerPrefs.DeleteKey(airplaneData.planeType);
-        //PlayerPrefs.Save();
-
 
         //put all dials back to country board
         for (int i = 0; i < menuHandler.dialsInTray.Count; i++)
@@ -1029,23 +1063,17 @@ public class DialsManager : MonoBehaviour
             menuHandler.dialsInTray[i].transform.parent = countryDialBoard.transform;
         }
 
-        //and call default
-        Layout.DefaultLayouts(countryDialBoard);
-
-        //make sure all ui is on
-        for (int i = 0; i < menuHandler.dialsInTray.Count; i++)
-        {
-            ButtonManager.IconsOn(menuHandler.dialsInTray[i]);
-        }
+        InstantiateDials();
 
         //now reset list
         menuHandler.dialsInTray.Clear();
 
-        //turn trays off, they will be empty now
-        for (int i = 0; i < menuHandler.trayObjects.Count; i++)
-        {
-            menuHandler.trayObjects[i].SetActive(false);
-        }
+        //reset tray target
+        if (menuHandler.trayPulled)
+            menuHandler.TrayPulldown();
+        else
+            menuHandler.DropDownYTarget();
+
 
     }
 }

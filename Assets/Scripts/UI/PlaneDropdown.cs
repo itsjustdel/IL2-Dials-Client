@@ -52,7 +52,7 @@ public class PlaneDropdown : MonoBehaviour
         ItaPlanes = new List<string>(PlaneLists.ItaPlanes);
         FrPlanes = new List<string>(PlaneLists.FrPlanes);
 
-        SortLists();
+        //SortLists(); //Not using so Flying circus planes stay at the bottom
 
         dropdown.ClearOptions();
 

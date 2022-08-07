@@ -38,6 +38,7 @@ public class MenuHandler : MonoBehaviour
     public bool portFieldOpen;
     public bool trayOpen;
     public GameObject trayParent;
+    public GameObject trayPullDown;
     public List<GameObject> trayObjects;
     public List<GameObject> dialsInTray;
     public List<GameObject> dialsOnBoard;
@@ -66,11 +67,15 @@ public class MenuHandler : MonoBehaviour
     private Vector3 mousePos;
 
     public bool layoutOpen;
+    private bool uiHandlersToggle;
     //public string planeTypeBeforeLayoutPanel;
     public bool inFlight;
     public bool trayPulled;
-    public float trayYTarget;
+    public float trayYTarget =100f;
     public float currentTrayY = 600;
+
+    ScreenOrientation currentOrientation;
+    
 
     public void Start()
     {
@@ -150,9 +155,6 @@ public class MenuHandler : MonoBehaviour
         titleColor = title.GetComponent<Image>().color;
         titleColor.a = 0;
         title.GetComponent<Image>().color = titleColor;
-
-
-
     }
 
     public void Update()
@@ -179,16 +181,31 @@ public class MenuHandler : MonoBehaviour
             MissionStartGlow();
         }
 
-        if (!trayPulled)
-            trayYTarget = 1260;
-        else
-            trayYTarget = 810;
+        AnimatePulldown();
         
-        RectTransform r = trayParent.GetComponent<RectTransform>();
-        r.anchoredPosition = Vector3.Lerp(r.anchoredPosition, new Vector3(0, trayYTarget, 1), Time.deltaTime * 10);
-
-
         IdleTimer();
+
+        ScreenOrientation();
+    }
+
+    void ScreenOrientation()
+    {
+        //detect change
+        if (currentOrientation != Screen.orientation)
+        {
+            if (layoutOpen)
+            {
+                // if layout open and user spins phone, work out dials again. (What if custom layout loaded?)
+                RectTransform canvasRectTransform = GameObject.FindGameObjectWithTag("Canvas").GetComponent<RectTransform>();
+                Layout.DefaultLayouts(LoadManager.ActiveDials(dialsManager.countryDialBoard),canvasRectTransform);
+            }
+        }
+        currentOrientation = Screen.orientation;
+    }
+
+    void AnimatePulldown() {
+        RectTransform r = trayPullDown.GetComponent<RectTransform>();
+        r.anchoredPosition = Vector3.Lerp(r.anchoredPosition, new Vector3(0, trayYTarget, 1), Time.deltaTime * 10);
     }
 
     void IdleTimer()
@@ -515,9 +532,6 @@ public class MenuHandler : MonoBehaviour
         blurPanel.SetActive(false);
         //turn our new menu on
         layoutPanel.SetActive(true);
-        //work out how it should look
-        UpdateLayoutPanel();
-
 
         //show dial controls for each dial
         TurnHandlersOn();
@@ -528,8 +542,7 @@ public class MenuHandler : MonoBehaviour
     }
 
     public void AcceptLayoutClick()
-    {
-
+    {        
         //go back to main menu panel
         layoutPanel.SetActive(false);
 
@@ -568,13 +581,13 @@ public class MenuHandler : MonoBehaviour
     {
         dialsManager.DeleteLayout();
 
+        TurnHandlersOn();
     }
 
     public void AddLayouButtonClick()
     {
         //Debug.Log("Add layout click");
         trayOpen = !trayOpen;
-        UpdateLayoutPanel();
     }
 
     public void OpenConnectionsClick()
@@ -590,19 +603,7 @@ public class MenuHandler : MonoBehaviour
         //connectionPanel.GetComponent<PanelAnimator>().animationTarget = 4000;
     }
 
-    public void UpdateLayoutPanel()
-    {
-        //only show how many blank tray space we need to
-        for (int i = 0; i < trayObjects.Count; i++)
-        {
-            //  Debug.Log(trayObjects[i].transform.childCount);
-            if (trayObjects[i].transform.childCount != 0)
-                trayObjects[i].SetActive(true);
 
-            else
-                trayObjects[i].SetActive(false);
-        }
-    }
 
     private void DeActivateCompassTouch()
     {
@@ -637,20 +638,31 @@ public class MenuHandler : MonoBehaviour
 
         for (int i = 0; i < UIhandlers.Length; i++)
         {
-            //turn image off, not gameobject, find with tag can't find find inactive objects
-
-            //if in tray, don't do this
-            if (!dialsInTray.Contains(UIhandlers[i].transform.parent.parent.gameObject))
-                UIhandlers[i].GetComponent<Image>().enabled = true;
+            if (dialsInTray.Contains(UIhandlers[i].transform.parent.gameObject))
+            {
+                GameObject container = UIhandlers[i].transform.Find("Return Container").gameObject;
+                container.SetActive(true);
+            }
+            else
+            {
+                GameObject container = UIhandlers[i].transform.Find("Container").gameObject;
+                container.SetActive(true);
+            }        
         }
     }
 
-    private void TurnHandlersOff()
+    public void TurnHandlersOff()
     {
         GameObject[] UIhandlers = GameObject.FindGameObjectsWithTag("UIHandler");
+
         for (int i = 0; i < UIhandlers.Length; i++)
         {
-            UIhandlers[i].GetComponent<Image>().enabled = false;
+            for (int j = 0; j < UIhandlers[i].transform.childCount; j++)
+            {
+               
+                    UIhandlers[i].transform.Find("Container").gameObject.SetActive(false);
+               
+            }
         }
     }
     public void OpenDisplayPanel()
@@ -729,7 +741,64 @@ public class MenuHandler : MonoBehaviour
 
     public void TrayPulldown()
     {
-        Debug.Log("pulldown");
         trayPulled = !trayPulled;
+
+        DropDownYTarget();
+    }
+
+    public void DropDownYTarget()
+    {
+        if (trayPulled)
+        {
+            DropdownYTargetWithChildren();
+        }
+        else if (trayParent.transform.childCount == 0)
+        {
+            //keep high if none
+            trayYTarget = 2100;
+        }
+        else
+        {
+            //hang it down a bit
+            //keep high if none
+            trayYTarget = 1950;
+        }
+    }
+    public void DropdownYTargetWithChildren()
+    {
+        Debug.Log("dropdown Y target");
+
+        HashSet<float> rows = new HashSet<float>();
+        for (int i = 0; i < trayParent.transform.childCount; i++)
+        {
+            float childY = trayParent.transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition.y;
+            rows.Add(childY);
+        }
+        float spacing = GameObject.FindGameObjectWithTag("DialsTray").GetComponent<GridLayoutGroup>().spacing.x;
+        Debug.Log("spacing = " + spacing);
+        trayYTarget = 1800 - (rows.Count * spacing)+150; //150 is y pos of tray parent in hierarchy
+                                                           //Debug.Log("rows= " + rows.Count);
+    }
+
+    public void UIHandlersToggle(GameObject buttonPressed)
+    {
+        if (uiHandlersToggle)
+        {
+            TurnHandlersOn();
+
+            //swap button
+            buttonPressed.transform.parent.Find("Eye On").gameObject.SetActive(true);
+            buttonPressed.SetActive(false);
+        }
+        else
+        {
+            TurnHandlersOff();
+            buttonPressed.transform.parent.Find("Eye Off").gameObject.SetActive(true);
+            buttonPressed.SetActive(false);
+        }
+
+
+
+        uiHandlersToggle = !uiHandlersToggle;
     }
 }

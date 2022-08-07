@@ -7,39 +7,38 @@ using UnityEngine.EventSystems;
 
 public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
-
     public MenuHandler menuHandler;
-
-  //  public bool moveTray;
     public bool move;    
     public bool scale;
     public bool remove;
     public bool compass;
     public bool navArrow;
+    public bool gear;
+    public bool returnToBoard;
     public GameObject trayParent;
     public bool leftArrow;
     private bool navArrowDown;
     public float navArrowDownSpeed =10f;
     public float navArrowClickSpeed = 0f;
-
+    public float scaleButtonSpeed = 10f;
     public float compassSpinSpeed = 100f;
-
-    
     public Canvas canvas;
-    private RectTransform rectTransform;
-
+    public RectTransform parentRect;
+    public RectTransform dialRect;
     private Quaternion compassTarget;
-
+    private float moveSnap = 20;
+    public float scaleSnap = 20;
     private float minScale = 0.1f;
     private float maxScale = 2f;
-
-    
+    public GameObject openContainer;
+    public GameObject closedContainer;
 
     private void Awake()
     {
         canvas = GameObject.FindGameObjectWithTag("Canvas").transform.GetComponent<Canvas>();
         menuHandler = GameObject.Find("Menu").GetComponent<MenuHandler>();
-        rectTransform = transform.parent.parent.GetComponent<RectTransform>();
+        parentRect = transform.parent.parent.parent.GetComponent<RectTransform>();
+        dialRect = parentRect.Find("Dial").GetComponent<RectTransform>();
     }
 
     private void Update()
@@ -62,17 +61,6 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     public void OnPointerClick(PointerEventData eventData)
     {
 
-        if (!menuHandler.layoutOpen)
-            return;
-
-        if (remove)
-        {
-            //parent from button press is first parameter
-            PutDialInTray(transform.parent.parent.gameObject, menuHandler);
-            //Debug.Log("Remove Dial Click");
-
-            menuHandler.dialsManager.SaveLayout();
-        }
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -81,58 +69,68 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         {
             if (move)
             {
-                //check the dial is attached to the original parent (not in tray)
-
                 //was it in tray?
-                if (menuHandler.dialsInTray.Contains(transform.parent.parent.gameObject))                
-                {
+                GameObject dialParent = transform.parent.parent.parent.gameObject;
+                if (menuHandler.dialsInTray.Contains(dialParent))
+                {                    
                     //it is in the tray
                     //put it back to orignal parent
-                    transform.parent.parent.gameObject.transform.parent = menuHandler.udpClient.rN.transform;
-                    //reset scale
-                    List<GameObject> dials = Layout.ActiveDials(menuHandler.dialsManager.countryDialBoard);
-                    float defaultScale = Layout.DefaultDialScale(dials);
-                    //defauly scale in prefab is 0.6f, factor this in
-                    defaultScale *= Layout.scaleOverall;
-                    rectTransform.localScale = new Vector3(defaultScale, defaultScale, 1f);
+                    dialParent.transform.parent = menuHandler.udpClient.rN.transform;
+                    //reset scale ?                   
+                    //float defaultScale = Layout.dialScale;
+                    //parentRect.transform.Find("Dial").localScale = new Vector3(defaultScale, defaultScale, 1f);
 
                     //remove from tray list
-                    menuHandler.dialsInTray.Remove(rectTransform.gameObject);
+                    menuHandler.dialsInTray.Remove(parentRect.gameObject);
 
-                    //turn on/off empty trays
-                    menuHandler.UpdateLayoutPanel();
+                    //close tray
+                    menuHandler.TrayPulldown();
                 }
+
+                parentRect.SetAsLastSibling();
             }
-        }
-       
+        }       
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-
         if (menuHandler.layoutOpen)
         {
             if (move)
             {
                 Vector2 d2 = eventData.delta / canvas.scaleFactor;
-                rectTransform.anchoredPosition += d2;
+                parentRect.anchoredPosition += d2;
             }
 
             if (scale)
             {
+                if (transform.name == "Arrow Down" || transform.name == "Arrow Up")
+                {
+                    //don't drag on buttons
+                    return;
+                }
+                //remove parent so the panel doesn't scale
+                GameObject container = transform.parent.gameObject;
+                GameObject containerParent = container.transform.parent.gameObject;
+                Vector3 prevPos = container.transform.position;
+                container.transform.parent = null;
 
                 Vector2 d2 = eventData.delta;
                 float avg = (d2.x + d2.y) / 2;
-                avg /= canvas.scaleFactor;// * Time.deltaTime;
-                                          //scale speed var
+                avg /= canvas.scaleFactor;                                         
                 avg /= 200;
 
-                rectTransform.localScale += new Vector3(avg, avg, 0f);
+                //scale only the dial- not the parent or UI
+                dialRect.localScale += new Vector3(avg, avg, 0f);
 
-                float clampX = Mathf.Clamp(rectTransform.localScale.x, minScale, maxScale);
-                float clampY = Mathf.Clamp(rectTransform.localScale.y, minScale, maxScale);
+                float clampX = Mathf.Clamp(dialRect.localScale.x, minScale, maxScale);
+                float clampY = Mathf.Clamp(dialRect.localScale.y, minScale, maxScale);
 
-                rectTransform.localScale = new Vector3(clampX, clampY, 1f);
+                dialRect.localScale = new Vector3(clampX, clampY, 1f);
+               
+                //re parent
+                container.transform.parent = containerParent.transform;
+                container.transform.position = prevPos;              
             }
         }
         else
@@ -154,44 +152,41 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         //snap 
         if (move)
         {
-            Vector2 d2 = rectTransform.anchoredPosition;
+            Vector2 d2 = parentRect.anchoredPosition;
 
+            d2.x = Mathf.Round(d2.x / moveSnap) * moveSnap;
+            d2.y = Mathf.Round(d2.y / moveSnap) * moveSnap;
+           
+            parentRect.anchoredPosition = ScreenTrap(d2);
 
-            //snap
-            int snap = 10;
-
-            d2.x = Mathf.Round(d2.x / snap) * snap;
-            d2.y = Mathf.Round(d2.y / snap) * snap;
-
-            //  d2.x = Mathf.Clamp(d2.x, Screen.width * -.5f, Screen.width * .5f);
-            //  float ySize = Screen.height * .5f + rectTransform.rect.height;
-            //  d2.y = Mathf.Clamp(d2.y, Screen.height * -.5f - rectTransform.rect.height, rectTransform.rect.height * canvas.scaleFactor);//bottom, top
-             rectTransform.anchoredPosition = ScreenTrap(d2);
-
-
-            //make sure icons are 
-            //Debug.Log(transform.parent.parent.gameObject.name);
-            IconsOn(transform.parent.parent.gameObject);
+            //ensure correct icons are showing
+            GameObject UIHandlerObject = transform.parent.parent.gameObject;
+            UIHandlerObject.transform.Find("Container").gameObject.SetActive(true);
+            UIHandlerObject.transform.Find("Return Container").gameObject.SetActive(false);
 
         }
 
         if (scale)
         {
-            int snap = 20;
 
-            Vector2 d2 = rectTransform.localScale;
+            //remove parent so the panel doesn't scale
+            GameObject container = transform.parent.gameObject;
+            GameObject containerParent = container.transform.parent.gameObject;
+            Vector3 prevPos = container.transform.position;
+            container.transform.parent = null;
+
+
+            Vector2 d2 = dialRect.localScale;
             
-            d2.x = Mathf.Round(d2.y * snap) / snap;
-            d2.y = Mathf.Round(d2.y* snap) / snap;
-
-            rectTransform.localScale = new Vector3(d2.x, d2.y, 1f);
+            d2.x = Mathf.Round(d2.y * scaleSnap) / scaleSnap;
+            d2.y = Mathf.Round(d2.y* scaleSnap) / scaleSnap;
 
             //clamping on drag above function
-            rectTransform.localScale = new Vector3(d2.x, d2.y, 1f);
+            dialRect.localScale = new Vector3(d2.x, d2.y, 1f);
 
-            //trap in screen
-            ScreenTrap(rectTransform.anchoredPosition);
-
+            //re parent
+            container.transform.parent = containerParent.transform;
+            container.transform.position = prevPos;
         }
 
 
@@ -231,8 +226,8 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         if (menuHandler.dialsInTray.Contains(transform.parent.parent.gameObject))
         {
             //using same functions as when we load the dials to find out what size they are by default
-            float defaultScale = Layout.DefaultDialScale(LoadManager.ActiveDials(menuHandler.dialsManager.countryDialBoard) );
-            rectTransform.localScale = new Vector3(defaultScale, defaultScale, 1f);
+            //float defaultScale = 0.6f;// Layout.DefaultDialScale(LoadManager.ActiveDials(menuHandler.dialsManager.countryDialBoard) );
+            //parentRect.localScale = new Vector3(defaultScale, defaultScale, 1f);
         }
 
         if (navArrow)
@@ -251,23 +246,65 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         //if (transform.parent.parent.parent.gameObject != originalParent)
         if (menuHandler.dialsInTray.Contains(transform.parent.parent.gameObject))
         {
-            rectTransform.localScale = new Vector3(1f, 1f, 1f);
+           // parentRect.transform.Find("Dial").localScale = new Vector3(1f, 1f, 1f);
         }
 
         if (navArrow)
             navArrowDown = false;
+
+        if(gear)
+        {    
+            //turn on controllers
+            closedContainer.SetActive(false); //to scale animation?
+            openContainer.SetActive(true); //to scale animation?
+        }
+        if (scale)
+        {
+            //remove parent so the panel doesn't scale
+            GameObject container = transform.parent.gameObject;            
+            GameObject containerParent = container.transform.parent.gameObject;
+            Vector3 prevPos = container.transform.position;
+            container.transform.parent = null;
+            
+            if (transform.name == "Arrow Up")
+            { 
+                dialRect.transform.localScale += new Vector3(scaleButtonSpeed, scaleButtonSpeed, 0f);
+              
+            } 
+            else if (transform.name == "Arrow Down")
+            {
+                dialRect.transform.localScale -= new Vector3(scaleButtonSpeed, scaleButtonSpeed, 0f);                
+            }
+            //re parent
+            container.transform.parent = containerParent.transform;
+            container.transform.position = prevPos;
+        }
+
+        if (remove)
+        {
+            //parent from button press is first parameter
+            PutDialInTray(transform.parent.parent.parent.gameObject, menuHandler);
+            Debug.Log("Remove Dial Click");
+
+            menuHandler.dialsManager.SaveLayout();
+
+        }
+        if (returnToBoard)
+        {
+            //should have a better way to get country dial board
+            transform.parent.parent.parent.parent = menuHandler.udpClient.rN.transform;
+        }
     }
 
     public Vector2 ScreenTrap(  Vector2 d2 )
     {
         RectTransform rectTransformParent = transform.parent.parent.GetComponent<RectTransform>();
-        //400 because face width is 100 and face scale is 8. Move half of that out
-        float minWidth = canvas.GetComponent<RectTransform>().rect.width * -.5f + rectTransformParent.localScale.x * 400;
-        float maxWidth = canvas.GetComponent<RectTransform>().rect.width * .5f - rectTransformParent.localScale.x * 400;
+        //face width is 100 
+        float minWidth = canvas.GetComponent<RectTransform>().rect.width * -.5f + rectTransformParent.localScale.x * 50;
+        float maxWidth = canvas.GetComponent<RectTransform>().rect.width * .5f - rectTransformParent.localScale.x * 50;
 
-        
-        float minHeight = canvas.GetComponent<RectTransform>().rect.height * -.5f + rectTransformParent.localScale.x * 400;
-        float maxHeight = canvas.GetComponent<RectTransform>().rect.height * .5f - rectTransformParent.localScale.x * 400; 
+        float minHeight = canvas.GetComponent<RectTransform>().rect.height *-.5f + rectTransformParent.localScale.x * 50;
+        float maxHeight = canvas.GetComponent<RectTransform>().rect.height * .5f - rectTransformParent.localScale.x * 50; 
 
         d2.x = Mathf.Clamp(d2.x, minWidth, maxWidth);
         d2.y = Mathf.Clamp(d2.y, minHeight, maxHeight);
@@ -279,87 +316,53 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     //put dial in tray
     public static void PutDialInTray(GameObject dialParent, MenuHandler menuHandler)
     {
+        //Debug.Log("Put dial in tray");
+        //put canvas width to tray
+        RectTransform canvasRect = GameObject.FindGameObjectWithTag("Canvas").GetComponent<RectTransform>();
+        RectTransform trayRect = menuHandler.trayParent.GetComponent<RectTransform>();               
+        
+        trayRect.sizeDelta = new Vector2( canvasRect.sizeDelta.x, canvasRect.sizeDelta.y*.5f);
+        dialParent.transform.parent = menuHandler.trayParent.transform;// targetTray.transform;
+        menuHandler.dialsInTray.Add(dialParent);
 
-        //find empty tray in children of trayParent
+        float max = Mathf.Max(canvasRect.rect.width, canvasRect.rect.height);
+        float s = max / 5000;
+        //ensure on
+        bool trayActive = menuHandler.layoutPanel.activeSelf;
+        menuHandler.layoutPanel.SetActive(true);
+        GridLayoutGroup glg = GameObject.FindGameObjectWithTag("DialsTray").GetComponent<GridLayoutGroup>();
+        //return to previous state - workaround for being inactive on launch. Could set public var and assign for all dials? :S
+        menuHandler.layoutPanel.SetActive(trayActive);
+        float spacing = s * 800 + 20;//20 general padding
+        glg.spacing = new Vector2(spacing, spacing); 
+        int p = Mathf.RoundToInt( s * 400);
+        glg.padding = new RectOffset(p, p, 0, p);
+        dialParent.transform.Find("Dial").transform.localScale = new Vector3(s, s, 1f);
 
-        for (int i = 0; i < menuHandler.trayParent.transform.childCount; i++)
-        {
-            if (menuHandler.trayParent.transform.GetChild(i).childCount == 0)
-            {
-                GameObject targetTray = menuHandler.trayParent.transform.GetChild(i).gameObject;
-                //we have found an empty tray, place dial in tray
-                //Debug.Log("B4 =" + dialParent.transform.parent.name);
-                dialParent.transform.parent = targetTray.transform;
-                //Debug.Log("After =" + dialParent.transform.parent.name);
-                dialParent.transform.position = targetTray.transform.position;
+        if (menuHandler.trayPulled)
+            menuHandler.TrayPulldown();
+        else
+            menuHandler.DropDownYTarget();
 
-                dialParent.transform.localScale = new Vector3(1f, 1f, 1f);
 
-                menuHandler.dialsInTray.Add(dialParent);
-
-                //turn image off for icons
-                IconsOff(dialParent);
-
-                //turn on/off empty trays
-                menuHandler.UpdateLayoutPanel();
-
-                return;
-
-            }
-        }
+        //switch icon to reset
+        //Debug.Log("Parent = " + dialParent.gameObject);
+        dialParent.transform.Find("UI Handlers").Find("Container").gameObject.SetActive(false);
+        dialParent.transform.Find("UI Handlers").Find("Return Container").gameObject.SetActive(true);
     }
         
     public static void EmptyTrays( MenuHandler menuHandler)
     {
 
+        for (int i = 0; i < menuHandler.dialsInTray.Count; i++)
+        {
+            Destroy(menuHandler.dialsInTray[i]);
+        }
+
         //empty list
         menuHandler.dialsInTray.Clear();
-
-        //remove dials in tray hierarchy
-
-        for (int i = 0; i < menuHandler.trayParent.transform.childCount; i++)
-        {
-            if (menuHandler.trayParent.transform.GetChild(i).childCount != 0)
-            {
-                //should only be one child/dial ever
-                //destroy happens on next frame but there is aparent check before this so let's just null the parent until destroyed
-                Destroy(menuHandler.trayParent.gameObject.transform.GetChild(i).GetChild(0).gameObject);
-                menuHandler.trayParent.gameObject.transform.GetChild(i).GetChild(0).transform.parent = null;
-                
-            }
-        }
     }
-
-    public static void IconsOn(GameObject dialParent)
-    {
-        //turn  icons (UI Handlers should be first child)
-        for (int j = 0; j < dialParent.transform.GetChild(0).transform.childCount; j++)
-        {
-            Transform child = dialParent.transform.GetChild(0).transform.GetChild(j);
-            if (child.tag == "UIHandler")
-            {
-                //only turn on dial icons if not in tray
-
-                //child.gameObject.SetActive(toggle);
-                child.gameObject.GetComponent<UnityEngine.UI.Image>().enabled = true;
-            }
-        }
-    }
-
-    private static void IconsOff(GameObject dialParent)
-    {
-        //turn off icons (UI Handlers should be first child)
-        for (int j = 0; j < dialParent.transform.GetChild(0).transform.childCount; j++)
-        {
-            Transform child = dialParent.transform.GetChild(0).transform.GetChild(j);
-            if (child.tag == "UIHandler")
-            {
-                //child.gameObject.SetActive(toggle);
-                child.gameObject.GetComponent<UnityEngine.UI.Image>().enabled = false;
-            }
-        }
-    }
-
+ 
     public void TrayArrowLeft(GameObject parent)
     {
         Debug.Log("Tray Arrow Left");
@@ -405,7 +408,5 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         }
 
         return isOverTaggedElement;
-    }
-
-  
+    }    
 }

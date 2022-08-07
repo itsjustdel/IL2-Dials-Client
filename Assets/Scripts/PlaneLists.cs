@@ -31,26 +31,26 @@ public static class PlaneLists
         "Mosquito F.B. Mk.VI ser.2",
         "Spitfire Mk.Vb",
         "Spitfire Mk.IXe",
-        "Tempest Mk.V ser.2",
         "Spitfire Mk.XIV",
+        "Tempest Mk.V ser.2",        
         "Typhoon Mk.Ib",
-        "Sopwith Triplane",
-        "Sopwith Camel",
-        "Sopwith Dolphin",
+
+        "Airco De Haviland 4",
         "Bristol F.2B Falcon II",
         "Bristol F.2B Falcon III",
         "Handley Page O/400",
         "S.E.5a",
-        "Airco De Haviland 4"
-
+        "Sopwith Camel",
+        "Sopwith Dolphin",
+        "Sopwith Triplane"
     };
 
     public static List<string> FrPlanes = new List<string>()
     {
-        "SPAD XIII.C1",
+        "Breguet type 14 B.2",        
         "SPAD VII.C1 150HP",
         "SPAD VII.C1 180HP",
-        "Breguet type 14 B.2"
+        "SPAD XIII.C1"
     };
 
     public static List<string> UsPlanes = new List<string>()
@@ -92,18 +92,19 @@ public static class PlaneLists
         "Ju-88 A4",
         "Ju-88 C6",
         "Me 262 A",
+
         "Albatros D.Va",
-        "Pfalz D.IIIa",
+        "DFW C.V",
+        "Fokker D.VII",
+        "Fokker D.VIIF",
+        "Fokker D.VIII",
+        "Fokker Dr.I",        
         "Gotha G.V",
-        "Fokker Dr.I",
         "Halberstadt CL.II D.IIIa",
         "Halberstadt CL.II D.IIIau",
         "Nieuport 28.C1",
-        "Fokker D.VIII",
-        "Pfalz D.XII",
-        "DFW C.V",
-        "Fokker D.VII",
-        "Fokker D.VIIF"
+        "Pfalz D.IIIa",
+        "Pfalz D.XII"
     };
 
     public static List<string> ItaPlanes = new List<string>()
