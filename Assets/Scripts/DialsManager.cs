@@ -787,7 +787,7 @@ public class DialsManager : MonoBehaviour
             if (!menuHandler.dialsInTray.Contains(vsi))
             {
                 layout.vsiPos = vsi.GetComponent<RectTransform>().anchoredPosition;
-                layout.vsiScale = vsi.GetComponent<RectTransform>().localScale.x;
+                layout.vsiScale = vsi.transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
             }
             else
                 VSIInTray(layout);
@@ -923,7 +923,7 @@ public class DialsManager : MonoBehaviour
     private void VSIInTray(Layout layout)
     {
         layout.vsiPos = vsi.GetComponent<RectTransform>().anchoredPosition;
-        layout.vsiScale = vsi.GetComponent<RectTransform>().localScale.x;
+        layout.vsiScale = vsi.transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
         layout.vsiInTray = true;
     }
 

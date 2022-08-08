@@ -85,20 +85,21 @@ public class Layout
     public static void DefaultLayouts(List<GameObject> activeDials, RectTransform canvasRectTransform)
     {
         UnityEngine.Debug.Log("Default Layouts");
-        int d = 0;
+        int total = 0;
 
         //what's left over after we place each dial on a row - used to center a row
         float diff = (canvasRectTransform.rect.width - (cellSize * columns)) * .5f;
 
         for (int i = 0; i < rows; i++)
-        {            
+        {
+            int thisRow = 0;
             for (int j = 0; j < columns; j++)
             {                
-                if (d > activeDials.Count - 1)
+                if (total > activeDials.Count - 1)
                 {
                     //last row doesn't have enough dials to make it to the end
                     //center all in row
-                    for (int p = d-1; p > d-columns; p--)
+                    for (int p = total - 1; p >= total - thisRow; p--)
                     {
                         activeDials[p].GetComponent<RectTransform>().anchoredPosition += new Vector2(cellSize * .5f, 0);
                     }
@@ -113,12 +114,13 @@ public class Layout
                 
                 y += canvasRectTransform.rect.height*.5f - cellSize*.5f;
                 
-                activeDials[d].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
-                activeDials[d].transform.Find("Dial").transform.localScale = new Vector3(dialScale, dialScale, 1);
+                activeDials[total].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
+                activeDials[total].transform.Find("Dial").transform.localScale = new Vector3(dialScale, dialScale, 1);
                 //set ui scale this time only
-                activeDials[d].transform.Find("UI Handlers").transform.localScale = new Vector3(dialScale, dialScale, 1);
+                activeDials[total].transform.Find("UI Handlers").transform.localScale = new Vector3(dialScale, dialScale, 1);
 
-                d++;
+                total++;
+                thisRow++;
                 
             }
         }

@@ -1463,8 +1463,8 @@ MonoBehaviour:
   scaleButtonSpeed: 10
   compassSpinSpeed: 100
   canvas: {fileID: 0}
-  rectTransform: {fileID: 0}
-  moveSnap: 10
+  parentRect: {fileID: 0}
+  dialRect: {fileID: 0}
   scaleSnap: 20
   openContainer: {fileID: 0}
   closedContainer: {fileID: 0}
@@ -4591,8 +4591,8 @@ MonoBehaviour:
   scaleButtonSpeed: 10
   compassSpinSpeed: 100
   canvas: {fileID: 0}
-  rectTransform: {fileID: 0}
-  moveSnap: 10
+  parentRect: {fileID: 0}
+  dialRect: {fileID: 0}
   scaleSnap: 20
   openContainer: {fileID: 0}
   closedContainer: {fileID: 0}
@@ -8632,7 +8632,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: v0.54
+  m_Text: 'v0.6
+
+'
 --- !u!222 &1312049642
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8984,7 +8986,7 @@ MonoBehaviour:
   scalar1: 73.1
   useTestPlane: 0
   testPlane: {fileID: 0}
-  clientVersion: 0.54
+  clientVersion: 0.6
   serverVersion: 0
   planeType: 
   planeTypePrevious: 

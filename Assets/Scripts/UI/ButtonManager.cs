@@ -37,8 +37,11 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     {
         canvas = GameObject.FindGameObjectWithTag("Canvas").transform.GetComponent<Canvas>();
         menuHandler = GameObject.Find("Menu").GetComponent<MenuHandler>();
-        parentRect = transform.parent.parent.parent.GetComponent<RectTransform>();
-        dialRect = parentRect.Find("Dial").GetComponent<RectTransform>();
+        if (!compass)
+        {
+            parentRect = transform.parent.parent.parent.GetComponent<RectTransform>();
+            dialRect = parentRect.Find("Dial").GetComponent<RectTransform>();
+        }
     }
 
     private void Update()
