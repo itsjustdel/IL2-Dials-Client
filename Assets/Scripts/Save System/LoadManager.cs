@@ -150,7 +150,7 @@ public class LoadManager : MonoBehaviour
 
     private static void DialScalePosition(GameObject dialParent, Vector3 position, float scale)
     {
-        UnityEngine.Debug.Log("Load layout - dial scale = " + Layout.dialScale);
+        //UnityEngine.Debug.Log("Load layout - dial scale = " + Layout.dialScale);
         dialParent.GetComponent<RectTransform>().anchoredPosition = position;
 
         

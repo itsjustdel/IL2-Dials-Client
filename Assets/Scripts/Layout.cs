@@ -79,7 +79,7 @@ public class Layout
         columns = Mathf.RoundToInt(t.Item2); //global
         cellSize = t.Item3;
         dialScale = cellSize / 800; //global
-        Debug.Log("dial scale =" + dialScale);
+       // Debug.Log("dial scale =" + dialScale);
     }
 
     public static void DefaultLayouts(List<GameObject> activeDials, RectTransform canvasRectTransform)
