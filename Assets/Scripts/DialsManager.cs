@@ -83,6 +83,7 @@ public class DialsManager : MonoBehaviour
         Markings(airplaneData);
 
         P51FaceSwitch();
+        MosquitoFaceSwitch();
 
         Hs129B2NeedleSwitch();
 
@@ -110,6 +111,24 @@ public class DialsManager : MonoBehaviour
             Debug.Log("air country = " + airplaneData.planeAttributes.country);
             menuHandler.OpenLayoutClick();
             openLayoutOnLoad = false;
+        }
+    }
+
+    private void MosquitoFaceSwitch()
+    {
+        if (airplaneData.planeType == "Mosquito F.B. Mk.VI ser.2")
+        {
+            if (airplaneData.engineModification == 1)
+            {
+                for (int i = 0; i < manifoldObjects.Count; i++)
+                {
+                    manifoldObjects[i].transform.Find("Dial").GetChild(0).gameObject.SetActive(false);
+                    manifoldObjects[i].transform.Find("Dial").GetChild(3).gameObject.SetActive(false);
+
+                    manifoldObjects[i].transform.Find("Dial").GetChild(1).gameObject.SetActive(true);
+                    manifoldObjects[i].transform.Find("Dial").GetChild(4).gameObject.SetActive(true);
+                }
+            }
         }
     }
 
@@ -147,8 +166,8 @@ public class DialsManager : MonoBehaviour
             {
                 for (int i = 0; i < manifoldObjects.Count; i++)
                 {
-                    manifoldObjects[i].transform.Find("Dial").Find("Face").gameObject.SetActive(false);
-                    manifoldObjects[i].transform.Find("Dial").Find("Face 150").gameObject.SetActive(true);
+                    manifoldObjects[i].transform.Find("Dial").GetChild(0).gameObject.SetActive(false);
+                    manifoldObjects[i].transform.Find("Dial").GetChild(1).gameObject.SetActive(true);
                 }
             }
 
