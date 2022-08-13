@@ -12,9 +12,10 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     public bool scale;
     public bool remove;
     public bool compass;
-    public bool navArrow;
+    public bool navArrow; //anything using this?
     public bool gear;
     public bool returnToBoard;
+    public bool tigermoth;
     public GameObject trayParent;
     public bool leftArrow;
     private bool navArrowDown;
@@ -32,12 +33,14 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     private float maxScale = 2f;
     public GameObject openContainer;
     public GameObject closedContainer;
+    public float tigerTimer = 0;
+    public bool tigerTimerOn;
 
     private void Awake()
     {
         canvas = GameObject.FindGameObjectWithTag("Canvas").transform.GetComponent<Canvas>();
         menuHandler = GameObject.Find("Menu").GetComponent<MenuHandler>();
-        if (!compass)
+        if (!compass && !tigermoth)
         {
             parentRect = transform.parent.parent.parent.GetComponent<RectTransform>();
             dialRect = parentRect.Find("Dial").GetComponent<RectTransform>();
@@ -59,6 +62,21 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             else
                 trayParent.transform.position += Vector3.right * navArrowDownSpeed * Time.fixedDeltaTime;
         }
+
+        if (tigerTimerOn)
+        {
+            tigerTimer += Time.deltaTime;
+
+            if (tigerTimer > 1f)
+            {
+                if (!menuHandler.tigerMothSelected)
+                    menuHandler.airplaneData.planeType = "Tigermoth";
+
+                menuHandler.tigerMothSelected = !menuHandler.tigerMothSelected;
+                tigerTimerOn = false;
+            }
+        }
+        
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -221,6 +239,11 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         }
 
         //Debug.Log("OnPointerDown");
+        if (tigermoth)
+        {
+            
+            tigerTimerOn = true;
+        }
 
         if (!menuHandler.layoutOpen)
             return;
@@ -237,10 +260,21 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         {
             navArrowDown = true;
         }
+
+      
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        if (tigermoth)
+        {
+            tigerTimerOn = false;
+            tigerTimer = 0f;
+        }                
+
+        if (navArrow)
+            navArrowDown = false;
+
         if (!menuHandler.layoutOpen)
             return;
 
@@ -252,8 +286,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
            // parentRect.transform.Find("Dial").localScale = new Vector3(1f, 1f, 1f);
         }
 
-        if (navArrow)
-            navArrowDown = false;
+      
 
         if(gear)
         {    

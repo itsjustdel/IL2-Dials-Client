@@ -6,11 +6,11 @@ using static PlaneLists;
 
 public class MenuHandler : MonoBehaviour
 {
-
-    
     public AirplaneData airplaneData;
     public DialsManager dialsManager;
-
+    public FlagButtons flagButtons;
+    public SlaveManager slaveManager;
+    public PlaneDropdown planeDropdown;
     public bool deletePrefs = false;
     public GameObject title;
     public GameObject missionStart;
@@ -75,7 +75,7 @@ public class MenuHandler : MonoBehaviour
     public float currentTrayY = 600;
 
     ScreenOrientation currentOrientation;
-    
+    public bool tigerMothSelected;
 
     public void Start()
     {
@@ -159,9 +159,32 @@ public class MenuHandler : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKey("escape"))
-        {
-            Application.Quit();
+        if (Input.GetKeyDown("escape"))
+        {            
+            if (connectionPanel.activeInHierarchy)
+            {
+                ConnectionPanelBack();
+            }
+            else if (layoutOpen)
+            {
+                AcceptLayoutClick();               
+            }
+            else if (flagsPanel.activeInHierarchy)
+            {
+                flagButtons.BackPressed();
+            }
+            else if (screensPanel.activeInHierarchy)
+            {
+                slaveManager.ScreensPanelBack();
+            }
+            else if (planeDropdownPanel.activeInHierarchy)
+            {
+                planeDropdown.OnBack();
+            }
+            else if (menuPanel.activeInHierarchy)
+            {
+                MenuButtonClicked();
+            }
         }
 
         RemoveTitle();

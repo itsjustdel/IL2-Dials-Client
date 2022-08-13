@@ -34,7 +34,7 @@ public class FlagButtons : MonoBehaviour
 
     }
 
-    public void backPressed()
+    public void BackPressed()
     {
         //go back to menu panel
         menuPanel.SetActive(true);

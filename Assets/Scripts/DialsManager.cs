@@ -82,10 +82,15 @@ public class DialsManager : MonoBehaviour
 
         Markings(airplaneData);
 
+        //plane specific functions
         P51FaceSwitch();
+
         MosquitoFaceSwitch();
 
-        Hs129B2NeedleSwitch();
+        ME410ManifoldRotate();
+
+        LeftRightNeedleSwitch();
+        //end of plane specifics
 
         if (countryDialBoard != null)
             LoadManager.LoadLayout(airplaneData, this);
@@ -114,6 +119,13 @@ public class DialsManager : MonoBehaviour
         }
     }
 
+    private void ME410ManifoldRotate()
+    {
+        if (airplaneData.planeType == "Me 410 A-1")
+            //dial is puin 90 degrees in cockpit
+            manifoldObjects[0].transform.Find("Dial").Find("Face").transform.rotation *= Quaternion.Euler(0, 0, 90);
+    }
+
     private void MosquitoFaceSwitch()
     {
         if (airplaneData.planeType == "Mosquito F.B. Mk.VI ser.2")
@@ -132,12 +144,12 @@ public class DialsManager : MonoBehaviour
         }
     }
 
-    private void Hs129B2NeedleSwitch()
+    private void LeftRightNeedleSwitch()
     {
-        if (airplaneData.planeType == "Hs 129 B-2")
+        if (airplaneData.planeType == "Hs 129 B-2" || airplaneData.planeType == "Me 410 A-1")
         {
             //needles need re-order so R is underneath
-            manifoldObjects[0].transform.Find("Dial").Find("Needle Left").transform.SetSiblingIndex(manifoldObjects[0].transform.childCount-1);
+            manifoldObjects[0].transform.Find("Dial").Find("Needle Left").transform.SetAsLastSibling();
         }
     }
 
@@ -339,6 +351,24 @@ public class DialsManager : MonoBehaviour
                 }
             }
 
+            else if (airplaneData.planeAttributes.country == Country.GER)
+            {                
+                if (airplaneData.planeType == "Me 410 A-1")
+                {
+                    if (i == 0)
+                    {
+                        //do both needles and return, p38 has two needles on one dial
+                        GameObject needleLeft = rpmObjects[i].transform.Find("Dial").Find("Needle Left").gameObject;
+                        countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleLeft);
+
+                        GameObject needleRight = rpmObjects[i].transform.Find("Dial").Find("Needle Right").gameObject;
+                        countryDialBoard.GetComponent<RotateNeedle>().rpmNeedlesLarge.Add(needleRight);
+
+                        return;
+                    }
+                }
+            }
+
             else if (airplaneData.planeAttributes.country == Country.UK  || airplaneData.planeAttributes.country == Country.FR)
             {
                 //Mosquito
@@ -360,7 +390,10 @@ public class DialsManager : MonoBehaviour
 
         for (int i = 0; i < manifoldObjects.Count; i++)
         {
-            if (airplaneData.planeType == "P-38J-25" || airplaneData.planeType == "He 111 H-16" || airplaneData.planeType == "Hs 129 B-2")
+            if (airplaneData.planeType == "P-38J-25" || 
+                    airplaneData.planeType == "He 111 H-16" ||
+                        airplaneData.planeType == "Me 410 A-1" ||
+                            airplaneData.planeType == "Hs 129 B-2")
             {
                 //p38 J or he 111 h16
                 GameObject needleLeft = manifoldObjects[i].transform.Find("Dial").Find("Needle Left").gameObject;
@@ -453,7 +486,7 @@ public class DialsManager : MonoBehaviour
 
                 int dialsToInstantiate = airplaneData.planeAttributes.engines;
                 //some plane have two needles one dial, only create one in this instance
-                if (airplaneData.planeType == "P-38J-25")
+                if (airplaneData.planeType == "P-38J-25" || airplaneData.planeType == "Me 410 A-1")
                     dialsToInstantiate = 1;
 
                 for (int i = 0; i < dialsToInstantiate; i++)
@@ -473,7 +506,7 @@ public class DialsManager : MonoBehaviour
                     rpmObjects.Add(rpmInstance);
                 }
 
-                if (dialsToInstantiate == 2) // 3 engine ger plane, no support atm
+                if (dialsToInstantiate == 2) // 3 engine ger plane, no support atm (just ui icons)
                 {
                     for (int i = 0; i < rpmObjects.Count; i++)
                     {
@@ -497,7 +530,10 @@ public class DialsManager : MonoBehaviour
 
                 int dialsToInstantiate = airplaneData.planeAttributes.engines;
                 //some plane have two needles one dial, only create one in this instance
-                if (airplaneData.planeType == "P-38J-25" || airplaneData.planeType == "He 111 H-16" || airplaneData.planeType == "Hs 129 B-2")
+                if (airplaneData.planeType == "P-38J-25" || 
+                        airplaneData.planeType == "He 111 H-16" ||
+                            airplaneData.planeType == "Me 410 A-1"||
+                                airplaneData.planeType == "Hs 129 B-2")
                     dialsToInstantiate = 1;
 
                 for (int i = 0; i < dialsToInstantiate; i++)

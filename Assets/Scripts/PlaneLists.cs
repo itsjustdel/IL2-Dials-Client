@@ -92,6 +92,7 @@ public static class PlaneLists
         "Ju-88 A4",
         "Ju-88 C6",
         "Me 262 A",
+        "Me 410 A-1",
 
         "Albatros D.Va",
         "DFW C.V",

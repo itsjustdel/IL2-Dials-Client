@@ -16,8 +16,6 @@ public enum DialVariant
 //extending from airplanedata for Country enum
 public class PlaneDataFromName : AirplaneData
 {
-
-
     public class PlaneAttributes
     {
         public Country country;
@@ -848,6 +846,21 @@ public class PlaneDataFromName : AirplaneData
                 break;
 
 
+            //RSE.RSE::CCockpitInstruments::simulation+102D - 48 8D 15 246D0E00     - lea rdx,[RSE.RSE::CAeroplane_Me_410_A1::`vftable'+360] { ("Me 410 A-1") }
+            case "Me 410 A-1":
+                planeAttributes.country = Country.GER;
+                planeAttributes.altimeter = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.vsiLarge = true;
+                planeAttributes.headingIndicator = true;
+                planeAttributes.artificialHorizon = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.engines = 2;
+                planeAttributes.rpmType = DialVariant.E;
+                planeAttributes.manifoldType = DialVariant.F;
+                planeAttributes.waterTempType = DialVariant.A;
+                break;
+
             //Flying Circus Vol 1
             //RSE.RSE::CCockpitInstruments::simulation+3DB5 - 48 8D 15 C4481F00     - lea rdx,[RSE.RSE::CAeroplane_SPAD_XIII_C1::`vftable'+1C8] { ("SPAD XIII.C1") }
             case "SPAD XIII.C1":
@@ -1103,6 +1116,17 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.manifoldType = DialVariant.None;
                 planeAttributes.waterTempType = DialVariant.A;
                 break;
+
+            case "Tigermoth":
+                planeAttributes.country = Country.UK;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
+                planeAttributes.waterTempType = DialVariant.A;
+                break;
+
 
             default:
                 planeAttributes.country = Country.UNDEFINED;

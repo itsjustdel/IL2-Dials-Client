@@ -1456,6 +1456,7 @@ MonoBehaviour:
   navArrow: 1
   gear: 0
   returnToBoard: 0
+  tigermoth: 0
   trayParent: {fileID: 54036928}
   leftArrow: 1
   navArrowDownSpeed: 10
@@ -1468,6 +1469,8 @@ MonoBehaviour:
   scaleSnap: 20
   openContainer: {fileID: 0}
   closedContainer: {fileID: 0}
+  tigerTimer: 0
+  tigerTimerOn: 0
 --- !u!114 &301423304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4584,6 +4587,7 @@ MonoBehaviour:
   navArrow: 1
   gear: 0
   returnToBoard: 0
+  tigermoth: 0
   trayParent: {fileID: 54036928}
   leftArrow: 0
   navArrowDownSpeed: 10
@@ -4596,6 +4600,8 @@ MonoBehaviour:
   scaleSnap: 20
   openContainer: {fileID: 0}
   closedContainer: {fileID: 0}
+  tigerTimer: 0
+  tigerTimerOn: 0
 --- !u!114 &739187403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5235,6 +5241,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   airplaneData: {fileID: 1370128203}
   dialsManager: {fileID: 1111493065}
+  flagButtons: {fileID: 794077233}
+  slaveManager: {fileID: 1142282480}
+  planeDropdown: {fileID: 1278647518}
   deletePrefs: 0
   title: {fileID: 1236250533}
   missionStart: {fileID: 1016918972}
@@ -5290,6 +5299,7 @@ MonoBehaviour:
   trayPulled: 0
   trayYTarget: 2100
   currentTrayY: 0
+  tigerMothSelected: 0
 --- !u!4 &840226280
 Transform:
   m_ObjectHideFlags: 0
@@ -9169,6 +9179,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1413319310}
   - component: {fileID: 1413319309}
+  - component: {fileID: 1413319311}
   m_Layer: 0
   m_Name: Build Chooser
   m_TagString: Untagged
@@ -9205,6 +9216,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1413319311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1413319308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec67f0f2cec1df6498982872d6b61698, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1420615819
 GameObject:
   m_ObjectHideFlags: 0
@@ -9934,6 +9957,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1515710652}
+  - component: {fileID: 1515710653}
   m_Layer: 5
   m_Name: LEDs
   m_TagString: Untagged
@@ -9961,9 +9985,44 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -158.3, y: 131.27}
+  m_AnchoredPosition: {x: -158.2998, y: 131.27002}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1515710653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515710651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc3bebc31c4852243be2cf74ebf46f24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuHandler: {fileID: 0}
+  move: 0
+  scale: 0
+  remove: 0
+  compass: 0
+  navArrow: 0
+  gear: 0
+  returnToBoard: 0
+  tigermoth: 1
+  trayParent: {fileID: 0}
+  leftArrow: 0
+  navArrowDownSpeed: 10
+  navArrowClickSpeed: 0
+  scaleButtonSpeed: 10
+  compassSpinSpeed: 100
+  canvas: {fileID: 0}
+  parentRect: {fileID: 0}
+  dialRect: {fileID: 0}
+  scaleSnap: 20
+  openContainer: {fileID: 0}
+  closedContainer: {fileID: 0}
+  tigerTimer: 0
+  tigerTimerOn: 0
 --- !u!1 &1533612674
 GameObject:
   m_ObjectHideFlags: 0
@@ -11055,6 +11114,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slaveManager: {fileID: 1142282480}
   menuPanel: {fileID: 0}
+  savePos: 0
+  setPos: 0
 --- !u!4 &1853040845
 Transform:
   m_ObjectHideFlags: 0

@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 public class LoadManager : MonoBehaviour
 {
-    public static int step = 500;    
+    public static int step = 500;
 
     public static void MigrateLayoutsToNewVersion(int clientId)
     {

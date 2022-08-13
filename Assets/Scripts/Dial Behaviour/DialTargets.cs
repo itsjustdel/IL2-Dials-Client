@@ -47,6 +47,9 @@ public class DialTargets : MonoBehaviour
                     {
                         
                         manifoldLargeTargets[i] = GermanDials.ManifoldTargetA(airplaneData.manifolds[i], airplaneData.planeType,airplaneData.engineModification, airplaneData.scalar0);
+
+                        //me 410 has it's dial spun by 90 degrees, so add 90 to the target
+                        manifoldLargeTargets[i] *= Quaternion.Euler(0, 0, 90);
                     }
 
                     else if (airplaneData.planeAttributes.manifoldType == DialVariant.D)
@@ -142,14 +145,18 @@ public class DialTargets : MonoBehaviour
                     }
                     else if (airplaneData.planeAttributes.rpmType == DialVariant.B)
                     {
-                        rpmLargeTargets[i] = GermanDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1,rotateNeedle.animationCurveRPMA);
+                        rpmLargeTargets[i] = GermanDials.RPMBTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveRPMA);
                     }
                     else if (airplaneData.planeAttributes.rpmType == DialVariant.C)
                     {
                         rpmLargeTargets[i] = GermanDials.RPMCTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveRPMC);
                     }
-                    else
+                    else if (airplaneData.planeAttributes.rpmType == DialVariant.D)
+                    {
                         rpmLargeTargets[i] = GermanDials.RPMDTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveRPMD);
+                    }
+                    else
+                        rpmLargeTargets[i] = GermanDials.RPMCTarget(airplaneData.rpms[i], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveRPMC);
 
                     break;
 
