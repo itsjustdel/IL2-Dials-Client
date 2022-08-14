@@ -416,7 +416,12 @@ public class MenuHandler : MonoBehaviour
     {
         // Debug.Log("IP changed");
         string ipAddressText = ipTextField.GetComponent<Text>().text;
-        if (string.IsNullOrEmpty(ipAddressText))
+        if(ipAddressText == "clear prefs")
+        {
+            Debug.Log("Clearing all prefs from IP address");
+            PlayerPrefs.DeleteAll();
+        }
+        else if (string.IsNullOrEmpty(ipAddressText))
         {
             //go back to autoscan 
             udpClient.autoScan = true;

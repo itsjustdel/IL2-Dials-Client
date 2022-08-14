@@ -48,8 +48,10 @@ public class DialTargets : MonoBehaviour
                         
                         manifoldLargeTargets[i] = GermanDials.ManifoldTargetA(airplaneData.manifolds[i], airplaneData.planeType,airplaneData.engineModification, airplaneData.scalar0);
 
+
                         //me 410 has it's dial spun by 90 degrees, so add 90 to the target
-                        manifoldLargeTargets[i] *= Quaternion.Euler(0, 0, 90);
+                        if (airplaneData.planeType == "Me 410 A-1")
+                            manifoldLargeTargets[i] *= Quaternion.Euler(0, 0, 90);
                     }
 
                     else if (airplaneData.planeAttributes.manifoldType == DialVariant.D)
