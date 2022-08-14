@@ -111,9 +111,7 @@ public class DialsManager : MonoBehaviour
 
         if (openLayoutOnLoad)
         {
-            //flagged from open 
-            Debug.Log("open layout on load");
-            Debug.Log("air country = " + airplaneData.planeAttributes.country);
+            //flagged from open             
             menuHandler.OpenLayoutClick();
             openLayoutOnLoad = false;
         }
@@ -763,7 +761,7 @@ public class DialsManager : MonoBehaviour
             layout.speedoPos = speedometer.GetComponent<RectTransform>().anchoredPosition;
             // but only dial scale, we don't want to alter the UI default scale
             float s = speedometer.transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
-            Debug.Log("Speedo scale saving " + s);
+           
             layout.speedoScale = s;
         }
         else

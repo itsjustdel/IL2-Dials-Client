@@ -528,8 +528,6 @@ public class MenuHandler : MonoBehaviour
 
     public void OpenLayoutClick()
     {
-        Debug.Log("Layout Click");
-        Debug.Log("airplane data = " + airplaneData);
         layoutOpen = true;
 
         //check for plane - can only organise if plane loaded
@@ -739,13 +737,11 @@ public class MenuHandler : MonoBehaviour
     }
 
     public void ShowFlagsPanel()
-    {
-        Debug.Log("to flags");
+    {        
         inFlight = InFlight();
-        Debug.Log("in f = " + inFlight);
+        
         if (inFlight)
-        {
-            Debug.Log("to layout");
+        {         
             //open layout directly with current plane
             OpenLayoutClick();
         }
@@ -789,8 +785,6 @@ public class MenuHandler : MonoBehaviour
     }
     public void DropdownYTargetWithChildren()
     {
-        Debug.Log("dropdown Y target");
-
         HashSet<float> rows = new HashSet<float>();
         for (int i = 0; i < trayParent.transform.childCount; i++)
         {
@@ -798,7 +792,7 @@ public class MenuHandler : MonoBehaviour
             rows.Add(childY);
         }
         float spacing = GameObject.FindGameObjectWithTag("DialsTray").GetComponent<GridLayoutGroup>().spacing.x;
-        Debug.Log("spacing = " + spacing);
+        
         trayYTarget = 1800 - (rows.Count * spacing)+150; //150 is y pos of tray parent in hierarchy
                                                            //Debug.Log("rows= " + rows.Count);
     }

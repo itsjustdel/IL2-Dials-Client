@@ -84,7 +84,7 @@ public class Layout
 
     public static void DefaultLayouts(List<GameObject> activeDials, RectTransform canvasRectTransform)
     {
-        UnityEngine.Debug.Log("Default Layouts");
+        
         int total = 0;
 
         //what's left over after we place each dial on a row - used to center a row
