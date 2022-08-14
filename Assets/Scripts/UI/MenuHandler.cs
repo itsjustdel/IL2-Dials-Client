@@ -208,7 +208,7 @@ public class MenuHandler : MonoBehaviour
         
         IdleTimer();
 
-        ScreenOrientation();
+       // ScreenOrientation();
     }
 
     void ScreenOrientation()
@@ -420,6 +420,7 @@ public class MenuHandler : MonoBehaviour
         {
             Debug.Log("Clearing all prefs from IP address");
             PlayerPrefs.DeleteAll();
+            ipTextField.GetComponentInParent<InputField>().text = "Cleared!";
         }
         else if (string.IsNullOrEmpty(ipAddressText))
         {
@@ -595,11 +596,8 @@ public class MenuHandler : MonoBehaviour
         {
             //keep blur, we go back to menuPanel
             blurPanel.SetActive(true);
-
-            airplaneData.planeType = "";
-                    
-            flagsPanel.SetActive(true);
-        
+            airplaneData.planeType = "";                    
+            flagsPanel.SetActive(true);        
         }
     }
 

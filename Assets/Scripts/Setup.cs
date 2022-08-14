@@ -8,7 +8,7 @@ public class Setup : MonoBehaviour
     void Start()
     {
         //breaking layout changes were introduced in 0.6
-        if (PlayerPrefs.GetInt("0.6 update") == 0)
+        if (PlayerPrefs.GetInt("0.6 update") == 0 || PlayerPrefs.GetInt("0.6a update") == 0)
         {
             string[] keys = PlayerPrefsHelper.GetRegistryValues();
             for (int i = 0; i < keys.Length; i++)
@@ -22,6 +22,7 @@ public class Setup : MonoBehaviour
             }
 
             PlayerPrefs.SetInt("0.6 update", 1);
+            PlayerPrefs.SetInt("0.6a update", 1);
         }
     }
 }
