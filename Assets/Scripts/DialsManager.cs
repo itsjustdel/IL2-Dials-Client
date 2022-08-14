@@ -1108,8 +1108,12 @@ public class DialsManager : MonoBehaviour
     public void DeleteLayout()
     {
         Debug.Log("Deleting = " + airplaneData.planeType);
-        PlayerPrefs.DeleteKey(airplaneData.planeType);
-
+#if UNITY_ANDROID
+        string key = airplaneData.planeType;
+#else
+        string key = "layout " + slaveManager.id + " " + airplaneData.planeType;
+#endif
+        PlayerPrefs.DeleteKey(key);
         //put all dials back to country board
         for (int i = 0; i < menuHandler.dialsInTray.Count; i++)
         {
