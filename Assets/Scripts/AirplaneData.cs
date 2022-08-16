@@ -51,6 +51,7 @@ public class AirplaneData : MonoBehaviour
     public List<float> rpms;
     public List<float> manifolds;
     public List<float> waterTemps;
+    public List<float> oilTemps;
     public int engineModification;
 
     public BuildControl buildControl;
@@ -64,6 +65,7 @@ public class AirplaneData : MonoBehaviour
         rpms = new List<float> { 0f, 0f, 0f, 0f };
         manifolds = new List<float> { 0f, 0f, 0f, 0f };
         waterTemps = new List<float> { 0f, 0f};
+        oilTemps = new List<float> { 0f, 0f };
     }
 
     //fixed update is enough for checking status
