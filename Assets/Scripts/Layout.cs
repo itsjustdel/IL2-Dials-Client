@@ -113,9 +113,9 @@ public class Layout
                 x += diff;
                 
                 y += canvasRectTransform.rect.height*.5f - cellSize*.5f;
-                
                 activeDials[total].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
                 activeDials[total].transform.Find("Dial").transform.localScale = new Vector3(dialScale, dialScale, 1);
+                
                 //set ui scale this time only
                 activeDials[total].transform.Find("UI Handlers").transform.localScale = new Vector3(dialScale, dialScale, 1);
 
