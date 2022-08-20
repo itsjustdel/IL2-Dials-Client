@@ -249,7 +249,7 @@ public class DialTargets : MonoBehaviour
                     }
                     else if (airplaneData.planeAttributes.waterTempType == DialVariant.B)
                     {
-                        waterTempTargets[i] = RussianDials.WaterTempTargetB(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                        waterTempTargets[i] = RussianDials.WaterTempTargetB(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1,airplaneData.planeType);
                     }
                     if (airplaneData.planeAttributes.waterTempType == DialVariant.C)
                     {
@@ -303,11 +303,11 @@ public class DialTargets : MonoBehaviour
                 case (Country.UK):
                     if (airplaneData.planeAttributes.waterTempType == DialVariant.A)
                     {
-                        waterTempTargets[i] = UKDials.WaterTempTargetA(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveWaterTempA);
+                        waterTempTargets[i] = UKDials.WaterTempTargetA(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveWaterTempA, airplaneData.planeType);
                     } 
                     else if (airplaneData.planeAttributes.waterTempType == DialVariant.B)
                     {
-                        waterTempTargets[i] = UKDials.WaterTempTargetB(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                        waterTempTargets[i] = UKDials.WaterTempTargetB(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1,airplaneData.planeType);
                     }
 
                     break;
