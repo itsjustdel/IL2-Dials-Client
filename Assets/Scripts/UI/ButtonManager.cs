@@ -27,8 +27,9 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     public RectTransform parentRect;
     public RectTransform dialRect;
     private Quaternion compassTarget;
-    private float moveSnap = 20;
-    public float scaleSnap = 20;
+    public bool snap = false;
+    private float moveSnap = 20f; 
+    private float scaleSnap = 1f;
     private float minScale = 0.1f;
     private float maxScale = 2f;
     public GameObject openContainer;
@@ -108,7 +109,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
                     menuHandler.TrayPulldown();
                 }
 
-                parentRect.SetAsLastSibling();
+                
             }
         }       
     }
@@ -175,8 +176,11 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         {
             Vector2 d2 = parentRect.anchoredPosition;
 
-            d2.x = Mathf.Round(d2.x / moveSnap) * moveSnap;
-            d2.y = Mathf.Round(d2.y / moveSnap) * moveSnap;
+            if (snap)
+            {
+                d2.x = Mathf.Round(d2.x / moveSnap) * moveSnap;
+                d2.y = Mathf.Round(d2.y / moveSnap) * moveSnap;
+            }
            
             parentRect.anchoredPosition = ScreenTrap(d2);
 
@@ -198,12 +202,15 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
 
             Vector2 d2 = dialRect.localScale;
-            
-            d2.x = Mathf.Round(d2.y * scaleSnap) / scaleSnap;
-            d2.y = Mathf.Round(d2.y* scaleSnap) / scaleSnap;
 
-            //clamping on drag above function
-            dialRect.localScale = new Vector3(d2.x, d2.y, 1f);
+            if (snap)
+            {
+                d2.x = Mathf.Round(d2.y * scaleSnap) / scaleSnap;
+                d2.y = Mathf.Round(d2.y * scaleSnap) / scaleSnap;
+
+                //clamping on drag above function
+                dialRect.localScale = new Vector3(d2.x, d2.y, 1f);
+            }
 
             //re parent
             container.transform.parent = containerParent.transform;
@@ -261,6 +268,10 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             navArrowDown = true;
         }
 
+        if (move)
+        {
+            parentRect.SetAsLastSibling();
+        }
       
     }
 
