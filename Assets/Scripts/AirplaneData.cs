@@ -64,7 +64,7 @@ public class AirplaneData : MonoBehaviour
         //initialise list with empty
         rpms = new List<float> { 0f, 0f, 0f, 0f };
         manifolds = new List<float> { 0f, 0f, 0f, 0f };
-        waterTemps = new List<float> { 0f, 0f};
+        waterTemps = new List<float> { 0f, 0f };
         oilTemps = new List<float> { 0f, 0f };
     }
 

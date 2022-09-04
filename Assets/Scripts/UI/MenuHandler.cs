@@ -662,7 +662,12 @@ public class MenuHandler : MonoBehaviour
 
         for (int i = 0; i < UIhandlers.Length; i++)
         {
-            if (dialsInTray.Contains(UIhandlers[i].transform.parent.gameObject))
+            //german water oil switch
+            if (UIhandlers[i].name == "Gear")
+            {
+                UIhandlers[i].GetComponent<Image>().enabled = true;
+            }
+            else if (dialsInTray.Contains(UIhandlers[i].transform.parent.gameObject))
             {
                 GameObject container = UIhandlers[i].transform.Find("Return Container").gameObject;
                 container.SetActive(true);
@@ -681,11 +686,19 @@ public class MenuHandler : MonoBehaviour
 
         for (int i = 0; i < UIhandlers.Length; i++)
         {
-            for (int j = 0; j < UIhandlers[i].transform.childCount; j++)
+            //german water oil switch
+            if (UIhandlers[i].name == "Gear")
             {
-               
+                UIhandlers[i].GetComponent<Image>().enabled = false;
+            }
+            else
+            {
+                for (int j = 0; j < UIhandlers[i].transform.childCount; j++)
+                {
+
                     UIhandlers[i].transform.Find("Container").gameObject.SetActive(false);
-               
+
+                }
             }
         }
     }

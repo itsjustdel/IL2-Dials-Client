@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
     public MenuHandler menuHandler;
+    public RotateNeedle rotateNeedle;
     public bool move;    
     public bool scale;
     public bool remove;
@@ -16,6 +17,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     public bool gear;
     public bool returnToBoard;
     public bool tigermoth;
+    public bool oilSwitch;
     public GameObject trayParent;
     public bool leftArrow;
     private bool navArrowDown;
@@ -40,7 +42,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     {
         canvas = GameObject.FindGameObjectWithTag("Canvas").transform.GetComponent<Canvas>();
         menuHandler = GameObject.Find("Menu").GetComponent<MenuHandler>();
-        if (!compass && !tigermoth)
+        if (!compass && !tigermoth && !oilSwitch)
         {
             parentRect = transform.parent.parent.parent.GetComponent<RectTransform>();
             dialRect = parentRect.Find("Dial").GetComponent<RectTransform>();
@@ -76,6 +78,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
                 tigerTimerOn = false;
             }
         }
+
         
     }
 
@@ -245,6 +248,12 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             tigerTimerOn = true;
         }
 
+
+        if (oilSwitch)
+        {
+            rotateNeedle.germanWaterOilSwitch = true;
+        }
+
         if (!menuHandler.layoutOpen)
             return;
       
@@ -261,7 +270,6 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             navArrowDown = true;
         }
 
-      
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -274,6 +282,12 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
         if (navArrow)
             navArrowDown = false;
+
+
+        if (oilSwitch)
+        {
+            rotateNeedle.germanWaterOilSwitch = false;
+        }
 
         if (!menuHandler.layoutOpen)
             return;
@@ -330,6 +344,7 @@ public class ButtonManager : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             //should have a better way to get country dial board
             transform.parent.parent.parent.parent = menuHandler.udpClient.rN.transform;
         }
+
     }
 
     public Vector2 ScreenTrap(  Vector2 d2 )

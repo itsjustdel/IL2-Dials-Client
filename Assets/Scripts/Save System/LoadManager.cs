@@ -319,6 +319,13 @@ public class LoadManager : MonoBehaviour
             if (layout.waterTempInTray[i])
                 AddToTrayOnLoad(dialsManager.waterTempObjects[i], menuHandler);
         }
+
+        for (int i = 0; i < dialsManager.oilTempObjects.Count; i++)
+        {
+            DialScalePosition(dialsManager.oilTempObjects[i], layout.oilTempPos[i], layout.oilTempScale[i]);
+            if (layout.oilTempInTray[i])
+                AddToTrayOnLoad(dialsManager.oilTempObjects[i], menuHandler);
+        }
     }
 
     static void AddToTrayOnLoad(GameObject dial, MenuHandler menuHandler)
