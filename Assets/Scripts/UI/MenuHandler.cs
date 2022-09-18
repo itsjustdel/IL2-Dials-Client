@@ -16,6 +16,8 @@ public class MenuHandler : MonoBehaviour
     public GameObject missionStart;
     public GameObject welcomePanel;
     public GameObject serverMessagePanel;
+    public GameObject keyCodePanel;
+    public Inputs inputs;
     public GameObject blurPanel;
     public GameObject menuPanel;
     public GameObject displayPanel;
@@ -833,5 +835,40 @@ public class MenuHandler : MonoBehaviour
 
 
         uiHandlersToggle = !uiHandlersToggle;
+    }
+
+    public void EnableKeyCodePanel()
+    {
+        keyCodePanel.SetActive(true);
+        blurPanel.SetActive(true);
+        layoutPanel.SetActive(false);
+
+        string s = "";
+        if (inputs.oilWaterKeys.Count == 0)
+            s = "...";
+        else
+        {   
+            for (int i = 0; i < inputs.oilWaterKeys.Count; i++)
+            {
+                if (i != 0)
+                    s += " + ";
+
+                s += inputs.oilWaterKeys[i].ToString();
+            }
+        }
+        inputs.keyCodeText.text = s;
+    }
+
+    public void AcceptOilKeyCode()
+    {
+        keyCodePanel.SetActive(false);
+        blurPanel.SetActive(false);
+        layoutPanel.SetActive(true);
+
+        if (inputs.oilWaterKeyRecord)
+        {
+            //if user just pressed click without stoppping recording, assume they are happy with what they entered
+            inputs.OilKeyRecordToggle();
+        }
     }
 }

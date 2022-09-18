@@ -4840,7 +4840,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.827451, g: 0.8117647, b: 0.7647059, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4901,9 +4901,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 306252514439278351}
-        m_TargetAssemblyTypeName: Inputs, Assembly-CSharp
-        m_MethodName: SetOilWaterKey
+      - m_Target: {fileID: 7744837421071600567}
+        m_TargetAssemblyTypeName: RotateNeedle, Assembly-CSharp
+        m_MethodName: OpenKeyCodePanel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8009,7 +8009,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6572005322613381038}
   - component: {fileID: 7744837421071600567}
-  - component: {fileID: 306252514439278351}
   m_Layer: 5
   m_Name: GER
   m_TagString: Untagged
@@ -8269,23 +8268,6 @@ MonoBehaviour:
     m_RotationOrder: 4
   germanWaterOilSwitch: 0
   waterTempButton: {fileID: 7679047720277640776}
---- !u!114 &306252514439278351
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7662585089409608118}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80f15193c8ff7b9449ab9c0b49904f7d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WorkInBackground: 1
-  rN: {fileID: 0}
-  lastKeyPressed: 0
-  oilWaterKeys: 
-  oilWaterKeyRecord: 0
 --- !u!1 &7679047720277640776
 GameObject:
   m_ObjectHideFlags: 0

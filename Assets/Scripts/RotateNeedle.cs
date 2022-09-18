@@ -106,7 +106,7 @@ public class RotateNeedle : MonoBehaviour
     private bool headingIndicatorTest;
 
     public bool germanWaterOilSwitch;
-    public GameObject waterTempButton;
+    public GameObject waterTempButton;    
 
     // Start is called before the first frame update
     void Start()
@@ -513,5 +513,11 @@ public class RotateNeedle : MonoBehaviour
     {
         if(artificialHorizonChevron != null)
             artificialHorizonChevron.transform.rotation = Quaternion.Slerp(artificialHorizonChevron.transform.rotation, artificialHorizonChevronTarget, Time.deltaTime * smoothing);
+    }
+
+    public void OpenKeyCodePanel()
+    {
+        //Inputs objects holds reference to de-activated key code panel. "Find" cannot find disactivated objects
+        GameObject.FindGameObjectWithTag("MenuObject").GetComponent<MenuHandler>().EnableKeyCodePanel();
     }
 }
