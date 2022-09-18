@@ -61,6 +61,7 @@ public class Inputs : MonoBehaviour
         if (key == RawKey.LeftButton || key == RawKey.RightButton)
             return;
 
+
         if (!allKeysDown.Contains(key))
         {
             allKeysDown.Add(key);            
@@ -120,8 +121,11 @@ public class Inputs : MonoBehaviour
         //listen for oil key combo press
         bool comboPressed = true;
 
-        if (currentKeysDown.Count == 0)
+        if (currentKeysDown.Count == 0 || listToMatch.Count == 0)
+        {
             comboPressed = false;
+            return comboPressed;
+        }
 
         int counter = 0;
         foreach (RawKey keyDown in currentKeysDown)
