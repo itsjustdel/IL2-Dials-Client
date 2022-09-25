@@ -138,6 +138,9 @@ public class RotateNeedle : MonoBehaviour
 
     void WaterTempButtonSize()
     {
+        if (waterTempButton == null)
+            return;
+
         //show visual change
         if (germanWaterOilSwitch)
         {
