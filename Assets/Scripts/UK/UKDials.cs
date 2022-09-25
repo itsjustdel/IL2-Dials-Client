@@ -343,9 +343,9 @@ public class UKDials : MonoBehaviour
 
     internal static Quaternion WaterTempTargetA(float v, float scalar, float scalar1, AnimationCurve curve, string name)
     {
-        if (name == "Spitfire Mk.Vb" || name == "Spitfire Mk.Vb" || name == "Spitfire Mk.IXe")
+        if (name == "Spitfire Mk.Vb" || name == "Spitfire Mk.Vb" || name == "Spitfire Mk.IXe" || name == "Spitfire Mk.XIV")
         {
-            v *= 1.125f; // Don't know why
+            v *= -0.86f;
         }
         //and work out percentage to use 0-1 scale for curve
         float highest = 140;
@@ -366,12 +366,14 @@ public class UKDials : MonoBehaviour
 
     internal static Quaternion WaterTempTargetB(float v, float scalar0, float scalar1, string name)
     {
-        if (name == "Spitfire Mk.Vb" || name == "Spitfire Mk.Vb" || name == "Spitfire Mk.IXe")
+        if (name == "Spitfire Mk.Vb" || name == "Spitfire Mk.Vb" || name == "Spitfire Mk.IXe" || name == "Spitfire Mk.XIV")
         {
-            v *= 1.125f; // Don't know why
+            v *= -0.86f;
         }
-
-        v *= -0.789f;
+        else
+        {
+            v *= -0.789f;
+        }
         v -= -71;
         v = Mathf.Clamp(v, -39.33f, 39.33f);
 
