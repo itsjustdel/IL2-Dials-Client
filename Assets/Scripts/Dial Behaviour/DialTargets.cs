@@ -396,11 +396,11 @@ public class DialTargets : MonoBehaviour
                 case (Country.UK):
                     if (airplaneData.planeAttributes.oilTempType == DialVariant.A)
                     {
-                        oilTempTargets[i] = UKDials.WaterTempTargetA(airplaneData.oilTemps[i], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveWaterTempA, airplaneData.planeType);
+                        oilTempTargets[i] = UKDials.OilTempTargetA(airplaneData.oilTemps[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
                     else if (airplaneData.planeAttributes.oilTempType == DialVariant.B)
                     {
-                        oilTempTargets[i] = UKDials.WaterTempTargetB(airplaneData.oilTemps[i], airplaneData.scalar0, airplaneData.scalar1, airplaneData.planeType);
+                        oilTempTargets[i] = UKDials.OilTempTargetB(airplaneData.oilTemps[i], airplaneData.scalar0, airplaneData.scalar1, airplaneData.planeType);
                     }
 
                     break;
