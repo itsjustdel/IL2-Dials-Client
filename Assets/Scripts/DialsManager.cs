@@ -15,7 +15,9 @@ public class DialsManager : MonoBehaviour
     public List<GameObject> rpmObjects = new List<GameObject>();
     public List<GameObject> manifoldObjects = new List<GameObject>();
     public List<GameObject> waterTempObjects = new List<GameObject>();
-    public List<GameObject> oilTempObjects = new List<GameObject>();
+    public List<GameObject> oilTempInObjects = new List<GameObject>();
+    public List<GameObject> oilTempOutObjects = new List<GameObject>();
+    public List<GameObject> oilTempPressureObjects = new List<GameObject>();
     public GameObject speedometer;
     public GameObject turnIndicator;
     public GameObject vsi;
@@ -203,28 +205,28 @@ public class DialsManager : MonoBehaviour
 
         AsignWaterTemp();
 
-        AsignOilTemp();
+        AsignOilTempIn();
     }
 
-    private void AsignOilTemp()
+    private void AsignOilTempIn()
     {
         //empty lists first
-        countryDialBoard.GetComponent<RotateNeedle>().oilTempNeedles.Clear();
+        countryDialBoard.GetComponent<RotateNeedle>().oilTempInNeedles.Clear();
 
         if (airplaneData.planeType == "P-38J-25")
         {
-            GameObject needleLargeL = oilTempObjects[0].transform.Find("Dial").Find("Needle Large L").gameObject;
-            countryDialBoard.GetComponent<RotateNeedle>().oilTempNeedles.Add(needleLargeL);
-            GameObject needleLargeR = oilTempObjects[0].transform.Find("Dial").Find("Needle Large R").gameObject;
-            countryDialBoard.GetComponent<RotateNeedle>().oilTempNeedles.Add(needleLargeR);
+            GameObject needleLargeL = oilTempInObjects[0].transform.Find("Dial").Find("Needle Large L").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().oilTempInNeedles.Add(needleLargeL);
+            GameObject needleLargeR = oilTempInObjects[0].transform.Find("Dial").Find("Needle Large R").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().oilTempInNeedles.Add(needleLargeR);
 
             return;
         }
 
-        for (int i = 0; i < oilTempObjects.Count; i++)
+        for (int i = 0; i < oilTempInObjects.Count; i++)
         {
-            GameObject needleLarge = oilTempObjects[i].transform.Find("Dial").Find("Needle Large").gameObject;
-            countryDialBoard.GetComponent<RotateNeedle>().oilTempNeedles.Add(needleLarge);
+            GameObject needleLarge = oilTempInObjects[i].transform.Find("Dial").Find("Needle Large").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().oilTempInNeedles.Add(needleLarge);
         }
     }
 
@@ -626,16 +628,13 @@ public class DialsManager : MonoBehaviour
                 }
             }
 
-            //instantiate oil temps
-
-            oilTempObjects.Clear();
-
-            string oilTempString = airplaneData.planeAttributes.oilTempType.ToString();
-
-            if (countryDialBoard.transform.Find("Oil Temp " + oilTempString) != null)
-            {
+            //instantiate oil In temps
+            oilTempInObjects.Clear();
+            string oilTempString = airplaneData.planeAttributes.oilTempInType.ToString();            
+            if (countryDialBoard.transform.Find("Oil Temp In " + oilTempString) != null)
+            {                
                 //find prefab outside of loop
-                GameObject oilTemp = countryDialBoard.transform.Find("Oil Temp " + oilTempString).gameObject;
+                GameObject oilTemp = countryDialBoard.transform.Find("Oil Temp In " + oilTempString).gameObject;
 
                 int dialsToInstantiate = airplaneData.planeAttributes.engines;
                 if (airplaneData.planeType == "P-38J-25")
@@ -653,16 +652,94 @@ public class DialsManager : MonoBehaviour
                     }
                     //set to last position - getting fiddly with this rpm/manifolds/oil temps - need better solution
                     oilTempInstance.transform.SetSiblingIndex(countryDialBoard.transform.childCount - 1);
-                    oilTempInstance.transform.name = "Oil Temp " + airplaneData.planeAttributes.oilTempType.ToString() + " " + i.ToString();
-                    oilTempObjects.Add(oilTempInstance);
+                    oilTempInstance.transform.name = "Oil Temp In " + airplaneData.planeAttributes.oilTempInType.ToString() + " " + i.ToString();
+                    oilTempInObjects.Add(oilTempInstance);
                 }
 
                 if (dialsToInstantiate == 2) // 3 engine ger plane, no support atm
                 {
-                    for (int i = 0; i < oilTempObjects.Count; i++)
+                    for (int i = 0; i < oilTempInObjects.Count; i++)
                     {
                         //engine dials have "L" or "R"
-                        GameObject parent = oilTempObjects[i].transform.Find("UI Handlers").GetChild(0).Find("Left Right").gameObject;
+                        GameObject parent = oilTempInObjects[i].transform.Find("UI Handlers").GetChild(0).Find("Left Right").gameObject;
+                        parent.transform.GetChild(i).gameObject.SetActive(true);
+                    }
+                }
+            }
+
+            //instantiate oil In temps
+            oilTempInObjects.Clear();
+            string oilTempOutString = airplaneData.planeAttributes.oilTempOutType.ToString();
+            if (countryDialBoard.transform.Find("Oil Temp Out " + oilTempString) != null)
+            {
+                //find prefab outside of loop
+                GameObject oilTemp = countryDialBoard.transform.Find("Oil Temp Out " + oilTempOutString).gameObject;
+
+                int dialsToInstantiate = airplaneData.planeAttributes.engines;
+                if (airplaneData.planeType == "P-38J-25")
+                    dialsToInstantiate = 1;
+
+                for (int i = 0; i < dialsToInstantiate; i++)
+                {
+                    //create instance variable if we need to duplicate
+                    GameObject oilTempInstance = oilTemp;
+                    if (i > 0)
+                    {
+                        //duplicate if we have more than one engine
+                        oilTempInstance = Instantiate(oilTemp, oilTemp.transform.position, Quaternion.identity, countryDialBoard.transform);
+
+                    }
+                    //set to last position - getting fiddly with this rpm/manifolds/oil temps - need better solution
+                    oilTempInstance.transform.SetSiblingIndex(countryDialBoard.transform.childCount - 1);
+                    oilTempInstance.transform.name = "Oil Temp Out " + airplaneData.planeAttributes.oilTempOutType.ToString() + " " + i.ToString();
+                    oilTempOutObjects.Add(oilTempInstance);
+                }
+
+                if (dialsToInstantiate == 2) // 3 engine ger plane, no support atm
+                {
+                    for (int i = 0; i < oilTempOutObjects.Count; i++)
+                    {
+                        //engine dials have "L" or "R"
+                        GameObject parent = oilTempOutObjects[i].transform.Find("UI Handlers").GetChild(0).Find("Left Right").gameObject;
+                        parent.transform.GetChild(i).gameObject.SetActive(true);
+                    }
+                }
+            }
+
+            //instantiate oil pressure combo temps
+            oilTempPressureObjects.Clear();
+            string oilTempPressureString = airplaneData.planeAttributes.oilTempPressureType.ToString();
+            if (countryDialBoard.transform.Find("Oil Temp Pressure " + oilTempPressureString) != null)
+            {
+                //find prefab outside of loop
+                GameObject oilTemp = countryDialBoard.transform.Find("Oil Temp Pressure " + oilTempPressureString).gameObject;
+
+                int dialsToInstantiate = airplaneData.planeAttributes.engines;
+                if (airplaneData.planeType == "P-38J-25")
+                    dialsToInstantiate = 1;
+
+                for (int i = 0; i < dialsToInstantiate; i++)
+                {
+                    //create instance variable if we need to duplicate
+                    GameObject oilTempInstance = oilTemp;
+                    if (i > 0)
+                    {
+                        //duplicate if we have more than one engine
+                        oilTempInstance = Instantiate(oilTemp, oilTemp.transform.position, Quaternion.identity, countryDialBoard.transform);
+
+                    }
+                    //set to last position - getting fiddly with this rpm/manifolds/oil temps - need better solution
+                    oilTempInstance.transform.SetSiblingIndex(countryDialBoard.transform.childCount - 1);
+                    oilTempInstance.transform.name = "Oil Temp Pressure " + airplaneData.planeAttributes.oilTempPressureType.ToString() + " " + i.ToString();
+                    oilTempPressureObjects.Add(oilTempInstance);
+                }
+
+                if (dialsToInstantiate == 2) // 3 engine ger plane, no support atm
+                {
+                    for (int i = 0; i < oilTempPressureObjects.Count; i++)
+                    {
+                        //engine dials have "L" or "R"
+                        GameObject parent = oilTempPressureObjects[i].transform.Find("UI Handlers").GetChild(0).Find("Left Right").gameObject;
                         parent.transform.GetChild(i).gameObject.SetActive(true);
                     }
                 }
@@ -811,11 +888,11 @@ public class DialsManager : MonoBehaviour
             allWaterTemps[i].SetActive(false);
         }
 
-        GameObject[] allOilTempsArray = GameObject.FindGameObjectsWithTag("oil temp");
+        GameObject[] allOilTempsArray = GameObject.FindGameObjectsWithTag("oil temp in");
         List<GameObject> allOilTemps = new List<GameObject>();
         allOilTemps.AddRange(allOilTempsArray);
 
-        foreach (GameObject oilTemp in oilTempObjects)
+        foreach (GameObject oilTemp in oilTempInObjects)
             allOilTemps.Remove(oilTemp);
 
         for (int i = 0; i < allOilTemps.Count; i++)
@@ -1029,16 +1106,16 @@ public class DialsManager : MonoBehaviour
                 WaterTempInTray(layout, i, waterTempObjects[i]);
         }
 
-        for (int i = 0; i < oilTempObjects.Count; i++)
+        for (int i = 0; i < oilTempInObjects.Count; i++)
         {
             //if on dial board
-            if (oilTempObjects[i].transform.parent == countryDialBoard.transform)
+            if (oilTempInObjects[i].transform.parent == countryDialBoard.transform)
             {
-                layout.oilTempPos[i] = oilTempObjects[i].GetComponent<RectTransform>().anchoredPosition;
-                layout.oilTempScale[i] = oilTempObjects[i].transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
+                layout.oilTempInPos[i] = oilTempInObjects[i].GetComponent<RectTransform>().anchoredPosition;
+                layout.oilTempInScale[i] = oilTempInObjects[i].transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
             }
             else
-                WaterTempInTray(layout, i, waterTempObjects[i]);
+                OilTempInInTray(layout, i, waterTempObjects[i]);
         }
 
         //pack with json utility
@@ -1114,11 +1191,11 @@ public class DialsManager : MonoBehaviour
         layout.waterTempInTray[i] = true;
     }
 
-    private void OilTempInTray(Layout layout, int i, GameObject oilTemp)
+    private void OilTempInInTray(Layout layout, int i, GameObject oilTemp)
     {
-        layout.oilTempPos[i] = oilTemp.GetComponent<RectTransform>().anchoredPosition;
-        layout.oilTempScale[i] = oilTemp.GetComponent<RectTransform>().localScale.x;
-        layout.oilTempInTray[i] = true;
+        layout.oilTempInPos[i] = oilTemp.GetComponent<RectTransform>().anchoredPosition;
+        layout.oilTempInScale[i] = oilTemp.GetComponent<RectTransform>().localScale.x;
+        layout.oilTempInInTray[i] = true;
     }
 
     void SpeedoInTray(Layout layout)

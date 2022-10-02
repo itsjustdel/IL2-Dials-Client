@@ -40,7 +40,9 @@ public class RotateNeedle : MonoBehaviour
     public List<GameObject> manifoldNeedlesSmall = new List<GameObject>();
     public List<GameObject> manifoldNeedlesLarge = new List<GameObject>();
     public List<GameObject> waterTempNeedles = new List<GameObject>();
-    public List<GameObject> oilTempNeedles = new List<GameObject>();
+    public List<GameObject> oilTempInNeedles = new List<GameObject>();
+    public List<GameObject> oilTempOutNeedles = new List<GameObject>();
+    public List<GameObject> oilTempPressureNeedles = new List<GameObject>();
 
     public float previousMessageTime;
     public float maxSpin =1f;
@@ -73,7 +75,9 @@ public class RotateNeedle : MonoBehaviour
     public  List<Quaternion> rpmSmallTargets = new List<Quaternion>();
     public List<Quaternion> manifoldLargeTargets = new List<Quaternion>();
     public List<Quaternion> waterTempTargets = new List<Quaternion>();
-    public List<Quaternion> oilTempTargets = new List<Quaternion>();
+    public List<Quaternion> oilTempInTargets = new List<Quaternion>();
+    public List<Quaternion> oilTempOutTargets = new List<Quaternion>();
+    public List<Quaternion> oilTempPressureTargets = new List<Quaternion>();
     private Quaternion turnAndBankBallTarget;
 
     // -- positions
@@ -117,7 +121,9 @@ public class RotateNeedle : MonoBehaviour
         manifoldLargeTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
         manifoldLargeTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
         waterTempTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
-        oilTempTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
+        oilTempInTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
+        oilTempOutTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
+        oilTempPressureTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
     }
 
     // Update is called once per frame
@@ -171,7 +177,7 @@ public class RotateNeedle : MonoBehaviour
             float a = .4f;
             float b = 6f;
 
-            //swithc direction
+            //switch direction
             if (h > a && h < b)
             {
                 //                Debug.Log(headingIndicatorShift);
@@ -243,7 +249,9 @@ public class RotateNeedle : MonoBehaviour
         waterTempTargets = DialTargets.WaterTempTargets(airplaneData, airplaneData.planeAttributes.country,this);
 
         //oil temps
-        oilTempTargets = DialTargets.OilTempTargets(airplaneData, airplaneData.planeAttributes.country, this);
+        oilTempInTargets = DialTargets.OilTempInTargets(airplaneData, airplaneData.planeAttributes.country, this);
+        oilTempOutTargets = DialTargets.OilTempOutTargets(airplaneData, airplaneData.planeAttributes.country, this);
+        oilTempOutTargets = DialTargets.OilTempPressureTargets(airplaneData, airplaneData.planeAttributes.country, this);
     }
 
     void NeedleRotations()
@@ -272,15 +280,37 @@ public class RotateNeedle : MonoBehaviour
 
         WaterTempRotations();
 
-        OilTempRotations();
+        OilTempInRotations();
+
+        OilTempOutRotations();
+
+        OilTempPressureRotations();
     }
 
-    private void OilTempRotations()
+    private void OilTempPressureRotations()
     {
-        for (int i = 0; i < oilTempNeedles.Count; i++)
+        for (int i = 0; i < oilTempPressureNeedles.Count; i++)
         {
-            if (oilTempNeedles[i].gameObject != null)
-                oilTempNeedles[i].transform.rotation = Quaternion.Slerp(oilTempNeedles[i].transform.rotation, oilTempTargets[i], Time.deltaTime * smoothing);
+            if (oilTempPressureNeedles[i].gameObject != null)
+                oilTempPressureNeedles[i].transform.rotation = Quaternion.Slerp(oilTempPressureNeedles[i].transform.rotation, oilTempPressureTargets[i], Time.deltaTime * smoothing);
+        }
+    }
+
+    private void OilTempOutRotations()
+    {
+        for (int i = 0; i < oilTempOutNeedles.Count; i++)
+        {
+            if (oilTempOutNeedles[i].gameObject != null)
+                oilTempOutNeedles[i].transform.rotation = Quaternion.Slerp(oilTempOutNeedles[i].transform.rotation, oilTempOutTargets[i], Time.deltaTime * smoothing);
+        }
+    }
+
+    private void OilTempInRotations()
+    {
+        for (int i = 0; i < oilTempInNeedles.Count; i++)
+        {
+            if (oilTempInNeedles[i].gameObject != null)
+                oilTempInNeedles[i].transform.rotation = Quaternion.Slerp(oilTempInNeedles[i].transform.rotation, oilTempInTargets[i], Time.deltaTime * smoothing);
         }
     }
 
@@ -293,7 +323,7 @@ public class RotateNeedle : MonoBehaviour
                 if (!germanWaterOilSwitch)
                     waterTempNeedles[i].transform.rotation = Quaternion.Slerp(waterTempNeedles[i].transform.rotation, waterTempTargets[i], Time.deltaTime * smoothing);
                 else
-                    waterTempNeedles[i].transform.rotation = Quaternion.Slerp(waterTempNeedles[i].transform.rotation, oilTempTargets[i], Time.deltaTime * smoothing);
+                    waterTempNeedles[i].transform.rotation = Quaternion.Slerp(waterTempNeedles[i].transform.rotation, oilTempInTargets[i], Time.deltaTime * smoothing);
             }
         }
     }

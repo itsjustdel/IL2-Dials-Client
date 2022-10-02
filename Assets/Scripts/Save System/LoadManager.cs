@@ -320,11 +320,11 @@ public class LoadManager : MonoBehaviour
                 AddToTrayOnLoad(dialsManager.waterTempObjects[i], menuHandler);
         }
 
-        for (int i = 0; i < dialsManager.oilTempObjects.Count; i++)
+        for (int i = 0; i < dialsManager.oilTempInObjects.Count; i++)
         {
-            DialScalePosition(dialsManager.oilTempObjects[i], layout.oilTempPos[i], layout.oilTempScale[i]);
-            if (layout.oilTempInTray[i])
-                AddToTrayOnLoad(dialsManager.oilTempObjects[i], menuHandler);
+            DialScalePosition(dialsManager.oilTempInObjects[i], layout.oilTempInPos[i], layout.oilTempInScale[i]);
+            if (layout.oilTempInInTray[i])
+                AddToTrayOnLoad(dialsManager.oilTempInObjects[i], menuHandler);
         }
     }
 

@@ -326,7 +326,7 @@ public class DialTargets : MonoBehaviour
         return waterTempTargets;
     }
 
-    internal static List<Quaternion> OilTempTargets(AirplaneData airplaneData, Country country, RotateNeedle rotateNeedle)
+    internal static List<Quaternion> OilTempPressureTargets(AirplaneData airplaneData, Country country, RotateNeedle rotateNeedle)
     {
         List<Quaternion> oilTempTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
 
@@ -336,17 +336,144 @@ public class DialTargets : MonoBehaviour
             {
                 //RU
                 case (Country.RU):
-                    if (airplaneData.planeAttributes.oilTempType == DialVariant.A)
+                    if (airplaneData.planeAttributes.oilTempPressureType == DialVariant.A)
                     {
-                        oilTempTargets[i] = RussianDials.WaterTempTargetA(airplaneData.oilTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                        //inbound oil fro top dial of combo
+                        oilTempTargets[i] = RussianDials.OilTempCombo(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }                  
+
+                    break;
+
+                //GER
+                case (Country.GER):
+                    break;
+
+                //US
+                case (Country.US):
+                    if (airplaneData.planeAttributes.oilTempOutType == DialVariant.A)
+                    {
+                       // oilTempTargets[i] = USDials.WaterTempTargetA(airplaneData.oilTempOutType[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }                    
+                    break;
+
+                case (Country.FR):
+                case (Country.UK):
+                    break;
+
+                case (Country.ITA):
+                    break;
+            }
+        }
+
+        return oilTempTargets;
+    }
+
+    internal static List<Quaternion> OilTempOutTargets(AirplaneData airplaneData, Country country, RotateNeedle rotateNeedle)
+    {
+        List<Quaternion> oilTempTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
+
+        for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
+        {
+            switch (country)
+            {
+                //RU
+                case (Country.RU):
+                    if (airplaneData.planeAttributes.oilTempOutType == DialVariant.A)
+                    {
+                        oilTempTargets[i] = RussianDials.WaterTempTargetA(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                    else if (airplaneData.planeAttributes.oilTempType == DialVariant.B)
+                    else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.B)
                     {
-                        oilTempTargets[i] = RussianDials.WaterTempTargetB(airplaneData.oilTemps[i], airplaneData.scalar0, airplaneData.scalar1, airplaneData.planeType);
+                        //note targetC is correct - there's one more water dial so variant type enums don't match up
+                        oilTempTargets[i] = RussianDials.WaterTempTargetC(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                    if (airplaneData.planeAttributes.oilTempType == DialVariant.C)
+                   
+                    break;
+
+                //GER
+                case (Country.GER):
+
+                    if (airplaneData.planeAttributes.oilTempOutType == DialVariant.A)
                     {
-                        oilTempTargets[i] = RussianDials.WaterTempTargetC(airplaneData.oilTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                        oilTempTargets[i] = GermanDials.WaterTempTargetA(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.B)
+                    {
+                        oilTempTargets[i] = GermanDials.WaterTempTargetB(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.C)
+                    {
+                        oilTempTargets[i] = GermanDials.WaterTempTargetC(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+
+                    break;
+
+                //US
+                case (Country.US):
+                    if (airplaneData.planeAttributes.oilTempOutType == DialVariant.A)
+                    {
+                        oilTempTargets[i] = USDials.WaterTempTargetA(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.B)
+                    {
+                        //p38 - two needles, one dial
+                        oilTempTargets[0] = USDials.WaterTempTargetB(airplaneData.oilTempsOut[0], airplaneData.scalar0, airplaneData.scalar1, true);
+                        oilTempTargets[1] = USDials.WaterTempTargetB(airplaneData.oilTempsOut[1], airplaneData.scalar0, airplaneData.scalar1, false);
+                    }
+                    else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.C)
+                    {
+                        oilTempTargets[i] = USDials.WaterTempTargetC(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+
+                    break;
+
+                case (Country.FR):
+                case (Country.UK):
+                    if (airplaneData.planeAttributes.oilTempOutType == DialVariant.A)
+                    {
+                        oilTempTargets[i] = UKDials.OilTempTargetA(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.B)
+                    {
+                        oilTempTargets[i] = UKDials.OilTempTargetB(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1, airplaneData.planeType);
+                    }
+
+                    break;
+
+                case (Country.ITA):
+                    if (airplaneData.planeAttributes.oilTempOutType == DialVariant.A)
+                    {
+                        oilTempTargets[i] = ITADials.WaterTempTargetA(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveWaterTempA);
+                    }
+
+                    break;
+            }
+        }
+
+        return oilTempTargets;
+    }
+
+    internal static List<Quaternion> OilTempInTargets(AirplaneData airplaneData, Country country, RotateNeedle rotateNeedle)
+    {
+        List<Quaternion> oilTempTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
+
+        for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
+        {
+            switch (country)
+            {
+                //RU
+                case (Country.RU):
+                    if (airplaneData.planeAttributes.oilTempInType == DialVariant.A)
+                    {
+                        oilTempTargets[i] = RussianDials.WaterTempTargetA(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    else if (airplaneData.planeAttributes.oilTempInType == DialVariant.B)
+                    {
+                        oilTempTargets[i] = RussianDials.WaterTempTargetB(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1, airplaneData.planeType);
+                    }
+                    if (airplaneData.planeAttributes.oilTempInType == DialVariant.C)
+                    {
+                        oilTempTargets[i] = RussianDials.WaterTempTargetC(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
 
                     break;
@@ -354,65 +481,64 @@ public class DialTargets : MonoBehaviour
                 //GER
                 case (Country.GER):
 
-                    if (airplaneData.planeAttributes.oilTempType == DialVariant.A)
+                    if (airplaneData.planeAttributes.oilTempInType == DialVariant.A)
                     {
-                        oilTempTargets[i] = GermanDials.WaterTempTargetA(airplaneData.oilTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                        oilTempTargets[i] = GermanDials.WaterTempTargetA(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                    else if (airplaneData.planeAttributes.oilTempType == DialVariant.B)
+                    else if (airplaneData.planeAttributes.oilTempInType == DialVariant.B)
                     {
-                        oilTempTargets[i] = GermanDials.WaterTempTargetB(airplaneData.oilTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                        oilTempTargets[i] = GermanDials.WaterTempTargetB(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                    else if (airplaneData.planeAttributes.oilTempType == DialVariant.C)
+                    else if (airplaneData.planeAttributes.oilTempInType == DialVariant.C)
                     {
-                        oilTempTargets[i] = GermanDials.WaterTempTargetC(airplaneData.oilTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                        oilTempTargets[i] = GermanDials.WaterTempTargetC(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                    else if (airplaneData.planeAttributes.oilTempType == DialVariant.D)
+                    else if (airplaneData.planeAttributes.oilTempInType == DialVariant.D)
                     {
-                        oilTempTargets[i] = GermanDials.WaterTempTargetD(airplaneData.oilTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                        oilTempTargets[i] = GermanDials.WaterTempTargetD(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
 
                     break;
 
                 //US
                 case (Country.US):
-                    if (airplaneData.planeAttributes.oilTempType == DialVariant.A)
+                    if (airplaneData.planeAttributes.oilTempInType == DialVariant.A)
                     {
-                        oilTempTargets[i] = USDials.WaterTempTargetA(airplaneData.oilTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                        oilTempTargets[i] = USDials.WaterTempTargetA(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                    else if (airplaneData.planeAttributes.oilTempType == DialVariant.B)
+                    else if (airplaneData.planeAttributes.oilTempInType == DialVariant.B)
                     {
                         //p38 - two needles, one dial
-                        oilTempTargets[0] = USDials.WaterTempTargetB(airplaneData.oilTemps[0], airplaneData.scalar0, airplaneData.scalar1, true);
-                        oilTempTargets[1] = USDials.WaterTempTargetB(airplaneData.oilTemps[1], airplaneData.scalar0, airplaneData.scalar1, false);
+                        oilTempTargets[0] = USDials.WaterTempTargetB(airplaneData.oilTempsIn[0], airplaneData.scalar0, airplaneData.scalar1, true);
+                        oilTempTargets[1] = USDials.WaterTempTargetB(airplaneData.oilTempsIn[1], airplaneData.scalar0, airplaneData.scalar1, false);
                     }
-                    else if (airplaneData.planeAttributes.oilTempType == DialVariant.C)
+                    else if (airplaneData.planeAttributes.oilTempInType == DialVariant.C)
                     {
-                        oilTempTargets[i] = USDials.WaterTempTargetC(airplaneData.oilTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                        oilTempTargets[i] = USDials.WaterTempTargetC(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
 
                     break;
 
                 case (Country.FR):
                 case (Country.UK):
-                    if (airplaneData.planeAttributes.oilTempType == DialVariant.A)
+                    if (airplaneData.planeAttributes.oilTempInType == DialVariant.A)
                     {
-                        oilTempTargets[i] = UKDials.OilTempTargetA(airplaneData.oilTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                        oilTempTargets[i] = UKDials.OilTempTargetA(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                    else if (airplaneData.planeAttributes.oilTempType == DialVariant.B)
+                    else if (airplaneData.planeAttributes.oilTempInType == DialVariant.B)
                     {
-                        oilTempTargets[i] = UKDials.OilTempTargetB(airplaneData.oilTemps[i], airplaneData.scalar0, airplaneData.scalar1, airplaneData.planeType);
+                        oilTempTargets[i] = UKDials.OilTempTargetB(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1, airplaneData.planeType);
                     }
 
                     break;
 
                 case (Country.ITA):
 
-                    if (airplaneData.planeAttributes.oilTempType == DialVariant.A)
+                    if (airplaneData.planeAttributes.oilTempInType == DialVariant.A)
                     {
-                        oilTempTargets[i] = ITADials.WaterTempTargetA(airplaneData.oilTemps[i], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveWaterTempA);
+                        oilTempTargets[i] = ITADials.WaterTempTargetA(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveWaterTempA);
                     }
                     break;
-
             }
         }
 

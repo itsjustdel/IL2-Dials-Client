@@ -297,4 +297,9 @@ public class RussianDials : MonoBehaviour
 
         return target;
     }
+
+    internal static Quaternion OilTempCombo(float v, float scalar0, float scalar1)
+    {
+        throw new NotImplementedException();
+    }
 }

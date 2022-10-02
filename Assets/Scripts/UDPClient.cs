@@ -276,8 +276,8 @@ public class UDPClient : MonoBehaviour
 			airplaneData.engineModification = (int)floats[17];
 			airplaneData.waterTemps[0] = floats[18] - 273.15f;//kelvin to celcius
 			airplaneData.waterTemps[1] = floats[19] - 273.15f;
-			airplaneData.oilTemps[0] = floats[20] - 273.15f;//kelvin to celcius
-			airplaneData.oilTemps[1] = floats[21] - 273.15f;
+			airplaneData.oilTempsIn[0] = floats[20] - 273.15f;//kelvin to celcius
+			airplaneData.oilTempsIn[1] = floats[21] - 273.15f;
 
 		}
 		p += floatArrayLengthBytes;
