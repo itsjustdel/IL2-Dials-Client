@@ -251,7 +251,7 @@ public class RotateNeedle : MonoBehaviour
         //oil temps
         oilTempInTargets = DialTargets.OilTempInTargets(airplaneData, airplaneData.planeAttributes.country, this);
         oilTempOutTargets = DialTargets.OilTempOutTargets(airplaneData, airplaneData.planeAttributes.country, this);
-        oilTempOutTargets = DialTargets.OilTempPressureTargets(airplaneData, airplaneData.planeAttributes.country, this);
+        oilTempPressureTargets = DialTargets.OilTempPressureTargets(airplaneData, airplaneData.planeAttributes.country, this);
     }
 
     void NeedleRotations()
