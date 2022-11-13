@@ -107,6 +107,7 @@ public class RotateNeedle : MonoBehaviour
     public AnimationCurve animationCurveRPMD;
     public AnimationCurve animationCurveSpeedometerA;
     public AnimationCurve animationCurveWaterTempA;
+    public AnimationCurve animationCurveOilTempF;
     private bool headingIndicatorTest;
 
     public bool germanWaterOilSwitch;
@@ -323,6 +324,7 @@ public class RotateNeedle : MonoBehaviour
                 if (!germanWaterOilSwitch)
                     waterTempNeedles[i].transform.rotation = Quaternion.Slerp(waterTempNeedles[i].transform.rotation, waterTempTargets[i], Time.deltaTime * smoothing);
                 else
+                    // bf 109 oil is inbound https://airpages.ru/eng/lw/109k_01.shtml
                     waterTempNeedles[i].transform.rotation = Quaternion.Slerp(waterTempNeedles[i].transform.rotation, oilTempInTargets[i], Time.deltaTime * smoothing);
             }
         }

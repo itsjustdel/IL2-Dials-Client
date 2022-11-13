@@ -998,8 +998,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1482332910435746714}
   m_Layer: 5
-  m_Name: Oil Temp B
-  m_TagString: oil temp in
+  m_Name: Oil Temp Out B
+  m_TagString: oil temp out
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2783,7 +2783,9 @@ MonoBehaviour:
   manifoldNeedlesSmall: []
   manifoldNeedlesLarge: []
   waterTempNeedles: []
-  oilTempNeedles: []
+  oilTempInNeedles: []
+  oilTempOutNeedles: []
+  oilTempPressureNeedles: []
   previousMessageTime: 0
   maxSpin: 1
   turnAndBankPitchMultiplier: 8.56
@@ -2794,7 +2796,9 @@ MonoBehaviour:
   rpmSmallTargets: []
   manifoldLargeTargets: []
   waterTempTargets: []
-  oilTempTargets: []
+  oilTempInTargets: []
+  oilTempOutTargets: []
+  oilTempPressureTargets: []
   trackLength: -200.5
   trackLengthForSwitch: 200.3
   turnCoordinaterNeedleMod: 1
@@ -3754,8 +3758,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4459917619917293186}
   m_Layer: 5
-  m_Name: Oil Temp A
-  m_TagString: oil temp in
+  m_Name: Oil Temp Out A
+  m_TagString: oil temp out
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

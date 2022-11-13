@@ -241,7 +241,7 @@ public class UDPClient : MonoBehaviour
 		int p = 0;
 
 		//set length sent from server	
-		int floatArrayLength = 22;
+		int floatArrayLength = 24;
 		int floatArrayLengthBytes = 4 * floatArrayLength; //4 bytes for float * array length
 														  //float array
 		float[] floats = GetFloats(bytes, p, floatArrayLength);
@@ -276,8 +276,10 @@ public class UDPClient : MonoBehaviour
 			airplaneData.engineModification = (int)floats[17];
 			airplaneData.waterTemps[0] = floats[18] - 273.15f;//kelvin to celcius
 			airplaneData.waterTemps[1] = floats[19] - 273.15f;
-			airplaneData.oilTempsIn[0] = floats[20] - 273.15f;//kelvin to celcius
-			airplaneData.oilTempsIn[1] = floats[21] - 273.15f;
+			airplaneData.oilTempsOut[0] = floats[20] - 273.15f;//kelvin to celcius
+			airplaneData.oilTempsOut[1] = floats[21] - 273.15f;
+			airplaneData.oilTempsIn[0] = floats[22] - 273.15f;//kelvin to celcius
+			airplaneData.oilTempsIn[1] = floats[23] - 273.15f;
 
 		}
 		p += floatArrayLengthBytes;

@@ -339,7 +339,7 @@ public class DialTargets : MonoBehaviour
                     if (airplaneData.planeAttributes.oilTempPressureType == DialVariant.A)
                     {
                         //inbound oil fro top dial of combo
-                        oilTempTargets[i] = RussianDials.OilTempCombo(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1);
+                        oilTempTargets[i] = RussianDials.OilTempCombo(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
                     }                  
 
                     break;
@@ -405,6 +405,10 @@ public class DialTargets : MonoBehaviour
                     {
                         oilTempTargets[i] = GermanDials.WaterTempTargetC(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
+                    else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.F)
+                    {
+                        oilTempTargets[i] = GermanDials.OilTempTargetF(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveOilTempF);
+                    }
 
                     break;
 
@@ -469,12 +473,8 @@ public class DialTargets : MonoBehaviour
                     }
                     else if (airplaneData.planeAttributes.oilTempInType == DialVariant.B)
                     {
-                        oilTempTargets[i] = RussianDials.WaterTempTargetB(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1, airplaneData.planeType);
-                    }
-                    if (airplaneData.planeAttributes.oilTempInType == DialVariant.C)
-                    {
                         oilTempTargets[i] = RussianDials.WaterTempTargetC(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1);
-                    }
+                    }                  
 
                     break;
 
@@ -497,7 +497,10 @@ public class DialTargets : MonoBehaviour
                     {
                         oilTempTargets[i] = GermanDials.WaterTempTargetD(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-
+                    else if (airplaneData.planeAttributes.oilTempInType == DialVariant.E)
+                    {
+                        oilTempTargets[i] = GermanDials.OilTempFW190(airplaneData.oilTempsIn[i],airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
                     break;
 
                 //US

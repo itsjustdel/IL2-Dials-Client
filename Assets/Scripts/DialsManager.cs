@@ -659,11 +659,11 @@ public class DialsManager : MonoBehaviour
 
             //instantiate oil In temps
             oilTempInObjects.Clear();
-            string oilTempString = airplaneData.planeAttributes.oilTempInType.ToString();            
-            if (countryDialBoard.transform.Find("Oil Temp In " + oilTempString) != null)
+            string oilString = airplaneData.planeAttributes.oilTempInType.ToString();            
+            if (countryDialBoard.transform.Find("Oil Temp In " + oilString) != null)
             {                
                 //find prefab outside of loop
-                GameObject oilTemp = countryDialBoard.transform.Find("Oil Temp In " + oilTempString).gameObject;
+                GameObject oilTemp = countryDialBoard.transform.Find("Oil Temp In " + oilString).gameObject;
 
                 int dialsToInstantiate = airplaneData.planeAttributes.engines;
                 if (airplaneData.planeType == "P-38J-25")
@@ -698,11 +698,11 @@ public class DialsManager : MonoBehaviour
 
             //instantiate oil out temps
             oilTempOutObjects.Clear();
-            string oilTempOutString = airplaneData.planeAttributes.oilTempOutType.ToString();
-            if (countryDialBoard.transform.Find("Oil Temp Out " + oilTempString) != null)
+            oilString = airplaneData.planeAttributes.oilTempOutType.ToString();            
+            if (countryDialBoard.transform.Find("Oil Temp Out " + oilString) != null)
             {
                 //find prefab outside of loop
-                GameObject oilTemp = countryDialBoard.transform.Find("Oil Temp Out " + oilTempOutString).gameObject;
+                GameObject oilTemp = countryDialBoard.transform.Find("Oil Temp Out " + oilString).gameObject;
 
                 int dialsToInstantiate = airplaneData.planeAttributes.engines;
                 if (airplaneData.planeType == "P-38J-25")
@@ -917,16 +917,40 @@ public class DialsManager : MonoBehaviour
             allWaterTemps[i].SetActive(false);
         }
 
-        GameObject[] allOilTempsArray = GameObject.FindGameObjectsWithTag("oil temp in");
-        List<GameObject> allOilTemps = new List<GameObject>();
-        allOilTemps.AddRange(allOilTempsArray);
+        GameObject[] allOilInTempsArray = GameObject.FindGameObjectsWithTag("oil temp in");
+        List<GameObject> allOilInTemps = new List<GameObject>();
+        allOilInTemps.AddRange(allOilInTempsArray);
 
         foreach (GameObject oilTemp in oilTempInObjects)
-            allOilTemps.Remove(oilTemp);
+            allOilInTemps.Remove(oilTemp);
 
-        for (int i = 0; i < allOilTemps.Count; i++)
+        for (int i = 0; i < allOilInTemps.Count; i++)
         {
-            allOilTemps[i].SetActive(false);
+            allOilInTemps[i].SetActive(false);
+        }
+
+        GameObject[] allOilOutTempsArray = GameObject.FindGameObjectsWithTag("oil temp out");
+        List<GameObject> allOilOutTemps = new List<GameObject>();
+        allOilOutTemps.AddRange(allOilOutTempsArray);
+
+        foreach (GameObject oilTemp in oilTempOutObjects)
+            allOilOutTemps.Remove(oilTemp);
+
+        for (int i = 0; i < allOilOutTemps.Count; i++)
+        {
+            allOilOutTemps[i].SetActive(false);
+        }
+
+        GameObject[] allOilPressureTempsArray = GameObject.FindGameObjectsWithTag("oil temp pressure");
+        List<GameObject> allOilPressureTemps = new List<GameObject>();
+        allOilPressureTemps.AddRange(allOilPressureTempsArray);
+
+        foreach (GameObject oilTemp in oilTempPressureObjects)
+            allOilPressureTemps.Remove(oilTemp);
+
+        for (int i = 0; i < allOilPressureTemps.Count; i++)
+        {
+            allOilPressureTemps[i].SetActive(false);
         }
     }
 
@@ -1144,7 +1168,31 @@ public class DialsManager : MonoBehaviour
                 layout.oilTempInScale[i] = oilTempInObjects[i].transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
             }
             else
-                OilTempInInTray(layout, i, waterTempObjects[i]);
+                OilTempInInTray(layout, i, oilTempInObjects[i]);
+        }
+
+        for (int i = 0; i < oilTempOutObjects.Count; i++)
+        {
+            //if on dial board
+            if (oilTempOutObjects[i].transform.parent == countryDialBoard.transform)
+            {
+                layout.oilTempOutPos[i] = oilTempOutObjects[i].GetComponent<RectTransform>().anchoredPosition;
+                layout.oilTempOutScale[i] = oilTempOutObjects[i].transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
+            }
+            else
+                OilTempOutInTray(layout, i, oilTempOutObjects[i]);
+        }
+
+        for (int i = 0; i < oilTempPressureObjects.Count; i++)
+        {
+            //if on dial board
+            if (oilTempPressureObjects[i].transform.parent == countryDialBoard.transform)
+            {
+                layout.oilTempPressurePos[i] = oilTempPressureObjects[i].GetComponent<RectTransform>().anchoredPosition;
+                layout.oilTempPressureScale[i] = oilTempPressureObjects[i].transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
+            }
+            else
+                OilTempPressureInTray(layout, i, oilTempPressureObjects[i]);
         }
 
         //pack with json utility
@@ -1225,6 +1273,20 @@ public class DialsManager : MonoBehaviour
         layout.oilTempInPos[i] = oilTemp.GetComponent<RectTransform>().anchoredPosition;
         layout.oilTempInScale[i] = oilTemp.GetComponent<RectTransform>().localScale.x;
         layout.oilTempInInTray[i] = true;
+    }
+
+    private void OilTempOutInTray(Layout layout, int i, GameObject oilTemp)
+    {
+        layout.oilTempOutPos[i] = oilTemp.GetComponent<RectTransform>().anchoredPosition;
+        layout.oilTempOutScale[i] = oilTemp.GetComponent<RectTransform>().localScale.x;
+        layout.oilTempOutInTray[i] = true;
+    }
+
+    private void OilTempPressureInTray(Layout layout, int i, GameObject oilTemp)
+    {
+        layout.oilTempPressurePos[i] = oilTemp.GetComponent<RectTransform>().anchoredPosition;
+        layout.oilTempPressureScale[i] = oilTemp.GetComponent<RectTransform>().localScale.x;
+        layout.oilTempPressureInTray[i] = true;
     }
 
     void SpeedoInTray(Layout layout)
