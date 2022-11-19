@@ -241,7 +241,7 @@ public class UDPClient : MonoBehaviour
 		int p = 0;
 
 		//set length sent from server	
-		int floatArrayLength = 24;
+		int floatArrayLength = 30;
 		int floatArrayLengthBytes = 4 * floatArrayLength; //4 bytes for float * array length
 														  //float array
 		float[] floats = GetFloats(bytes, p, floatArrayLength);
@@ -272,16 +272,22 @@ public class UDPClient : MonoBehaviour
 			airplaneData.manifolds[0] = floats[13];
 			airplaneData.manifolds[1] = floats[14];
 			airplaneData.manifolds[2] = floats[15];
-			airplaneData.manifolds[3] = floats[16]; //support for 4 engines (you never know!)
+			airplaneData.manifolds[3] = floats[16];
 			airplaneData.engineModification = (int)floats[17];
-			airplaneData.waterTemps[0] = floats[18] - 273.15f;//kelvin to celcius
+			airplaneData.waterTemps[0] = floats[18] - 273.15f; //kelvin to celcius
 			airplaneData.waterTemps[1] = floats[19] - 273.15f;
-			airplaneData.oilTempsOut[0] = floats[20] - 273.15f;//kelvin to celcius
-			airplaneData.oilTempsOut[1] = floats[21] - 273.15f;
-			airplaneData.oilTempsIn[0] = floats[22] - 273.15f;//kelvin to celcius
-			airplaneData.oilTempsIn[1] = floats[23] - 273.15f;
-
+			airplaneData.waterTemps[2] = floats[20] - 273.15f;
+			airplaneData.waterTemps[3] = floats[21] - 273.15f;
+			airplaneData.oilTempsOut[0] = floats[22] - 273.15f;
+			airplaneData.oilTempsOut[1] = floats[23] - 273.15f;
+			airplaneData.oilTempsOut[2] = floats[24] - 273.15f;
+			airplaneData.oilTempsOut[3] = floats[25] - 273.15f;
+			airplaneData.oilTempsIn[0] = floats[26] - 273.15f;
+			airplaneData.oilTempsIn[1] = floats[27] - 273.15f;
+			airplaneData.oilTempsIn[2] = floats[28] - 273.15f;
+			airplaneData.oilTempsIn[3] = floats[29] - 273.15f;
 		}
+
 		p += floatArrayLengthBytes;
 
 		//version number

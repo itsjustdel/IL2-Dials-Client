@@ -65,9 +65,9 @@ public class AirplaneData : MonoBehaviour
         //initialise list with empty
         rpms = new List<float> { 0f, 0f, 0f, 0f };
         manifolds = new List<float> { 0f, 0f, 0f, 0f };
-        waterTemps = new List<float> { 0f, 0f };
-        oilTempsIn = new List<float> { 0f, 0f };
-        oilTempsOut = new List<float> { 0f, 0f };
+        waterTemps = new List<float> { 0f, 0f, 0f, 0f };
+        oilTempsIn = new List<float> { 0f, 0f, 0f, 0f };
+        oilTempsOut = new List<float> { 0f, 0f, 0f, 0f };
     }
 
     //fixed update is enough for checking status
