@@ -56,6 +56,7 @@ public static class PlaneLists
     public static List<string> UsPlanes = new List<string>()
     {
         "A-20B",
+        "C-47A",
         "P-40E-1",
         "P-39L-1",
         "P-47D-28",
