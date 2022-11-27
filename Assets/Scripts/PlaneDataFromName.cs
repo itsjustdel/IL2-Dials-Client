@@ -758,14 +758,17 @@ public class PlaneDataFromName : AirplaneData
             //RSE.RSE::CCockpitInstruments::simulation+F0D - 4C 8D 05 ECA40600     - lea r8,[RSE.RSE::CAeroplane_C_47A::`vftable'+210] { ("C-47A") }
             case "C-47A": //non player?
                 planeAttributes.country = Country.US;
+                planeAttributes.engines = 2;
                 planeAttributes.altimeter = true;
-                planeAttributes.artificialHorizon = true;
+                planeAttributes.speedometerType = DialVariant.E;
+                planeAttributes.horizonType = DialVariant.C;
                 planeAttributes.repeaterCompass = true;
-                planeAttributes.vsiLarge = true;
-                planeAttributes.turnCoordinator = true;
+                planeAttributes.vsiType = DialVariant.B;
+                planeAttributes.turnCoordinatorType = DialVariant.C;
                 planeAttributes.headingIndicator = true;
-                planeAttributes.rpmType = DialVariant.A;
-                planeAttributes.manifoldType = DialVariant.A;
+                planeAttributes.rpmType = DialVariant.E;
+                planeAttributes.manifoldType = DialVariant.F;
+                planeAttributes.waterTempType = DialVariant.None;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+F3F - 4C 8D 05 F2D40D00     - lea r8,[RSE.RSE::CAeroplane_P_51B_5::`vftable'+210] { ("P-51B-5") }
@@ -800,6 +803,21 @@ public class PlaneDataFromName : AirplaneData
 
             //RSE.RSE::CCockpitInstruments::simulation + F7D - 48 8D 15 747B0F00 - lea rdx,[RSE.RSE::CAeroplane_Spitfire_Mk_XIV::`vftable'+2E8] { ("Spitfire Mk.XIV") }
             case "Spitfire Mk.XIV":
+                planeAttributes.country = Country.UK;
+                planeAttributes.altimeter = true;
+                planeAttributes.artificialHorizon = true;
+                planeAttributes.vsiLarge = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.headingIndicator = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.B;
+                planeAttributes.manifoldType = DialVariant.B;
+                planeAttributes.waterTempType = DialVariant.B;
+                planeAttributes.oilTempInType = DialVariant.B;
+                break;
+
+            //guess - released?
+            case "Spitfire Mk.XIVe":
                 planeAttributes.country = Country.UK;
                 planeAttributes.altimeter = true;
                 planeAttributes.artificialHorizon = true;

@@ -7684,7 +7684,9 @@ MonoBehaviour:
   rpmObjects: []
   manifoldObjects: []
   waterTempObjects: []
-  oilTempObjects: []
+  oilTempInObjects: []
+  oilTempOutObjects: []
+  oilTempPressureObjects: []
   speedometer: {fileID: 0}
   turnIndicator: {fileID: 0}
   vsi: {fileID: 0}
@@ -9167,7 +9169,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: v0.6c
+  m_Text: v0.61
 --- !u!222 &1312049642
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9656,7 +9658,7 @@ MonoBehaviour:
   scalar1: 73.1
   useTestPlane: 0
   testPlane: {fileID: 0}
-  clientVersion: 0.6
+  clientVersion: 0.61
   serverVersion: 0
   planeType: 0
   planeTypePrevious: 
@@ -9675,7 +9677,8 @@ MonoBehaviour:
   rpms: []
   manifolds: []
   waterTemps: []
-  oilTemps: []
+  oilTempsIn: []
+  oilTempsOut: []
   engineModification: 0
   buildControl: {fileID: 1413319309}
   menuHandler: {fileID: 840226279}

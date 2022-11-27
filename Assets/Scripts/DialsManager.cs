@@ -205,11 +205,13 @@ public class DialsManager : MonoBehaviour
 
         AsignWaterTemp();
 
+        /*
         AsignOilTempIn();
 
         AsignOilTempOut();
 
         AsignOilTempPressure(); 
+        */
     }
 
     private void AsignOilTempPressure()
@@ -244,11 +246,12 @@ public class DialsManager : MonoBehaviour
 
         if (airplaneData.planeType == "P-38J-25")
         {
+            /*
             GameObject needleLargeL = oilTempInObjects[0].transform.Find("Dial").Find("Needle Large L").gameObject;
             countryDialBoard.GetComponent<RotateNeedle>().oilTempInNeedles.Add(needleLargeL);
             GameObject needleLargeR = oilTempInObjects[0].transform.Find("Dial").Find("Needle Large R").gameObject;
             countryDialBoard.GetComponent<RotateNeedle>().oilTempInNeedles.Add(needleLargeR);
-
+            */
             return;
         }
 
@@ -383,7 +386,7 @@ public class DialsManager : MonoBehaviour
             else if (airplaneData.planeAttributes.country == Country.US)
             {
                 //p38 J
-                if (airplaneData.planeType == "P-38J-25")
+                if (airplaneData.planeType == "P-38J-25" || airplaneData.planeType == "C-47A")
                 {
                     if (i == 0)
                     {
@@ -447,7 +450,8 @@ public class DialsManager : MonoBehaviour
             if (airplaneData.planeType == "P-38J-25" || 
                     airplaneData.planeType == "He 111 H-16" ||
                         airplaneData.planeType == "Me 410 A-1" ||
-                            airplaneData.planeType == "Hs 129 B-2")
+                            airplaneData.planeType == "Hs 129 B-2" ||
+                              airplaneData.planeType == "C-47A")
             {
                 //p38 J or he 111 h16
                 GameObject needleLeft = manifoldObjects[i].transform.Find("Dial").Find("Needle Left").gameObject;
@@ -540,7 +544,7 @@ public class DialsManager : MonoBehaviour
 
                 int dialsToInstantiate = airplaneData.planeAttributes.engines;
                 //some plane have two needles one dial, only create one in this instance
-                if (airplaneData.planeType == "P-38J-25" || airplaneData.planeType == "Me 410 A-1")
+                if (airplaneData.planeType == "P-38J-25" || airplaneData.planeType == "Me 410 A-1" || airplaneData.planeType == "C-47A")
                     dialsToInstantiate = 1;
 
                 for (int i = 0; i < dialsToInstantiate; i++)
@@ -587,7 +591,8 @@ public class DialsManager : MonoBehaviour
                 if (airplaneData.planeType == "P-38J-25" || 
                         airplaneData.planeType == "He 111 H-16" ||
                             airplaneData.planeType == "Me 410 A-1"||
-                                airplaneData.planeType == "Hs 129 B-2")
+                                airplaneData.planeType == "Hs 129 B-2" ||
+                                  airplaneData.planeType == "C-47A")
                     dialsToInstantiate = 1;
 
                 for (int i = 0; i < dialsToInstantiate; i++)
