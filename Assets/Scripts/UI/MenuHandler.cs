@@ -16,6 +16,8 @@ public class MenuHandler : MonoBehaviour
     public GameObject missionStart;
     public GameObject welcomePanel;
     public GameObject serverMessagePanel;
+    public GameObject keyCodePanel;
+    public Inputs inputs;
     public GameObject blurPanel;
     public GameObject menuPanel;
     public GameObject displayPanel;
@@ -662,7 +664,12 @@ public class MenuHandler : MonoBehaviour
 
         for (int i = 0; i < UIhandlers.Length; i++)
         {
-            if (dialsInTray.Contains(UIhandlers[i].transform.parent.gameObject))
+            //german water oil switch
+            if (UIhandlers[i].name == "Gear")
+            {
+                UIhandlers[i].GetComponent<Image>().enabled = true;
+            }
+            else if (dialsInTray.Contains(UIhandlers[i].transform.parent.gameObject))
             {
                 GameObject container = UIhandlers[i].transform.Find("Return Container").gameObject;
                 container.SetActive(true);
@@ -681,11 +688,19 @@ public class MenuHandler : MonoBehaviour
 
         for (int i = 0; i < UIhandlers.Length; i++)
         {
-            for (int j = 0; j < UIhandlers[i].transform.childCount; j++)
+            //german water oil switch
+            if (UIhandlers[i].name == "Gear")
             {
-               
+                UIhandlers[i].GetComponent<Image>().enabled = false;
+            }
+            else
+            {
+                for (int j = 0; j < UIhandlers[i].transform.childCount; j++)
+                {
+
                     UIhandlers[i].transform.Find("Container").gameObject.SetActive(false);
-               
+
+                }
             }
         }
     }
@@ -820,5 +835,40 @@ public class MenuHandler : MonoBehaviour
 
 
         uiHandlersToggle = !uiHandlersToggle;
+    }
+
+    public void EnableKeyCodePanel()
+    {
+        keyCodePanel.SetActive(true);
+        blurPanel.SetActive(true);
+        layoutPanel.SetActive(false);
+
+        string s = "";
+        if (inputs.oilWaterKeys.Count == 0)
+            s = "...";
+        else
+        {   
+            for (int i = 0; i < inputs.oilWaterKeys.Count; i++)
+            {
+                if (i != 0)
+                    s += " + ";
+
+                s += inputs.oilWaterKeys[i].ToString();
+            }
+        }
+        inputs.keyCodeText.text = s;
+    }
+
+    public void AcceptOilKeyCode()
+    {
+        keyCodePanel.SetActive(false);
+        blurPanel.SetActive(false);
+        layoutPanel.SetActive(true);
+
+        if (inputs.oilWaterKeyRecord)
+        {
+            //if user just pressed click without stoppping recording, assume they are happy with what they entered
+            inputs.OilKeyRecordToggle();
+        }
     }
 }

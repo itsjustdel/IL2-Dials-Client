@@ -447,4 +447,34 @@ public class GermanDials : MonoBehaviour
 
         return Quaternion.Euler(0, 0, v);
     }
+
+    internal static Quaternion OilTempFW190(float inRad,float outRad, float scalar0, float scalar1)
+    {
+        float diff = (outRad - inRad);
+        float modDiff = diff * 0.45f;
+        float preDiv = outRad - modDiff;
+        float v = preDiv / 120f;
+        v = Mathf.Lerp(-48f, 51f, v);//skewed model, or maybe not correct formula, good enough for now
+        Debug.Log("angle " + v);
+        return Quaternion.Euler(0, 0, -v);
+    }
+
+    internal static Quaternion OilTempTargetF(float v, float scalar0, float scalar1, AnimationCurve curve)
+    {
+        //and work out percentage to use 0-1 scale for curve
+        float highest = 160;
+        float percentage = (Mathf.Abs(v / highest));
+
+        Debug.Log(percentage);
+
+        //multiply by half a dial of spin (180 degrees)
+        float angleToSpin = curve.Evaluate(percentage);
+
+        angleToSpin *= -287.5f;
+        angleToSpin -= -145;
+
+        Quaternion target = Quaternion.Euler(0, 0, angleToSpin);
+
+        return target;
+    }
 }

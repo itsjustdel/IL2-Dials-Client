@@ -297,4 +297,13 @@ public class RussianDials : MonoBehaviour
 
         return target;
     }
+
+    internal static Quaternion OilTempCombo(float v, float scalar0, float scalar1)
+    {
+        v = Mathf.Clamp(v, 0, 125);
+        float r = v * -1.438f;
+        Quaternion target = Quaternion.Euler(0, 0, r + 90);
+
+        return target;
+    }
 }

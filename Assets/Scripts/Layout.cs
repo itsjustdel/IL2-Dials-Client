@@ -24,6 +24,9 @@ public class Layout
     public List<Vector2> rpmPos = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
     public List<Vector2> manifoldPos = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
     public List<Vector2> waterTempPos = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
+    public List<Vector2> oilTempInPos = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
+    public List<Vector2> oilTempOutPos = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
+    public List<Vector2> oilTempPressurePos = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
 
     public float speedoScale;
     public float altScale;
@@ -40,6 +43,9 @@ public class Layout
     public List<float> rpmScale = new List<float>() { -1f, -1f, -1f, -1f }; //max 4 engines in game?
     public List<float> manifoldScale = new List<float>() { -1f, -1f, -1f, -1f };
     public List<float> waterTempScale = new List<float>() { -1f, -1f, -1f, -1f };
+    public List<float> oilTempInScale = new List<float>() { -1f, -1f, -1f, -1f };
+    public List<float> oilTempOutScale = new List<float>() { -1f, -1f, -1f, -1f };
+    public List<float> oilTempPressureScale = new List<float>() { -1f, -1f, -1f, -1f };
 
     public bool speedoInTray;
     public bool altimeterInTray;
@@ -56,8 +62,11 @@ public class Layout
     public List<bool> rpmInTray = new List<bool>() { false, false, false, false };
     public List<bool> manifoldInTray = new List<bool>() { false, false, false, false };
     public List<bool> waterTempInTray = new List<bool>() { false, false, false, false };
+    public List<bool> oilTempInInTray = new List<bool>() { false, false, false, false };
+    public List<bool> oilTempOutInTray = new List<bool>() { false, false, false, false };
+    public List<bool> oilTempPressureInTray = new List<bool>() { false, false, false, false };
 
-    
+
     public static int rows;
     public static int columns;
     public static float dialScale = 1f;

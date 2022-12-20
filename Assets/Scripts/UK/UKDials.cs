@@ -343,9 +343,13 @@ public class UKDials : MonoBehaviour
 
     internal static Quaternion WaterTempTargetA(float v, float scalar, float scalar1, AnimationCurve curve, string name)
     {
-        if (name == "Spitfire Mk.Vb" || name == "Spitfire Mk.Vb" || name == "Spitfire Mk.IXe")
+        if (name == "Spitfire Mk.Vb" || name == "Spitfire Mk.XIV")
         {
-            v *= 1.125f; // Don't know why
+            v *= -1.118f;
+        }
+        else if (name == "Spitfire Mk.IXe")
+        {
+            v *= -1.1667f;
         }
         //and work out percentage to use 0-1 scale for curve
         float highest = 140;
@@ -366,12 +370,40 @@ public class UKDials : MonoBehaviour
 
     internal static Quaternion WaterTempTargetB(float v, float scalar0, float scalar1, string name)
     {
-        if (name == "Spitfire Mk.Vb" || name == "Spitfire Mk.Vb" || name == "Spitfire Mk.IXe")
+        if (name == "Spitfire Mk.XIV") //only one with this dial?
         {
-            v *= 1.125f; // Don't know why
+            v *= -0.86f;
         }
+        else
+        {
+            v *= -0.789f;
+        }
+        v -= -71;
+        v = Mathf.Clamp(v, -39.33f, 39.33f);
 
-        v *= -0.789f;
+
+        return Quaternion.Euler(0, 0, v);
+    }
+
+    internal static Quaternion OilTempTargetA(float v, float scalar0, float scalar1)
+    {
+        v *= -3f;
+        v += 150;
+        Quaternion target = Quaternion.Euler(0, 0, v);
+
+        return target;
+    }
+
+    internal static Quaternion OilTempTargetB(float v, float scalar0, float scalar1, string name)
+    {
+        if (name == "Spitfire Mk.XIV") //only one with this dial?
+        {
+            v *= -1.05f;
+        }
+        else
+        {
+            v *= -0.789f;
+        }
         v -= -71;
         v = Mathf.Clamp(v, -39.33f, 39.33f);
 
