@@ -319,7 +319,7 @@ public class LoadManager : MonoBehaviour
             if (layout.waterTempInTray[i])
                 AddToTrayOnLoad(dialsManager.waterTempObjects[i], menuHandler);
         }
-        /*
+      
         for (int i = 0; i < dialsManager.oilTempInObjects.Count; i++)
         {
             DialScalePosition(dialsManager.oilTempInObjects[i], layout.oilTempInPos[i], layout.oilTempInScale[i]);
@@ -339,8 +339,7 @@ public class LoadManager : MonoBehaviour
             DialScalePosition(dialsManager.oilTempPressureObjects[i], layout.oilTempPressurePos[i], layout.oilTempPressureScale[i]);
             if (layout.oilTempInInTray[i])
                 AddToTrayOnLoad(dialsManager.oilTempPressureObjects[i], menuHandler);
-        }
-        */
+        }        
     }
 
     static void AddToTrayOnLoad(GameObject dial, MenuHandler menuHandler)
