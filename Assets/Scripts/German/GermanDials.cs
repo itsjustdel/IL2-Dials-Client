@@ -477,4 +477,15 @@ public class GermanDials : MonoBehaviour
 
         return target;
     }
+
+    internal static Quaternion OilTempTargetC(float v, float scalar0, float scalar1)
+    {
+        v += 273.15f;
+        v = Mathf.Clamp(v, -30f, 160f);
+        v *= -0.686f;
+        v -= -134;
+
+
+        return Quaternion.Euler(0, 0, v);
+    }
 }

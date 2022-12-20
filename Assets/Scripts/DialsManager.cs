@@ -205,13 +205,11 @@ public class DialsManager : MonoBehaviour
 
         AsignWaterTemp();
 
-        /*
         AsignOilTempIn();
 
         AsignOilTempOut();
 
-        AsignOilTempPressure(); 
-        */
+        AsignOilTempPressure();        
     }
 
     private void AsignOilTempPressure()
@@ -246,12 +244,12 @@ public class DialsManager : MonoBehaviour
 
         if (airplaneData.planeType == "P-38J-25")
         {
-            /*
+            
             GameObject needleLargeL = oilTempInObjects[0].transform.Find("Dial").Find("Needle Large L").gameObject;
             countryDialBoard.GetComponent<RotateNeedle>().oilTempInNeedles.Add(needleLargeL);
             GameObject needleLargeR = oilTempInObjects[0].transform.Find("Dial").Find("Needle Large R").gameObject;
             countryDialBoard.GetComponent<RotateNeedle>().oilTempInNeedles.Add(needleLargeR);
-            */
+            
             return;
         }
 

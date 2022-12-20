@@ -403,7 +403,7 @@ public class DialTargets : MonoBehaviour
                     }
                     else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.C)
                     {
-                        oilTempTargets[i] = GermanDials.WaterTempTargetC(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
+                        oilTempTargets[i] = GermanDials.OilTempTargetC(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
                     else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.F)
                     {
