@@ -501,6 +501,10 @@ public class DialTargets : MonoBehaviour
                     {
                         oilTempTargets[i] = GermanDials.OilTempFW190(airplaneData.oilTempsIn[i],airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
+                    else if (airplaneData.planeAttributes.oilTempInType == DialVariant.F)
+                    {
+                        oilTempTargets[i] = GermanDials.OilTempTargetF(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveOilTempF);
+                    }
                     break;
 
                 //US

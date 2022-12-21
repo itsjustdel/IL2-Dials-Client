@@ -287,7 +287,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.rpmType = DialVariant.C;                
                 planeAttributes.manifoldType = DialVariant.B;
                 planeAttributes.waterTempType = DialVariant.B;
-                planeAttributes.oilTempInType = DialVariant.None;                
+                planeAttributes.oilTempInType = DialVariant.F;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+BFB - 4C 8D 05 56E31500     - lea r8,[RSE.RSE::CFlywheelStarter_P_40E_1::`vftable'+68] { ("P-40E-1") }
