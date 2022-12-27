@@ -43,6 +43,7 @@ public class RotateNeedle : MonoBehaviour
     public List<GameObject> oilTempInNeedles = new List<GameObject>();
     public List<GameObject> oilTempOutNeedles = new List<GameObject>();
     public List<GameObject> oilTempPressureNeedles = new List<GameObject>();
+    public List<GameObject> oilTempComboNeedles = new List<GameObject>();
 
     public float previousMessageTime;
     public float maxSpin =1f;
@@ -78,6 +79,7 @@ public class RotateNeedle : MonoBehaviour
     public List<Quaternion> oilTempInTargets = new List<Quaternion>();
     public List<Quaternion> oilTempOutTargets = new List<Quaternion>();
     public List<Quaternion> oilTempPressureTargets = new List<Quaternion>();
+    public List<Quaternion> oilTempComboTargets = new List<Quaternion>();
     private Quaternion turnAndBankBallTarget;
 
     // -- positions
@@ -253,6 +255,7 @@ public class RotateNeedle : MonoBehaviour
         oilTempInTargets = DialTargets.OilTempInTargets(airplaneData, airplaneData.planeAttributes.country, this);
         oilTempOutTargets = DialTargets.OilTempOutTargets(airplaneData, airplaneData.planeAttributes.country, this);
         oilTempPressureTargets = DialTargets.OilTempPressureTargets(airplaneData, airplaneData.planeAttributes.country, this);
+        oilTempComboTargets = DialTargets.OilTempComboTargets(airplaneData, airplaneData.planeAttributes.country, this);
     }
 
     void NeedleRotations()
@@ -286,6 +289,17 @@ public class RotateNeedle : MonoBehaviour
         OilTempOutRotations();
 
         OilTempPressureRotations();
+
+        OilTempComboRotations();
+    }
+
+    private void OilTempComboRotations()
+    {
+        for (int i = 0; i < oilTempComboNeedles.Count; i++)
+        {
+            if (oilTempComboNeedles[i].gameObject != null)
+                oilTempComboNeedles[i].transform.rotation = Quaternion.Slerp(oilTempComboNeedles[i].transform.rotation, oilTempComboTargets[i], Time.deltaTime * smoothing);
+        }
     }
 
     private void OilTempPressureRotations()

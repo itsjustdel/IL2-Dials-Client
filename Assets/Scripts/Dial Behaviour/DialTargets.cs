@@ -552,6 +552,49 @@ public class DialTargets : MonoBehaviour
         return oilTempTargets;
     }
 
+    internal static List<Quaternion> OilTempComboTargets(AirplaneData airplaneData, Country country, RotateNeedle rotateNeedle)
+    {
+        List<Quaternion> oilTempTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines * 2]); //two for each engine
+
+        for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
+        {
+            switch (country)
+            {
+                //RU
+                case (Country.RU):
+                    break;
+
+                //GER
+                case (Country.GER):
+
+                    if (airplaneData.planeAttributes.oilTempComboType == DialVariant.A)
+                    {
+                        // we will save engine in in out as index 0, 1 and engine 2 as index 2, 3
+                        oilTempTargets[0] = GermanDials.OilTempTargetF(airplaneData.oilTempsIn[0], airplaneData.scalar0, airplaneData.scalar1,rotateNeedle.animationCurveOilTempF);
+                        oilTempTargets[1] = GermanDials.OilTempTargetF(airplaneData.oilTempsOut[0], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveOilTempF);
+                        oilTempTargets[2] = GermanDials.OilTempTargetF(airplaneData.oilTempsIn[1], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveOilTempF);
+                        oilTempTargets[3] = GermanDials.OilTempTargetF(airplaneData.oilTempsOut[1], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveOilTempF);
+                    }
+
+                    //return out of for loop - Consider if we need the for loop when implementing other countries/planes
+                    return oilTempTargets;
+
+                //US
+                case (Country.US):                   
+                    break;
+
+                case (Country.FR):
+                case (Country.UK):                  
+                    break;
+
+                case (Country.ITA):
+                    break;
+            }
+        }
+
+        return oilTempTargets;
+    }
+
     public static Quaternion ArtificialHorizonTargets(ref Quaternion artificialHorizonNeedleTarget, ref Vector3 artificialHorizonPositionTarget, ref Quaternion artificialHorizonChevronTarget, ref Quaternion artificialHorizonRotationPlaneTarget,
                                                     AirplaneData airplaneData, GameObject artificialHorizonNeedle, 
                                                     float artificialHorizonRollMod, float artificialHorizonMultiplier, Country country)

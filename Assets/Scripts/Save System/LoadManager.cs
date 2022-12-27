@@ -339,7 +339,14 @@ public class LoadManager : MonoBehaviour
             DialScalePosition(dialsManager.oilTempPressureObjects[i], layout.oilTempPressurePos[i], layout.oilTempPressureScale[i]);
             if (layout.oilTempInInTray[i])
                 AddToTrayOnLoad(dialsManager.oilTempPressureObjects[i], menuHandler);
-        }        
+        }
+
+        for (int i = 0; i < dialsManager.oilTempComboObjects.Count; i++)
+        {
+            DialScalePosition(dialsManager.oilTempComboObjects[i], layout.oilTempComboPos[i], layout.oilTempComboScale[i]);
+            if (layout.oilTempInInTray[i])
+                AddToTrayOnLoad(dialsManager.oilTempComboObjects[i], menuHandler);
+        }
     }
 
     static void AddToTrayOnLoad(GameObject dial, MenuHandler menuHandler)
