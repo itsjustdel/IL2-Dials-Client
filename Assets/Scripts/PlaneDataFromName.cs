@@ -414,7 +414,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.rpmType = DialVariant.C;                
                 planeAttributes.manifoldType = DialVariant.B;
                 planeAttributes.waterTempType = DialVariant.B;
-                planeAttributes.oilTempInType = DialVariant.None;
+                planeAttributes.oilTempComboType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+217E - 48 8D 15 334D0800     - lea rdx,[RSE.RSE::CAeroplane_He_111_H16::`vftable'+298] { ("He 111 H-16") }
@@ -903,7 +903,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.rpmType = DialVariant.B;
                 planeAttributes.manifoldType = DialVariant.E;
                 planeAttributes.waterTempType = DialVariant.B;
-                planeAttributes.oilTempInType = DialVariant.None;
+                planeAttributes.oilTempOutType = DialVariant.F;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+574F - 48 8D 15 72AD0E00     - lea rdx,[RSE.RSE::CAeroplane_Mosquito_FB_Mk_VI_s2::`vftable'+2E8] { ("Mosquito F.B. Mk.VI ser.2") }
