@@ -820,6 +820,16 @@ public class DialsManager : MonoBehaviour
                     oilTempInstance.transform.name = "Oil Temp Combo " + airplaneData.planeAttributes.oilTempComboType.ToString() + " " + i.ToString();
                     oilTempComboObjects.Add(oilTempInstance);
                 }
+
+                if (dialsToInstantiate == 2) // 3 engine ger plane, no support atm (just ui icons)
+                {
+                    for (int i = 0; i < oilTempComboObjects.Count; i++)
+                    {
+                        //engine dials have "L" or "R"
+                        GameObject parent = oilTempComboObjects[i].transform.Find("UI Handlers").GetChild(0).Find("Left Right").gameObject;
+                        parent.transform.GetChild(i).gameObject.SetActive(true);
+                    }
+                }
             }
         }    
     }
