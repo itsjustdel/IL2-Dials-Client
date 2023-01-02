@@ -27,6 +27,7 @@ public class Layout
     public List<Vector2> oilTempInPos = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
     public List<Vector2> oilTempOutPos = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
     public List<Vector2> oilTempPressurePos = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
+    public List<Vector2> oilTempComboPos = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
 
     public float speedoScale;
     public float altScale;
@@ -46,6 +47,7 @@ public class Layout
     public List<float> oilTempInScale = new List<float>() { -1f, -1f, -1f, -1f };
     public List<float> oilTempOutScale = new List<float>() { -1f, -1f, -1f, -1f };
     public List<float> oilTempPressureScale = new List<float>() { -1f, -1f, -1f, -1f };
+    public List<float> oilTempComboScale = new List<float>() { -1f, -1f, -1f, -1f };
 
     public bool speedoInTray;
     public bool altimeterInTray;
@@ -65,6 +67,7 @@ public class Layout
     public List<bool> oilTempInInTray = new List<bool>() { false, false, false, false };
     public List<bool> oilTempOutInTray = new List<bool>() { false, false, false, false };
     public List<bool> oilTempPressureInTray = new List<bool>() { false, false, false, false };
+    public List<bool> oilTempComboInTray = new List<bool>() { false, false, false, false };
 
 
     public static int rows;

@@ -17,6 +17,7 @@ public class DialsManager : MonoBehaviour
     public List<GameObject> waterTempObjects = new List<GameObject>();
     public List<GameObject> oilTempInObjects = new List<GameObject>();
     public List<GameObject> oilTempOutObjects = new List<GameObject>();
+    public List<GameObject> oilTempComboObjects = new List<GameObject>();
     public List<GameObject> oilTempPressureObjects = new List<GameObject>();
     public GameObject speedometer;
     public GameObject turnIndicator;
@@ -205,13 +206,29 @@ public class DialsManager : MonoBehaviour
 
         AsignWaterTemp();
 
-        /*
         AsignOilTempIn();
 
         AsignOilTempOut();
 
-        AsignOilTempPressure(); 
-        */
+        AsignOilTempPressure();
+
+        AsignOilTempCombo();
+    }
+
+    private void AsignOilTempCombo()
+    {
+        //empty lists first
+        countryDialBoard.GetComponent<RotateNeedle>().oilTempComboNeedles.Clear();
+
+
+        for (int i = 0; i < oilTempComboObjects.Count; i++)
+        {
+            GameObject needleIn = oilTempComboObjects[i].transform.Find("Dial").Find("Needle In").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().oilTempComboNeedles.Add(needleIn);
+            GameObject needleOut = oilTempComboObjects[i].transform.Find("Dial").Find("Needle Out").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().oilTempComboNeedles.Add(needleOut);
+        }
+            
     }
 
     private void AsignOilTempPressure()
@@ -246,12 +263,12 @@ public class DialsManager : MonoBehaviour
 
         if (airplaneData.planeType == "P-38J-25")
         {
-            /*
+            
             GameObject needleLargeL = oilTempInObjects[0].transform.Find("Dial").Find("Needle Large L").gameObject;
             countryDialBoard.GetComponent<RotateNeedle>().oilTempInNeedles.Add(needleLargeL);
             GameObject needleLargeR = oilTempInObjects[0].transform.Find("Dial").Find("Needle Large R").gameObject;
             countryDialBoard.GetComponent<RotateNeedle>().oilTempInNeedles.Add(needleLargeR);
-            */
+            
             return;
         }
 
@@ -778,6 +795,42 @@ public class DialsManager : MonoBehaviour
                     }
                 }
             }
+
+            //instantiate oil combo in and out temps
+            oilTempComboObjects.Clear();
+            string oilTempComboString = airplaneData.planeAttributes.oilTempComboType.ToString();
+            if (countryDialBoard.transform.Find("Oil Temp Combo " + oilTempComboString) != null)
+            {
+                //find prefab outside of loop
+                GameObject oilTemp = countryDialBoard.transform.Find("Oil Temp Combo " + oilTempComboString).gameObject;
+
+                int dialsToInstantiate = airplaneData.planeAttributes.engines;
+                for (int i = 0; i < dialsToInstantiate; i++)
+                {
+                    //create instance variable if we need to duplicate
+                    GameObject oilTempInstance = oilTemp;
+                    if (i > 0)
+                    {
+                        //duplicate if we have more than one engine
+                        oilTempInstance = Instantiate(oilTemp, oilTemp.transform.position, Quaternion.identity, countryDialBoard.transform);
+
+                    }
+                    //set to last position - getting fiddly with this rpm/manifolds/oil temps - need better solution
+                    oilTempInstance.transform.SetSiblingIndex(countryDialBoard.transform.childCount - 1);
+                    oilTempInstance.transform.name = "Oil Temp Combo " + airplaneData.planeAttributes.oilTempComboType.ToString() + " " + i.ToString();
+                    oilTempComboObjects.Add(oilTempInstance);
+                }
+
+                if (dialsToInstantiate == 2) // 3 engine ger plane, no support atm (just ui icons)
+                {
+                    for (int i = 0; i < oilTempComboObjects.Count; i++)
+                    {
+                        //engine dials have "L" or "R"
+                        GameObject parent = oilTempComboObjects[i].transform.Find("UI Handlers").GetChild(0).Find("Left Right").gameObject;
+                        parent.transform.GetChild(i).gameObject.SetActive(true);
+                    }
+                }
+            }
         }    
     }
 
@@ -956,6 +1009,18 @@ public class DialsManager : MonoBehaviour
         for (int i = 0; i < allOilPressureTemps.Count; i++)
         {
             allOilPressureTemps[i].SetActive(false);
+        }
+
+        GameObject[] allOilComboTempsArray = GameObject.FindGameObjectsWithTag("oil temp combo");
+        List<GameObject> allOilComboTemps = new List<GameObject>();
+        allOilComboTemps.AddRange(allOilComboTempsArray);
+
+        foreach (GameObject oilTemp in oilTempComboObjects)
+            allOilComboTemps.Remove(oilTemp);
+
+        for (int i = 0; i < allOilComboTemps.Count; i++)
+        {
+            allOilComboTemps[i].SetActive(false);
         }
     }
 
@@ -1200,6 +1265,18 @@ public class DialsManager : MonoBehaviour
                 OilTempPressureInTray(layout, i, oilTempPressureObjects[i]);
         }
 
+        for (int i = 0; i < oilTempComboObjects.Count; i++)
+        {
+            //if on dial board
+            if (oilTempComboObjects[i].transform.parent == countryDialBoard.transform)
+            {
+                layout.oilTempComboPos[i] = oilTempComboObjects[i].GetComponent<RectTransform>().anchoredPosition;
+                layout.oilTempComboScale[i] = oilTempComboObjects[i].transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
+            }
+            else
+                OilTempComboInTray(layout, i, oilTempComboObjects[i]);
+        }
+
         //pack with json utility
         string jsonFoo = JsonUtility.ToJson(layout);
 
@@ -1292,6 +1369,13 @@ public class DialsManager : MonoBehaviour
         layout.oilTempPressurePos[i] = oilTemp.GetComponent<RectTransform>().anchoredPosition;
         layout.oilTempPressureScale[i] = oilTemp.GetComponent<RectTransform>().localScale.x;
         layout.oilTempPressureInTray[i] = true;
+    }
+
+    private void OilTempComboInTray(Layout layout, int i, GameObject oilTemp)
+    {
+        layout.oilTempComboPos[i] = oilTemp.GetComponent<RectTransform>().anchoredPosition;
+        layout.oilTempComboScale[i] = oilTemp.GetComponent<RectTransform>().localScale.x;
+        layout.oilTempComboInTray[i] = true;
     }
 
     void SpeedoInTray(Layout layout)

@@ -41,6 +41,7 @@ public class PlaneDataFromName : AirplaneData
         public DialVariant oilTempInType = DialVariant.None;
         public DialVariant oilTempOutType = DialVariant.None;
         public DialVariant oilTempPressureType = DialVariant.None;
+        public DialVariant oilTempComboType = DialVariant.None;
 
         public int engines = 1; //default to 1
 
@@ -287,7 +288,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.rpmType = DialVariant.C;                
                 planeAttributes.manifoldType = DialVariant.B;
                 planeAttributes.waterTempType = DialVariant.B;
-                planeAttributes.oilTempInType = DialVariant.None;                
+                planeAttributes.oilTempComboType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+BFB - 4C 8D 05 56E31500     - lea r8,[RSE.RSE::CFlywheelStarter_P_40E_1::`vftable'+68] { ("P-40E-1") }
@@ -413,7 +414,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.rpmType = DialVariant.C;                
                 planeAttributes.manifoldType = DialVariant.B;
                 planeAttributes.waterTempType = DialVariant.B;
-                planeAttributes.oilTempInType = DialVariant.None;
+                planeAttributes.oilTempComboType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+217E - 48 8D 15 334D0800     - lea rdx,[RSE.RSE::CAeroplane_He_111_H16::`vftable'+298] { ("He 111 H-16") }
@@ -902,7 +903,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.rpmType = DialVariant.B;
                 planeAttributes.manifoldType = DialVariant.E;
                 planeAttributes.waterTempType = DialVariant.B;
-                planeAttributes.oilTempInType = DialVariant.None;
+                planeAttributes.oilTempOutType = DialVariant.F;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+574F - 48 8D 15 72AD0E00     - lea rdx,[RSE.RSE::CAeroplane_Mosquito_FB_Mk_VI_s2::`vftable'+2E8] { ("Mosquito F.B. Mk.VI ser.2") }
@@ -938,6 +939,18 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.oilTempOutType = DialVariant.A;
                 break;
 
+            //RSE.RSE::CCockpitInstruments::simulation+8E99 - 48 8D 15 A88B0600     - lea rdx,[RSE.RSE::CAeroplane_Bf_109_G6AS::`vftable'+238] { ("Bf 109 G-6AS") }
+            case "Bf 109 G-6AS":
+                planeAttributes.country = Country.GER;
+                planeAttributes.altimeter = true;
+                planeAttributes.turnAndBank = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.B;
+                planeAttributes.waterTempType = DialVariant.D;
+                planeAttributes.oilTempInType = DialVariant.D;
+                break;
+
             //Flying Circus Vol 1
             //RSE.RSE::CCockpitInstruments::simulation+3DB5 - 48 8D 15 C4481F00     - lea rdx,[RSE.RSE::CAeroplane_SPAD_XIII_C1::`vftable'+1C8] { ("SPAD XIII.C1") }
             case "SPAD XIII.C1":
@@ -965,6 +978,17 @@ public class PlaneDataFromName : AirplaneData
 
             //RSE.RSE::CCockpitInstruments::simulation+3DD0 - 48 8D 15 399A1E00     - lea rdx,[RSE.RSE::CAeroplane_Sopwith_Camel::`vftable'+1C8] { ("Sopwith Camel") }
             case "Sopwith Camel":
+                planeAttributes.country = Country.UK;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
+                planeAttributes.waterTempType = DialVariant.A;
+                break;
+
+            // Couldn't find!
+            case "Sopwith Snipe":
                 planeAttributes.country = Country.UK;
                 planeAttributes.speedometerType = DialVariant.A;
                 planeAttributes.altimeter = true;

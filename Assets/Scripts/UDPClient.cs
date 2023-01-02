@@ -265,10 +265,34 @@ public class UDPClient : MonoBehaviour
 			airplaneData.verticalSpeed = floats[6];
 			airplaneData.turnCoordinatorBall = floats[7];
 			airplaneData.turnCoordinatorNeedle = floats[8];
+
+			if(airplaneData.planeType == "Ju-52/3m g4e")
+            {
+				//switch order of engines to flow left to right
+
+				//rpm
+				float temp = floats[11];
+				floats[11] = floats[10];
+				floats[10] = temp;
+
+				//oil out
+				temp = floats[23];
+				floats[23] = floats[24];
+				floats[24] = temp;
+
+				//oil inbound
+				temp = floats[27];
+				floats[27] = floats[28];
+				floats[28] = temp;
+
+			}
+
 			airplaneData.rpms[0] = floats[9];
 			airplaneData.rpms[1] = floats[10];
 			airplaneData.rpms[2] = floats[11];
 			airplaneData.rpms[3] = floats[12]; //support for 4 engines (you never know!)
+
+
 			airplaneData.manifolds[0] = floats[13];
 			airplaneData.manifolds[1] = floats[14];
 			airplaneData.manifolds[2] = floats[15];
@@ -306,6 +330,7 @@ public class UDPClient : MonoBehaviour
 		//using setter method so we can check menu status before chaning plane name
 		airplaneData.setPlaneType(planeType);
 		
+
 
 	}
 

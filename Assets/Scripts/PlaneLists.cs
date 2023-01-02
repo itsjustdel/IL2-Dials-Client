@@ -42,6 +42,7 @@ public static class PlaneLists
         "S.E.5a",
         "Sopwith Camel",
         "Sopwith Dolphin",
+        "Sopwith Snipe",
         "Sopwith Triplane"
     };
 
@@ -75,7 +76,8 @@ public static class PlaneLists
         "Bf 109 G-2",
         "Bf 109 G-4",
         "Bf 109 G-6",
-        "Bf 109 G-6 Late",
+        "Bf 109 G-6AS",
+        "Bf 109 G-6 Late",        
         "Bf 109 G-14",
         "Bf 109 K-4",
         "Bf-110 E2",

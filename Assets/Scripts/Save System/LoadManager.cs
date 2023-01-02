@@ -319,7 +319,7 @@ public class LoadManager : MonoBehaviour
             if (layout.waterTempInTray[i])
                 AddToTrayOnLoad(dialsManager.waterTempObjects[i], menuHandler);
         }
-        /*
+      
         for (int i = 0; i < dialsManager.oilTempInObjects.Count; i++)
         {
             DialScalePosition(dialsManager.oilTempInObjects[i], layout.oilTempInPos[i], layout.oilTempInScale[i]);
@@ -330,17 +330,23 @@ public class LoadManager : MonoBehaviour
         for (int i = 0; i < dialsManager.oilTempOutObjects.Count; i++)
         {
             DialScalePosition(dialsManager.oilTempOutObjects[i], layout.oilTempOutPos[i], layout.oilTempOutScale[i]);
-            if (layout.oilTempInInTray[i])
+            if (layout.oilTempOutInTray[i])
                 AddToTrayOnLoad(dialsManager.oilTempOutObjects[i], menuHandler);
         }
 
         for (int i = 0; i < dialsManager.oilTempPressureObjects.Count; i++)
         {
             DialScalePosition(dialsManager.oilTempPressureObjects[i], layout.oilTempPressurePos[i], layout.oilTempPressureScale[i]);
-            if (layout.oilTempInInTray[i])
+            if (layout.oilTempPressureInTray[i])
                 AddToTrayOnLoad(dialsManager.oilTempPressureObjects[i], menuHandler);
         }
-        */
+
+        for (int i = 0; i < dialsManager.oilTempComboObjects.Count; i++)
+        {
+            DialScalePosition(dialsManager.oilTempComboObjects[i], layout.oilTempComboPos[i], layout.oilTempComboScale[i]);
+            if (layout.oilTempComboInTray[i])
+                AddToTrayOnLoad(dialsManager.oilTempComboObjects[i], menuHandler);
+        }
     }
 
     static void AddToTrayOnLoad(GameObject dial, MenuHandler menuHandler)
