@@ -306,4 +306,17 @@ public class RussianDials : MonoBehaviour
 
         return target;
     }
+
+    internal static Quaternion OilTempInA(float inbound, float outbound, float scalar0, float scalar1)
+    {
+        // Calculation here - would be good to move all calcs server side
+        // RSE.RSE::CAeroplane::setDrawArguments+4ADB - E9 2F010000           - jmp RSE.RSE::CAeroplane::setDrawArguments+4C0F
+        float v = outbound - (outbound - inbound) * 0.7f;
+
+        v = Mathf.Clamp(v, 0, 120);
+        float r = v * -.8f;
+        Quaternion target = Quaternion.Euler(0, 0, r + 48);
+
+        return target;
+    }
 }

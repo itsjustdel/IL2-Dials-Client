@@ -469,7 +469,7 @@ public class DialTargets : MonoBehaviour
                 case (Country.RU):
                     if (airplaneData.planeAttributes.oilTempInType == DialVariant.A)
                     {
-                        oilTempTargets[i] = RussianDials.WaterTempTargetA(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1);
+                        oilTempTargets[i] = RussianDials.OilTempInA(airplaneData.oilTempsIn[i], airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
                     else if (airplaneData.planeAttributes.oilTempInType == DialVariant.B)
                     {
