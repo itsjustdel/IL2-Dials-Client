@@ -247,7 +247,15 @@ public class DialsManager : MonoBehaviour
     {
         //empty lists first
         countryDialBoard.GetComponent<RotateNeedle>().oilTempOutNeedles.Clear();
+        if (airplaneData.planeType == "C-47A")
+        {
+            GameObject needleLargeL = oilTempOutObjects[0].transform.Find("Dial").Find("Needle Large L").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().oilTempOutNeedles.Add(needleLargeL);
+            GameObject needleLargeR = oilTempOutObjects[0].transform.Find("Dial").Find("Needle Large R").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().oilTempOutNeedles.Add(needleLargeR);
 
+            return;
+        }
         for (int i = 0; i < oilTempOutObjects.Count; i++)
         {
             GameObject needleLarge = oilTempOutObjects[i].transform.Find("Dial").Find("Needle Large").gameObject;
@@ -260,18 +268,6 @@ public class DialsManager : MonoBehaviour
     {
         //empty lists first
         countryDialBoard.GetComponent<RotateNeedle>().oilTempInNeedles.Clear();
-
-        if (airplaneData.planeType == "P-38J-25")
-        {
-            
-            GameObject needleLargeL = oilTempInObjects[0].transform.Find("Dial").Find("Needle Large L").gameObject;
-            countryDialBoard.GetComponent<RotateNeedle>().oilTempInNeedles.Add(needleLargeL);
-            GameObject needleLargeR = oilTempInObjects[0].transform.Find("Dial").Find("Needle Large R").gameObject;
-            countryDialBoard.GetComponent<RotateNeedle>().oilTempInNeedles.Add(needleLargeR);
-            
-            return;
-        }
-
         for (int i = 0; i < oilTempInObjects.Count; i++)
         {
             GameObject needleLarge = oilTempInObjects[i].transform.Find("Dial").Find("Needle Large").gameObject;
@@ -593,7 +589,6 @@ public class DialsManager : MonoBehaviour
             }
 
             //instantiate manifolds
-
             manifoldObjects.Clear();
 
             string manifoldString = airplaneData.planeAttributes.manifoldType.ToString();
@@ -638,7 +633,6 @@ public class DialsManager : MonoBehaviour
             }
 
             //instantiate water temps
-
             waterTempObjects.Clear();
 
             string waterTempString = airplaneData.planeAttributes.waterTempType.ToString();
@@ -727,7 +721,7 @@ public class DialsManager : MonoBehaviour
                 GameObject oilTemp = countryDialBoard.transform.Find("Oil Temp Out " + oilString).gameObject;
 
                 int dialsToInstantiate = airplaneData.planeAttributes.engines;
-                if (airplaneData.planeType == "P-38J-25")
+                if (airplaneData.planeType == "C-47A")
                     dialsToInstantiate = 1;
 
                 for (int i = 0; i < dialsToInstantiate; i++)
@@ -766,8 +760,8 @@ public class DialsManager : MonoBehaviour
                 GameObject oilTemp = countryDialBoard.transform.Find("Oil Temp Pressure " + oilTempPressureString).gameObject;
 
                 int dialsToInstantiate = airplaneData.planeAttributes.engines;
-                if (airplaneData.planeType == "P-38J-25")
-                    dialsToInstantiate = 1;
+                //if (airplaneData.planeType == "P-38J-25")
+                  //  dialsToInstantiate = 1;
 
                 for (int i = 0; i < dialsToInstantiate; i++)
                 {

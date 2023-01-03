@@ -306,6 +306,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiType = DialVariant.A;
                 planeAttributes.horizonType = DialVariant.A;
                 planeAttributes.waterTempType = DialVariant.A;
+                planeAttributes.oilTempPressureType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+C51 - 48 8D 15 88A51600     - lea rdx,[RSE.RSE::CAeroplane_MiG_3_ser_24::`vftable'+1C0] { ("MiG-3 ser.24") }
@@ -497,6 +498,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiType = DialVariant.A;
                 planeAttributes.horizonType = DialVariant.B;
                 planeAttributes.waterTempType = DialVariant.A;
+                planeAttributes.oilTempPressureType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+D29 - 48 8D 15 C0DE1000     - lea rdx,[RSE.RSE::CAeroplane_Yak_7B_ser_36::`vftable'+2C0] { ("Yak-7B ser.36") }
@@ -592,6 +594,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiType = DialVariant.A;
                 planeAttributes.horizonType = DialVariant.C;
                 planeAttributes.waterTempType = DialVariant.None; // air cooled
+                planeAttributes.oilTempPressureType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+E65 - 48 8D 15 044A0500     - lea rdx,[RSE.RSE::CAeroplane_Bf_109_K4::`vftable'+310] { ("Bf 109 K-4") }
@@ -623,6 +626,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiType = DialVariant.B;
                 planeAttributes.horizonType = DialVariant.C;
                 planeAttributes.waterTempType = DialVariant.C;
+                planeAttributes.oilTempPressureType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+5778 - 48 8D 15 09890A00     - lea rdx,[RSE.RSE::CAeroplane_Me_262_A::`vftable'+260] { ("Me 262 A") }
@@ -668,6 +672,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiType = DialVariant.B;
                 planeAttributes.horizonType = DialVariant.C;
                 planeAttributes.waterTempType = DialVariant.B;
+                planeAttributes.oilTempPressureType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+E9B - 48 8D 15 56E10F00     - lea rdx,[RSE.RSE::CAeroplane_Tempest_Mk_V_ser_2::`vftable'+2E8] { ("Tempest Mk.V ser.2") }
@@ -739,6 +744,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiType = DialVariant.A;
                 planeAttributes.horizonType = DialVariant.B;
                 planeAttributes.waterTempType = DialVariant.None; //air cooled
+                planeAttributes.oilTempPressureType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+EE9 - 48 8D 15 C85E0900     - lea rdx,[RSE.RSE::CAeroplane_Hurricane_Mk_II::`vftable'+2E8] { ("Hurricane Mk.II") }
@@ -757,7 +763,7 @@ public class PlaneDataFromName : AirplaneData
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+F0D - 4C 8D 05 ECA40600     - lea r8,[RSE.RSE::CAeroplane_C_47A::`vftable'+210] { ("C-47A") }
-            case "C-47A": //non player?
+            case "C-47A":
                 planeAttributes.country = Country.US;
                 planeAttributes.engines = 2;
                 planeAttributes.altimeter = true;
@@ -770,6 +776,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.rpmType = DialVariant.E;
                 planeAttributes.manifoldType = DialVariant.F;
                 planeAttributes.waterTempType = DialVariant.None;
+                planeAttributes.oilTempOutType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+F3F - 4C 8D 05 F2D40D00     - lea r8,[RSE.RSE::CAeroplane_P_51B_5::`vftable'+210] { ("P-51B-5") }
@@ -788,6 +795,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiType = DialVariant.B;
                 planeAttributes.horizonType = DialVariant.B;
                 planeAttributes.waterTempType = DialVariant.C;
+                planeAttributes.oilTempPressureType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+F66 - 48 8D 15 530F0500     - lea rdx,[RSE.RSE::CAeroplane_Bf_109_G6_Late::`vftable'+310] { ("Bf 109 G-6 Late") }
