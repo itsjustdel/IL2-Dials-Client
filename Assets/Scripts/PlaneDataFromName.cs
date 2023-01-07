@@ -231,6 +231,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.rpmType = DialVariant.A;
                 planeAttributes.manifoldType = DialVariant.A;
                 planeAttributes.waterTempType = DialVariant.A;
+                planeAttributes.oilTempOutType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+CA2 - 48 8D 15 6FFD1400     - lea rdx,[RSE.RSE::CAeroplane_Ju523mg4e::`vftable'+1E8] { ("Ju-52/3m g4e") }
