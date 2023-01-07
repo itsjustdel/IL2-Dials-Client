@@ -247,7 +247,7 @@ public class DialsManager : MonoBehaviour
     {
         //empty lists first
         countryDialBoard.GetComponent<RotateNeedle>().oilTempOutNeedles.Clear();
-        if (airplaneData.planeType == "C-47A")
+        if (airplaneData.planeType == "C-47A" || airplaneData.planeType == "A-20B")
         {
             GameObject needleLargeL = oilTempOutObjects[0].transform.Find("Dial").Find("Needle Large L").gameObject;
             countryDialBoard.GetComponent<RotateNeedle>().oilTempOutNeedles.Add(needleLargeL);
@@ -721,7 +721,7 @@ public class DialsManager : MonoBehaviour
                 GameObject oilTemp = countryDialBoard.transform.Find("Oil Temp Out " + oilString).gameObject;
 
                 int dialsToInstantiate = airplaneData.planeAttributes.engines;
-                if (airplaneData.planeType == "C-47A")
+                if (airplaneData.planeType == "C-47A" || airplaneData.planeType == "A-20B")
                     dialsToInstantiate = 1;
 
                 for (int i = 0; i < dialsToInstantiate; i++)

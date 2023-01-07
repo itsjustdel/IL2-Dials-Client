@@ -480,6 +480,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.horizonType = DialVariant.A;
                 planeAttributes.headingIndicatorType = DialVariant.B;
                 planeAttributes.waterTempType = DialVariant.None; // engine is air cooled
+                planeAttributes.oilTempOutType = DialVariant.B;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+D83 - 4C 8D 05 6EAF0C00     - lea r8,[RSE.RSE::CAeroplane_P_39L_1::`vftable'+210] { ("P-39L-1") }

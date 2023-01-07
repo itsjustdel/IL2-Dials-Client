@@ -189,7 +189,7 @@ public class MenuHandler : MonoBehaviour
             }
         }
 
-        RemoveTitle();
+        //RemoveTitle();
 
         if (airplaneData.planeAttributes != null && airplaneData.planeAttributes.country != Country.UNDEFINED)
             RemoveTitle();
@@ -598,8 +598,15 @@ public class MenuHandler : MonoBehaviour
         {
             //keep blur, we go back to menuPanel
             blurPanel.SetActive(true);
-            airplaneData.planeType = "";                    
-            flagsPanel.SetActive(true);        
+            //airplaneData.planeType = "";
+            //title looks for planeattributes to show or not
+            airplaneData.planeAttributes = null;
+            flagsPanel.SetActive(true);
+            
+            //remove dial board if any 
+            //remove any existing dials board prefab in scene
+            if (dialsManager.countryDialBoard != null)
+                Destroy(dialsManager.countryDialBoard);
         }
     }
 

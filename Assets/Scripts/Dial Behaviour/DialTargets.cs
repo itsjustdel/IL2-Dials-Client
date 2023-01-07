@@ -419,11 +419,10 @@ public class DialTargets : MonoBehaviour
                         oilTempTargets[0] = USDials.WaterTempTargetB(airplaneData.oilTempsOut[0], airplaneData.scalar0, airplaneData.scalar1, true);
                         oilTempTargets[1] = USDials.WaterTempTargetB(airplaneData.oilTempsOut[1], airplaneData.scalar0, airplaneData.scalar1, false);
                     }
-                    else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.B)
+                    else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.B) // A20 double needle dial
                     {
-                        //p38 - two needles, one dial
-                        oilTempTargets[0] = USDials.WaterTempTargetB(airplaneData.oilTempsOut[0], airplaneData.scalar0, airplaneData.scalar1, true);
-                        oilTempTargets[1] = USDials.WaterTempTargetB(airplaneData.oilTempsOut[1], airplaneData.scalar0, airplaneData.scalar1, false);
+                        oilTempTargets[0] = USDials.OilTempTargetB(airplaneData.oilTempsOut[0], airplaneData.scalar0, airplaneData.scalar1, true);
+                        oilTempTargets[1] = USDials.OilTempTargetB(airplaneData.oilTempsOut[1], airplaneData.scalar0, airplaneData.scalar1, false);
                     }
                     else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.C)
                     {

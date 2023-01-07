@@ -497,8 +497,21 @@ public class USDials : MonoBehaviour
 
         return target;
     }
+
+    internal static Quaternion OilTempTargetB(float v, float scalar0, float scalar1, bool v2)
+    {
+        v = Mathf.Clamp(v, 20f, 120f);        
+        if (!v2)
+        {
+            v *= .69f;
+            v -= 102.5f;
+        }
+        else
+        {
+            v *= -.69f;
+            v += 102.5f;
+        }
+        
+        return Quaternion.Euler(0, 0, v);
+    }
 }
-
-
-
-
