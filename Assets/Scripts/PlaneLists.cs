@@ -32,6 +32,7 @@ public static class PlaneLists
         "Spitfire Mk.Vb",
         "Spitfire Mk.IXe",
         "Spitfire Mk.XIV",
+        "Spitfire Mk.XIVe",
         "Tempest Mk.V ser.2",        
         "Typhoon Mk.Ib",
 

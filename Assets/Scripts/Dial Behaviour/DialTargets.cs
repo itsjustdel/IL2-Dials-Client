@@ -329,7 +329,6 @@ public class DialTargets : MonoBehaviour
     internal static List<Quaternion> OilTempPressureTargets(AirplaneData airplaneData, Country country, RotateNeedle rotateNeedle)
     {
         List<Quaternion> oilTempTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
-
         for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
         {
             switch (country)
@@ -340,8 +339,7 @@ public class DialTargets : MonoBehaviour
                     {
                         //inbound oil fro top dial of combo
                         oilTempTargets[i] = RussianDials.OilTempCombo(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
-                    }                  
-
+                    }
                     break;
 
                 //GER
@@ -350,10 +348,11 @@ public class DialTargets : MonoBehaviour
 
                 //US
                 case (Country.US):
-                    if (airplaneData.planeAttributes.oilTempOutType == DialVariant.A)
+                    if (airplaneData.planeAttributes.oilTempPressureType == DialVariant.A)
                     {
-                       // oilTempTargets[i] = USDials.WaterTempTargetA(airplaneData.oilTempOutType[i], airplaneData.scalar0, airplaneData.scalar1);
-                    }                    
+                        //inbound oil fro top dial of combo
+                        oilTempTargets[i] = USDials.OilTempCombo(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
                     break;
 
                 case (Country.FR):
@@ -414,15 +413,16 @@ public class DialTargets : MonoBehaviour
 
                 //US
                 case (Country.US):
-                    if (airplaneData.planeAttributes.oilTempOutType == DialVariant.A)
+                    if (airplaneData.planeAttributes.oilTempOutType == DialVariant.A) //c47 double needle dial
                     {
-                        oilTempTargets[i] = USDials.WaterTempTargetA(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
-                    }
-                    else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.B)
-                    {
-                        //p38 - two needles, one dial
+                        //re use water target, same dial with a different label
                         oilTempTargets[0] = USDials.WaterTempTargetB(airplaneData.oilTempsOut[0], airplaneData.scalar0, airplaneData.scalar1, true);
                         oilTempTargets[1] = USDials.WaterTempTargetB(airplaneData.oilTempsOut[1], airplaneData.scalar0, airplaneData.scalar1, false);
+                    }
+                    else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.B) // A20 double needle dial
+                    {
+                        oilTempTargets[0] = USDials.OilTempTargetB(airplaneData.oilTempsOut[0], airplaneData.scalar0, airplaneData.scalar1, true);
+                        oilTempTargets[1] = USDials.OilTempTargetB(airplaneData.oilTempsOut[1], airplaneData.scalar0, airplaneData.scalar1, false);
                     }
                     else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.C)
                     {
@@ -469,7 +469,7 @@ public class DialTargets : MonoBehaviour
                 case (Country.RU):
                     if (airplaneData.planeAttributes.oilTempInType == DialVariant.A)
                     {
-                        oilTempTargets[i] = RussianDials.WaterTempTargetA(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1);
+                        oilTempTargets[i] = RussianDials.OilTempInA(airplaneData.oilTempsIn[i], airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
                     else if (airplaneData.planeAttributes.oilTempInType == DialVariant.B)
                     {

@@ -343,7 +343,7 @@ public class UKDials : MonoBehaviour
 
     internal static Quaternion WaterTempTargetA(float v, float scalar, float scalar1, AnimationCurve curve, string name)
     {
-        if (name == "Spitfire Mk.Vb" || name == "Spitfire Mk.XIV")
+        if (name == "Spitfire Mk.Vb" || name == "Spitfire Mk.XIV") //proba;y some other calcs going on in the game
         {
             v *= -1.118f;
         }
@@ -398,7 +398,7 @@ public class UKDials : MonoBehaviour
     {
         if (name == "Spitfire Mk.XIV") //only one with this dial?
         {
-            v *= -1.05f;
+            v *= -1f;// -1.05f;
         }
         else
         {
