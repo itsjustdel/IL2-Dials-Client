@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class RotateNeedle : MonoBehaviour
 {
-    //
     public BuildControl buildControl;
     public AirplaneData airplaneData;
     public UDPClient udpClient;
@@ -19,8 +14,8 @@ public class RotateNeedle : MonoBehaviour
     public GameObject altitudeNeedleSmallest;//UK//US
     public GameObject altitudeNeedleLarge;
     public GameObject mmhgDial;
-    public GameObject airspeedNeedle; 
-    public GameObject turnAndBankNumberTrack;    
+    public GameObject airspeedNeedle;
+    public GameObject turnAndBankNumberTrack;
     public GameObject turnAndBankPlane;
     public GameObject headingIndicator;
     public GameObject headingIndicatorBall;
@@ -46,7 +41,7 @@ public class RotateNeedle : MonoBehaviour
     public List<GameObject> oilTempComboNeedles = new List<GameObject>();
 
     public float previousMessageTime;
-    public float maxSpin =1f;
+    public float maxSpin = 1f;
     public float turnAndBankPitchMultiplier = 5f;
     public float turnAndBankRollMultiplier = 5f;
     public float turnAndBankPlaneXMultiplier = 5f;
@@ -56,13 +51,13 @@ public class RotateNeedle : MonoBehaviour
 
     //  private bool saveForPredictions -- rotations
 
-    public  Quaternion airspeedTarget;
+    private Quaternion airspeedTarget;
     private Quaternion altitudeLargeTarget;
     private Quaternion altitudeSmallTarget;
     private Quaternion altitudeSmallestTarget;
     private Quaternion mmhgTarget;
-    private Quaternion turnAndBankPlaneRotationTarget;    
-    private Quaternion turnCoordinatorNeedleTarget;    
+    private Quaternion turnAndBankPlaneRotationTarget;
+    private Quaternion turnCoordinatorNeedleTarget;
     private Quaternion turnCoordinatorBallTarget;
     private Quaternion headingIndicatorBallTarget;
     private Quaternion vsiNeedleTarget;
@@ -73,7 +68,7 @@ public class RotateNeedle : MonoBehaviour
     private Quaternion artificialHorizonChevronTarget;
     private Quaternion artificialHorizonRotationPlaneTarget;//if dial has seperate background and plane
     public List<Quaternion> rpmLargeTargets = new List<Quaternion>();
-    public  List<Quaternion> rpmSmallTargets = new List<Quaternion>();
+    public List<Quaternion> rpmSmallTargets = new List<Quaternion>();
     public List<Quaternion> manifoldLargeTargets = new List<Quaternion>();
     public List<Quaternion> waterTempTargets = new List<Quaternion>();
     public List<Quaternion> oilTempInTargets = new List<Quaternion>();
@@ -84,17 +79,17 @@ public class RotateNeedle : MonoBehaviour
 
     // -- positions
     //heading is on a track, we move along the x, we don't rotate
-    private Vector3 headingIndicatorTarget;    
-    private Vector3 turnAndBankPlanePositionTarget;    
+    private Vector3 headingIndicatorTarget;
+    private Vector3 turnAndBankPlanePositionTarget;
     private Vector3 turnAndBankNumberTrackTarget;
     private Vector3 artificialHorizonPositionTarget;
 
     // -- modifiers
     public float trackLength = -15.64f;
-    public float trackLengthForSwitch = 200.3f;    
+    public float trackLengthForSwitch = 200.3f;
 
     public float turnCoordinaterNeedleMod = 1f;
-    public float turnCoordinaterBallMod = 1f;    
+    public float turnCoordinaterBallMod = 1f;
     public float turnCoordinaterMultiplier = 20f;
     public float artificialHorizonRollMod = 1f;
     public float artificialHorizonMultiplier = 20f;
@@ -113,7 +108,7 @@ public class RotateNeedle : MonoBehaviour
     private bool headingIndicatorTest;
 
     public bool germanWaterOilSwitch;
-    public GameObject waterTempButton;    
+    public GameObject waterTempButton;
 
     // Start is called before the first frame update
     void Start()
@@ -131,18 +126,16 @@ public class RotateNeedle : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    { 
+    {
         if (airplaneData.tests)
         {
-            Tests();   
+            Tests();
             return;
-        }        
+        }
 
         SetRotationTargets();
         NeedleRotations();
-
         WaterTempButtonSize();
-
     }
 
     void WaterTempButtonSize()
@@ -216,7 +209,7 @@ public class RotateNeedle : MonoBehaviour
         //initial refactoring, could go further, lots of parameters
         airspeedTarget = DialTargets.AirspeedTarget(airplaneData.planeAttributes.country, airplaneData, this);
 
-        altitudeLargeTarget = DialTargets.AltimeterTargets(ref altitudeSmallTarget,ref altitudeSmallestTarget, altitudeNeedleSmallest, airplaneData);
+        altitudeLargeTarget = DialTargets.AltimeterTargets(ref altitudeSmallTarget, ref altitudeSmallestTarget, altitudeNeedleSmallest, airplaneData);
 
         mmhgTarget = DialTargets.PressureReferenceTargets(airplaneData);
 
@@ -226,15 +219,15 @@ public class RotateNeedle : MonoBehaviour
 
         turnAndBankPlaneRotationTarget = DialTargets.TurnAndBankTargets(ref turnAndBankPlanePositionTarget, ref turnAndBankNumberTrackTarget, ref turnAndBankBallTarget,
                                                                         airplaneData, turnAndBankPitchMultiplier, turnAndBankRollMultiplier, turnAndBankPlaneXMultiplier,
-                                                                        turnAndBankBallMultiplier,airplaneData.planeAttributes.country);
+                                                                        turnAndBankBallMultiplier, airplaneData.planeAttributes.country);
 
-        turnCoordinatorNeedleTarget = DialTargets.TurnCoordinatorTarget(ref turnCoordinatorBallTarget, airplaneData, turnCoordinaterNeedleMod,turnCoordinaterBallMod, airplaneData.planeAttributes.country);
+        turnCoordinatorNeedleTarget = DialTargets.TurnCoordinatorTarget(ref turnCoordinatorBallTarget, airplaneData, turnCoordinaterNeedleMod, turnCoordinaterBallMod, airplaneData.planeAttributes.country);
 
-        vsiNeedleTarget =  DialTargets.VSITarget(airplaneData, airplaneData.planeAttributes.country, this);
+        vsiNeedleTarget = DialTargets.VSITarget(airplaneData, airplaneData.planeAttributes.country, this);
 
-        repeaterCompassTarget = DialTargets.RepeaterCompassTarget(ref repeaterCompassAlternateTarget, airplaneData,compassRim, airplaneData.planeAttributes.country);
+        repeaterCompassTarget = DialTargets.RepeaterCompassTarget(ref repeaterCompassAlternateTarget, airplaneData, compassRim, airplaneData.planeAttributes.country);
 
-        artificialHorizonRotationTarget = DialTargets.ArtificialHorizonTargets(ref artificialHorizonNeedleTarget, ref artificialHorizonPositionTarget, ref artificialHorizonChevronTarget, ref artificialHorizonRotationPlaneTarget, 
+        artificialHorizonRotationTarget = DialTargets.ArtificialHorizonTargets(ref artificialHorizonNeedleTarget, ref artificialHorizonPositionTarget, ref artificialHorizonChevronTarget, ref artificialHorizonRotationPlaneTarget,
                                                                                 airplaneData, artificialHorizonNeedle,
                                                                                 artificialHorizonRollMod, artificialHorizonMultiplier, airplaneData.planeAttributes.country);
 
@@ -249,7 +242,7 @@ public class RotateNeedle : MonoBehaviour
         manifoldLargeTargets = manifoldTargets[1];
 
         //water temps
-        waterTempTargets = DialTargets.WaterTempTargets(airplaneData, airplaneData.planeAttributes.country,this);
+        waterTempTargets = DialTargets.WaterTempTargets(airplaneData, airplaneData.planeAttributes.country, this);
 
         //oil temps
         oilTempInTargets = DialTargets.OilTempInTargets(airplaneData, airplaneData.planeAttributes.country, this);
@@ -265,10 +258,10 @@ public class RotateNeedle : MonoBehaviour
         AltitudeNeedleRotations();
 
         MmhgNeedleRotation();
-        
+
         HeadingIndicatorRotation();
-        
-        TurnAndBankRotations();    
+
+        TurnAndBankRotations();
 
         TurnCoordinatorRotation();
 
@@ -354,11 +347,11 @@ public class RotateNeedle : MonoBehaviour
     }
 
     void RPMRotations()
-    {      
+    {
         for (int i = 0; i < rpmNeedlesLarge.Count; i++)
         {
             if (rpmNeedlesLarge[i].gameObject != null)
-                rpmNeedlesLarge[i].transform.rotation = Quaternion.Slerp(rpmNeedlesLarge[i].transform.rotation, rpmLargeTargets[i], Time.deltaTime*smoothing);
+                rpmNeedlesLarge[i].transform.rotation = Quaternion.Slerp(rpmNeedlesLarge[i].transform.rotation, rpmLargeTargets[i], Time.deltaTime * smoothing);
         }
 
 
@@ -371,10 +364,8 @@ public class RotateNeedle : MonoBehaviour
 
     void AirspeedNeedleRotation()
     {
-        //float d = Mathf.Abs( airspeedTarget.eulerAngles.z - quaternionsAirspeed[0].eulerAngles.z);
-       // Debug.Log("air needle");
-       if( airspeedNeedle != null)
-            airspeedNeedle.transform.rotation = Quaternion.Slerp(airspeedNeedle.transform.rotation, airspeedTarget, Time.deltaTime * smoothing);         
+        if (airspeedNeedle != null)
+            airspeedNeedle.transform.rotation = Quaternion.Slerp(airspeedNeedle.transform.rotation, airspeedTarget, Time.deltaTime * smoothing);
     }
 
     void AltitudeNeedleRotations()
@@ -383,10 +374,10 @@ public class RotateNeedle : MonoBehaviour
         if (altitudeNeedleSmallest != null)
             altitudeNeedleSmallest.transform.rotation = Quaternion.Slerp(altitudeNeedleSmallest.transform.rotation, altitudeSmallestTarget, Time.deltaTime * smoothing);
 
-        if(altitudeNeedleSmall != null)
+        if (altitudeNeedleSmall != null)
             altitudeNeedleSmall.transform.rotation = Quaternion.Slerp(altitudeNeedleSmall.transform.rotation, altitudeSmallTarget, Time.deltaTime * smoothing);
 
-        if(altitudeNeedleLarge != null)
+        if (altitudeNeedleLarge != null)
             altitudeNeedleLarge.transform.rotation = Quaternion.Slerp(altitudeNeedleLarge.transform.rotation, altitudeLargeTarget, Time.deltaTime * smoothing);
     }
 
@@ -401,7 +392,7 @@ public class RotateNeedle : MonoBehaviour
         turnCoordinatorNeedle.transform.rotation = Quaternion.Slerp(turnCoordinatorNeedle.transform.rotation, turnCoordinatorNeedleTarget, Time.deltaTime * turnNeedleSmoothing);
 
         //Ball
-        turnCoordinatorBall.transform.rotation = Quaternion.Slerp(turnCoordinatorBall.transform.rotation, turnCoordinatorBallTarget, Time.deltaTime * smoothing); 
+        turnCoordinatorBall.transform.rotation = Quaternion.Slerp(turnCoordinatorBall.transform.rotation, turnCoordinatorBallTarget, Time.deltaTime * smoothing);
     }
 
     bool HeadingIndicatorSwitch()
@@ -456,7 +447,7 @@ public class RotateNeedle : MonoBehaviour
 
 
         //now rework target
-        headingIndicatorTarget =DialTargets.HeadingTarget(airplaneData.planeAttributes.country, airplaneData, trackLength);
+        headingIndicatorTarget = DialTargets.HeadingTarget(airplaneData.planeAttributes.country, airplaneData, trackLength);
 
 
         return false;
@@ -471,7 +462,7 @@ public class RotateNeedle : MonoBehaviour
 
         headingIndicator.transform.localPosition = Vector3.Lerp(headingIndicator.transform.localPosition, headingIndicatorTarget, Time.deltaTime * smoothing);
 
-        if(airplaneData.planeAttributes.headingIndicatorType == DialVariant.B)
+        if (airplaneData.planeAttributes.headingIndicatorType == DialVariant.B)
         {
             //a-20 has combined ball and heading indicator
             headingIndicatorBall.transform.rotation = Quaternion.Slerp(headingIndicatorBall.transform.rotation, headingIndicatorBallTarget, Time.deltaTime * smoothing);
@@ -481,8 +472,8 @@ public class RotateNeedle : MonoBehaviour
     void TurnAndBankRotations()
     {
         if (turnAndBankPlane != null)
-            {
-        
+        {
+
             //for x rotatin we need to rotate around global x after z rot
             turnAndBankPlane.transform.rotation = Quaternion.Slerp(turnAndBankPlane.transform.rotation, turnAndBankPlaneRotationTarget, Time.deltaTime * smoothing);
 
@@ -492,11 +483,11 @@ public class RotateNeedle : MonoBehaviour
         }
 
         //number track - only russian
-        if(turnAndBankNumberTrack != null)
+        if (turnAndBankNumberTrack != null)
             turnAndBankNumberTrack.transform.localPosition = Vector3.Lerp(turnAndBankNumberTrack.transform.localPosition, turnAndBankNumberTrackTarget, Time.deltaTime * smoothing);
 
         //ball -- only german
-        if(turnAndBankBall != null)
+        if (turnAndBankBall != null)
         {
             turnAndBankBall.transform.rotation = Quaternion.Slerp(turnAndBankBall.transform.rotation, turnAndBankBallTarget, Time.deltaTime * smoothing);
         }
@@ -504,7 +495,7 @@ public class RotateNeedle : MonoBehaviour
 
     void VSIRotation()
     {
-        vsiNeedle.transform.rotation = Quaternion.Slerp(vsiNeedle.transform.rotation, vsiNeedleTarget,Time.deltaTime * smoothing);
+        vsiNeedle.transform.rotation = Quaternion.Slerp(vsiNeedle.transform.rotation, vsiNeedleTarget, Time.deltaTime * smoothing);
     }
 
     void RepeaterCompassRotation()
@@ -515,9 +506,9 @@ public class RotateNeedle : MonoBehaviour
                 repeaterCompassFace.transform.rotation = Quaternion.Slerp(repeaterCompassFace.transform.rotation, repeaterCompassTarget, Time.deltaTime * smoothing);
         }
 
-        if(airplaneData.planeAttributes.repeaterCompassAlternate)
+        if (airplaneData.planeAttributes.repeaterCompassAlternate)
         {
-            if(repeaterCompassAlternateFace != null)
+            if (repeaterCompassAlternateFace != null)
                 repeaterCompassAlternateFace.transform.rotation = Quaternion.Slerp(repeaterCompassAlternateFace.transform.rotation, repeaterCompassAlternateTarget, Time.deltaTime * smoothing);
         }
     }
@@ -542,7 +533,7 @@ public class RotateNeedle : MonoBehaviour
             artificialHorizon.transform.rotation = Quaternion.Slerp(artificialHorizon.transform.rotation, artificialHorizonRotationTarget, Time.deltaTime * smoothing);
 
         //german plane also has co-ordinator needle on this dial
-        if(artificialHorizonNeedle != null)
+        if (artificialHorizonNeedle != null)
         {
             artificialHorizonNeedle.transform.rotation = Quaternion.Slerp(artificialHorizonNeedle.transform.rotation, artificialHorizonNeedleTarget, Time.deltaTime * smoothing);
         }
@@ -554,13 +545,13 @@ public class RotateNeedle : MonoBehaviour
         artificialHorizon.transform.localPosition = Vector3.Lerp(artificialHorizon.transform.localPosition, artificialHorizonPositionTarget, Time.deltaTime * smoothing);
 
         //clamp plane to background
-        if(artificialHorizonPlane != null) //ITA
+        if (artificialHorizonPlane != null) //ITA
             artificialHorizonPlane.transform.localPosition = artificialHorizon.transform.localPosition;
     }
 
     void ArtificialHorizonChevronRotation()
     {
-        if(artificialHorizonChevron != null)
+        if (artificialHorizonChevron != null)
             artificialHorizonChevron.transform.rotation = Quaternion.Slerp(artificialHorizonChevron.transform.rotation, artificialHorizonChevronTarget, Time.deltaTime * smoothing);
     }
 
