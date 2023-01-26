@@ -31,9 +31,7 @@ public class UDPClient : MonoBehaviour
 	public int ip3;
 	public int socketTimeoutTime = 5;
 	public float connectionTimer = 0f;
-
 	bool localScanAttempted = false;
-
 	
 	private void Start()
 	{
@@ -44,8 +42,7 @@ public class UDPClient : MonoBehaviour
         }
 
 		//so if statement catches check on first frame
-		timerOfLastReceived = DateTime.Now.AddSeconds(-udpTimeout);
-	
+		timerOfLastReceived = DateTime.Now.AddSeconds(-udpTimeout);	
 	}
 
 	public void Update()
@@ -115,8 +112,7 @@ public class UDPClient : MonoBehaviour
 		}
 		else
         {
-			//go straight to ip address in text field from interface			
-
+			//go straight to ip address in text field from interface
 			menuHandler.scanDebug.GetComponent<Text>().text = "Attempting Connection: " + serverAddress.ToString() + " : " + portNumber;
 			//use value entered by user in ip address text box
 			Thread thread = new Thread(() => UDPScanner(serverAddress));
@@ -132,7 +128,7 @@ public class UDPClient : MonoBehaviour
 
 		//use standard constructor, if we use params it will bind the port under the ood. Only the server should bind the port
 		var client = new UdpClient();
-		//set quick timerouts on scan thread
+		//set quick timeouts on scan thread
 		client.Client.ReceiveTimeout = 100;
 					
 		//endpoint where server is listening
@@ -142,13 +138,10 @@ public class UDPClient : MonoBehaviour
 		{
 			//create a connection - this will hold until closed
 			client.Connect(ep);
-
 		
 			// Sends a message to the host to which you have connected.
-			byte[] sendBytes = System.Text.Encoding.ASCII.GetBytes("IL-2 Client");
-					
-			//if(!slaveManager.slave)
-				client.Send(sendBytes, sendBytes.Length);
+			byte[] sendBytes = System.Text.Encoding.ASCII.GetBytes("IL-2 Client");			
+			client.Send(sendBytes, sendBytes.Length);
 
 			//////blocking call
 			byte[] receivedData = client.Receive(ref ep);
@@ -187,16 +180,13 @@ public class UDPClient : MonoBehaviour
 		thread.IsBackground = true;
 		thread.Start();
 
-		//Debug.Log("UDP port : " + ((IPEndPoint)client.Client.LocalEndPoint).Port.ToString());
 		try
 		{			
 			while (true)
 			{
 				// Sends a message to the host to which we have connected.
 				byte[] sendBytes = System.Text.Encoding.ASCII.GetBytes("IL-2 Client");
-
 				client.Send(sendBytes, sendBytes.Length);
-
 				Thread.Sleep(sendRate);
 			}
 		}
@@ -225,9 +215,7 @@ public class UDPClient : MonoBehaviour
 				ProcessPackage(receivedData);
 
 				udpReceived = true;
-
 				timerOfLastReceived = DateTime.Now;
-
 			}
 		}
 		catch (Exception ex)
@@ -246,7 +234,7 @@ public class UDPClient : MonoBehaviour
 														  //float array
 		float[] floats = GetFloats(bytes, p, floatArrayLength);
 
-		//check for Nan, infinity etc
+		//check for Nan, infinity etc - we can receive garbled data from reading raw memory
 		DataCheck(floats);
 
 		if (!testPrediction)
@@ -266,7 +254,7 @@ public class UDPClient : MonoBehaviour
 			airplaneData.turnCoordinatorBall = floats[7];
 			airplaneData.turnCoordinatorNeedle = floats[8];
 
-			if(airplaneData.planeType == "Ju-52/3m g4e")
+			if(airplaneData.planeType == "Ju-52/3m g4e") //TODO, re-order on server side
             {
 				//switch order of engines to flow left to right
 
@@ -284,14 +272,12 @@ public class UDPClient : MonoBehaviour
 				temp = floats[27];
 				floats[27] = floats[28];
 				floats[28] = temp;
-
 			}
 
 			airplaneData.rpms[0] = floats[9];
 			airplaneData.rpms[1] = floats[10];
 			airplaneData.rpms[2] = floats[11];
 			airplaneData.rpms[3] = floats[12]; //support for 4 engines (you never know!)
-
 
 			airplaneData.manifolds[0] = floats[13];
 			airplaneData.manifolds[1] = floats[14];
@@ -322,16 +308,12 @@ public class UDPClient : MonoBehaviour
 		//plane type string size
 		uint stringSize = BitConverter.ToUInt32(bytes, p);
 		p += sizeof(uint);
-
-
 		
 		//plane type string
 		string planeType = System.Text.Encoding.UTF8.GetString(bytes, p, (int)stringSize);
+
 		//using setter method so we can check menu status before chaning plane name
 		airplaneData.setPlaneType(planeType);
-		
-
-
 	}
 
 	void DataCheck(float[] floats)

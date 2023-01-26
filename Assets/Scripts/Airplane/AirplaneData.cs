@@ -15,7 +15,6 @@ public enum Country
     ITA,
     FR,
     UNDEFINED
-
 }
 
 public class AirplaneData : MonoBehaviour
@@ -25,17 +24,11 @@ public class AirplaneData : MonoBehaviour
     public float scalar1;
     public bool useTestPlane;
     public GameObject testPlane;
-
     public float clientVersion = 0.3f; //manually update this
     public float serverVersion;
-
-
     public string planeType;
-    public string planeTypePrevious;
-    //stores name avaialble dials
-
+    public string planeTypePrevious;    
     public PlaneDataFromName.PlaneAttributes planeAttributes;
-
     public float altitude;
     public float mmhg;
     public float airspeed;
@@ -54,11 +47,9 @@ public class AirplaneData : MonoBehaviour
     public List<float> oilTempsIn;
     public List<float> oilTempsOut;
     public int engineModification;
-
     public BuildControl buildControl;
     public MenuHandler menuHandler;
-    public UDPClient udpClient;
-    
+    public UDPClient udpClient;    
 
     public void Start()
     {
@@ -75,14 +66,10 @@ public class AirplaneData : MonoBehaviour
     {
         //check client version against incoming server message
         CheckVersion();
-
-
     }
-
 
     void CheckVersion()
     {
-
         //checks version and shows message if mismatch (if connected)
         if (udpClient.connected)
         {
@@ -110,5 +97,4 @@ public class AirplaneData : MonoBehaviour
         if (!menuHandler.layoutOpen && !menuHandler.tigerMothSelected)
             this.planeType = planeType;
     }
-
 }
