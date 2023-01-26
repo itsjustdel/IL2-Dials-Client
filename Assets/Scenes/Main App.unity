@@ -3370,6 +3370,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   size: 10
   m: 5
+  m_LastGraphExtents:
+    x: 0
+    y: 0
+    width: 0
+    height: 0
   lineMaterial: {fileID: 2100000, guid: 292438665f15937438778cc28775e10f, type: 2}
 --- !u!20 &519420031
 Camera:
@@ -6200,50 +6205,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 889080645}
   m_CullTransparentMesh: 1
---- !u!1 &890992136
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 890992138}
-  - component: {fileID: 890992137}
-  m_Layer: 0
-  m_Name: Debug
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &890992137
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 890992136}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a731236a5e86f04c9da24bc2fbcef81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &890992138
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 890992136}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 940.084, y: 171.56944, z: -266.57104}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 11
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &910867446
 GameObject:
   m_ObjectHideFlags: 0
@@ -9794,7 +9755,7 @@ RectTransform:
   - {fileID: 1236250534}
   - {fileID: 247457237}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -10697,7 +10658,7 @@ RectTransform:
   - {fileID: 982101445}
   - {fileID: 1659848174}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -12125,8 +12086,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slaveManager: {fileID: 1142282480}
   menuPanel: {fileID: 0}
-  savePos: 0
-  setPos: 0
 --- !u!4 &1853040845
 Transform:
   m_ObjectHideFlags: 0
