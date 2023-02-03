@@ -42,6 +42,7 @@ public class PlaneDataFromName : AirplaneData
         public DialVariant oilTempOutType = DialVariant.None;
         public DialVariant oilTempPressureType = DialVariant.None;
         public DialVariant oilTempComboType = DialVariant.None;
+        public DialVariant cylinderHeadType = DialVariant.None;
 
         public int engines = 1; //default to 1
 
@@ -188,8 +189,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.manifoldType = DialVariant.A;
                 planeAttributes.waterTempType = DialVariant.None;
                 planeAttributes.oilTempPressureType = DialVariant.A;
-                //to do 
-                //cylinder head temp
+                planeAttributes.cylinderHeadType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+482 - 48 8D 15 07AA1400     - lea rdx,[RSE.RSE::CAeroplane_FW_190_A3::`vftable'+2C0] { ("FW 190 A3") }
@@ -261,7 +261,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.manifoldType = DialVariant.A;
                 planeAttributes.waterTempType = DialVariant.None;
                 planeAttributes.oilTempPressureType = DialVariant.A;
-                // cylinder head temp
+                planeAttributes.cylinderHeadType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+467 - 48 8D 15 721C1600     - lea rdx,[RSE.RSE::CAeroplane_Bf_109_E7::`vftable'+1C0] { ("Bf 109 E-7") }
@@ -526,7 +526,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.manifoldType = DialVariant.A;
                 planeAttributes.waterTempType = DialVariant.None;
                 planeAttributes.oilTempPressureType = DialVariant.A; //inbound accroding to requiem (let's ignore that for now - I don't have the plane atm)
-                //cylinder head
+                planeAttributes.cylinderHeadType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+2A8 - 48 8D 15 A1FB0400     - lea rdx,[RSE.RSE::CAeroplane_Bf_109_G6::`vftable'+310] { ("Bf 109 G-6") }
@@ -597,6 +597,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.horizonType = DialVariant.C;
                 planeAttributes.waterTempType = DialVariant.None; // air cooled
                 planeAttributes.oilTempPressureType = DialVariant.A;
+                planeAttributes.cylinderHeadType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+E65 - 48 8D 15 044A0500     - lea rdx,[RSE.RSE::CAeroplane_Bf_109_K4::`vftable'+310] { ("Bf 109 K-4") }
@@ -747,6 +748,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.horizonType = DialVariant.B;
                 planeAttributes.waterTempType = DialVariant.None; //air cooled
                 planeAttributes.oilTempPressureType = DialVariant.A;
+                planeAttributes.cylinderHeadType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+EE9 - 48 8D 15 C85E0900     - lea rdx,[RSE.RSE::CAeroplane_Hurricane_Mk_II::`vftable'+2E8] { ("Hurricane Mk.II") }
