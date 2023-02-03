@@ -159,15 +159,13 @@ public class UDPClient : MonoBehaviour
 		{	
 			client.Close();		
 		}
+
 	}
 
 
 	void UDPSender(string _serverAddress)
-	{
-		//create package to send - content arbitary
-		byte[] data = System.Text.Encoding.ASCII.GetBytes("Il-2 Client request");
-		
-		//use standard constructor, if we use params it will bind the port under the ood. Only the server should bind the port
+	{		
+		//use standard constructor, if we use params it will bind the port under the hood. Only the server should bind the port
 		var client = new UdpClient();
 
 		//endpoint where server is listening
@@ -229,7 +227,7 @@ public class UDPClient : MonoBehaviour
 		int p = 0;
 
 		//set length sent from server	
-		int floatArrayLength = 30;
+		int floatArrayLength = 34;
 		int floatArrayLengthBytes = 4 * floatArrayLength; //4 bytes for float * array length
 														  //float array
 		float[] floats = GetFloats(bytes, p, floatArrayLength);
@@ -296,6 +294,10 @@ public class UDPClient : MonoBehaviour
 			airplaneData.oilTempsIn[1] = floats[27] - 273.15f;
 			airplaneData.oilTempsIn[2] = floats[28] - 273.15f;
 			airplaneData.oilTempsIn[3] = floats[29] - 273.15f;
+			airplaneData.cylinderHeadTemps[0] = floats[30] - 273.15f;
+			airplaneData.cylinderHeadTemps[1] = floats[31] - 273.15f;
+			airplaneData.cylinderHeadTemps[2] = floats[32] - 273.15f;
+			airplaneData.cylinderHeadTemps[3] = floats[33] - 273.15f;
 		}
 
 		p += floatArrayLengthBytes;
