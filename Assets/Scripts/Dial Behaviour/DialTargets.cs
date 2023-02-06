@@ -595,6 +595,91 @@ public class DialTargets : MonoBehaviour
         return oilTempTargets;
     }
 
+    internal static List<Quaternion> CylinderHeadTargets(AirplaneData airplaneData, Country country)
+    {
+        List<Quaternion> targets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
+
+        for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
+        {
+            switch (country)
+            {
+                //RU
+                case (Country.RU):
+                    if (airplaneData.planeAttributes.cylinderHeadType == DialVariant.A)
+                    {
+                        // TO DO - select correct dial                        
+                        targets[i] = RussianDials.WaterTempTargetA(airplaneData.cylinderHeadTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+
+                    break;
+
+                //GER
+                case (Country.GER):
+                    break;
+                //US
+                case (Country.US):
+                    if (airplaneData.planeAttributes.cylinderHeadType == DialVariant.A)
+                    {
+                        // TO DO - select correct dial                        
+                        targets[i] = USDials.WaterTempTargetA(airplaneData.cylinderHeadTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    break;
+
+                case (Country.FR):
+                case (Country.UK):
+                    break;
+
+                case (Country.ITA):
+                    break;
+            }
+        }
+
+        return targets;
+    }
+
+    internal static List<Quaternion> CarbAirTargets(AirplaneData airplaneData, Country country)
+    {
+        List<Quaternion> targets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
+
+        for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
+        {
+            switch (country)
+            {
+                //RU
+                case (Country.RU):
+                    if (airplaneData.planeAttributes.carbAirTempType == DialVariant.A)
+                    {
+                        // TO DO - select correct dial                        
+                        targets[i] = RussianDials.WaterTempTargetA(airplaneData.carbAirTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+
+                    break;
+
+                //GER
+                case (Country.GER):
+                    break;
+                //US
+                case (Country.US):
+                    if (airplaneData.planeAttributes.carbAirTempType == DialVariant.A)
+                    {
+                        // TO DO - select correct dial                        
+                        targets[i] = USDials.WaterTempTargetA(airplaneData.carbAirTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    break;
+
+                case (Country.FR):
+                case (Country.UK):
+                    break;
+
+                case (Country.ITA):
+                    break;
+            }
+        }
+
+        return targets;
+    }
+
+
     public static Quaternion ArtificialHorizonTargets(ref Quaternion artificialHorizonNeedleTarget, ref Vector3 artificialHorizonPositionTarget, ref Quaternion artificialHorizonChevronTarget, ref Quaternion artificialHorizonRotationPlaneTarget,
                                                     AirplaneData airplaneData, GameObject artificialHorizonNeedle, 
                                                     float artificialHorizonRollMod, float artificialHorizonMultiplier, Country country)

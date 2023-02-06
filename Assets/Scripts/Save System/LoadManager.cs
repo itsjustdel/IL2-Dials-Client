@@ -347,6 +347,20 @@ public class LoadManager : MonoBehaviour
             if (layout.oilTempComboInTray[i])
                 AddToTrayOnLoad(dialsManager.oilTempComboObjects[i], menuHandler);
         }
+
+        for (int i = 0; i < dialsManager.cylinderHeadObjects.Count; i++)
+        {
+            DialScalePosition(dialsManager.cylinderHeadObjects[i], layout.cylinderHeadPos[i], layout.cylinderHeadScale[i]);
+            if (layout.cylinderHeadInTray[i])
+                AddToTrayOnLoad(dialsManager.cylinderHeadObjects[i], menuHandler);
+        }
+
+        for (int i = 0; i < dialsManager.carbAirObjects.Count; i++)
+        {
+            DialScalePosition(dialsManager.carbAirObjects[i], layout.carbAirPos[i], layout.carbAirScale[i]);
+            if (layout.carbAirInTray[i])
+                AddToTrayOnLoad(dialsManager.carbAirObjects[i], menuHandler);
+        }
     }
 
     static void AddToTrayOnLoad(GameObject dial, MenuHandler menuHandler)

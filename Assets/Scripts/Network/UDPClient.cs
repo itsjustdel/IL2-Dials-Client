@@ -299,10 +299,10 @@ public class UDPClient : MonoBehaviour
 			airplaneData.cylinderHeadTemps[2] = floats[32] - 273.15f;
 			airplaneData.cylinderHeadTemps[3] = floats[33] - 273.15f;
 
-			airplaneData.carbMixTemps[0] = floats[34]; //date in celsius in game
-			airplaneData.carbMixTemps[1] = floats[35];
-			airplaneData.carbMixTemps[2] = floats[36];
-			airplaneData.carbMixTemps[3] = floats[37];
+			airplaneData.carbAirTemps[0] = floats[34]; //date in celsius in game
+			airplaneData.carbAirTemps[1] = floats[35];
+			airplaneData.carbAirTemps[2] = floats[36];
+			airplaneData.carbAirTemps[3] = floats[37];
 		}
 
 		p += floatArrayLengthBytes;

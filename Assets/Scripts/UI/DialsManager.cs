@@ -19,6 +19,8 @@ public class DialsManager : MonoBehaviour
     public List<GameObject> oilTempOutObjects = new List<GameObject>();
     public List<GameObject> oilTempComboObjects = new List<GameObject>();
     public List<GameObject> oilTempPressureObjects = new List<GameObject>();
+    public List<GameObject> cylinderHeadObjects = new List<GameObject>();
+    public List<GameObject> carbAirObjects = new List<GameObject>();
     public GameObject speedometer;
     public GameObject turnIndicator;
     public GameObject vsi;
@@ -213,6 +215,34 @@ public class DialsManager : MonoBehaviour
         AsignOilTempPressure();
 
         AsignOilTempCombo();
+
+        AsignCylinderHead();
+
+        AsignCarbAir();
+    }
+
+    private void AsignCarbAir()
+    {
+        //empty lists first
+        countryDialBoard.GetComponent<RotateNeedle>().carbAirNeedles.Clear();
+
+        for (int i = 0; i < carbAirObjects.Count; i++)
+        {
+            GameObject needleLarge = carbAirObjects[i].transform.Find("Dial").Find("Needle Large").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().carbAirNeedles.Add(needleLarge);
+        }
+    }
+
+    private void AsignCylinderHead()
+    {
+        //empty lists first
+        countryDialBoard.GetComponent<RotateNeedle>().cylinderHeadNeedles.Clear();
+
+        for (int i = 0; i < cylinderHeadObjects.Count; i++)
+        {
+            GameObject needleLarge = cylinderHeadObjects[i].transform.Find("Dial").Find("Needle Large").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().cylinderHeadNeedles.Add(needleLarge);
+        }
     }
 
     private void AsignOilTempCombo()
@@ -220,15 +250,13 @@ public class DialsManager : MonoBehaviour
         //empty lists first
         countryDialBoard.GetComponent<RotateNeedle>().oilTempComboNeedles.Clear();
 
-
         for (int i = 0; i < oilTempComboObjects.Count; i++)
         {
             GameObject needleIn = oilTempComboObjects[i].transform.Find("Dial").Find("Needle In").gameObject;
             countryDialBoard.GetComponent<RotateNeedle>().oilTempComboNeedles.Add(needleIn);
             GameObject needleOut = oilTempComboObjects[i].transform.Find("Dial").Find("Needle Out").gameObject;
             countryDialBoard.GetComponent<RotateNeedle>().oilTempComboNeedles.Add(needleOut);
-        }
-            
+        }            
     }
 
     private void AsignOilTempPressure()
@@ -821,6 +849,78 @@ public class DialsManager : MonoBehaviour
                     {
                         //engine dials have "L" or "R"
                         GameObject parent = oilTempComboObjects[i].transform.Find("UI Handlers").GetChild(0).Find("Left Right").gameObject;
+                        parent.transform.GetChild(i).gameObject.SetActive(true);
+                    }
+                }
+            }
+
+            //instantiate cylinder head temps
+            cylinderHeadObjects.Clear();
+            string cylinderTempComboString = airplaneData.planeAttributes.cylinderHeadType.ToString();
+            if (countryDialBoard.transform.Find("Cylinder Head Temp" + cylinderTempComboString) != null)
+            {
+                //find prefab outside of loop
+                GameObject cylinderTemp = countryDialBoard.transform.Find("Cylinder Head Temp " + cylinderTempComboString).gameObject;
+
+                int dialsToInstantiate = airplaneData.planeAttributes.engines;
+                for (int i = 0; i < dialsToInstantiate; i++)
+                {
+                    //create instance variable if we need to duplicate
+                    GameObject cylinderTempInstance = cylinderTemp;
+                    if (i > 0)
+                    {
+                        //duplicate if we have more than one engine
+                        cylinderTempInstance = Instantiate(cylinderTemp, cylinderTemp.transform.position, Quaternion.identity, countryDialBoard.transform);
+
+                    }
+                    //set to last position - getting fiddly with this rpm/manifolds/oil temps - need better solution
+                    cylinderTempInstance.transform.SetSiblingIndex(countryDialBoard.transform.childCount - 1);
+                    cylinderTempInstance.transform.name = "Cylinder Head Temp " + airplaneData.planeAttributes.cylinderHeadType.ToString() + " " + i.ToString();
+                    cylinderHeadObjects.Add(cylinderTempInstance);
+                }
+
+                if (dialsToInstantiate == 2) // 3 engine ger plane, no support atm (just ui icons)
+                {
+                    for (int i = 0; i < cylinderHeadObjects.Count; i++)
+                    {
+                        //engine dials have "L" or "R"
+                        GameObject parent = cylinderHeadObjects[i].transform.Find("UI Handlers").GetChild(0).Find("Left Right").gameObject;
+                        parent.transform.GetChild(i).gameObject.SetActive(true);
+                    }
+                }
+            }
+
+            //instantiate carb air temps
+            carbAirObjects.Clear();
+            string carbAirTempComboString = airplaneData.planeAttributes.carbAirTempType.ToString();
+            if (countryDialBoard.transform.Find("Carb Air Temp" + carbAirTempComboString) != null)
+            {
+                //find prefab outside of loop
+                GameObject carbAirTemp = countryDialBoard.transform.Find("Carb Air Temp " + carbAirTempComboString).gameObject;
+
+                int dialsToInstantiate = airplaneData.planeAttributes.engines;
+                for (int i = 0; i < dialsToInstantiate; i++)
+                {
+                    //create instance variable if we need to duplicate
+                    GameObject carbAirInstance = carbAirTemp;
+                    if (i > 0)
+                    {
+                        //duplicate if we have more than one engine
+                        carbAirInstance = Instantiate(carbAirTemp, carbAirTemp.transform.position, Quaternion.identity, countryDialBoard.transform);
+
+                    }
+                    //set to last position - getting fiddly with this rpm/manifolds/oil temps - need better solution
+                    carbAirInstance.transform.SetSiblingIndex(countryDialBoard.transform.childCount - 1);
+                    carbAirInstance.transform.name = "Carb Air Temp " + airplaneData.planeAttributes.carbAirTempType.ToString() + " " + i.ToString();
+                    carbAirObjects.Add(carbAirInstance);
+                }
+
+                if (dialsToInstantiate == 2) // 3 engine ger plane, no support atm (just ui icons)
+                {
+                    for (int i = 0; i < carbAirObjects.Count; i++)
+                    {
+                        //engine dials have "L" or "R"
+                        GameObject parent = carbAirObjects[i].transform.Find("UI Handlers").GetChild(0).Find("Left Right").gameObject;
                         parent.transform.GetChild(i).gameObject.SetActive(true);
                     }
                 }
