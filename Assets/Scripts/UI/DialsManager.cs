@@ -1116,6 +1116,30 @@ public class DialsManager : MonoBehaviour
         {
             allOilComboTemps[i].SetActive(false);
         }
+
+        GameObject[] allCylinderHeadTempsArray = GameObject.FindGameObjectsWithTag("cylinder head temp");
+        List<GameObject> allCylinderHeadTemps = new List<GameObject>();
+        allCylinderHeadTemps.AddRange(allCylinderHeadTempsArray);
+
+        foreach (GameObject cylinderHeadTemp in cylinderHeadObjects)
+            allCylinderHeadTemps.Remove(cylinderHeadTemp);
+
+        for (int i = 0; i < allCylinderHeadTemps.Count; i++)
+        {
+            allCylinderHeadTemps[i].SetActive(false);
+        }
+
+        GameObject[] allCarbAirTempsArray = GameObject.FindGameObjectsWithTag("carb air temp");
+        List<GameObject> allCarbAirTemps = new List<GameObject>();
+        allCarbAirTemps.AddRange(allCarbAirTempsArray);
+
+        foreach (GameObject carbAirTemp in allCarbAirTemps)
+            allCarbAirTemps.Remove(carbAirTemp);
+
+        for (int i = 0; i < allCarbAirTemps.Count; i++)
+        {
+            allCarbAirTemps[i].SetActive(false);
+        }
     }
 
     public void SaveLayout()
