@@ -47,6 +47,7 @@ public class AirplaneData : MonoBehaviour
     public List<float> oilTempsIn;
     public List<float> oilTempsOut;
     public List<float> cylinderHeadTemps;
+    public List<float> carbMixTemps;
     public int engineModification;
     public BuildControl buildControl;
     public MenuHandler menuHandler;
@@ -61,6 +62,7 @@ public class AirplaneData : MonoBehaviour
         oilTempsIn = new List<float> { 0f, 0f, 0f, 0f };
         oilTempsOut = new List<float> { 0f, 0f, 0f, 0f };
         cylinderHeadTemps = new List<float> { 0f, 0f, 0f, 0f };
+        carbMixTemps = new List<float> { 0f, 0f, 0f, 0f };
     }
 
     //fixed update is enough for checking status

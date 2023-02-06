@@ -227,12 +227,12 @@ public class UDPClient : MonoBehaviour
 		int p = 0;
 
 		//set length sent from server	
-		int floatArrayLength = 34;
+		int floatArrayLength = 38;
 		int floatArrayLengthBytes = 4 * floatArrayLength; //4 bytes for float * array length
 														  //float array
 		float[] floats = GetFloats(bytes, p, floatArrayLength);
 
-		//check for Nan, infinity etc - we can receive garbled data from reading raw memory
+		//check for Nan, infinity etc and zero them - we can receive garbled data from reading raw memory
 		DataCheck(floats);
 
 		if (!testPrediction)
@@ -298,6 +298,11 @@ public class UDPClient : MonoBehaviour
 			airplaneData.cylinderHeadTemps[1] = floats[31] - 273.15f;
 			airplaneData.cylinderHeadTemps[2] = floats[32] - 273.15f;
 			airplaneData.cylinderHeadTemps[3] = floats[33] - 273.15f;
+
+			airplaneData.carbMixTemps[0] = floats[34]; //date in celsius in game
+			airplaneData.carbMixTemps[1] = floats[35];
+			airplaneData.carbMixTemps[2] = floats[36];
+			airplaneData.carbMixTemps[3] = floats[37];
 		}
 
 		p += floatArrayLengthBytes;
