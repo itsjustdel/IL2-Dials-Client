@@ -483,6 +483,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.headingIndicatorType = DialVariant.B;
                 planeAttributes.waterTempType = DialVariant.None; // engine is air cooled
                 planeAttributes.oilTempOutType = DialVariant.B;
+                planeAttributes.cylinderHeadType = DialVariant.B;
                 planeAttributes.carbAirTempType = DialVariant.A;
                 break;
 
@@ -788,6 +789,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.manifoldType = DialVariant.F;
                 planeAttributes.waterTempType = DialVariant.None;
                 planeAttributes.oilTempOutType = DialVariant.A;
+                planeAttributes.cylinderHeadType = DialVariant.C;
                 planeAttributes.carbAirTempType = DialVariant.A;
                 break;
 
