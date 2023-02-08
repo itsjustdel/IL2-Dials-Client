@@ -322,9 +322,9 @@ public class RussianDials : MonoBehaviour
 
     internal static Quaternion CylinderHeadTempTargetA(float v, float scalar0, float scalar1)
     {
-        v = Mathf.Clamp(v, 0, scalar1);
-        float r = v * scalar1;
-        Quaternion target = Quaternion.Euler(0, 0, r + 48);
+        v = Mathf.Clamp(v, 0, 350f);
+        float r = v * -0.27f;
+        Quaternion target = Quaternion.Euler(0, 0, r + 47.25f);
 
         return target;
     }

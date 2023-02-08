@@ -606,9 +606,8 @@ public class DialTargets : MonoBehaviour
                 //RU
                 case (Country.RU):
                     if (airplaneData.planeAttributes.cylinderHeadType == DialVariant.A)
-                    {
-                        // TO DO - select correct dial                        
-                        targets[i] = RussianDials.WaterTempTargetA(airplaneData.cylinderHeadTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                    {              
+                        targets[i] = RussianDials.CylinderHeadTempTargetA(airplaneData.cylinderHeadTemps[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
 
                     break;
