@@ -621,7 +621,7 @@ public class DialTargets : MonoBehaviour
                     if (airplaneData.planeAttributes.cylinderHeadType == DialVariant.A)
                     {
                         // TO DO - select correct dial                        
-                        targets[i] = USDials.WaterTempTargetA(airplaneData.cylinderHeadTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                        targets[i] = USDials.CylinderHeadTempTargetA(airplaneData.cylinderHeadTemps[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
                     break;
 
