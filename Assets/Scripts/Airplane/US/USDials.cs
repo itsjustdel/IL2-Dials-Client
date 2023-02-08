@@ -523,4 +523,21 @@ public class USDials : MonoBehaviour
 
         return target;
     }
+
+    internal static Quaternion CylinderHeadTempTargetB(float v, float scalar0, float scalar1, bool v2)
+    {
+        v = Mathf.Clamp(v, 0f, 350f);
+        if (!v2)
+        {
+            v *= 0.197f;
+            v -= 89;
+        }
+        else
+        {
+            v *= -0.197f;
+            v += 89;
+        }
+
+        return Quaternion.Euler(0, 0, v);
+    }
 }

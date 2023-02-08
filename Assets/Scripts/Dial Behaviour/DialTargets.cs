@@ -620,8 +620,12 @@ public class DialTargets : MonoBehaviour
                 case (Country.US):
                     if (airplaneData.planeAttributes.cylinderHeadType == DialVariant.A)
                     {
-                        // TO DO - select correct dial                        
                         targets[i] = USDials.CylinderHeadTempTargetA(airplaneData.cylinderHeadTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.B) // A20 double needle dial
+                    {
+                        targets[0] = USDials.CylinderHeadTempTargetB(airplaneData.cylinderHeadTemps[0], airplaneData.scalar0, airplaneData.scalar1, true);
+                        targets[1] = USDials.CylinderHeadTempTargetB(airplaneData.cylinderHeadTemps[1], airplaneData.scalar0, airplaneData.scalar1, false);
                     }
                     break;
 

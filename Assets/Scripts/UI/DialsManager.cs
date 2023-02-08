@@ -237,6 +237,15 @@ public class DialsManager : MonoBehaviour
     {
         //empty lists first
         countryDialBoard.GetComponent<RotateNeedle>().cylinderHeadNeedles.Clear();
+        if (airplaneData.planeType == "C-47A" || airplaneData.planeType == "A-20B")
+        {
+            GameObject needleLargeL = cylinderHeadObjects[0].transform.Find("Dial").Find("Needle Large L").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().cylinderHeadNeedles.Add(needleLargeL);
+            GameObject needleLargeR = cylinderHeadObjects[0].transform.Find("Dial").Find("Needle Large R").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().cylinderHeadNeedles.Add(needleLargeR);
+
+            return;
+        }
 
         for (int i = 0; i < cylinderHeadObjects.Count; i++)
         {
@@ -863,6 +872,8 @@ public class DialsManager : MonoBehaviour
                 GameObject cylinderTemp = countryDialBoard.transform.Find("Cylinder Head Temp " + cylinderTempComboString).gameObject;
 
                 int dialsToInstantiate = airplaneData.planeAttributes.engines;
+                if (airplaneData.planeType == "C-47A" || airplaneData.planeType == "A-20B")
+                    dialsToInstantiate = 1;
                 for (int i = 0; i < dialsToInstantiate; i++)
                 {
                     //create instance variable if we need to duplicate
@@ -899,6 +910,8 @@ public class DialsManager : MonoBehaviour
                 GameObject carbAirTemp = countryDialBoard.transform.Find("Carb Air Temp " + carbAirTempComboString).gameObject;
 
                 int dialsToInstantiate = airplaneData.planeAttributes.engines;
+                if (airplaneData.planeType == "C-47A" || airplaneData.planeType == "A-20B")
+                    dialsToInstantiate = 1;
                 for (int i = 0; i < dialsToInstantiate; i++)
                 {
                     //create instance variable if we need to duplicate
