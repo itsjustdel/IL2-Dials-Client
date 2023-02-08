@@ -622,10 +622,16 @@ public class DialTargets : MonoBehaviour
                     {
                         targets[i] = USDials.CylinderHeadTempTargetA(airplaneData.cylinderHeadTemps[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                    else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.B) // A20 double needle dial
+                    else if (airplaneData.planeAttributes.cylinderHeadType == DialVariant.B) // A20 double needle dial
                     {
                         targets[0] = USDials.CylinderHeadTempTargetB(airplaneData.cylinderHeadTemps[0], airplaneData.scalar0, airplaneData.scalar1, true);
                         targets[1] = USDials.CylinderHeadTempTargetB(airplaneData.cylinderHeadTemps[1], airplaneData.scalar0, airplaneData.scalar1, false);
+                    }
+                    else if (airplaneData.planeAttributes.cylinderHeadType == DialVariant.C)
+                    {
+                        //C47
+                        targets[0] = USDials.CylinderHeadTempTargetC(airplaneData.cylinderHeadTemps[0], airplaneData.scalar0, airplaneData.scalar1, true);
+                        targets[1] = USDials.CylinderHeadTempTargetC(airplaneData.cylinderHeadTemps[1], airplaneData.scalar0, airplaneData.scalar1, false);
                     }
                     break;
 
