@@ -260,7 +260,7 @@ public class RotateNeedle : MonoBehaviour
         cylinderHeadTargets = DialTargets.CylinderHeadTargets(airplaneData, airplaneData.planeAttributes.country);
 
         //carb air
-        cylinderHeadTargets = DialTargets.CarbAirTargets(airplaneData, airplaneData.planeAttributes.country);
+        carbAirTargets = DialTargets.CarbAirTargets(airplaneData, airplaneData.planeAttributes.country);
     }
 
     void NeedleRotations()
