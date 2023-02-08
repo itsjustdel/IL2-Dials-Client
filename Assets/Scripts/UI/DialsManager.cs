@@ -857,7 +857,7 @@ public class DialsManager : MonoBehaviour
             //instantiate cylinder head temps
             cylinderHeadObjects.Clear();
             string cylinderTempComboString = airplaneData.planeAttributes.cylinderHeadType.ToString();
-            if (countryDialBoard.transform.Find("Cylinder Head Temp" + cylinderTempComboString) != null)
+            if (countryDialBoard.transform.Find("Cylinder Head Temp " + cylinderTempComboString) != null)
             {
                 //find prefab outside of loop
                 GameObject cylinderTemp = countryDialBoard.transform.Find("Cylinder Head Temp " + cylinderTempComboString).gameObject;
@@ -893,7 +893,7 @@ public class DialsManager : MonoBehaviour
             //instantiate carb air temps
             carbAirObjects.Clear();
             string carbAirTempComboString = airplaneData.planeAttributes.carbAirTempType.ToString();
-            if (countryDialBoard.transform.Find("Carb Air Temp" + carbAirTempComboString) != null)
+            if (countryDialBoard.transform.Find("Carb Air Temp " + carbAirTempComboString) != null)
             {
                 //find prefab outside of loop
                 GameObject carbAirTemp = countryDialBoard.transform.Find("Carb Air Temp " + carbAirTempComboString).gameObject;
@@ -1395,8 +1395,33 @@ public class DialsManager : MonoBehaviour
                 OilTempComboInTray(layout, i, oilTempComboObjects[i]);
         }
 
+        for (int i = 0; i < cylinderHeadObjects.Count; i++)
+        {
+            //if on dial board
+            if (cylinderHeadObjects[i].transform.parent == countryDialBoard.transform)
+            {
+                layout.cylinderHeadPos[i] = cylinderHeadObjects[i].GetComponent<RectTransform>().anchoredPosition;
+                layout.cylinderHeadScale[i] = cylinderHeadObjects[i].transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
+            }
+            else
+                CylinderHeadInTray(layout, i, cylinderHeadObjects[i]);
+        }
+
+        for (int i = 0; i < carbAirObjects.Count; i++)
+        {
+            //if on dial board
+            if (carbAirObjects[i].transform.parent == countryDialBoard.transform)
+            {
+                layout.carbAirPos[i] = carbAirObjects[i].GetComponent<RectTransform>().anchoredPosition;
+                layout.carbAirScale[i] = carbAirObjects[i].transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
+            }
+            else
+                CarbAirInTray(layout, i, carbAirObjects[i]);
+        }
+
         //pack with json utility
         string jsonFoo = JsonUtility.ToJson(layout);
+
 
         //save master/client id as first char in string, then save plane name
 
@@ -1494,6 +1519,20 @@ public class DialsManager : MonoBehaviour
         layout.oilTempComboPos[i] = oilTemp.GetComponent<RectTransform>().anchoredPosition;
         layout.oilTempComboScale[i] = oilTemp.GetComponent<RectTransform>().localScale.x;
         layout.oilTempComboInTray[i] = true;
+    }
+
+    private void CylinderHeadInTray(Layout layout, int i, GameObject cylinderHead)
+    {
+        layout.cylinderHeadPos[i] = cylinderHead.GetComponent<RectTransform>().anchoredPosition;
+        layout.cylinderHeadScale[i] = cylinderHead.GetComponent<RectTransform>().localScale.x;
+        layout.cylinderHeadInTray[i] = true;
+    }
+
+    private void CarbAirInTray(Layout layout, int i, GameObject carbAir)
+    {
+        layout.carbAirPos[i] = carbAir.GetComponent<RectTransform>().anchoredPosition;
+        layout.carbAirScale[i] = carbAir.GetComponent<RectTransform>().localScale.x;
+        layout.carbAirInTray[i] = true;
     }
 
     void SpeedoInTray(Layout layout)
