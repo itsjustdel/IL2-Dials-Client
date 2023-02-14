@@ -585,16 +585,16 @@ public class USDials : MonoBehaviour
 
     internal static Quaternion CarbAirTargetE(float v, float scalar0, float scalar1, bool v2)
     {
-        v = Mathf.Clamp(v, 0f, 350f);
+        v = Mathf.Clamp(v, -70f, 150f);
         if (!v2)
         {
-            v *= -0.306f;
-            v -= -143.4f;
+            v *= -0.56f;
+            v -= -112.5f;
         }
         else
         {
-            v *= 0.306f;
-            v += -143.4f;
+            v *= 0.56f;
+            v += -112.5f;
         }
         return Quaternion.Euler(0, 0, v);
     }
