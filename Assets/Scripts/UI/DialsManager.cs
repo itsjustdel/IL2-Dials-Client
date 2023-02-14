@@ -20,7 +20,7 @@ public class DialsManager : MonoBehaviour
     public List<GameObject> oilTempComboObjects = new List<GameObject>();
     public List<GameObject> oilTempPressureObjects = new List<GameObject>();
     public List<GameObject> cylinderHeadObjects = new List<GameObject>();
-    public List<GameObject> carbAirObjects = new List<GameObject>();
+    public List<GameObject> carbTempObjects = new List<GameObject>();
     public GameObject speedometer;
     public GameObject turnIndicator;
     public GameObject vsi;
@@ -224,12 +224,20 @@ public class DialsManager : MonoBehaviour
     private void AsignCarbAir()
     {
         //empty lists first
-        countryDialBoard.GetComponent<RotateNeedle>().carbAirNeedles.Clear();
-
-        for (int i = 0; i < carbAirObjects.Count; i++)
+        countryDialBoard.GetComponent<RotateNeedle>().carbTempNeedles.Clear();
+        if (airplaneData.planeType == "C-47A" || airplaneData.planeType == "A-20B" || airplaneData.planeType == "P-38J-25")
         {
-            GameObject needleLarge = carbAirObjects[i].transform.Find("Dial").Find("Needle Large").gameObject;
-            countryDialBoard.GetComponent<RotateNeedle>().carbAirNeedles.Add(needleLarge);
+            GameObject needleLargeL = carbTempObjects[0].transform.Find("Dial").Find("Needle Large L").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().carbTempNeedles.Add(needleLargeL);
+            GameObject needleLargeR = carbTempObjects[0].transform.Find("Dial").Find("Needle Large R").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().carbTempNeedles.Add(needleLargeR);
+
+            return;
+        }
+        for (int i = 0; i < carbTempObjects.Count; i++)
+        {
+            GameObject needleLarge = carbTempObjects[i].transform.Find("Dial").Find("Needle Large").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().carbTempNeedles.Add(needleLarge);
         }
     }
 
@@ -902,15 +910,16 @@ public class DialsManager : MonoBehaviour
             }
 
             //instantiate carb air temps
-            carbAirObjects.Clear();
+            carbTempObjects.Clear();
             string carbAirTempComboString = airplaneData.planeAttributes.carbAirTempType.ToString();
             if (countryDialBoard.transform.Find("Carb Air Temp " + carbAirTempComboString) != null)
             {
                 //find prefab outside of loop
                 GameObject carbAirTemp = countryDialBoard.transform.Find("Carb Air Temp " + carbAirTempComboString).gameObject;
 
-                int dialsToInstantiate = airplaneData.planeAttributes.engines;
-                if (airplaneData.planeType == "C-47A" || airplaneData.planeType == "A-20B")
+                int dialsToInstantiate = airplaneData.planeAttributes.engines;                
+                if (airplaneData.planeType == "C-47A" || airplaneData.planeType == "A-20B" || airplaneData.planeType == "P-38J-25")
+                        
                     dialsToInstantiate = 1;
                 for (int i = 0; i < dialsToInstantiate; i++)
                 {
@@ -925,15 +934,15 @@ public class DialsManager : MonoBehaviour
                     //set to last position - getting fiddly with this rpm/manifolds/oil temps - need better solution
                     carbAirInstance.transform.SetSiblingIndex(countryDialBoard.transform.childCount - 1);
                     carbAirInstance.transform.name = "Carb Air Temp " + airplaneData.planeAttributes.carbAirTempType.ToString() + " " + i.ToString();
-                    carbAirObjects.Add(carbAirInstance);
+                    carbTempObjects.Add(carbAirInstance);
                 }
 
                 if (dialsToInstantiate == 2) // 3 engine ger plane, no support atm (just ui icons)
                 {
-                    for (int i = 0; i < carbAirObjects.Count; i++)
+                    for (int i = 0; i < carbTempObjects.Count; i++)
                     {
                         //engine dials have "L" or "R"
-                        GameObject parent = carbAirObjects[i].transform.Find("UI Handlers").GetChild(0).Find("Left Right").gameObject;
+                        GameObject parent = carbTempObjects[i].transform.Find("UI Handlers").GetChild(0).Find("Left Right").gameObject;
                         parent.transform.GetChild(i).gameObject.SetActive(true);
                     }
                 }
@@ -1146,7 +1155,7 @@ public class DialsManager : MonoBehaviour
         List<GameObject> allCarbAirTemps = new List<GameObject>();
         allCarbAirTemps.AddRange(allCarbAirTempsArray);
 
-        foreach (GameObject carbAirTemp in allCarbAirTempsArray)
+        foreach (GameObject carbAirTemp in carbTempObjects)
             allCarbAirTemps.Remove(carbAirTemp);
 
         for (int i = 0; i < allCarbAirTemps.Count; i++)
@@ -1420,16 +1429,16 @@ public class DialsManager : MonoBehaviour
                 CylinderHeadInTray(layout, i, cylinderHeadObjects[i]);
         }
 
-        for (int i = 0; i < carbAirObjects.Count; i++)
+        for (int i = 0; i < carbTempObjects.Count; i++)
         {
             //if on dial board
-            if (carbAirObjects[i].transform.parent == countryDialBoard.transform)
+            if (carbTempObjects[i].transform.parent == countryDialBoard.transform)
             {
-                layout.carbAirPos[i] = carbAirObjects[i].GetComponent<RectTransform>().anchoredPosition;
-                layout.carbAirScale[i] = carbAirObjects[i].transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
+                layout.carbAirPos[i] = carbTempObjects[i].GetComponent<RectTransform>().anchoredPosition;
+                layout.carbAirScale[i] = carbTempObjects[i].transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
             }
             else
-                CarbAirInTray(layout, i, carbAirObjects[i]);
+                CarbAirInTray(layout, i, carbTempObjects[i]);
         }
 
         //pack with json utility

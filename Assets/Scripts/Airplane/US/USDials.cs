@@ -556,4 +556,55 @@ public class USDials : MonoBehaviour
         }
         return Quaternion.Euler(0, 0, v);
     }
+
+    internal static Quaternion CarbAirTargetA(float v, float scalar0, float scalar1)
+    {
+        v *= -.91f;
+        v -= -91.2f;
+        v = Mathf.Clamp(v, -50f, 50f);
+
+        return Quaternion.Euler(0, 0, v);
+    }
+
+    internal static Quaternion CarbAirTargetD(float v, float scalar0, float scalar1, bool v2)
+    {
+        v = Mathf.Clamp(v, -45f, 45f);
+        if (!v2)
+        {
+            v *= .76f;
+            v -= 54.5f;
+        }
+        else
+        {
+            v *= -.76f;
+            v += 54.5f;
+        }
+
+        return Quaternion.Euler(0, 0, v);
+    }
+
+    internal static Quaternion CarbAirTargetE(float v, float scalar0, float scalar1, bool v2)
+    {
+        v = Mathf.Clamp(v, 0f, 350f);
+        if (!v2)
+        {
+            v *= -0.306f;
+            v -= -143.4f;
+        }
+        else
+        {
+            v *= 0.306f;
+            v += -143.4f;
+        }
+        return Quaternion.Euler(0, 0, v);
+    }
+
+    internal static Quaternion CarbAirTargetF(float v, float scalar0, float scalar1)
+    {
+        v *= -.91f;
+        v -= -91.2f;
+        v = Mathf.Clamp(v, -50f, 50f);
+
+        return Quaternion.Euler(0, 0, v);
+    }
 }

@@ -355,11 +355,11 @@ public class LoadManager : MonoBehaviour
                 AddToTrayOnLoad(dialsManager.cylinderHeadObjects[i], menuHandler);
         }
 
-        for (int i = 0; i < dialsManager.carbAirObjects.Count; i++)
+        for (int i = 0; i < dialsManager.carbTempObjects.Count; i++)
         {
-            DialScalePosition(dialsManager.carbAirObjects[i], layout.carbAirPos[i], layout.carbAirScale[i]);
+            DialScalePosition(dialsManager.carbTempObjects[i], layout.carbAirPos[i], layout.carbAirScale[i]);
             if (layout.carbAirInTray[i])
-                AddToTrayOnLoad(dialsManager.carbAirObjects[i], menuHandler);
+                AddToTrayOnLoad(dialsManager.carbTempObjects[i], menuHandler);
         }
     }
 

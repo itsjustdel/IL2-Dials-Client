@@ -484,7 +484,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.waterTempType = DialVariant.None; // engine is air cooled
                 planeAttributes.oilTempOutType = DialVariant.B;
                 planeAttributes.cylinderHeadType = DialVariant.B;
-                planeAttributes.carbAirTempType = DialVariant.A;
+                planeAttributes.carbAirTempType = DialVariant.D;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+D83 - 4C 8D 05 6EAF0C00     - lea r8,[RSE.RSE::CAeroplane_P_39L_1::`vftable'+210] { ("P-39L-1") }
@@ -504,7 +504,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.horizonType = DialVariant.B;
                 planeAttributes.waterTempType = DialVariant.A;
                 planeAttributes.oilTempPressureType = DialVariant.A;
-                planeAttributes.carbAirTempType = DialVariant.A;
+                planeAttributes.carbAirTempType = DialVariant.F;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+D29 - 48 8D 15 C0DE1000     - lea rdx,[RSE.RSE::CAeroplane_Yak_7B_ser_36::`vftable'+2C0] { ("Yak-7B ser.36") }
@@ -602,7 +602,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.waterTempType = DialVariant.None; // air cooled
                 planeAttributes.oilTempPressureType = DialVariant.A;
                 planeAttributes.cylinderHeadType = DialVariant.A;
-                planeAttributes.carbAirTempType = DialVariant.A;
+                planeAttributes.carbAirTempType = DialVariant.B;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+E65 - 48 8D 15 044A0500     - lea rdx,[RSE.RSE::CAeroplane_Bf_109_K4::`vftable'+310] { ("Bf 109 K-4") }
@@ -635,7 +635,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.horizonType = DialVariant.C;
                 planeAttributes.waterTempType = DialVariant.C;
                 planeAttributes.oilTempPressureType = DialVariant.A;
-                planeAttributes.carbAirTempType = DialVariant.A;
+                planeAttributes.carbAirTempType = DialVariant.C;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+5778 - 48 8D 15 09890A00     - lea rdx,[RSE.RSE::CAeroplane_Me_262_A::`vftable'+260] { ("Me 262 A") }
@@ -682,7 +682,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.horizonType = DialVariant.C;
                 planeAttributes.waterTempType = DialVariant.B;
                 planeAttributes.oilTempPressureType = DialVariant.A;
-                planeAttributes.carbAirTempType = DialVariant.A;
+                planeAttributes.carbAirTempType = DialVariant.E;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+E9B - 48 8D 15 56E10F00     - lea rdx,[RSE.RSE::CAeroplane_Tempest_Mk_V_ser_2::`vftable'+2E8] { ("Tempest Mk.V ser.2") }
@@ -790,7 +790,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.waterTempType = DialVariant.None;
                 planeAttributes.oilTempOutType = DialVariant.A;
                 planeAttributes.cylinderHeadType = DialVariant.C;
-                planeAttributes.carbAirTempType = DialVariant.A;
+                planeAttributes.carbAirTempType = DialVariant.E;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+F3F - 4C 8D 05 F2D40D00     - lea r8,[RSE.RSE::CAeroplane_P_51B_5::`vftable'+210] { ("P-51B-5") }
@@ -810,7 +810,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.horizonType = DialVariant.B;
                 planeAttributes.waterTempType = DialVariant.C;
                 planeAttributes.oilTempPressureType = DialVariant.A;
-                planeAttributes.carbAirTempType = DialVariant.A;
+                planeAttributes.carbAirTempType = DialVariant.C;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+F66 - 48 8D 15 530F0500     - lea rdx,[RSE.RSE::CAeroplane_Bf_109_G6_Late::`vftable'+310] { ("Bf 109 G-6 Late") }

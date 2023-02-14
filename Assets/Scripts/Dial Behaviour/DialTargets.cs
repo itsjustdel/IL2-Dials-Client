@@ -655,13 +655,7 @@ public class DialTargets : MonoBehaviour
             switch (country)
             {
                 //RU
-                case (Country.RU):
-                    if (airplaneData.planeAttributes.carbAirTempType == DialVariant.A)
-                    {
-                        // TO DO - select correct dial                        
-                        targets[i] = RussianDials.WaterTempTargetA(airplaneData.carbAirTemps[i], airplaneData.scalar0, airplaneData.scalar1);
-                    }
-
+                case (Country.RU):                  
                     break;
 
                 //GER
@@ -669,10 +663,25 @@ public class DialTargets : MonoBehaviour
                     break;
                 //US
                 case (Country.US):
-                    if (airplaneData.planeAttributes.carbAirTempType == DialVariant.A)
+                    if (airplaneData.planeAttributes.carbAirTempType == DialVariant.A
+                        || airplaneData.planeAttributes.carbAirTempType == DialVariant.B
+                            || airplaneData.planeAttributes.carbAirTempType == DialVariant.C)
+                    {                        
+                        targets[i] = USDials.CarbAirTargetA(airplaneData.carbAirTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    else if (airplaneData.planeAttributes.carbAirTempType == DialVariant.D) // A20 double needle dial
                     {
-                        // TO DO - select correct dial                        
-                        targets[i] = USDials.WaterTempTargetA(airplaneData.carbAirTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                        targets[0] = USDials.CarbAirTargetD(airplaneData.carbAirTemps[0], airplaneData.scalar0, airplaneData.scalar1, true);
+                        targets[1] = USDials.CarbAirTargetD(airplaneData.carbAirTemps[1], airplaneData.scalar0, airplaneData.scalar1, false);
+                    }
+                    else if (airplaneData.planeAttributes.carbAirTempType == DialVariant.E) // p38/c47 double needle dial
+                    {
+                        targets[0] = USDials.CarbAirTargetE(airplaneData.carbAirTemps[0], airplaneData.scalar0, airplaneData.scalar1, true);
+                        targets[1] = USDials.CarbAirTargetE(airplaneData.carbAirTemps[1], airplaneData.scalar0, airplaneData.scalar1, false);
+                    }
+                    else if(airplaneData.planeAttributes.carbAirTempType == DialVariant.F)
+                    {
+                        targets[i] = USDials.CarbAirTargetF(airplaneData.carbAirTemps[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
                     break;
 

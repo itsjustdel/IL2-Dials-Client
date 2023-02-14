@@ -40,7 +40,7 @@ public class RotateNeedle : MonoBehaviour
     public List<GameObject> oilTempPressureNeedles = new List<GameObject>();
     public List<GameObject> oilTempComboNeedles = new List<GameObject>();
     public List<GameObject> cylinderHeadNeedles = new List<GameObject>();
-    public List<GameObject> carbAirNeedles = new List<GameObject>();
+    public List<GameObject> carbTempNeedles = new List<GameObject>();
 
     public float previousMessageTime;
     public float maxSpin = 1f;
@@ -313,10 +313,10 @@ public class RotateNeedle : MonoBehaviour
 
     private void CarbAirRotations()
     {
-        for (int i = 0; i < carbAirNeedles.Count; i++)
+        for (int i = 0; i < carbTempNeedles.Count; i++)
         {
-            if (carbAirNeedles[i].gameObject != null)
-                carbAirNeedles[i].transform.rotation = Quaternion.Slerp(carbAirNeedles[i].transform.rotation, carbAirTargets[i], Time.deltaTime * smoothing);
+            if (carbTempNeedles[i].gameObject != null)
+                carbTempNeedles[i].transform.rotation = Quaternion.Slerp(carbTempNeedles[i].transform.rotation, carbAirTargets[i], Time.deltaTime * smoothing);
         }
     }
 
