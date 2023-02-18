@@ -98,7 +98,7 @@ public class AirplaneData : MonoBehaviour
     internal void setPlaneType(string planeType)
     {
         //do not set if menu open, if tigermoth mod, or if nothing was sent through (nothing can override a player selected plane)
-        if (!menuHandler.layoutOpen && !menuHandler.tigerMothSelected && planeType == "")
+        if (!menuHandler.layoutOpen && !menuHandler.tigerMothSelected)
             this.planeType = planeType;
     }
 }

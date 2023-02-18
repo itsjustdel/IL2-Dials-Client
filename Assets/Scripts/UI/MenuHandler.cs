@@ -62,7 +62,7 @@ public class MenuHandler : MonoBehaviour
     public float idleTimer;
     private Vector3 mousePos;
     public bool layoutOpen;
-    private bool uiHandlersToggle;
+    public bool planeDropdownPanelOpen;
     public bool inFlight;
     public bool trayPulled;
     public float trayYTarget = 100f;
@@ -188,6 +188,7 @@ public class MenuHandler : MonoBehaviour
         IdleTimer();
     }
 
+
     void AnimatePulldown()
     {
         RectTransform r = trayPullDown.GetComponent<RectTransform>();
@@ -297,10 +298,10 @@ public class MenuHandler : MonoBehaviour
         if (menuPanel.activeInHierarchy)
         {
             //close from main main menu 
-            menuPanel.SetActive(false);       
+            menuPanel.SetActive(false);
             blurPanel.SetActive(false);
             layoutWarningMessage.SetActive(false);
-
+            planeDropdownPanelOpen = false;
         }
         else if (connectionPanel.activeInHierarchy)
         {
@@ -324,6 +325,7 @@ public class MenuHandler : MonoBehaviour
         else if (planeDropdownPanel.activeInHierarchy)
         {
             planeDropdownPanel.SetActive(false);
+            planeDropdownPanelOpen = false;
             blurPanel.SetActive(false);
         }
         else if (layoutOpen)
@@ -439,7 +441,7 @@ public class MenuHandler : MonoBehaviour
         if (dontFire)
             return;
 
-        dontShowAgain = !dontShowAgain;        
+        dontShowAgain = !dontShowAgain;
         //set pref - ternary to set integer (no bool value in prefs)
         PlayerPrefs.SetInt("dontshowagain", dontShowAgain ? 1 : 0);
         PlayerPrefs.Save();
@@ -464,6 +466,8 @@ public class MenuHandler : MonoBehaviour
 
         //show dial controls for each dial
         TurnHandlersOn();
+        TurnEyeTrayOn();
+        ShowOpenEyeButton();   
 
         DeActivateCompassTouch();
     }
@@ -474,9 +478,7 @@ public class MenuHandler : MonoBehaviour
         layoutPanel.SetActive(false);
         //turn icon handlers off 
         TurnHandlersOff();
-        //force true and then toggle
-        uiHandlersToggle = true;
-        UIHandlersToggle();
+        TurnEyeTrayOff();
 
         layoutOpen = false;
 
@@ -701,26 +703,23 @@ public class MenuHandler : MonoBehaviour
         trayYTarget = 1800 - (rows.Count * spacing) + 150;
     }
 
-    public void UIHandlersToggle()
+    public void TurnEyeTrayOn()
     {
-        if (uiHandlersToggle)
-        {
-            TurnHandlersOn();
-            //swap button
-            eyeTray.SetActive(true);
-            eyeTray.transform.Find("Eye On").gameObject.SetActive(true);
-            eyeTray.transform.Find("Eye Off").gameObject.SetActive(false);
-        }
-        else
-        {
-            TurnHandlersOff();
-            //swap button
-            eyeTray.SetActive(true);
-            eyeTray.transform.Find("Eye On").gameObject.SetActive(false);
-            eyeTray.transform.Find("Eye Off").gameObject.SetActive(true);
-        }
-
-        uiHandlersToggle = !uiHandlersToggle;
+        eyeTray.SetActive(true);        
+    }
+    public void TurnEyeTrayOff()
+    {
+        eyeTray.SetActive(false);
+    }
+    public void ShowClosedEyeButton()
+    {
+        eyeTray.transform.Find("Eye On").gameObject.SetActive(false);
+        eyeTray.transform.Find("Eye Off").gameObject.SetActive(true);
+    }
+    public void ShowOpenEyeButton()
+    {
+        eyeTray.transform.Find("Eye On").gameObject.SetActive(true);
+        eyeTray.transform.Find("Eye Off").gameObject.SetActive(false);
     }
 
     public void EnableKeyCodePanel()

@@ -6,6 +6,7 @@ public class FlagButtons : MonoBehaviour
 {
     public GameObject menuPanel;
     public PlaneDropdown planeDropdown;
+    public MenuHandler menuHandler;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,9 +30,9 @@ public class FlagButtons : MonoBehaviour
         
         //and hide this
         this.gameObject.SetActive(false);
-        
 
-
+        //reference for layout/server plane type overwrites
+        menuHandler.planeDropdownPanelOpen = true;
     }
 
     public void BackPressed()
