@@ -33,6 +33,7 @@ public class MenuHandler : MonoBehaviour
     public GameObject ipTextField;
     public GameObject portTextField;
     public GameObject scanDebug;
+    public GameObject eyeTray;
     public UDPClient udpClient;
     public bool dontShowAgain;
     public Toggle dontShowAgainToggle;
@@ -553,24 +554,25 @@ public class MenuHandler : MonoBehaviour
         //show dial controls for each dial
         TurnHandlersOn();
 
-
         DeActivateCompassTouch();
-
     }
 
     public void AcceptLayoutClick()
-    {        
+    {
         //go back to main menu panel
         layoutPanel.SetActive(false);
 
         //turn icon handlers off 
         TurnHandlersOff();
+        //force true and then toggle
+        uiHandlersToggle = true;
+        UIHandlersToggle();
 
         layoutOpen = false;
 
         //turn compasses back on 
         ActivateCompassTouch();
-
+        
         dialsManager.SaveLayout();
 
         //turn menu button and leds back on
@@ -810,24 +812,24 @@ public class MenuHandler : MonoBehaviour
                                                            //Debug.Log("rows= " + rows.Count);
     }
 
-    public void UIHandlersToggle(GameObject buttonPressed)
+    public void UIHandlersToggle()
     {
         if (uiHandlersToggle)
         {
             TurnHandlersOn();
-
             //swap button
-            buttonPressed.transform.parent.Find("Eye On").gameObject.SetActive(true);
-            buttonPressed.SetActive(false);
+            eyeTray.SetActive(true);
+            eyeTray.transform.Find("Eye On").gameObject.SetActive(true);
+            eyeTray.transform.Find("Eye Off").gameObject.SetActive(false);
         }
         else
         {
             TurnHandlersOff();
-            buttonPressed.transform.parent.Find("Eye Off").gameObject.SetActive(true);
-            buttonPressed.SetActive(false);
+            //swap button
+            eyeTray.SetActive(true);
+            eyeTray.transform.Find("Eye On").gameObject.SetActive(false);
+            eyeTray.transform.Find("Eye Off").gameObject.SetActive(true);
         }
-
-
 
         uiHandlersToggle = !uiHandlersToggle;
     }
