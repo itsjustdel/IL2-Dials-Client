@@ -538,24 +538,12 @@ public class MenuHandler : MonoBehaviour
     {
         layoutOpen = true;
 
-        //check for plane - can only organise if plane loaded
-        if (airplaneData.planeAttributes == null || airplaneData.planeAttributes.country == Country.UNDEFINED)
-        {
-            layoutWarningMessage.SetActive(true);
-            Debug.Log("Layout Warning message");
-            return;
-        }
-        else
-            layoutWarningMessage.SetActive(false);
-
         //remove metal panel
         menuPanel.SetActive(false);
 
         //hide Leds and Menu button
         menuButton.SetActive(false);
         ledParent.SetActive(false);
-
-
 
         //turn blur off so we can see what we are doing with the dials
         blurPanel.SetActive(false);
@@ -598,7 +586,7 @@ public class MenuHandler : MonoBehaviour
         {
             //keep blur, we go back to menuPanel
             blurPanel.SetActive(true);
-            //airplaneData.planeType = "";
+            airplaneData.planeType = "";
             //title looks for planeattributes to show or not
             airplaneData.planeAttributes = null;
             flagsPanel.SetActive(true);
