@@ -45,16 +45,11 @@ public class MenuHandler : MonoBehaviour
     public List<GameObject> trayObjects;
     public List<GameObject> dialsInTray;
     public List<GameObject> dialsOnBoard;
-
     //messages
     public GameObject layoutWarningMessage;
-
     //override UI toggle fire on first frame
     private bool dontFire;
-
-
     //opening animations
-
     public float slideSpeed = 1f;
     private Color missionStartColor;
     private Color titleColor;
@@ -63,21 +58,15 @@ public class MenuHandler : MonoBehaviour
     public float titleFadeSpeed = 1f;
     public float startLEDFade = 1f;
     public float startMissionGlowFade = 1f;
-    //public bool fadeLeds = false;
     public System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-    //idle timer
     public float idleTimer;
     private Vector3 mousePos;
-
     public bool layoutOpen;
     private bool uiHandlersToggle;
-    //public string planeTypeBeforeLayoutPanel;
     public bool inFlight;
     public bool trayPulled;
-    public float trayYTarget =100f;
+    public float trayYTarget = 100f;
     public float currentTrayY = 600;
-
-    ScreenOrientation currentOrientation;
     public bool tigerMothSelected;
 
     public void Start()
@@ -89,10 +78,8 @@ public class MenuHandler : MonoBehaviour
             PlayerPrefs.DeleteAll();
         }
 
-
         udpClient.serverAddress = PlayerPrefs.GetString("IPAddress");
         udpClient.portNumber = PlayerPrefs.GetInt("PortNumber");
-
 
         //toggle         
         //first frame, don't fire event, just set bool value
@@ -100,7 +87,6 @@ public class MenuHandler : MonoBehaviour
         dontShowAgain = PlayerPrefs.GetInt("dontshowagain") == 1 ? true : false;
         dontShowAgainToggle.isOn = dontShowAgain;//this would fire the toggle function
         dontFire = false;
-
 
         if (dontShowAgain)
         {
@@ -122,38 +108,30 @@ public class MenuHandler : MonoBehaviour
             menuButton.SetActive(false);
         }
 
-
         if (udpClient.portNumber == 0)
             udpClient.portNumber = 11200;
 
         //apply to UI
         //inlcude inactive with bool flag
         ipTextField.GetComponentInParent<InputField>(true).text = udpClient.serverAddress;
-
-        //Debug.Log(udpClient.portNumber);
         if (udpClient.portNumber == 11200 || udpClient.portNumber == 0)
         {
             //set default port number text field to null so unity shows the greyed out placeholder text
-            //Debug.Log("0");
             portTextField.GetComponentInParent<InputField>(true).text = null;
         }
         else
         {
-            //Debug.Log("1");
             portTextField.GetComponentInParent<InputField>(true).text = udpClient.portNumber.ToString();
         }
-
 
         //force this false to start with, above code flags this as true because we changed a value
         ipFieldOpen = false;
         portFieldOpen = false;
 
-
-        //set alhpa in mission glow and title to 0 - this way we can see it in the editor before we press play
+        //set alpha in mission glow and title to 0 - this way we can see it in the editor before we press play
         missionStartColor = missionStart.GetComponent<Text>().color;
         missionStartColor.a = 0;
         missionStart.GetComponent<Text>().color = missionStartColor;
-
 
         titleColor = title.GetComponent<Image>().color;
         titleColor.a = 0;
@@ -163,14 +141,14 @@ public class MenuHandler : MonoBehaviour
     public void Update()
     {
         if (Input.GetKeyDown("escape"))
-        {            
+        {
             if (connectionPanel.activeInHierarchy)
             {
                 ConnectionPanelBack();
             }
             else if (layoutOpen)
             {
-                AcceptLayoutClick();               
+                AcceptLayoutClick();
             }
             else if (flagsPanel.activeInHierarchy)
             {
@@ -190,8 +168,6 @@ public class MenuHandler : MonoBehaviour
             }
         }
 
-        //RemoveTitle();
-
         if (airplaneData.planeAttributes != null && airplaneData.planeAttributes.country != Country.UNDEFINED)
             RemoveTitle();
         else
@@ -208,36 +184,18 @@ public class MenuHandler : MonoBehaviour
         }
 
         AnimatePulldown();
-        
+
         IdleTimer();
-
-       // ScreenOrientation();
     }
 
-    void ScreenOrientation()
+    void AnimatePulldown()
     {
-        //detect change
-        if (currentOrientation != Screen.orientation)
-        {
-            if (layoutOpen)
-            {
-                // if layout open and user spins phone, work out dials again. (What if custom layout loaded?)
-                RectTransform canvasRectTransform = GameObject.FindGameObjectWithTag("Canvas").GetComponent<RectTransform>();
-                Layout.DefaultLayouts(LoadManager.ActiveDials(dialsManager.countryDialBoard),canvasRectTransform);
-            }
-        }
-        currentOrientation = Screen.orientation;
-    }
-
-    void AnimatePulldown() {
         RectTransform r = trayPullDown.GetComponent<RectTransform>();
         r.anchoredPosition = Vector3.Lerp(r.anchoredPosition, new Vector3(0, trayYTarget, 1), Time.deltaTime * 10);
     }
 
     void IdleTimer()
     {
-        //TODO  if android add click?
-
         //return if intro animation not finished
         if (!GetComponent<LEDs>().fadeInComplete)
             return;
@@ -248,7 +206,6 @@ public class MenuHandler : MonoBehaviour
         //else, reset timer
         else
             idleTimer = 0f;
-
 
         //click can reset timer too - works on android?
         if (Input.GetButtonDown("Fire1"))
@@ -262,18 +219,16 @@ public class MenuHandler : MonoBehaviour
         if (idleTimer == 0f)
         {
             Color color = menuButton.GetComponent<Image>().color;
-            color.a = 1f;// * Time.deltaTime;
+            color.a = 1f;
             menuButton.GetComponent<Image>().color = color;
         }
 
         if (idleTimer > 10f)
         {
-            int fadeInSpeed = 10;
             Color color = menuButton.GetComponent<Image>().color;
             color.a -= 1f * Time.deltaTime;
             menuButton.GetComponent<Image>().color = color;
         }
-
     }
 
     void RemoveTitle()
@@ -290,19 +245,14 @@ public class MenuHandler : MonoBehaviour
 
     void TitleFade()
     {
-
-
         if (titleColor.a < 1f)
         {
-
             //alpha starts at 0 in hierarchy so it fades in to view
-
             titleColor.a += Time.deltaTime * titleFadeSpeed;
             title.GetComponent<Image>().color = titleColor;
         }
         else
         {
-
             if (stopwatch.ElapsedMilliseconds > startLEDFade * 1000)
             {
                 //led script on same object
@@ -310,19 +260,13 @@ public class MenuHandler : MonoBehaviour
                     GetComponent<LEDs>().startFadeIn = true;
             }
         }
-
-
-
     }
 
     public void MissionStartGlow()
     {
-
         //wait until slide is finished
         if (stopwatch.ElapsedMilliseconds < startMissionGlowFade * 1000)
             return;
-
-        //missionStartColor = missionStart.GetComponent<Image>().color;
 
         //alpha starts at 0 in hierarchy so it fades in to view
         if (!glowDirection)
@@ -348,29 +292,16 @@ public class MenuHandler : MonoBehaviour
         }
     }
 
-    public void InputFieldOpen11()
-    {
-        // Debug.Log("ip open");
-        //pause the game if autosearching, makes input smoother because scan is cpu heavy for mobile device
-        ipFieldOpen = true;
-
-    }
-
     public void MenuButtonClicked()
     {
-
-
         if (menuPanel.activeInHierarchy)
         {
             //close from main main menu 
-            //Debug.Log("Closing from main menu");
-            menuPanel.SetActive(false);
-            //
+            menuPanel.SetActive(false);       
             blurPanel.SetActive(false);
             layoutWarningMessage.SetActive(false);
 
         }
-
         else if (connectionPanel.activeInHierarchy)
         {
             //close from connection panel
@@ -398,18 +329,13 @@ public class MenuHandler : MonoBehaviour
         else if (layoutOpen)
         {
             //leaving layout screen
-            //Debug.Log("Closing menu from layout");                
-
             //point to accept layout function - we can close this page from menu button or accept button
             AcceptLayoutClick();
-
             layoutWarningMessage.SetActive(false);
-
         }
         else
         {
             //everything closed, open menu panel
-            //Debug.Log("Opening menu from closed");
             menuPanel.SetActive(true);
             blurPanel.SetActive(true);
         }
@@ -417,9 +343,8 @@ public class MenuHandler : MonoBehaviour
 
     public void IPAddressChanged()
     {
-        // Debug.Log("IP changed");
         string ipAddressText = ipTextField.GetComponent<Text>().text;
-        if(ipAddressText == "clear prefs")
+        if (ipAddressText == "clear prefs")
         {
             Debug.Log("Clearing all prefs from IP address");
             PlayerPrefs.DeleteAll();
@@ -439,7 +364,6 @@ public class MenuHandler : MonoBehaviour
         {
             //direct attempt from user
             udpClient.autoScan = false;
-
             //give udpClient the user Ip
             //interface variable
             udpClient.serverAddress = ipAddressText;
@@ -462,18 +386,13 @@ public class MenuHandler : MonoBehaviour
 
     public void PortChanged()
     {
-        //Debug.Log("Port changed");
-
         string portText = portTextField.GetComponent<Text>().text;
         if (string.IsNullOrEmpty(portText))
         {
             //set to default port
             udpClient.portNumber = 11200;
-
             //save to player prefs for next load
             PlayerPrefs.SetInt("PortNumber", 11200);
-
-          //  Debug.Log("4");
         }
         else
         {
@@ -482,9 +401,6 @@ public class MenuHandler : MonoBehaviour
             udpClient.portNumber = parsed;
             //save
             PlayerPrefs.SetInt("PortNumber", parsed);
-
-            // Debug.Log("6");
-
         }
 
         udpClient.ip3 = 0;
@@ -492,10 +408,7 @@ public class MenuHandler : MonoBehaviour
 
         //flag for autoscan pause
         portFieldOpen = false;
-
         udpClient.hostFound = false;
-
-        //udpClient.timer = udpClient.socketTimeoutTime;
     }
 
     public void WelcomeClosed()
@@ -526,9 +439,7 @@ public class MenuHandler : MonoBehaviour
         if (dontFire)
             return;
 
-        dontShowAgain = !dontShowAgain;
-        //not saving to player prefs
-
+        dontShowAgain = !dontShowAgain;        
         //set pref - ternary to set integer (no bool value in prefs)
         PlayerPrefs.SetInt("dontshowagain", dontShowAgain ? 1 : 0);
         PlayerPrefs.Save();
@@ -561,7 +472,6 @@ public class MenuHandler : MonoBehaviour
     {
         //go back to main menu panel
         layoutPanel.SetActive(false);
-
         //turn icon handlers off 
         TurnHandlersOff();
         //force true and then toggle
@@ -572,7 +482,7 @@ public class MenuHandler : MonoBehaviour
 
         //turn compasses back on 
         ActivateCompassTouch();
-        
+
         dialsManager.SaveLayout();
 
         //turn menu button and leds back on
@@ -582,7 +492,7 @@ public class MenuHandler : MonoBehaviour
         if (inFlight)
         {
             //reset flag
-            inFlight = false;            
+            inFlight = false;
         }
         else
         {
@@ -592,7 +502,7 @@ public class MenuHandler : MonoBehaviour
             //title looks for planeattributes to show or not
             airplaneData.planeAttributes = null;
             flagsPanel.SetActive(true);
-            
+
             //remove dial board if any 
             //remove any existing dials board prefab in scene
             if (dialsManager.countryDialBoard != null)
@@ -609,56 +519,39 @@ public class MenuHandler : MonoBehaviour
 
     public void AddLayouButtonClick()
     {
-        //Debug.Log("Add layout click");
         trayOpen = !trayOpen;
     }
 
     public void OpenConnectionsClick()
     {
-        //Debug.Log("Connections Click");
         menuPanel.SetActive(false);
-
         //show copnnection panel - IP address, port etc
         connectionPanel.SetActive(true);
-
-        //start animation?
-        //connectionPanel.GetComponent<PanelAnimator>().animateUp = true;
-        //connectionPanel.GetComponent<PanelAnimator>().animationTarget = 4000;
     }
-
-
 
     private void DeActivateCompassTouch()
     {
         //remove compass interactiveness
         GameObject[] compassSpinners = GameObject.FindGameObjectsWithTag("CompassSpin");
-
-        //Debug.Log("compasses = " + compassSpinners.Length);
         for (int i = 0; i < compassSpinners.Length; i++)
         {
             compassSpinners[i].GetComponent<Image>().raycastTarget = false;
         }
-
-
     }
 
     private void ActivateCompassTouch()
     {
         //compass interactiveness go!
         GameObject[] compassSpinners = GameObject.FindGameObjectsWithTag("CompassSpin");
-
         for (int i = 0; i < compassSpinners.Length; i++)
         {
             compassSpinners[i].GetComponent<Image>().raycastTarget = true;
         }
-
     }
 
     public void TurnHandlersOn()
     {
-
         GameObject[] UIhandlers = GameObject.FindGameObjectsWithTag("UIHandler");
-
         for (int i = 0; i < UIhandlers.Length; i++)
         {
             //german water oil switch
@@ -675,14 +568,13 @@ public class MenuHandler : MonoBehaviour
             {
                 GameObject container = UIhandlers[i].transform.Find("Container").gameObject;
                 container.SetActive(true);
-            }        
+            }
         }
     }
 
     public void TurnHandlersOff()
     {
         GameObject[] UIhandlers = GameObject.FindGameObjectsWithTag("UIHandler");
-
         for (int i = 0; i < UIhandlers.Length; i++)
         {
             //german water oil switch
@@ -705,7 +597,6 @@ public class MenuHandler : MonoBehaviour
     {
         menuPanel.SetActive(false);
         displayPanel.SetActive(true);
-
     }
 
     public bool InFlight()
@@ -720,7 +611,7 @@ public class MenuHandler : MonoBehaviour
                 if (RuPlanes.Contains(airplaneData.planeType))
                     inFlight = true;
                 break;
-                            
+
             case Country.UK:
                 if (UkPlanes.Contains(airplaneData.planeType))
                     inFlight = true;
@@ -752,11 +643,11 @@ public class MenuHandler : MonoBehaviour
     }
 
     public void ShowFlagsPanel()
-    {        
+    {
         inFlight = InFlight();
-        
+
         if (inFlight)
-        {         
+        {
             //open layout directly with current plane
             OpenLayoutClick();
         }
@@ -776,7 +667,6 @@ public class MenuHandler : MonoBehaviour
     public void TrayPulldown()
     {
         trayPulled = !trayPulled;
-
         DropDownYTarget();
     }
 
@@ -807,9 +697,8 @@ public class MenuHandler : MonoBehaviour
             rows.Add(childY);
         }
         float spacing = GameObject.FindGameObjectWithTag("DialsTray").GetComponent<GridLayoutGroup>().spacing.x;
-        
-        trayYTarget = 1800 - (rows.Count * spacing)+150; //150 is y pos of tray parent in hierarchy
-                                                           //Debug.Log("rows= " + rows.Count);
+
+        trayYTarget = 1800 - (rows.Count * spacing) + 150;
     }
 
     public void UIHandlersToggle()
@@ -844,7 +733,7 @@ public class MenuHandler : MonoBehaviour
         if (inputs.oilWaterKeys.Count == 0)
             s = "...";
         else
-        {   
+        {
             for (int i = 0; i < inputs.oilWaterKeys.Count; i++)
             {
                 if (i != 0)
