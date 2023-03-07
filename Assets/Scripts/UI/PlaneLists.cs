@@ -59,13 +59,14 @@ public static class PlaneLists
     {
         "A-20B",
         "C-47A",
-        "P-40E-1",
+        "P-38J-25",        
         "P-39L-1",
-        "P-47D-28",
-        "P-51D-15",
-        "P-38J-25",
+        "P-40E-1",
         "P-47D-22",
-        "P-51B-5"
+        "P-47D-28",
+        "P-51B-5",
+        "P-51D-15"
+        
     };
 
     public static List<string> GerPlanes = new List<string>()

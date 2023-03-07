@@ -595,6 +595,109 @@ public class DialTargets : MonoBehaviour
         return oilTempTargets;
     }
 
+    internal static List<Quaternion> CylinderHeadTargets(AirplaneData airplaneData, Country country)
+    {
+        List<Quaternion> targets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
+
+        for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
+        {
+            switch (country)
+            {
+                //RU
+                case (Country.RU):
+                    if (airplaneData.planeAttributes.cylinderHeadType == DialVariant.A)
+                    {              
+                        targets[i] = RussianDials.CylinderHeadTempTargetA(airplaneData.cylinderHeadTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+
+                    break;
+
+                //GER
+                case (Country.GER):
+                    break;
+                //US
+                case (Country.US):
+                    if (airplaneData.planeAttributes.cylinderHeadType == DialVariant.A)
+                    {
+                        targets[i] = USDials.CylinderHeadTempTargetA(airplaneData.cylinderHeadTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    else if (airplaneData.planeAttributes.cylinderHeadType == DialVariant.B) // A20 double needle dial
+                    {
+                        targets[0] = USDials.CylinderHeadTempTargetB(airplaneData.cylinderHeadTemps[0], airplaneData.scalar0, airplaneData.scalar1, true);
+                        targets[1] = USDials.CylinderHeadTempTargetB(airplaneData.cylinderHeadTemps[1], airplaneData.scalar0, airplaneData.scalar1, false);
+                    }
+                    else if (airplaneData.planeAttributes.cylinderHeadType == DialVariant.C)
+                    {
+                        //C47
+                        targets[0] = USDials.CylinderHeadTempTargetC(airplaneData.cylinderHeadTemps[0], airplaneData.scalar0, airplaneData.scalar1, true);
+                        targets[1] = USDials.CylinderHeadTempTargetC(airplaneData.cylinderHeadTemps[1], airplaneData.scalar0, airplaneData.scalar1, false);
+                    }
+                    break;
+
+                case (Country.FR):
+                case (Country.UK):
+                    break;
+
+                case (Country.ITA):
+                    break;
+            }
+        }
+
+        return targets;
+    }
+
+    internal static List<Quaternion> CarbAirTargets(AirplaneData airplaneData, Country country)
+    {
+        List<Quaternion> targets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
+
+        for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
+        {
+            switch (country)
+            {
+                //RU
+                case (Country.RU):                  
+                    break;
+
+                //GER
+                case (Country.GER):
+                    break;
+                //US
+                case (Country.US):
+                    if (airplaneData.planeAttributes.carbAirTempType == DialVariant.A
+                        || airplaneData.planeAttributes.carbAirTempType == DialVariant.B
+                            || airplaneData.planeAttributes.carbAirTempType == DialVariant.C)
+                    {                        
+                        targets[i] = USDials.CarbAirTargetA(airplaneData.carbAirTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    else if (airplaneData.planeAttributes.carbAirTempType == DialVariant.D) // A20 double needle dial
+                    {
+                        targets[0] = USDials.CarbAirTargetD(airplaneData.carbAirTemps[0], airplaneData.scalar0, airplaneData.scalar1, true);
+                        targets[1] = USDials.CarbAirTargetD(airplaneData.carbAirTemps[1], airplaneData.scalar0, airplaneData.scalar1, false);
+                    }
+                    else if (airplaneData.planeAttributes.carbAirTempType == DialVariant.E) // p38/c47 double needle dial
+                    {
+                        targets[0] = USDials.CarbAirTargetE(airplaneData.carbAirTemps[0], airplaneData.scalar0, airplaneData.scalar1, true);
+                        targets[1] = USDials.CarbAirTargetE(airplaneData.carbAirTemps[1], airplaneData.scalar0, airplaneData.scalar1, false);
+                    }
+                    else if(airplaneData.planeAttributes.carbAirTempType == DialVariant.F)
+                    {
+                        targets[i] = USDials.CarbAirTargetF(airplaneData.carbAirTemps[i], airplaneData.scalar0, airplaneData.scalar1);
+                    }
+                    break;
+
+                case (Country.FR):
+                case (Country.UK):
+                    break;
+
+                case (Country.ITA):
+                    break;
+            }
+        }
+
+        return targets;
+    }
+
+
     public static Quaternion ArtificialHorizonTargets(ref Quaternion artificialHorizonNeedleTarget, ref Vector3 artificialHorizonPositionTarget, ref Quaternion artificialHorizonChevronTarget, ref Quaternion artificialHorizonRotationPlaneTarget,
                                                     AirplaneData airplaneData, GameObject artificialHorizonNeedle, 
                                                     float artificialHorizonRollMod, float artificialHorizonMultiplier, Country country)

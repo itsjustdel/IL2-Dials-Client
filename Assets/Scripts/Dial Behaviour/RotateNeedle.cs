@@ -39,6 +39,8 @@ public class RotateNeedle : MonoBehaviour
     public List<GameObject> oilTempOutNeedles = new List<GameObject>();
     public List<GameObject> oilTempPressureNeedles = new List<GameObject>();
     public List<GameObject> oilTempComboNeedles = new List<GameObject>();
+    public List<GameObject> cylinderHeadNeedles = new List<GameObject>();
+    public List<GameObject> carbTempNeedles = new List<GameObject>();
 
     public float previousMessageTime;
     public float maxSpin = 1f;
@@ -75,6 +77,8 @@ public class RotateNeedle : MonoBehaviour
     public List<Quaternion> oilTempOutTargets = new List<Quaternion>();
     public List<Quaternion> oilTempPressureTargets = new List<Quaternion>();
     public List<Quaternion> oilTempComboTargets = new List<Quaternion>();
+    public List<Quaternion> cylinderHeadTargets = new List<Quaternion>();
+    public List<Quaternion> carbAirTargets = new List<Quaternion>();
     private Quaternion turnAndBankBallTarget;
 
     // -- positions
@@ -122,6 +126,8 @@ public class RotateNeedle : MonoBehaviour
         oilTempInTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
         oilTempOutTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
         oilTempPressureTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
+        cylinderHeadTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
+        carbAirTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
     }
 
     // Update is called once per frame
@@ -249,6 +255,12 @@ public class RotateNeedle : MonoBehaviour
         oilTempOutTargets = DialTargets.OilTempOutTargets(airplaneData, airplaneData.planeAttributes.country, this);
         oilTempPressureTargets = DialTargets.OilTempPressureTargets(airplaneData, airplaneData.planeAttributes.country, this);
         oilTempComboTargets = DialTargets.OilTempComboTargets(airplaneData, airplaneData.planeAttributes.country, this);
+
+        //cylinder head
+        cylinderHeadTargets = DialTargets.CylinderHeadTargets(airplaneData, airplaneData.planeAttributes.country);
+
+        //carb air
+        carbAirTargets = DialTargets.CarbAirTargets(airplaneData, airplaneData.planeAttributes.country);
     }
 
     void NeedleRotations()
@@ -284,6 +296,28 @@ public class RotateNeedle : MonoBehaviour
         OilTempPressureRotations();
 
         OilTempComboRotations();
+
+        CylinderHeadRotations();
+
+        CarbAirRotations();
+    }
+
+    private void CylinderHeadRotations()
+    {
+        for (int i = 0; i < cylinderHeadNeedles.Count; i++)
+        {
+            if (cylinderHeadNeedles[i].gameObject != null)
+                cylinderHeadNeedles[i].transform.rotation = Quaternion.Slerp(cylinderHeadNeedles[i].transform.rotation, cylinderHeadTargets[i], Time.deltaTime * smoothing);
+        }
+    }
+
+    private void CarbAirRotations()
+    {
+        for (int i = 0; i < carbTempNeedles.Count; i++)
+        {
+            if (carbTempNeedles[i].gameObject != null)
+                carbTempNeedles[i].transform.rotation = Quaternion.Slerp(carbTempNeedles[i].transform.rotation, carbAirTargets[i], Time.deltaTime * smoothing);
+        }
     }
 
     private void OilTempComboRotations()

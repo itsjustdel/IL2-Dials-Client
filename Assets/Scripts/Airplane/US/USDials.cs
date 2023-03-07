@@ -514,4 +514,97 @@ public class USDials : MonoBehaviour
         
         return Quaternion.Euler(0, 0, v);
     }
+
+    internal static Quaternion CylinderHeadTempTargetA(float v, float scalar0, float scalar1)
+    {
+        v = Mathf.Clamp(v, 0, 350);
+        float r = v * -0.2828f;
+        Quaternion target = Quaternion.Euler(0, 0, r + 49.5f);
+
+        return target;
+    }
+
+    internal static Quaternion CylinderHeadTempTargetB(float v, float scalar0, float scalar1, bool v2)
+    {
+        v = Mathf.Clamp(v, 0f, 350f);
+        if (!v2)
+        {
+            v *= 0.197f;
+            v -= 89;
+        }
+        else
+        {
+            v *= -0.197f;
+            v += 89;
+        }
+
+        return Quaternion.Euler(0, 0, v);
+    }
+
+    internal static Quaternion CylinderHeadTempTargetC(float v, float scalar0, float scalar1, bool v2)
+    {
+        v = Mathf.Clamp(v, 0f, 350f);
+        if (!v2)
+        {
+            v *= -0.306f;
+            v -= -143.4f;
+        }
+        else
+        {
+            v *= 0.306f;
+            v += -143.4f;
+        }
+        return Quaternion.Euler(0, 0, v);
+    }
+
+    internal static Quaternion CarbAirTargetA(float v, float scalar0, float scalar1)
+    {
+        v = Mathf.Clamp(v, -70f, 150f);
+        v *= -0.55f;
+        v -= -21.18f;       
+
+        return Quaternion.Euler(0, 0, v);
+    }
+
+    internal static Quaternion CarbAirTargetD(float v, float scalar0, float scalar1, bool v2)
+    {
+        v = Mathf.Clamp(v, -45f, 45f);
+        if (!v2)
+        {
+            v *= .76f;
+            v -= 54.5f;
+        }
+        else
+        {
+            v *= -.76f;
+            v += 54.5f;
+        }
+
+        return Quaternion.Euler(0, 0, v);
+    }
+
+    internal static Quaternion CarbAirTargetE(float v, float scalar0, float scalar1, bool v2)
+    {
+        v = Mathf.Clamp(v, -70f, 150f);
+        if (!v2)
+        {
+            v *= -0.56f;
+            v -= -112.5f;
+        }
+        else
+        {
+            v *= 0.56f;
+            v += -112.5f;
+        }
+        return Quaternion.Euler(0, 0, v);
+    }
+
+    internal static Quaternion CarbAirTargetF(float v, float scalar0, float scalar1)
+    {
+        v *= -0.96f;
+        v -= 0;
+        v = Mathf.Clamp(v, -50f, 50f);
+
+        return Quaternion.Euler(0, 0, v);
+    }
 }

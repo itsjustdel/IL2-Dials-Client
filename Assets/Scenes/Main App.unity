@@ -3368,14 +3368,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4a6604cd0998504b92df9c49e973119, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 10
-  m: 5
-  m_LastGraphExtents:
-    x: 0
-    y: 0
-    width: 0
-    height: 0
-  lineMaterial: {fileID: 2100000, guid: 292438665f15937438778cc28775e10f, type: 2}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -5486,6 +5478,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   menuPanel: {fileID: 28181940}
   planeDropdown: {fileID: 1278647518}
+  menuHandler: {fileID: 840226279}
 --- !u!1 &814209628
 GameObject:
   m_ObjectHideFlags: 0
@@ -5499,7 +5492,7 @@ GameObject:
   - component: {fileID: 814209630}
   m_Layer: 5
   m_Name: Eye Tray
-  m_TagString: Untagged
+  m_TagString: eye tray
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5755,6 +5748,7 @@ MonoBehaviour:
   ipTextField: {fileID: 602204878}
   portTextField: {fileID: 2137997100}
   scanDebug: {fileID: 1052976697}
+  eyeTray: {fileID: 814209628}
   udpClient: {fileID: 1841085020}
   dontShowAgain: 0
   dontShowAgainToggle: {fileID: 1006835868}
@@ -5786,6 +5780,7 @@ MonoBehaviour:
   startMissionGlowFade: 10
   idleTimer: 0
   layoutOpen: 0
+  planeDropdownPanelOpen: 0
   inFlight: 0
   trayPulled: 0
   trayYTarget: 2100
@@ -7485,10 +7480,10 @@ MonoBehaviour:
       - m_Target: {fileID: 840226279}
         m_TargetAssemblyTypeName: MenuHandler, Assembly-CSharp
         m_MethodName: UIHandlersToggle
-        m_Mode: 2
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 1088409962}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -7649,6 +7644,8 @@ MonoBehaviour:
   oilTempOutObjects: []
   oilTempComboObjects: []
   oilTempPressureObjects: []
+  cylinderHeadObjects: []
+  carbTempObjects: []
   speedometer: {fileID: 0}
   turnIndicator: {fileID: 0}
   vsi: {fileID: 0}
@@ -9131,7 +9128,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: v0.62
+  m_Text: v0.63
 --- !u!222 &1312049642
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9620,7 +9617,7 @@ MonoBehaviour:
   scalar1: 73.1
   useTestPlane: 0
   testPlane: {fileID: 0}
-  clientVersion: 0.62
+  clientVersion: 0.63
   serverVersion: 0
   planeType: 0
   planeTypePrevious: 
@@ -9641,6 +9638,8 @@ MonoBehaviour:
   waterTemps: []
   oilTempsIn: []
   oilTempsOut: []
+  cylinderHeadTemps: []
+  carbAirTemps: []
   engineModification: 0
   buildControl: {fileID: 1413319309}
   menuHandler: {fileID: 840226279}
@@ -12086,6 +12085,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slaveManager: {fileID: 1142282480}
   menuPanel: {fileID: 0}
+  savePos: 0
+  setPos: 0
 --- !u!4 &1853040845
 Transform:
   m_ObjectHideFlags: 0
@@ -12603,10 +12604,10 @@ MonoBehaviour:
       - m_Target: {fileID: 840226279}
         m_TargetAssemblyTypeName: MenuHandler, Assembly-CSharp
         m_MethodName: UIHandlersToggle
-        m_Mode: 2
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 1933503894}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

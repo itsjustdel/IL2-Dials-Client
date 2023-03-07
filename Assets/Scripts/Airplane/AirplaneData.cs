@@ -46,6 +46,8 @@ public class AirplaneData : MonoBehaviour
     public List<float> waterTemps;
     public List<float> oilTempsIn;
     public List<float> oilTempsOut;
+    public List<float> cylinderHeadTemps;
+    public List<float> carbAirTemps;
     public int engineModification;
     public BuildControl buildControl;
     public MenuHandler menuHandler;
@@ -59,6 +61,8 @@ public class AirplaneData : MonoBehaviour
         waterTemps = new List<float> { 0f, 0f, 0f, 0f };
         oilTempsIn = new List<float> { 0f, 0f, 0f, 0f };
         oilTempsOut = new List<float> { 0f, 0f, 0f, 0f };
+        cylinderHeadTemps = new List<float> { 0f, 0f, 0f, 0f };
+        carbAirTemps = new List<float> { 0f, 0f, 0f, 0f };
     }
 
     //fixed update is enough for checking status
@@ -93,7 +97,7 @@ public class AirplaneData : MonoBehaviour
 
     internal void setPlaneType(string planeType)
     {
-        //do not set if menu open
+        //do not set if menu open, if tigermoth mod, or if nothing was sent through (nothing can override a player selected plane)
         if (!menuHandler.layoutOpen && !menuHandler.tigerMothSelected)
             this.planeType = planeType;
     }

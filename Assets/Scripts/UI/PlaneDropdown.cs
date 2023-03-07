@@ -107,9 +107,14 @@ public class PlaneDropdown : MonoBehaviour
 
     public void OnPlaneAccept()
     {
+       //set layout open now to stopa race condition where the server asigns an empty plane. if layout is open, plant type is not set by udpclient
+        menuHandler.planeDropdownPanelOpen = false;
+        menuHandler.layoutOpen = true;
+
         //save so we know where to go back to after layout close
         if (airplaneData.planeType == dropdown.options[dropdown.value].text)
-        {         
+        {
+            
             //edit already loaded plane - just "click" layout button
             menuHandler.OpenLayoutClick();
 
@@ -121,10 +126,12 @@ public class PlaneDropdown : MonoBehaviour
 
             //let dials manager know when it notices a plane change to open layout panel
             airplaneData.menuHandler.dialsManager.openLayoutOnLoad = true;
+            
         }
 
         //close the panel
         this.gameObject.SetActive(false);
+        
     }
 
     public void OnBack()
@@ -132,6 +139,7 @@ public class PlaneDropdown : MonoBehaviour
         Debug.Log("On back");
         flagSelectorObject.SetActive(true);
         this.gameObject.SetActive(false);
+        menuHandler.planeDropdownPanelOpen = false;
     }
 }
 

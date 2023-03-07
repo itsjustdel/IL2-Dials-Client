@@ -19,6 +19,8 @@ public class DialsManager : MonoBehaviour
     public List<GameObject> oilTempOutObjects = new List<GameObject>();
     public List<GameObject> oilTempComboObjects = new List<GameObject>();
     public List<GameObject> oilTempPressureObjects = new List<GameObject>();
+    public List<GameObject> cylinderHeadObjects = new List<GameObject>();
+    public List<GameObject> carbTempObjects = new List<GameObject>();
     public GameObject speedometer;
     public GameObject turnIndicator;
     public GameObject vsi;
@@ -31,7 +33,7 @@ public class DialsManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -213,13 +215,57 @@ public class DialsManager : MonoBehaviour
         AsignOilTempPressure();
 
         AsignOilTempCombo();
+
+        AsignCylinderHead();
+
+        AsignCarbAir();
+    }
+
+    private void AsignCarbAir()
+    {
+        //empty lists first
+        countryDialBoard.GetComponent<RotateNeedle>().carbTempNeedles.Clear();
+        if (airplaneData.planeType == "C-47A" || airplaneData.planeType == "A-20B" || airplaneData.planeType == "P-38J-25")
+        {
+            GameObject needleLargeL = carbTempObjects[0].transform.Find("Dial").Find("Needle Large L").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().carbTempNeedles.Add(needleLargeL);
+            GameObject needleLargeR = carbTempObjects[0].transform.Find("Dial").Find("Needle Large R").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().carbTempNeedles.Add(needleLargeR);
+
+            return;
+        }
+        for (int i = 0; i < carbTempObjects.Count; i++)
+        {
+            GameObject needleLarge = carbTempObjects[i].transform.Find("Dial").Find("Needle Large").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().carbTempNeedles.Add(needleLarge);
+        }
+    }
+
+    private void AsignCylinderHead()
+    {
+        //empty lists first
+        countryDialBoard.GetComponent<RotateNeedle>().cylinderHeadNeedles.Clear();
+        if (airplaneData.planeType == "C-47A" || airplaneData.planeType == "A-20B")
+        {
+            GameObject needleLargeL = cylinderHeadObjects[0].transform.Find("Dial").Find("Needle Large L").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().cylinderHeadNeedles.Add(needleLargeL);
+            GameObject needleLargeR = cylinderHeadObjects[0].transform.Find("Dial").Find("Needle Large R").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().cylinderHeadNeedles.Add(needleLargeR);
+
+            return;
+        }
+
+        for (int i = 0; i < cylinderHeadObjects.Count; i++)
+        {
+            GameObject needleLarge = cylinderHeadObjects[i].transform.Find("Dial").Find("Needle Large").gameObject;
+            countryDialBoard.GetComponent<RotateNeedle>().cylinderHeadNeedles.Add(needleLarge);
+        }
     }
 
     private void AsignOilTempCombo()
     {
         //empty lists first
         countryDialBoard.GetComponent<RotateNeedle>().oilTempComboNeedles.Clear();
-
 
         for (int i = 0; i < oilTempComboObjects.Count; i++)
         {
@@ -228,7 +274,6 @@ public class DialsManager : MonoBehaviour
             GameObject needleOut = oilTempComboObjects[i].transform.Find("Dial").Find("Needle Out").gameObject;
             countryDialBoard.GetComponent<RotateNeedle>().oilTempComboNeedles.Add(needleOut);
         }
-            
     }
 
     private void AsignOilTempPressure()
@@ -291,23 +336,23 @@ public class DialsManager : MonoBehaviour
         }
 
         for (int i = 0; i < waterTempObjects.Count; i++)
-        {           
+        {
             GameObject needleLarge = waterTempObjects[i].transform.Find("Dial").Find("Needle Large").gameObject;
-            countryDialBoard.GetComponent<RotateNeedle>().waterTempNeedles.Add(needleLarge);           
+            countryDialBoard.GetComponent<RotateNeedle>().waterTempNeedles.Add(needleLarge);
         }
     }
 
     private void AsignHeadingIndicator()
     {
-        if(airplaneData.planeAttributes.country == Country.US)
+        if (airplaneData.planeAttributes.country == Country.US)
         {
             headingIndicator = GameObject.FindGameObjectWithTag("heading indicator");
             countryDialBoard.GetComponent<RotateNeedle>().headingIndicator = headingIndicator.transform.Find("Dial").Find("Mask").Find("Parent").transform.gameObject;
 
             if (airplaneData.planeAttributes.headingIndicatorType == DialVariant.B)
             {
-                
-                countryDialBoard.GetComponent<RotateNeedle>().headingIndicatorBall= headingIndicator.transform.Find("Dial").Find("BallParent").transform.gameObject;
+
+                countryDialBoard.GetComponent<RotateNeedle>().headingIndicatorBall = headingIndicator.transform.Find("Dial").Find("BallParent").transform.gameObject;
             }
         }
     }
@@ -359,7 +404,7 @@ public class DialsManager : MonoBehaviour
                 countryDialBoard.GetComponent<RotateNeedle>().vsiNeedle = countryDialBoard.transform.Find("VSI Smallest").Find("Dial").Find("Needle").gameObject;
             }
         }
-        
+
     }
 
     void AsignRPM()
@@ -422,7 +467,7 @@ public class DialsManager : MonoBehaviour
             }
 
             else if (airplaneData.planeAttributes.country == Country.GER)
-            {                
+            {
                 if (airplaneData.planeType == "Me 410 A-1")
                 {
                     if (i == 0)
@@ -439,7 +484,7 @@ public class DialsManager : MonoBehaviour
                 }
             }
 
-            else if (airplaneData.planeAttributes.country == Country.UK  || airplaneData.planeAttributes.country == Country.FR)
+            else if (airplaneData.planeAttributes.country == Country.UK || airplaneData.planeAttributes.country == Country.FR)
             {
                 //Mosquito
                 if (airplaneData.planeAttributes.rpmType == DialVariant.C)
@@ -460,7 +505,7 @@ public class DialsManager : MonoBehaviour
 
         for (int i = 0; i < manifoldObjects.Count; i++)
         {
-            if (airplaneData.planeType == "P-38J-25" || 
+            if (airplaneData.planeType == "P-38J-25" ||
                     airplaneData.planeType == "He 111 H-16" ||
                         airplaneData.planeType == "Me 410 A-1" ||
                             airplaneData.planeType == "Hs 129 B-2" ||
@@ -475,7 +520,7 @@ public class DialsManager : MonoBehaviour
 
                 //both needles asign and jump out of loop (has 2 engines)
                 return;
-             
+
             }
             else
             {
@@ -504,29 +549,29 @@ public class DialsManager : MonoBehaviour
 
         switch (country)
         {
-            case  Country.RU:
+            case Country.RU:
                 //countryDials[0].SetActive(true);
                 GameObject RUprefab = Resources.Load("Prefabs/RU") as GameObject;
                 countryDialBoard = GameObject.Instantiate(RUprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
 
-            case  Country.GER:
+            case Country.GER:
                 GameObject GERprefab = Resources.Load("Prefabs/GER") as GameObject;
                 countryDialBoard = GameObject.Instantiate(GERprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
 
-            case  Country.US:
+            case Country.US:
                 GameObject USprefab = Resources.Load("Prefabs/US") as GameObject;
                 countryDialBoard = GameObject.Instantiate(USprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
 
             case Country.FR:
-            case  Country.UK:
+            case Country.UK:
                 GameObject UKprefab = Resources.Load("Prefabs/UK") as GameObject;
                 countryDialBoard = GameObject.Instantiate(UKprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
 
-            case  Country.ITA:
+            case Country.ITA:
                 GameObject ITAprefab = Resources.Load("Prefabs/ITA") as GameObject;
                 countryDialBoard = GameObject.Instantiate(ITAprefab, canvas.transform.position, Quaternion.identity, canvas.transform.GetChild(0).transform);
                 break;
@@ -600,9 +645,9 @@ public class DialsManager : MonoBehaviour
 
                 int dialsToInstantiate = airplaneData.planeAttributes.engines;
                 //some plane have two needles one dial, only create one in this instance
-                if (airplaneData.planeType == "P-38J-25" || 
+                if (airplaneData.planeType == "P-38J-25" ||
                         airplaneData.planeType == "He 111 H-16" ||
-                            airplaneData.planeType == "Me 410 A-1"||
+                            airplaneData.planeType == "Me 410 A-1" ||
                                 airplaneData.planeType == "Hs 129 B-2" ||
                                   airplaneData.planeType == "C-47A")
                     dialsToInstantiate = 1;
@@ -616,7 +661,7 @@ public class DialsManager : MonoBehaviour
                         //duplicate if we have more than one engine
                         manifoldInstance = Instantiate(manifold, manifold.transform.position, Quaternion.identity, countryDialBoard.transform);
                         manifoldInstance.transform.SetSiblingIndex(manifoldInstance.transform.GetSiblingIndex() + 1);
-                    }                    
+                    }
                     manifoldInstance.transform.name = "Manifold " + airplaneData.planeAttributes.manifoldType.ToString() + " " + i.ToString();
                     manifoldObjects.Add(manifoldInstance);
                 }
@@ -653,11 +698,11 @@ public class DialsManager : MonoBehaviour
                     if (i > 0)
                     {
                         //duplicate if we have more than one engine
-                        waterTempInstance = Instantiate(waterTemp, waterTemp.transform.position, Quaternion.identity, countryDialBoard.transform);                        
+                        waterTempInstance = Instantiate(waterTemp, waterTemp.transform.position, Quaternion.identity, countryDialBoard.transform);
 
                     }
                     //set to last position - getting fiddly with this rpm/manifolds/water temps - need better solution
-                    waterTempInstance.transform.SetSiblingIndex(countryDialBoard.transform.childCount-1);
+                    waterTempInstance.transform.SetSiblingIndex(countryDialBoard.transform.childCount - 1);
                     waterTempInstance.transform.name = "Water Temp " + airplaneData.planeAttributes.waterTempType.ToString() + " " + i.ToString();
                     waterTempObjects.Add(waterTempInstance);
                 }
@@ -675,9 +720,9 @@ public class DialsManager : MonoBehaviour
 
             //instantiate oil In temps
             oilTempInObjects.Clear();
-            string oilString = airplaneData.planeAttributes.oilTempInType.ToString();            
+            string oilString = airplaneData.planeAttributes.oilTempInType.ToString();
             if (countryDialBoard.transform.Find("Oil Temp In " + oilString) != null)
-            {                
+            {
                 //find prefab outside of loop
                 GameObject oilTemp = countryDialBoard.transform.Find("Oil Temp In " + oilString).gameObject;
 
@@ -714,7 +759,7 @@ public class DialsManager : MonoBehaviour
 
             //instantiate oil out temps
             oilTempOutObjects.Clear();
-            oilString = airplaneData.planeAttributes.oilTempOutType.ToString();            
+            oilString = airplaneData.planeAttributes.oilTempOutType.ToString();
             if (countryDialBoard.transform.Find("Oil Temp Out " + oilString) != null)
             {
                 //find prefab outside of loop
@@ -761,7 +806,7 @@ public class DialsManager : MonoBehaviour
 
                 int dialsToInstantiate = airplaneData.planeAttributes.engines;
                 //if (airplaneData.planeType == "P-38J-25")
-                  //  dialsToInstantiate = 1;
+                //  dialsToInstantiate = 1;
 
                 for (int i = 0; i < dialsToInstantiate; i++)
                 {
@@ -825,7 +870,84 @@ public class DialsManager : MonoBehaviour
                     }
                 }
             }
-        }    
+
+            //instantiate cylinder head temps
+            cylinderHeadObjects.Clear();
+            string cylinderTempComboString = airplaneData.planeAttributes.cylinderHeadType.ToString();
+            if (countryDialBoard.transform.Find("Cylinder Head Temp " + cylinderTempComboString) != null)
+            {
+                //find prefab outside of loop
+                GameObject cylinderTemp = countryDialBoard.transform.Find("Cylinder Head Temp " + cylinderTempComboString).gameObject;
+
+                int dialsToInstantiate = airplaneData.planeAttributes.engines;
+                if (airplaneData.planeType == "C-47A" || airplaneData.planeType == "A-20B")
+                    dialsToInstantiate = 1;
+                for (int i = 0; i < dialsToInstantiate; i++)
+                {
+                    //create instance variable if we need to duplicate
+                    GameObject cylinderTempInstance = cylinderTemp;
+                    if (i > 0)
+                    {
+                        //duplicate if we have more than one engine
+                        cylinderTempInstance = Instantiate(cylinderTemp, cylinderTemp.transform.position, Quaternion.identity, countryDialBoard.transform);
+
+                    }
+                    //set to last position - getting fiddly with this rpm/manifolds/oil temps - need better solution
+                    cylinderTempInstance.transform.SetSiblingIndex(countryDialBoard.transform.childCount - 1);
+                    cylinderTempInstance.transform.name = "Cylinder Head Temp " + airplaneData.planeAttributes.cylinderHeadType.ToString() + " " + i.ToString();
+                    cylinderHeadObjects.Add(cylinderTempInstance);
+                }
+
+                if (dialsToInstantiate == 2) // 3 engine ger plane, no support atm (just ui icons)
+                {
+                    for (int i = 0; i < cylinderHeadObjects.Count; i++)
+                    {
+                        //engine dials have "L" or "R"
+                        GameObject parent = cylinderHeadObjects[i].transform.Find("UI Handlers").GetChild(0).Find("Left Right").gameObject;
+                        parent.transform.GetChild(i).gameObject.SetActive(true);
+                    }
+                }
+            }
+
+            //instantiate carb air temps
+            carbTempObjects.Clear();
+            string carbAirTempComboString = airplaneData.planeAttributes.carbAirTempType.ToString();
+            if (countryDialBoard.transform.Find("Carb Air Temp " + carbAirTempComboString) != null)
+            {
+                //find prefab outside of loop
+                GameObject carbAirTemp = countryDialBoard.transform.Find("Carb Air Temp " + carbAirTempComboString).gameObject;
+
+                int dialsToInstantiate = airplaneData.planeAttributes.engines;                
+                if (airplaneData.planeType == "C-47A" || airplaneData.planeType == "A-20B" || airplaneData.planeType == "P-38J-25")
+                        
+                    dialsToInstantiate = 1;
+                for (int i = 0; i < dialsToInstantiate; i++)
+                {
+                    //create instance variable if we need to duplicate
+                    GameObject carbAirInstance = carbAirTemp;
+                    if (i > 0)
+                    {
+                        //duplicate if we have more than one engine
+                        carbAirInstance = Instantiate(carbAirTemp, carbAirTemp.transform.position, Quaternion.identity, countryDialBoard.transform);
+
+                    }
+                    //set to last position - getting fiddly with this rpm/manifolds/oil temps - need better solution
+                    carbAirInstance.transform.SetSiblingIndex(countryDialBoard.transform.childCount - 1);
+                    carbAirInstance.transform.name = "Carb Air Temp " + airplaneData.planeAttributes.carbAirTempType.ToString() + " " + i.ToString();
+                    carbTempObjects.Add(carbAirInstance);
+                }
+
+                if (dialsToInstantiate == 2) // 3 engine ger plane, no support atm (just ui icons)
+                {
+                    for (int i = 0; i < carbTempObjects.Count; i++)
+                    {
+                        //engine dials have "L" or "R"
+                        GameObject parent = carbTempObjects[i].transform.Find("UI Handlers").GetChild(0).Find("Left Right").gameObject;
+                        parent.transform.GetChild(i).gameObject.SetActive(true);
+                    }
+                }
+            }
+        }
     }
 
     //static to refactor to new class - to do
@@ -838,12 +960,12 @@ public class DialsManager : MonoBehaviour
         {
             if (speedos[i].name != "Speedometer " + planeAttributes.speedometerType.ToString())
                 speedos[i].SetActive(false);
-        }     
+        }
 
         if (!planeAttributes.turnAndBank)
             if (countryDialBoard.transform.Find("Turn And Bank") != null)
                 countryDialBoard.transform.Find("Turn And Bank").gameObject.SetActive(false);
-                
+
 
         if (!planeAttributes.repeaterCompass)
             if (countryDialBoard.transform.Find("Repeater Compass") != null)
@@ -871,7 +993,7 @@ public class DialsManager : MonoBehaviour
             }
         }
 
-            //horizon
+        //horizon
         if (planeAttributes.country != Country.US)
         {
             if (!planeAttributes.artificialHorizon)
@@ -893,7 +1015,7 @@ public class DialsManager : MonoBehaviour
         {
             if (!planeAttributes.turnCoordinator)
                 if (countryDialBoard.transform.Find("Turn Coordinator").gameObject != null)
-                    countryDialBoard.transform.Find("Turn Coordinator").gameObject.SetActive(false);            
+                    countryDialBoard.transform.Find("Turn Coordinator").gameObject.SetActive(false);
         }
         else
         {
@@ -924,7 +1046,7 @@ public class DialsManager : MonoBehaviour
         else
         {
             //new system
-            GameObject[] vsis= GameObject.FindGameObjectsWithTag("vsi");
+            GameObject[] vsis = GameObject.FindGameObjectsWithTag("vsi");
             for (int i = 0; i < vsis.Length; i++)
             {
                 if (vsis[i].name != "VSI " + planeAttributes.vsiType.ToString())
@@ -1016,13 +1138,37 @@ public class DialsManager : MonoBehaviour
         {
             allOilComboTemps[i].SetActive(false);
         }
+
+        GameObject[] allCylinderHeadTempsArray = GameObject.FindGameObjectsWithTag("cylinder head temp");
+        List<GameObject> allCylinderHeadTemps = new List<GameObject>();
+        allCylinderHeadTemps.AddRange(allCylinderHeadTempsArray);
+
+        foreach (GameObject cylinderHeadTemp in cylinderHeadObjects)
+            allCylinderHeadTemps.Remove(cylinderHeadTemp);
+
+        for (int i = 0; i < allCylinderHeadTemps.Count; i++)
+        {
+            allCylinderHeadTemps[i].SetActive(false);
+        }
+
+        GameObject[] allCarbAirTempsArray = GameObject.FindGameObjectsWithTag("carb air temp");
+        List<GameObject> allCarbAirTemps = new List<GameObject>();
+        allCarbAirTemps.AddRange(allCarbAirTempsArray);
+
+        foreach (GameObject carbAirTemp in carbTempObjects)
+            allCarbAirTemps.Remove(carbAirTemp);
+
+        for (int i = 0; i < allCarbAirTemps.Count; i++)
+        {
+            allCarbAirTemps[i].SetActive(false);
+        }
     }
 
     public void SaveLayout()
     {
         //use class to write with json // https://forum.unity.com/threads/how-would-i-do-the-following-in-playerprefs.397516/#post-2595609
         Layout layout = new Layout();
-        layout.planeType =  airplaneData.planeType;
+        layout.planeType = airplaneData.planeType;
 
         //save version to cover for updates
         layout.version = airplaneData.clientVersion;
@@ -1034,7 +1180,7 @@ public class DialsManager : MonoBehaviour
             layout.speedoPos = speedometer.GetComponent<RectTransform>().anchoredPosition;
             // but only dial scale, we don't want to alter the UI default scale
             float s = speedometer.transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
-           
+
             layout.speedoScale = s;
         }
         else
@@ -1089,7 +1235,7 @@ public class DialsManager : MonoBehaviour
             if (!menuHandler.dialsInTray.Contains(turnIndicator))
             {
 
-                layout.turnIndicatorPos= turnIndicator.GetComponent<RectTransform>().anchoredPosition;
+                layout.turnIndicatorPos = turnIndicator.GetComponent<RectTransform>().anchoredPosition;
                 layout.turnIndicatorScale = turnIndicator.transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
             }
             else
@@ -1109,7 +1255,7 @@ public class DialsManager : MonoBehaviour
 
 
         if (airplaneData.planeAttributes.country == Country.US)
-        {          
+        {
             if (!menuHandler.dialsInTray.Contains(vsi))
             {
                 layout.vsiPos = vsi.GetComponent<RectTransform>().anchoredPosition;
@@ -1189,13 +1335,13 @@ public class DialsManager : MonoBehaviour
             DialInTray("Repeater Compass Alternate", layout);
 
         for (int i = 0; i < rpmObjects.Count; i++)
-        {           
+        {
             if (rpmObjects[i].transform.parent == countryDialBoard.transform)
             {
                 layout.rpmPos[i] = rpmObjects[i].GetComponent<RectTransform>().anchoredPosition;
                 layout.rpmScale[i] = rpmObjects[i].transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
-            }        
-            else             
+            }
+            else
                 RPMInTray(layout, i, rpmObjects[i]);
         }
 
@@ -1206,11 +1352,11 @@ public class DialsManager : MonoBehaviour
             {
                 layout.manifoldPos[i] = manifoldObjects[i].GetComponent<RectTransform>().anchoredPosition;
                 layout.manifoldScale[i] = manifoldObjects[i].transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
-            }         
+            }
             else
                 ManifoldInTray(layout, i, manifoldObjects[i]);
         }
-                
+
         for (int i = 0; i < waterTempObjects.Count; i++)
         {
             //if on dial board
@@ -1271,8 +1417,33 @@ public class DialsManager : MonoBehaviour
                 OilTempComboInTray(layout, i, oilTempComboObjects[i]);
         }
 
+        for (int i = 0; i < cylinderHeadObjects.Count; i++)
+        {
+            //if on dial board
+            if (cylinderHeadObjects[i].transform.parent == countryDialBoard.transform)
+            {
+                layout.cylinderHeadPos[i] = cylinderHeadObjects[i].GetComponent<RectTransform>().anchoredPosition;
+                layout.cylinderHeadScale[i] = cylinderHeadObjects[i].transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
+            }
+            else
+                CylinderHeadInTray(layout, i, cylinderHeadObjects[i]);
+        }
+
+        for (int i = 0; i < carbTempObjects.Count; i++)
+        {
+            //if on dial board
+            if (carbTempObjects[i].transform.parent == countryDialBoard.transform)
+            {
+                layout.carbAirPos[i] = carbTempObjects[i].GetComponent<RectTransform>().anchoredPosition;
+                layout.carbAirScale[i] = carbTempObjects[i].transform.Find("Dial").GetComponent<RectTransform>().localScale.x;
+            }
+            else
+                CarbAirInTray(layout, i, carbTempObjects[i]);
+        }
+
         //pack with json utility
         string jsonFoo = JsonUtility.ToJson(layout);
+
 
         //save master/client id as first char in string, then save plane name
 
@@ -1303,7 +1474,7 @@ public class DialsManager : MonoBehaviour
 
     private void TurnIndicatorInTray(Layout layout)
     {
-        layout.turnIndicatorPos= turnIndicator.GetComponent<RectTransform>().anchoredPosition;
+        layout.turnIndicatorPos = turnIndicator.GetComponent<RectTransform>().anchoredPosition;
         layout.turnIndicatorScale = turnIndicator.GetComponent<RectTransform>().localScale.x;
         layout.turnIndicatorInTray = true;
     }
@@ -1370,6 +1541,20 @@ public class DialsManager : MonoBehaviour
         layout.oilTempComboPos[i] = oilTemp.GetComponent<RectTransform>().anchoredPosition;
         layout.oilTempComboScale[i] = oilTemp.GetComponent<RectTransform>().localScale.x;
         layout.oilTempComboInTray[i] = true;
+    }
+
+    private void CylinderHeadInTray(Layout layout, int i, GameObject cylinderHead)
+    {
+        layout.cylinderHeadPos[i] = cylinderHead.GetComponent<RectTransform>().anchoredPosition;
+        layout.cylinderHeadScale[i] = cylinderHead.GetComponent<RectTransform>().localScale.x;
+        layout.cylinderHeadInTray[i] = true;
+    }
+
+    private void CarbAirInTray(Layout layout, int i, GameObject carbAir)
+    {
+        layout.carbAirPos[i] = carbAir.GetComponent<RectTransform>().anchoredPosition;
+        layout.carbAirScale[i] = carbAir.GetComponent<RectTransform>().localScale.x;
+        layout.carbAirInTray[i] = true;
     }
 
     void SpeedoInTray(Layout layout)

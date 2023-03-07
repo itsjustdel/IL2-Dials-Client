@@ -163,7 +163,6 @@ public class LoadManager : MonoBehaviour
     private static void ScaleAndPositions(DialsManager dialsManager, MenuHandler menuHandler, Layout layout)
     {
         UnityEngine.Debug.Log("ScaleAndPositions from saved layout");
-        UnityEngine.Debug.Log("Speedo scale loading " + layout.speedoScale);
         DialScalePosition(dialsManager.speedometer, layout.speedoPos, layout.speedoScale);
         if (layout.speedoInTray)
             AddToTrayOnLoad(dialsManager.speedometer, menuHandler);
@@ -346,6 +345,20 @@ public class LoadManager : MonoBehaviour
             DialScalePosition(dialsManager.oilTempComboObjects[i], layout.oilTempComboPos[i], layout.oilTempComboScale[i]);
             if (layout.oilTempComboInTray[i])
                 AddToTrayOnLoad(dialsManager.oilTempComboObjects[i], menuHandler);
+        }
+
+        for (int i = 0; i < dialsManager.cylinderHeadObjects.Count; i++)
+        {
+            DialScalePosition(dialsManager.cylinderHeadObjects[i], layout.cylinderHeadPos[i], layout.cylinderHeadScale[i]);
+            if (layout.cylinderHeadInTray[i])
+                AddToTrayOnLoad(dialsManager.cylinderHeadObjects[i], menuHandler);
+        }
+
+        for (int i = 0; i < dialsManager.carbTempObjects.Count; i++)
+        {
+            DialScalePosition(dialsManager.carbTempObjects[i], layout.carbAirPos[i], layout.carbAirScale[i]);
+            if (layout.carbAirInTray[i])
+                AddToTrayOnLoad(dialsManager.carbTempObjects[i], menuHandler);
         }
     }
 
