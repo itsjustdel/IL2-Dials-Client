@@ -27,7 +27,7 @@ public class AirplaneData : MonoBehaviour
     public float clientVersion = 0.3f; //manually update this
     public float serverVersion;
     public string planeType;
-    public string planeTypePrevious;    
+    public string planeTypePrevious;
     public PlaneDataFromName.PlaneAttributes planeAttributes;
     public float altitude;
     public float mmhg;
@@ -48,10 +48,11 @@ public class AirplaneData : MonoBehaviour
     public List<float> oilTempsOut;
     public List<float> cylinderHeadTemps;
     public List<float> carbAirTemps;
+    public List<float> fuel;
     public int engineModification;
     public BuildControl buildControl;
     public MenuHandler menuHandler;
-    public UDPClient udpClient;    
+    public UDPClient udpClient;
 
     public void Start()
     {
@@ -63,6 +64,7 @@ public class AirplaneData : MonoBehaviour
         oilTempsOut = new List<float> { 0f, 0f, 0f, 0f };
         cylinderHeadTemps = new List<float> { 0f, 0f, 0f, 0f };
         carbAirTemps = new List<float> { 0f, 0f, 0f, 0f };
+        fuel = new List<float> { 0f, 0f, 0f, 0f };
     }
 
     //fixed update is enough for checking status

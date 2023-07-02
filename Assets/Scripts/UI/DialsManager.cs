@@ -21,6 +21,7 @@ public class DialsManager : MonoBehaviour
     public List<GameObject> oilTempPressureObjects = new List<GameObject>();
     public List<GameObject> cylinderHeadObjects = new List<GameObject>();
     public List<GameObject> carbTempObjects = new List<GameObject>();
+    public List<GameObject> fuelObjects = new List<GameObject>();
     public GameObject speedometer;
     public GameObject turnIndicator;
     public GameObject vsi;
