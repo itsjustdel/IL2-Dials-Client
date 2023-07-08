@@ -48,7 +48,7 @@ public class GermanDials : MonoBehaviour
         return altitudeLargeTarget;
 
     }
-
+    
     public static Quaternion MmhgTarget(float mmhg)
     {
         
@@ -481,5 +481,16 @@ public class GermanDials : MonoBehaviour
         v -= -134;
 
         return Quaternion.Euler(0, 0, v);
+    }
+
+    internal static Quaternion FuelTargetA(float v, float scalar0)
+    {
+        //0..1 range
+        
+        float startRot = -30f;
+        float endRot = 30f;
+        float r = Mathf.Lerp(startRot, endRot, v);
+
+        return Quaternion.Euler(0, 0, r);
     }
 }

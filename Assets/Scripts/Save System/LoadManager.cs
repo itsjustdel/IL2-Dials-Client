@@ -36,7 +36,7 @@ public class LoadManager : MonoBehaviour
                 //save packed string to player preferences (unity)
                 //save with id to know if user addded a a second window - if no id, save only plane name ( this will be the master client)
                 key = "layout " + clientId.ToString() + " " + planeType;
-                
+
                 PlayerPrefs.SetString(key, jsonFoo);
                 PlayerPrefs.Save();
 
@@ -64,12 +64,12 @@ public class LoadManager : MonoBehaviour
 #if UNITY_ANDROID
         Layout layout = GetLayoutAndroid(airplaneData);
 #else
-        Layout layout = GetLayout(id,airplaneData);
+        Layout layout = GetLayout(id, airplaneData);
 #endif
 
         //work out default scale for dials depening how many are active for this plane - Used to control ui size too
         RectTransform canvasRectTransform = GameObject.FindGameObjectWithTag("Canvas").GetComponent<RectTransform>();
-        
+
         List<GameObject> activeDials = ActiveDials(dialsManager.countryDialBoard);
         //workout default sizes (saves to globals)
         Layout.RowsColumnsSize(canvasRectTransform, activeDials.Count);
@@ -77,16 +77,16 @@ public class LoadManager : MonoBehaviour
         if (layout != null)
             ScaleAndPositions(dialsManager, menuHandler, layout);
         else
-            Layout.DefaultLayouts(activeDials,canvasRectTransform);
+            Layout.DefaultLayouts(activeDials, canvasRectTransform);
 
     }
 
     private static Layout GetLayoutAndroid(AirplaneData airplaneData)
-    {        
+    {
         string jsonFoo = PlayerPrefs.GetString(airplaneData.planeType);
         //and rebuild layout
         Layout layout = JsonUtility.FromJson<Layout>(jsonFoo);
-        return layout;        
+        return layout;
     }
 
 
@@ -97,7 +97,7 @@ public class LoadManager : MonoBehaviour
 
         //get all player prefs that start with this plane type
         string[] keys = PlayerPrefsHelper.GetRegistryValues();
-        
+
         foreach (string key in keys)
         {
             //layout keys are saved with id then plane type e.g (0 il2 mod 1942), (1 spitfire-123)
@@ -105,34 +105,34 @@ public class LoadManager : MonoBehaviour
 
             //UnityEngine.Debug.Log("Sub 0 = " + subs[0]);
             //we are looking for a layout
-            if(subs[0] == "layout")
+            if (subs[0] == "layout")
             {
                 //we are looking for matching client ids
                 //UnityEngine.Debug.Log("sub = " + int.Parse(subs[1]) + " id " + id);
-                    
-                if (int.Parse( subs[1] ) == id)
+
+                if (int.Parse(subs[1]) == id)
                 {
-                  // UnityEngine.Debug.Log("found id");
-                    
+                    // UnityEngine.Debug.Log("found id");
+
                     //_h3923205751 = 12 chars - not always!
                     string planeType = "";
                     //start after "layout" and client number "0" or "1"
                     int start = subs[0].Length + subs[1].Length + 2; //2 spaces
-                    for (int i = start; i < key.Length-1; i++)
+                    for (int i = start; i < key.Length - 1; i++)
                     {
                         //look for handle "_h" - we don't need values after key[x] is a char so do conversion                        
                         if (key[i].ToString() == "_" && key[i + 1].ToString() == "h")
                             break;
-                        
+
                         planeType += key[i];
                     }
 
-                  //  UnityEngine.Debug.Log("plane type = " + planeType);
+                    //  UnityEngine.Debug.Log("plane type = " + planeType);
 
                     //we are looking to match the plane type with the game data
                     if (airplaneData.planeType == planeType)
                     {
-                       // UnityEngine.Debug.Log("found plane type");
+                        // UnityEngine.Debug.Log("found plane type");
                         //load layout from key
                         string jsonFoo = PlayerPrefs.GetString(key);
                         //and rebuild layout
@@ -153,7 +153,7 @@ public class LoadManager : MonoBehaviour
         //UnityEngine.Debug.Log("Load layout - dial scale = " + Layout.dialScale);
         dialParent.GetComponent<RectTransform>().anchoredPosition = position;
 
-        
+
         dialParent.transform.Find("Dial").GetComponent<RectTransform>().localScale = new Vector3(scale, scale, 1f);
         //set ui to previously worked out ui scale
         dialParent.transform.Find("UI Handlers").GetComponent<RectTransform>().localScale = new Vector3(Layout.dialScale, Layout.dialScale, 1f);
@@ -167,7 +167,7 @@ public class LoadManager : MonoBehaviour
         if (layout.speedoInTray)
             AddToTrayOnLoad(dialsManager.speedometer, menuHandler);
 
-        GameObject altimeter = dialsManager.countryDialBoard.transform.Find("Altimeter").gameObject;        
+        GameObject altimeter = dialsManager.countryDialBoard.transform.Find("Altimeter").gameObject;
         DialScalePosition(altimeter, layout.altPos, layout.altScale);
         if (layout.altimeterInTray)
             AddToTrayOnLoad(altimeter, menuHandler);
@@ -318,7 +318,7 @@ public class LoadManager : MonoBehaviour
             if (layout.waterTempInTray[i])
                 AddToTrayOnLoad(dialsManager.waterTempObjects[i], menuHandler);
         }
-      
+
         for (int i = 0; i < dialsManager.oilTempInObjects.Count; i++)
         {
             DialScalePosition(dialsManager.oilTempInObjects[i], layout.oilTempInPos[i], layout.oilTempInScale[i]);
@@ -360,6 +360,13 @@ public class LoadManager : MonoBehaviour
             if (layout.carbAirInTray[i])
                 AddToTrayOnLoad(dialsManager.carbTempObjects[i], menuHandler);
         }
+
+        for (int i = 0; i < dialsManager.fuelObjects.Count; i++)
+        {
+            DialScalePosition(dialsManager.fuelObjects[i], layout.fuelPos[i], layout.fuelScale[i]);
+            if (layout.fuelInTray[i])
+                AddToTrayOnLoad(dialsManager.fuelObjects[i], menuHandler);
+        }
     }
 
     static void AddToTrayOnLoad(GameObject dial, MenuHandler menuHandler)
@@ -377,7 +384,4 @@ public class LoadManager : MonoBehaviour
 
         return activeDials;
     }
-
-
-
 }

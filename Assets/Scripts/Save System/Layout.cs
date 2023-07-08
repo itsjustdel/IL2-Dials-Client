@@ -30,6 +30,7 @@ public class Layout
     public List<Vector2> oilTempComboPos = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
     public List<Vector2> cylinderHeadPos = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
     public List<Vector2> carbAirPos = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
+    public List<Vector2> fuelPos = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
 
     public float speedoScale;
     public float altScale;
@@ -52,6 +53,7 @@ public class Layout
     public List<float> oilTempComboScale = new List<float>() { -1f, -1f, -1f, -1f };
     public List<float> cylinderHeadScale = new List<float>() { -1f, -1f, -1f, -1f };
     public List<float> carbAirScale = new List<float>() { -1f, -1f, -1f, -1f };
+    public List<float> fuelScale = new List<float>() { -1f, -1f, -1f, -1f };
 
     public bool speedoInTray;
     public bool altimeterInTray;
@@ -74,6 +76,7 @@ public class Layout
     public List<bool> oilTempComboInTray = new List<bool>() { false, false, false, false };
     public List<bool> cylinderHeadInTray = new List<bool>() { false, false, false, false };
     public List<bool> carbAirInTray = new List<bool>() { false, false, false, false };
+    public List<bool> fuelInTray = new List<bool>() { false, false, false, false };
 
 
     public static int rows;
@@ -96,13 +99,12 @@ public class Layout
         rows = Mathf.RoundToInt(t.Item1); //global
         columns = Mathf.RoundToInt(t.Item2); //global
         cellSize = t.Item3;
-        dialScale = cellSize / 800; //global
-       // Debug.Log("dial scale =" + dialScale);
+        dialScale = cellSize / 800; //global     
     }
 
     public static void DefaultLayouts(List<GameObject> activeDials, RectTransform canvasRectTransform)
     {
-        
+
         int total = 0;
 
         //what's left over after we place each dial on a row - used to center a row
@@ -112,7 +114,7 @@ public class Layout
         {
             int thisRow = 0;
             for (int j = 0; j < columns; j++)
-            {                
+            {
                 if (total > activeDials.Count - 1)
                 {
                     //last row doesn't have enough dials to make it to the end
@@ -126,27 +128,28 @@ public class Layout
 
                 float x = cellSize * j;
                 float y = -cellSize * i;
-                x -= canvasRectTransform.rect.width*.5f - cellSize*.5f;
-                
+                x -= canvasRectTransform.rect.width * .5f - cellSize * .5f;
+
                 x += diff;
-                
-                y += canvasRectTransform.rect.height*.5f - cellSize*.5f;
+
+                y += canvasRectTransform.rect.height * .5f - cellSize * .5f;
                 activeDials[total].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
                 activeDials[total].transform.Find("Dial").transform.localScale = new Vector3(dialScale, dialScale, 1);
-                
+
                 //set ui scale this time only
                 activeDials[total].transform.Find("UI Handlers").transform.localScale = new Vector3(dialScale, dialScale, 1);
 
                 total++;
                 thisRow++;
-                
+
             }
         }
     }
 
     //https://math.stackexchange.com/questions/466198/algorithm-to-get-the-maximum-size-of-n-squares-that-fit-into-a-rectangle-with-a
     //translated form javascript example
-    private static (float,float,float) EdgeColumnsRows(float x, float y, float n){        
+    private static (float, float, float) EdgeColumnsRows(float x, float y, float n)
+    {
 
         // Compute number of rows and columns, and cell size
         float ratio = x / y;
@@ -187,7 +190,7 @@ public class Layout
             ncols = ncols1;
             cell_size = cell_size1;
         }
-        return (nrows,ncols,cell_size);
+        return (nrows, ncols, cell_size);
     }
 
 }

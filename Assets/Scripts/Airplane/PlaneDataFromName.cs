@@ -44,6 +44,7 @@ public class PlaneDataFromName : AirplaneData
         public DialVariant oilTempComboType = DialVariant.None;
         public DialVariant cylinderHeadType = DialVariant.None;
         public DialVariant carbAirTempType = DialVariant.None;
+        public DialVariant fuel = DialVariant.A;
 
         public int engines = 1; //default to 1
 
