@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public enum DialVariant
 {
     A,
@@ -137,7 +133,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.rpmType = DialVariant.A;
                 planeAttributes.manifoldType = DialVariant.A;
                 planeAttributes.waterTempType = DialVariant.A;
-                planeAttributes.oilTempOutType = DialVariant.A;                
+                planeAttributes.oilTempOutType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+1E0 - 48 8D 15 89211400     - lea rdx,[RSE.RSE::CAeroplane_Yak_1_ser_69::`vftable'+1E8] { ("Yak-1 ser.69") }
@@ -218,7 +214,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.rpmType = DialVariant.B;
                 planeAttributes.manifoldType = DialVariant.E;
                 planeAttributes.waterTempType = DialVariant.B;
-                planeAttributes.oilTempOutType = DialVariant.B;                
+                planeAttributes.oilTempOutType = DialVariant.B;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+2199 - 48 8D 15 80B41400     - lea rdx,[RSE.RSE::CAeroplane_MC_202_s8::`vftable'+1E8] { ("MC 202 s8") }
@@ -287,7 +283,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiSmall = true;
                 planeAttributes.artificialHorizon = true;
                 planeAttributes.engines = 2;
-                planeAttributes.rpmType = DialVariant.C;                
+                planeAttributes.rpmType = DialVariant.C;
                 planeAttributes.manifoldType = DialVariant.B;
                 planeAttributes.waterTempType = DialVariant.B;
                 planeAttributes.oilTempComboType = DialVariant.A;
@@ -350,7 +346,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.rpmType = DialVariant.B;
                 planeAttributes.manifoldType = DialVariant.B;
                 planeAttributes.waterTempType = DialVariant.B;
-                planeAttributes.oilTempOutType= DialVariant.F; 
+                planeAttributes.oilTempOutType = DialVariant.F;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+1AA - 48 8D 15 F7B01700     - lea rdx,[RSE.RSE::CAeroplane_Pe_2_ser_35::`vftable'+1E8] { ("Pe-2 ser.35") }
@@ -414,7 +410,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.headingIndicator = true;
                 planeAttributes.repeaterCompass = true;
                 planeAttributes.engines = 2;
-                planeAttributes.rpmType = DialVariant.C;                
+                planeAttributes.rpmType = DialVariant.C;
                 planeAttributes.manifoldType = DialVariant.B;
                 planeAttributes.waterTempType = DialVariant.B;
                 planeAttributes.oilTempComboType = DialVariant.A;
@@ -433,7 +429,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.rpmType = DialVariant.B;
                 planeAttributes.manifoldType = DialVariant.F;
                 planeAttributes.waterTempType = DialVariant.B;
-                planeAttributes.oilTempOutType = DialVariant.B;                
+                planeAttributes.oilTempOutType = DialVariant.B;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+CBD - 48 8D 15 7C330F00     - lea rdx,[RSE.RSE::CAeroplane_Spitfire_Mk_Vb::`vftable'+210] { ("Spitfire Mk.Vb") }
@@ -911,7 +907,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.manifoldType = DialVariant.None;
                 planeAttributes.waterTempType = DialVariant.None;
                 break;
-                            
+
             //RSE.RSE::CCockpitInstruments::simulation+5FD5 - 48 8D 15 645A0C00     - lea rdx,[RSE.RSE::CAeroplane_Ju_88_C6::`vftable'+238] { ("Ju-88 C6") }
             case "Ju-88 C6":
                 planeAttributes.country = Country.GER;
@@ -973,6 +969,27 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.waterTempType = DialVariant.D;
                 planeAttributes.oilTempInType = DialVariant.D;
                 break;
+
+            //RSE.RSE::CCockpitInstruments::simulation+AD76 - 48 8D 3D 3B610E00     - lea rdi,[RSE.RSE::CAeroplane_Li_2::`vftable'+210] { ("Li-2") }
+            case "Li-2":
+                planeAttributes.country = Country.RU;
+                planeAttributes.engines = 2;
+                planeAttributes.altimeter = true;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.horizonType = DialVariant.A;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.vsiType = DialVariant.A;
+                planeAttributes.turnCoordinatorType = DialVariant.A;
+                planeAttributes.headingIndicator = true;
+                planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.A;
+                planeAttributes.waterTempType = DialVariant.A;
+                planeAttributes.oilTempOutType = DialVariant.A;
+                planeAttributes.cylinderHeadType = DialVariant.A;
+                planeAttributes.carbAirTempType = DialVariant.A;
+                break;
+
+
 
             //Flying Circus Vol 1
             //RSE.RSE::CCockpitInstruments::simulation+3DB5 - 48 8D 15 C4481F00     - lea rdx,[RSE.RSE::CAeroplane_SPAD_XIII_C1::`vftable'+1C8] { ("SPAD XIII.C1") }
@@ -1209,7 +1226,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.waterTempType = DialVariant.A;
                 planeAttributes.artificialHorizon = true;
                 break;
-            
+
             //RSE.RSE::CAeroplane::simulation + C07 - 48 8D 15 627D1E00 - lea rdx,[RSE.RSE::CAeroplane_Nieuport_28::`vftable'+1C8] { ("Nieuport 28.C1") }
             case "Nieuport 28.C1":
                 planeAttributes.country = Country.GER;
@@ -1221,7 +1238,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.waterTempType = DialVariant.A;
                 planeAttributes.artificialHorizon = true;
                 break;
-                            
+
             //RSE.RSE::CAeroplane::simulation+6C3 - 48 8D 15 FE261D00     - lea rdx,[RSE.RSE::CAeroplane_Fokker_Dr_I::`vftable'+1F0] { ("Fokker Dr.I") }
             case "Fokker Dr.I":
                 planeAttributes.country = Country.GER;
