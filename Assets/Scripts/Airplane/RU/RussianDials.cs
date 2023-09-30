@@ -223,20 +223,19 @@ public class RussianDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion ManifoldTargetB(float manifold, float scalar)
+    public static Quaternion ManifoldTargetB(float manifold, float scalar, float scalarB)
     {
-        //"Yak-9 ser.1" || "Yak-9T ser.1" || "Yak-7B ser.36") - from different data source
-
         //km/cm2 to mm of Hg
         //manifold *= 7.35592400690826f;
         //manifold *= scalar;
         float m = 0;
-        if (manifold <= 30000)
+        // resting position in game
+        if (manifold <= 315)
             m = 111f;
         else
         {
-            m = (manifold - 30000) * -0.0024f;
-            m += 111f;
+            m = (manifold) * -0.25f;
+            m += 190;
         }
 
         Quaternion target = Quaternion.Euler(0, 0, m);
