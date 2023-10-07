@@ -981,10 +981,10 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.vsiType = DialVariant.A;
                 planeAttributes.turnCoordinatorType = DialVariant.A;
                 planeAttributes.headingIndicator = true;
-                planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.rpmType = DialVariant.C;
                 planeAttributes.manifoldType = DialVariant.A;
                 planeAttributes.waterTempType = DialVariant.A;
-                planeAttributes.oilTempOutType = DialVariant.A;
+                planeAttributes.oilTempInType = DialVariant.A;
                 planeAttributes.cylinderHeadType = DialVariant.A;
                 planeAttributes.carbAirTempType = DialVariant.A;
                 break;

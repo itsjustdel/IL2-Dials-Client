@@ -16,20 +16,11 @@ public class DialTargets : MonoBehaviour
                 case (Country.RU):
                     if (airplaneData.planeAttributes.manifoldType == DialVariant.A)
                     {
-                        manifoldLargeTargets[i] = RussianDials.ManifoldTargetA(airplaneData.manifolds[i]);
+                        manifoldLargeTargets[i] = RussianDials.ManifoldTargetAB(airplaneData.manifolds[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                    if (airplaneData.planeAttributes.manifoldType == DialVariant.B)
+                    else if (airplaneData.planeAttributes.manifoldType == DialVariant.B)
                     {
-                        if (airplaneData.planeType == "Yak-9 ser.1" || airplaneData.planeType == "Yak-9T ser.1")
-                        {
-                            //data found from different source
-                            manifoldLargeTargets[i] = RussianDials.ManifoldTargetB(airplaneData.manifolds[i], airplaneData.scalar0, airplaneData.scalar1);
-                        }
-                        else
-                        {
-                            //use same rotation as 16 scale
-                            manifoldLargeTargets[i] = RussianDials.ManifoldTargetA(airplaneData.manifolds[i]);
-                        }
+                        manifoldLargeTargets[i] = RussianDials.ManifoldTargetAB(airplaneData.manifolds[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
                     else if (airplaneData.planeAttributes.manifoldType == DialVariant.C)
                     {
