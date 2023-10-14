@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class UKDials : MonoBehaviour
@@ -129,15 +127,15 @@ public class UKDials : MonoBehaviour
 
         v *= -.62f; //clamped at 31 in game sp double that?
         Quaternion target = Quaternion.identity;
-        if (Mathf.Abs( v ) < 10f)
-             target = Quaternion.Euler(0, 0, v * 2f + 180);
+        if (Mathf.Abs(v) < 10f)
+            target = Quaternion.Euler(0, 0, v * 2f + 180);
         //geared
-        else if (Mathf.Abs( v )>= 10f )
+        else if (Mathf.Abs(v) >= 10f)
             //take in to account if v is positive or negative
-            if(v > 0)
-                target = Quaternion.Euler(0, 0,  10 + ((v)) + 180);
+            if (v > 0)
+                target = Quaternion.Euler(0, 0, 10 + ((v)) + 180);
             else
-                 target = Quaternion.Euler(0, 0, -10 + ((v)) + 180);
+                target = Quaternion.Euler(0, 0, -10 + ((v)) + 180);
 
 
         float z = Mathf.Clamp(target.eulerAngles.z, 140, 220); //could need more work, flicks to each side at some point over 200
@@ -158,12 +156,12 @@ public class UKDials : MonoBehaviour
         else if (Mathf.Abs(v) >= gearChange)
             //take in to account if v is positive or negative
             if (v > 0)
-                target = Quaternion.Euler(0, 0, (( gearChange + v)));
+                target = Quaternion.Euler(0, 0, ((gearChange + v)));
             else
                 target = Quaternion.Euler(0, 0, -(gearChange - v));
 
 
-        
+
         return target;
 
     }
@@ -173,7 +171,7 @@ public class UKDials : MonoBehaviour
     {
         //vsi
         //start at 9 o'clock
-        verticalSpeed = 90f - verticalSpeed* 7.2f;
+        verticalSpeed = 90f - verticalSpeed * 7.2f;
 
 
         //clamp to 90 degrees /TODO dont clamp hee, clamp after thre rotations applied to its hitsd the pin opn the dial rather coming to a smooth stop
@@ -201,15 +199,15 @@ public class UKDials : MonoBehaviour
         //and work out percentage to use 0-1 scale for curve
         float highest = 4000;
         float percentage = (Mathf.Abs(rpm / highest));
-        
+
         //multiply by half a dial of spin (180 degrees)
         float angleToSpin = curve.Evaluate(percentage);
-        
-        angleToSpin *=  -335;
+
+        angleToSpin *= -335;
         angleToSpin -= 180;
         Quaternion target = Quaternion.Euler(0, 0, angleToSpin);
 
-        
+
 
         return target;
     }
@@ -217,23 +215,23 @@ public class UKDials : MonoBehaviour
     internal static Quaternion RPMBTarget(float rpm, float scalar, float scalar2)
     {
         float r;
-        
+
         //geared
-        if(rpm < 1000)
+        if (rpm < 1000)
         {
             r = rpm * -0.02f;
             r -= 180;
         }
-        else if(rpm >= 1000 && rpm < 2000)
+        else if (rpm >= 1000 && rpm < 2000)
         {
             //make start point for rpm multiplication 
             rpm -= 1000;
             r = rpm * -0.07f;
             //add degrees back on where we started ( at 10 on dial)
-            r -= 200;            
-        }        
+            r -= 200;
+        }
         else if (rpm >= 2000 && rpm < 4000)
-        { 
+        {
             //make start point for rpm multiplication 
             rpm -= 2000;
             r = rpm * -0.09f;
@@ -250,7 +248,7 @@ public class UKDials : MonoBehaviour
             r -= 90;
         }
 
-        
+
 
         Quaternion target = Quaternion.Euler(0, 0, r);
 
@@ -281,8 +279,8 @@ public class UKDials : MonoBehaviour
         //manifold /= 6894.76f; // pascal
 
         //some strange behaviour on low values
-        if (manifold <= -7)
-            manifold = -8.2f;
+        //if (manifold <= -7)
+        //    manifold = -8.2f;
 
         float m = 0;
 
@@ -290,7 +288,7 @@ public class UKDials : MonoBehaviour
         if (manifold <= 8)
         {
             m = manifold * -11;
-        }        
+        }
         else
         {
             //gear 3
@@ -298,11 +296,11 @@ public class UKDials : MonoBehaviour
             m -= 90;
         }
 
-       
+
 
         Quaternion target = Quaternion.Euler(0, 0, m);
 
-        return target;      
+        return target;
     }
 
     internal static Quaternion ManifoldTargetC(float manifold, float scalar, float s2)
@@ -312,8 +310,8 @@ public class UKDials : MonoBehaviour
         // manifold /= 6894.76f; // pascal
 
         //some strange behaviour on low values
-        if (manifold <= -7)
-            manifold = -8.2f;
+        //if (manifold <= -7)
+        //    manifold = -8.2f;
 
         float m = 0;
 

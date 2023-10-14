@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GermanDials : MonoBehaviour
@@ -9,16 +6,16 @@ public class GermanDials : MonoBehaviour
     {
         if (float.IsNaN(airspeed))
             return Quaternion.identity;
-            
+
 
         if (airspeed == 0)
             return Quaternion.Euler(0, 0, 180);
 
         //airspeed dial has two gears
         Quaternion target = Quaternion.identity;
-        if(airspeed<100)
+        if (airspeed < 100)
         {
-            target = Quaternion.Euler(0, 0, -((airspeed) * 0.15f) - 180 );//smaller step size
+            target = Quaternion.Euler(0, 0, -((airspeed) * 0.15f) - 180);//smaller step size
         }
         else
         {
@@ -51,7 +48,7 @@ public class GermanDials : MonoBehaviour
 
     public static Quaternion MmhgTarget(float mmhg)
     {
-        
+
 
         //mmhg to mbar
         float input = mmhg * 1.333f;
@@ -63,7 +60,8 @@ public class GermanDials : MonoBehaviour
         {
             if (!float.IsNaN(z))
                 mmhgTarget = Quaternion.Euler(0, 0, z); // 0 is 1013.25 mbar //0 degrees // bit more confusing because of asset rotation
-        }catch
+        }
+        catch
         {
             return Quaternion.identity;
         }
@@ -73,11 +71,11 @@ public class GermanDials : MonoBehaviour
 
     public static Vector3 HeadingIndicatorPosition(float heading, float trackLength)
     {
-        
+
         //check for Nan
         if (float.IsNaN(heading))
             return Vector3.zero;
-        
+
         //range is 0 to pi*2
         float ratio = Mathf.PI * heading;
         //adjust for arbitry render camera position
@@ -125,7 +123,7 @@ public class GermanDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion TurnCoordinatorBallTarget(float ball,float mod)
+    public static Quaternion TurnCoordinatorBallTarget(float ball, float mod)
     {
         //indicates whether the aircraft is in coordinated flight, showing the slip or skid of the turn. 
         float z = ball * mod;
@@ -135,7 +133,7 @@ public class GermanDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion TurnAndBankBallTarget(float ball,float multiplier)
+    public static Quaternion TurnAndBankBallTarget(float ball, float multiplier)
     {
         //indicates whether the aircraft is in coordinated flight, showing the slip or skid of the turn. 
         float z = ball * multiplier;
@@ -195,23 +193,23 @@ public class GermanDials : MonoBehaviour
         //vsi
 
         //geared
-        
+
         if (Mathf.Abs(verticalSpeed) <= 5)
         {
             //start at 9 o'clock
             verticalSpeed = 90f - verticalSpeed * 9f;
         }
-        else if (Mathf.Abs (verticalSpeed )> 5 && Mathf.Abs(verticalSpeed) < 10f)
+        else if (Mathf.Abs(verticalSpeed) > 5 && Mathf.Abs(verticalSpeed) < 10f)
         {
             //create rotation by creating new start point ( verticalSpeed - 5 degrees )
-            if(verticalSpeed>0)
+            if (verticalSpeed > 0)
                 verticalSpeed = 90f - ((verticalSpeed - 5f) * 6f) - 45f;
             else
                 verticalSpeed = 90f - ((verticalSpeed + 5f) * 6f) + 45f;
         }
-        else        
+        else
         {
-            if(verticalSpeed > 0)
+            if (verticalSpeed > 0)
                 verticalSpeed = 90f - (verticalSpeed * 3f) - 45f;
             else
                 verticalSpeed = 90f - (verticalSpeed * 3f) + 45f;
@@ -228,9 +226,9 @@ public class GermanDials : MonoBehaviour
     public static Quaternion ArtificialHorizon(float roll, float rollMultiplier)
     {
         //rotate horizon        
-        
+
         Quaternion t = Quaternion.Euler(0, 0, roll * rollMultiplier);
-        
+
         //for x rotation we need to rotate around global x after z rot
         //t *= Quaternion.Euler(climb * climbMultiplier, 0, 0);
 
@@ -255,13 +253,13 @@ public class GermanDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion RPMBTarget(float rpm,float scalar,float scalar1, AnimationCurve curve)
-    { 
+    public static Quaternion RPMBTarget(float rpm, float scalar, float scalar1, AnimationCurve curve)
+    {
         //-315 full needle spin to 3000
         //and work out percentage to use 0-1 scale for curve
         float highest = 3000;
         float percentage = (Mathf.Abs(rpm / highest));
-        
+
         //multiply by half a dial of spin (180 degrees)
         float angleToSpin = curve.Evaluate(percentage);
         // Debug.Log(angleToSpin);
@@ -325,7 +323,7 @@ public class GermanDials : MonoBehaviour
 
         //multiply by half a dial of spin (180 degrees)
         float angleToSpin = curve.Evaluate(percentage);
-        
+
         angleToSpin *= -307;
 
         angleToSpin -= 180;
@@ -341,32 +339,32 @@ public class GermanDials : MonoBehaviour
     public static Quaternion ManifoldTargetA(float manifold, string planeType, int engineMod, float s)
     {
         //planes need nudged, not consistent to manifold value
-        if (planeType == "Bf 109 E-7" || planeType == "Bf-110 E2")
-            manifold *= 1.0225f;
-        else
-            manifold *= 0.9875f;
+        //   if (planeType == "Bf 109 E-7" || planeType == "Bf-110 E2")
+        //     manifold *= 1.0225f;
+        //else
+        //  manifold *= 0.9875f;
 
 
         //account for different engines
-        float upperLimit = 180000;        
+        float upperLimit = 1800;
         if (planeType == "Bf 109 K-4" && engineMod == 1)
-            upperLimit = 200000;
+            upperLimit = 2000;
 
         float m = 0;
-        if (manifold <= 60000)
+        if (manifold <= 600)
             m = 166.156f;
 
-        else if (upperLimit == 180000 && manifold > upperLimit)
+        else if (upperLimit == 1800 && manifold > upperLimit)
             m = -166.156f;
 
         else if (manifold <= upperLimit)
         {
-            m = (manifold - 60000) * -0.002766667f;
+            m = (manifold - 600) * -0.2766667f;//can be same as below now for k-4?
             m += 166.156f;
         }
         else
         {
-            m = (manifold - 60000) * -0.00275f;
+            m = (manifold - 600) * -0.275f;
             m += 166.156f;
         }
 
@@ -380,11 +378,11 @@ public class GermanDials : MonoBehaviour
     {
 
         float m = 0;
-        if (manifold <= 50000)
+        if (manifold <= 500)
             m = 160;
         else
         {
-            m = (manifold - 50000) * -0.0016f;
+            m = (manifold - 500) * -0.16f;
             m += 160;
         }
 
@@ -396,13 +394,13 @@ public class GermanDials : MonoBehaviour
     public static Quaternion ManifoldTargetE(float manifold, string planeType, float s)
     {
         //if (planeType == "He 111 H-6")
-        manifold *= 0.9875f; //assumed
+        //manifold *= 0.9875f; //assumed
         float m = 0;
-        if (manifold <= 60000)
+        if (manifold <= 600)
             m = 160;
         else
         {
-            m = (manifold - 60000) * -0.002766667f;
+            m = (manifold - 600) * -0.26667f;
             m += 160;
         }
 
@@ -434,21 +432,21 @@ public class GermanDials : MonoBehaviour
         v = Mathf.Clamp(v, -30f, 160f);
         v *= -0.686f;
         v -= -134;
-        
+
 
         return Quaternion.Euler(0, 0, v);
     }
 
     internal static Quaternion WaterTempTargetD(float v, float scalar0, float scalar1)
-    {   
+    {
         v *= -0.42f;
-        v -= -33.33334f;        
+        v -= -33.33334f;
         v = Mathf.Clamp(v, -34, 34);
 
         return Quaternion.Euler(0, 0, v);
     }
 
-    internal static Quaternion OilTempFW190(float inRad,float outRad, float scalar0, float scalar1)
+    internal static Quaternion OilTempFW190(float inRad, float outRad, float scalar0, float scalar1)
     {
         float diff = (outRad - inRad);
         float modDiff = diff * 0.45f;
