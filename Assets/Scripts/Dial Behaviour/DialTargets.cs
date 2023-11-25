@@ -385,7 +385,7 @@ public class DialTargets : MonoBehaviour
                     {
                         oilTempTargets[i] = GermanDials.WaterTempTargetA(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                    else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.B)
+                    else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.B || airplaneData.planeAttributes.oilTempOutType == DialVariant.E)
                     {
                         oilTempTargets[i] = GermanDials.WaterTempTargetB(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
