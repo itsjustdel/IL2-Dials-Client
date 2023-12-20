@@ -693,7 +693,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.rpmType = DialVariant.B;
                 planeAttributes.manifoldType = DialVariant.B;
                 planeAttributes.waterTempType = DialVariant.A;
-                planeAttributes.oilTempOutType = DialVariant.A;
+                planeAttributes.oilTempInType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+EBF - 4C 8D 05 8A0C0600     - lea r8,[RSE.RSE::CAeroplane_B_25_D::`vftable'+2B8] { ("B-25D") }
@@ -767,7 +767,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.rpmType = DialVariant.B;
                 planeAttributes.manifoldType = DialVariant.B;
                 planeAttributes.waterTempType = DialVariant.A;
-                planeAttributes.oilTempOutType = DialVariant.A;
+                planeAttributes.oilTempInType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+F0D - 4C 8D 05 ECA40600     - lea r8,[RSE.RSE::CAeroplane_C_47A::`vftable'+210] { ("C-47A") }
@@ -833,7 +833,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.rpmType = DialVariant.B;
                 planeAttributes.manifoldType = DialVariant.B;
                 planeAttributes.waterTempType = DialVariant.B;
-                planeAttributes.oilTempInType = DialVariant.B;
+                planeAttributes.oilTempOutType = DialVariant.B;
                 break;
 
             //pre-release
@@ -875,7 +875,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.rpmType = DialVariant.B;
                 planeAttributes.manifoldType = DialVariant.C;
                 planeAttributes.waterTempType = DialVariant.A;
-                planeAttributes.oilTempOutType = DialVariant.A;
+                planeAttributes.oilTempInType = DialVariant.A;
                 break;
 
             //RSE.RSE::CCockpitInstruments::simulation+DDD - 4C 8D 05 6CB00C00     - lea r8,[RSE.RSE::CAeroplane_Po_2_VS::`vftable'+1D0] { ("U-2VS") }
@@ -938,7 +938,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.rpmType = DialVariant.C;
                 planeAttributes.manifoldType = DialVariant.D;
                 planeAttributes.waterTempType = DialVariant.A;
-                planeAttributes.oilTempOutType = DialVariant.A;
+                planeAttributes.oilTempInType = DialVariant.A;
                 break;
 
 
@@ -989,6 +989,20 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.carbAirTempType = DialVariant.A;
                 break;
 
+            //RSE.RSE::CCockpitInstruments::simulation+637E - 48 8D 15 B3130D00     - lea rdx,[RSE.RSE::CAeroplane_IAR_80_A::`vftable'+2C8] { ("I.A.R. 80-A") }
+            case "I.A.R. 80-A":
+                planeAttributes.country = Country.GER;
+                planeAttributes.altimeter = true;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.horizonType = DialVariant.A;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.vsiType = DialVariant.A;
+                planeAttributes.rpmType = DialVariant.A;
+                //planeAttributes.manifoldType = DialVariant.A;  //need limits on server
+                //planeAttributes.waterTempType = DialVariant.A;
+                //planeAttributes.oilTempInType = DialVariant.A;
+                break;
 
 
             //Flying Circus Vol 1

@@ -274,32 +274,18 @@ public class UKDials : MonoBehaviour
 
     internal static Quaternion ManifoldTargetA(float manifold, float scalar)
     {
-        //UK =  read manifold, minus 101325.00, divide by 6894.76
-        //manifold -= 101325f; //air pressure
-        //manifold /= 6894.76f; // pascal
-
-        //some strange behaviour on low values
-        //if (manifold <= -7)
-        //    manifold = -8.2f;
-
-        float m = 0;
-
-
-        if (manifold <= 8)
+        float m;
+        if (manifold < 8)
         {
             m = manifold * -11;
         }
         else
         {
-            //gear 3
-            m = (manifold - 8) * -9;
-            m -= 90;
+            m = -90;
+            m += (manifold - 8) * -9;
         }
 
-
-
         Quaternion target = Quaternion.Euler(0, 0, m);
-
         return target;
     }
 

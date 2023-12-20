@@ -91,6 +91,7 @@ public static class PlaneLists
         "He 111 H-6",
         "He 111 H-16",
         "Hs 129 B-2",
+        "I.A.R. 80-A",
         "Ju-52/3m g4e",
         "Ju-87 D3",
         "Ju-88 A4",
