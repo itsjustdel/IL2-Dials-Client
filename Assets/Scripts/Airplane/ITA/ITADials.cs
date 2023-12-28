@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ITADials : MonoBehaviour
@@ -9,7 +6,7 @@ public class ITADials : MonoBehaviour
     {
 
         if (airspeed == 0 || float.IsNaN(airspeed))
-            return Quaternion.Euler(0,0,90);
+            return Quaternion.Euler(0, 0, 90);
 
         //airspeed dial has three gears
         Quaternion target = Quaternion.identity;
@@ -19,7 +16,7 @@ public class ITADials : MonoBehaviour
         }
         else if (airspeed >= 100 && airspeed < 300)
         {
-            target = Quaternion.Euler(0, 0, ((airspeed -100) * -0.72f) + 54);//
+            target = Quaternion.Euler(0, 0, ((airspeed - 100) * -0.72f) + 54);//
         }
         else
         {
@@ -147,13 +144,13 @@ public class ITADials : MonoBehaviour
     public static Quaternion ManifoldTargetA(float manifold, float scalar, float s2)
     {
         //in gamerotations differ from pure data from game
-        manifold *= 1.0225f;
+        //manifold *= 1.0225f;
         float m = 0;
-        if (manifold <= 50000)
+        if (manifold <= 500)
             m = 150;
         else
         {
-            m = (manifold - 50000) * -0.002f;
+            m = (manifold - 500) * -0.2f;
             m += 150;
         }
 

@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,28 +8,19 @@ public class DialTargets : MonoBehaviour
     {
         List<Quaternion> manifoldSmallTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
         List<Quaternion> manifoldLargeTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
-        
+
         for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
         {
             switch (country)
             {
                 case (Country.RU):
-                    if (airplaneData.planeAttributes.manifoldType == DialVariant.A)                            
+                    if (airplaneData.planeAttributes.manifoldType == DialVariant.A)
                     {
-                        manifoldLargeTargets[i] = RussianDials.ManifoldTargetA(airplaneData.manifolds[i]);
+                        manifoldLargeTargets[i] = RussianDials.ManifoldTargetAB(airplaneData.manifolds[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                    if (airplaneData.planeAttributes.manifoldType == DialVariant.B)
+                    else if (airplaneData.planeAttributes.manifoldType == DialVariant.B)
                     {
-                        if (airplaneData.planeType == "Yak-9 ser.1" || airplaneData.planeType == "Yak-9T ser.1")
-                        {
-                            //data found from different source
-                            manifoldLargeTargets[i] = RussianDials.ManifoldTargetB(airplaneData.manifolds[i], airplaneData.scalar0);
-                        }
-                        else
-                        {
-                            //use same rotation as 16 scale
-                            manifoldLargeTargets[i] = RussianDials.ManifoldTargetA(airplaneData.manifolds[i]);
-                        }
+                        manifoldLargeTargets[i] = RussianDials.ManifoldTargetAB(airplaneData.manifolds[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
                     else if (airplaneData.planeAttributes.manifoldType == DialVariant.C)
                     {
@@ -39,14 +28,14 @@ public class DialTargets : MonoBehaviour
                     }
                     break;
 
-                case (Country.GER):                    
+                case (Country.GER):
                     if (airplaneData.planeAttributes.manifoldType == DialVariant.A
                         || airplaneData.planeAttributes.manifoldType == DialVariant.B
                             || airplaneData.planeAttributes.manifoldType == DialVariant.C
                                 || airplaneData.planeAttributes.manifoldType == DialVariant.F)
                     {
-                        
-                        manifoldLargeTargets[i] = GermanDials.ManifoldTargetA(airplaneData.manifolds[i], airplaneData.planeType,airplaneData.engineModification, airplaneData.scalar0);
+
+                        manifoldLargeTargets[i] = GermanDials.ManifoldTargetA(airplaneData.manifolds[i], airplaneData.planeType, airplaneData.engineModification, airplaneData.scalar0);
 
 
                         //me 410 has it's dial spun by 90 degrees, so add 90 to the target
@@ -55,7 +44,7 @@ public class DialTargets : MonoBehaviour
                     }
 
                     else if (airplaneData.planeAttributes.manifoldType == DialVariant.D)
-                    {                        
+                    {
                         manifoldLargeTargets[i] = GermanDials.ManifoldTargetD(airplaneData.manifolds[i], airplaneData.planeType, airplaneData.scalar0);
                     }
                     else if (airplaneData.planeAttributes.manifoldType == DialVariant.E)
@@ -69,10 +58,10 @@ public class DialTargets : MonoBehaviour
                     if (airplaneData.planeAttributes.manifoldType == DialVariant.A
                             || airplaneData.planeAttributes.manifoldType == DialVariant.B)
                     {
-                        manifoldLargeTargets[i] = USDials.ManifoldTargetA(airplaneData.manifolds[i],airplaneData.scalar0);
+                        manifoldLargeTargets[i] = USDials.ManifoldTargetA(airplaneData.manifolds[i], airplaneData.scalar0);
                     }
                     else if (airplaneData.planeAttributes.manifoldType == DialVariant.C
-                            || airplaneData.planeAttributes.manifoldType == DialVariant.D                               
+                            || airplaneData.planeAttributes.manifoldType == DialVariant.D
                                     || airplaneData.planeAttributes.manifoldType == DialVariant.F)
                     {
 
@@ -81,7 +70,7 @@ public class DialTargets : MonoBehaviour
                     else if (airplaneData.planeAttributes.manifoldType == DialVariant.E)
                     {
 
-                        manifoldLargeTargets[i] = USDials.ManifoldTargetE(airplaneData.manifolds[i],airplaneData.engineModification, airplaneData.scalar0);
+                        manifoldLargeTargets[i] = USDials.ManifoldTargetE(airplaneData.manifolds[i], airplaneData.engineModification, airplaneData.scalar0);
                     }
                     break;
 
@@ -111,9 +100,9 @@ public class DialTargets : MonoBehaviour
         return new List<List<Quaternion>>() { manifoldSmallTargets, manifoldLargeTargets };
     }
 
-    public static List<List<Quaternion>> RPMTarget(AirplaneData airplaneData, Country country, RotateNeedle rotateNeedle )
+    public static List<List<Quaternion>> RPMTarget(AirplaneData airplaneData, Country country, RotateNeedle rotateNeedle)
     {
-        List<Quaternion> rpmLargeTargets = new List<Quaternion>( new Quaternion[airplaneData.planeAttributes.engines]);
+        List<Quaternion> rpmLargeTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
         List<Quaternion> rpmSmallTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
 
         for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
@@ -235,7 +224,7 @@ public class DialTargets : MonoBehaviour
 
     internal static List<Quaternion> WaterTempTargets(AirplaneData airplaneData, Country country, RotateNeedle rotateNeedle)
     {
-        List<Quaternion> waterTempTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);        
+        List<Quaternion> waterTempTargets = new List<Quaternion>(new Quaternion[airplaneData.planeAttributes.engines]);
 
         for (int i = 0; i < airplaneData.planeAttributes.engines; i++)
         {
@@ -249,7 +238,7 @@ public class DialTargets : MonoBehaviour
                     }
                     else if (airplaneData.planeAttributes.waterTempType == DialVariant.B)
                     {
-                        waterTempTargets[i] = RussianDials.WaterTempTargetB(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1,airplaneData.planeType);
+                        waterTempTargets[i] = RussianDials.WaterTempTargetB(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1, airplaneData.planeType);
                     }
                     if (airplaneData.planeAttributes.waterTempType == DialVariant.C)
                     {
@@ -260,7 +249,7 @@ public class DialTargets : MonoBehaviour
 
                 //GER
                 case (Country.GER):
-                    
+
                     if (airplaneData.planeAttributes.waterTempType == DialVariant.A)
                     {
                         waterTempTargets[i] = GermanDials.WaterTempTargetA(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1);
@@ -276,7 +265,7 @@ public class DialTargets : MonoBehaviour
                     else if (airplaneData.planeAttributes.waterTempType == DialVariant.D)
                     {
                         waterTempTargets[i] = GermanDials.WaterTempTargetD(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1);
-                    }                    
+                    }
 
                     break;
 
@@ -289,8 +278,8 @@ public class DialTargets : MonoBehaviour
                     else if (airplaneData.planeAttributes.waterTempType == DialVariant.B)
                     {
                         //p38 - two needles, one dial
-                        waterTempTargets[0] = USDials.WaterTempTargetB(airplaneData.waterTemps[0], airplaneData.scalar0, airplaneData.scalar1,true);                                                
-                        waterTempTargets[1] = USDials.WaterTempTargetB(airplaneData.waterTemps[1], airplaneData.scalar0, airplaneData.scalar1,false);
+                        waterTempTargets[0] = USDials.WaterTempTargetB(airplaneData.waterTemps[0], airplaneData.scalar0, airplaneData.scalar1, true);
+                        waterTempTargets[1] = USDials.WaterTempTargetB(airplaneData.waterTemps[1], airplaneData.scalar0, airplaneData.scalar1, false);
                     }
                     else if (airplaneData.planeAttributes.waterTempType == DialVariant.C)
                     {
@@ -304,10 +293,10 @@ public class DialTargets : MonoBehaviour
                     if (airplaneData.planeAttributes.waterTempType == DialVariant.A)
                     {
                         waterTempTargets[i] = UKDials.WaterTempTargetA(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveWaterTempA, airplaneData.planeType);
-                    } 
+                    }
                     else if (airplaneData.planeAttributes.waterTempType == DialVariant.B)
                     {
-                        waterTempTargets[i] = UKDials.WaterTempTargetB(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1,airplaneData.planeType);
+                        waterTempTargets[i] = UKDials.WaterTempTargetB(airplaneData.waterTemps[i], airplaneData.scalar0, airplaneData.scalar1, airplaneData.planeType);
                     }
 
                     break;
@@ -386,7 +375,7 @@ public class DialTargets : MonoBehaviour
                         //note targetC is correct - there's one more water dial so variant type enums don't match up
                         oilTempTargets[i] = RussianDials.WaterTempTargetC(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                   
+
                     break;
 
                 //GER
@@ -396,7 +385,7 @@ public class DialTargets : MonoBehaviour
                     {
                         oilTempTargets[i] = GermanDials.WaterTempTargetA(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
-                    else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.B)
+                    else if (airplaneData.planeAttributes.oilTempOutType == DialVariant.B || airplaneData.planeAttributes.oilTempOutType == DialVariant.E)
                     {
                         oilTempTargets[i] = GermanDials.WaterTempTargetB(airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
@@ -469,12 +458,12 @@ public class DialTargets : MonoBehaviour
                 case (Country.RU):
                     if (airplaneData.planeAttributes.oilTempInType == DialVariant.A)
                     {
-                        oilTempTargets[i] = RussianDials.OilTempInA(airplaneData.oilTempsIn[i], airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
+                        oilTempTargets[i] = RussianDials.OilTempInA(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
                     else if (airplaneData.planeAttributes.oilTempInType == DialVariant.B)
                     {
                         oilTempTargets[i] = RussianDials.WaterTempTargetC(airplaneData.oilTempsIn[i], airplaneData.scalar0, airplaneData.scalar1);
-                    }                  
+                    }
 
                     break;
 
@@ -499,7 +488,7 @@ public class DialTargets : MonoBehaviour
                     }
                     else if (airplaneData.planeAttributes.oilTempInType == DialVariant.E)
                     {
-                        oilTempTargets[i] = GermanDials.OilTempFW190(airplaneData.oilTempsIn[i],airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
+                        oilTempTargets[i] = GermanDials.OilTempFW190(airplaneData.oilTempsIn[i], airplaneData.oilTempsOut[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
                     else if (airplaneData.planeAttributes.oilTempInType == DialVariant.F)
                     {
@@ -570,7 +559,7 @@ public class DialTargets : MonoBehaviour
                     if (airplaneData.planeAttributes.oilTempComboType == DialVariant.A)
                     {
                         // we will save engine in in out as index 0, 1 and engine 2 as index 2, 3
-                        oilTempTargets[0] = GermanDials.OilTempTargetF(airplaneData.oilTempsIn[0], airplaneData.scalar0, airplaneData.scalar1,rotateNeedle.animationCurveOilTempF);
+                        oilTempTargets[0] = GermanDials.OilTempTargetF(airplaneData.oilTempsIn[0], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveOilTempF);
                         oilTempTargets[1] = GermanDials.OilTempTargetF(airplaneData.oilTempsOut[0], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveOilTempF);
                         oilTempTargets[2] = GermanDials.OilTempTargetF(airplaneData.oilTempsIn[1], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveOilTempF);
                         oilTempTargets[3] = GermanDials.OilTempTargetF(airplaneData.oilTempsOut[1], airplaneData.scalar0, airplaneData.scalar1, rotateNeedle.animationCurveOilTempF);
@@ -580,11 +569,11 @@ public class DialTargets : MonoBehaviour
                     return oilTempTargets;
 
                 //US
-                case (Country.US):                   
+                case (Country.US):
                     break;
 
                 case (Country.FR):
-                case (Country.UK):                  
+                case (Country.UK):
                     break;
 
                 case (Country.ITA):
@@ -606,7 +595,7 @@ public class DialTargets : MonoBehaviour
                 //RU
                 case (Country.RU):
                     if (airplaneData.planeAttributes.cylinderHeadType == DialVariant.A)
-                    {              
+                    {
                         targets[i] = RussianDials.CylinderHeadTempTargetA(airplaneData.cylinderHeadTemps[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
 
@@ -655,7 +644,7 @@ public class DialTargets : MonoBehaviour
             switch (country)
             {
                 //RU
-                case (Country.RU):                  
+                case (Country.RU):
                     break;
 
                 //GER
@@ -666,7 +655,7 @@ public class DialTargets : MonoBehaviour
                     if (airplaneData.planeAttributes.carbAirTempType == DialVariant.A
                         || airplaneData.planeAttributes.carbAirTempType == DialVariant.B
                             || airplaneData.planeAttributes.carbAirTempType == DialVariant.C)
-                    {                        
+                    {
                         targets[i] = USDials.CarbAirTargetA(airplaneData.carbAirTemps[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
                     else if (airplaneData.planeAttributes.carbAirTempType == DialVariant.D) // A20 double needle dial
@@ -679,7 +668,7 @@ public class DialTargets : MonoBehaviour
                         targets[0] = USDials.CarbAirTargetE(airplaneData.carbAirTemps[0], airplaneData.scalar0, airplaneData.scalar1, true);
                         targets[1] = USDials.CarbAirTargetE(airplaneData.carbAirTemps[1], airplaneData.scalar0, airplaneData.scalar1, false);
                     }
-                    else if(airplaneData.planeAttributes.carbAirTempType == DialVariant.F)
+                    else if (airplaneData.planeAttributes.carbAirTempType == DialVariant.F)
                     {
                         targets[i] = USDials.CarbAirTargetF(airplaneData.carbAirTemps[i], airplaneData.scalar0, airplaneData.scalar1);
                     }
@@ -699,7 +688,7 @@ public class DialTargets : MonoBehaviour
 
 
     public static Quaternion ArtificialHorizonTargets(ref Quaternion artificialHorizonNeedleTarget, ref Vector3 artificialHorizonPositionTarget, ref Quaternion artificialHorizonChevronTarget, ref Quaternion artificialHorizonRotationPlaneTarget,
-                                                    AirplaneData airplaneData, GameObject artificialHorizonNeedle, 
+                                                    AirplaneData airplaneData, GameObject artificialHorizonNeedle,
                                                     float artificialHorizonRollMod, float artificialHorizonMultiplier, Country country)
     {
         Quaternion artificialHorizonRotationTarget = Quaternion.identity;
@@ -835,7 +824,7 @@ public class DialTargets : MonoBehaviour
 
                 break;
 
-            
+
             case (Country.US):
                 if (airplaneData.planeAttributes.vsiType == DialVariant.A)
                     vsiNeedleTarget = USDials.VerticalSpeedTarget(airplaneData.verticalSpeed, rN.animationCurveVSI);
@@ -914,7 +903,7 @@ public class DialTargets : MonoBehaviour
 
     }
 
-    internal static Quaternion HeadingIndicatorBallTarget(AirplaneData airplaneData) 
+    internal static Quaternion HeadingIndicatorBallTarget(AirplaneData airplaneData)
     {
         Quaternion target = Quaternion.identity;
         switch (airplaneData.planeAttributes.country)
@@ -922,7 +911,7 @@ public class DialTargets : MonoBehaviour
             case (Country.US):
                 target = USDials.HeadingIndicatorBallTarget(airplaneData.turnCoordinatorBall, airplaneData.scalar0);
                 break;
-                
+
         }
 
         return target;
@@ -999,7 +988,7 @@ public class DialTargets : MonoBehaviour
         return headingIndicatorTarget;
     }
 
-    public static Quaternion AltimeterTargets(ref Quaternion altitudeSmallTarget, ref Quaternion altitudeSmallestTarget, 
+    public static Quaternion AltimeterTargets(ref Quaternion altitudeSmallTarget, ref Quaternion altitudeSmallestTarget,
                                             GameObject altitudeNeedleSmallest, AirplaneData airplaneData)
     {
         Quaternion altitudeLargeTarget;
@@ -1012,7 +1001,7 @@ public class DialTargets : MonoBehaviour
         altitudeLargeTarget = AltitudeTargetLarge(airplaneData.planeAttributes.country, airplaneData.altitude);
 
         return altitudeLargeTarget;
-        
+
     }
 
     public static Quaternion PressureReferenceTargets(AirplaneData airplaneData)
@@ -1061,7 +1050,7 @@ public class DialTargets : MonoBehaviour
 
     }
 
-   public static Quaternion AirspeedTarget(Country country, AirplaneData airplaneData,  RotateNeedle rN)
+    public static Quaternion AirspeedTarget(Country country, AirplaneData airplaneData, RotateNeedle rN)
     {
 
         Quaternion airspeedTarget = Quaternion.identity;
@@ -1076,13 +1065,13 @@ public class DialTargets : MonoBehaviour
                 airspeedTarget = GermanDials.AirspeedTarget(airplaneData.airspeed);
                 break;
 
-            case Country.US:                
+            case Country.US:
                 if (airplaneData.planeAttributes.speedometerType == DialVariant.A || airplaneData.planeAttributes.speedometerType == DialVariant.B || airplaneData.planeAttributes.speedometerType == DialVariant.C)
                     airspeedTarget = USDials.AirspeedTarget700Scale(airplaneData.airspeed, rN.animationCurveSpeedometerA, airplaneData.scalar0);
                 else if (airplaneData.planeAttributes.speedometerType == DialVariant.D)
                     airspeedTarget = USDials.AirspeedTargetA20(airplaneData.airspeed);
                 else if (airplaneData.planeAttributes.speedometerType == DialVariant.E)
-                    airspeedTarget = USDials.AirspeedTargetP40(airplaneData.airspeed,airplaneData.scalar0, airplaneData.scalar1);
+                    airspeedTarget = USDials.AirspeedTargetP40(airplaneData.airspeed, airplaneData.scalar0, airplaneData.scalar1);
 
                 break;
 

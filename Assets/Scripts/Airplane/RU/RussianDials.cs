@@ -1,11 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RussianDials : MonoBehaviour
 {
-   public static Quaternion AirspeedTarget(float airspeed)
+    public static Quaternion AirspeedTarget(float airspeed)
     {
         if (airspeed == 0)
             return Quaternion.identity;
@@ -55,12 +52,12 @@ public class RussianDials : MonoBehaviour
     {
 
         float z = ((760f - mmhg) / 100f) * 300;
-        
+
         Quaternion mmhgTarget = Quaternion.identity;
 
         //catch bad value
         if (!float.IsNaN(z))
-            mmhgTarget = Quaternion.Euler(0, 0, z); 
+            mmhgTarget = Quaternion.Euler(0, 0, z);
 
         return mmhgTarget;
     }
@@ -76,16 +73,16 @@ public class RussianDials : MonoBehaviour
         //adjust for arbitry render camera position
         ratio *= 10.99f;
 
-        Vector3 pos = Vector3.right*ratio;
+        Vector3 pos = Vector3.right * ratio;
         //track length
         pos += Vector3.right * trackLength;
-        
+
 
         return pos;
     }
 
-    public static Quaternion TurnAndBankPlaneRotation(float roll,float climb, float rollMultiplier, float xRotation)
-    {        
+    public static Quaternion TurnAndBankPlaneRotation(float roll, float climb, float rollMultiplier, float xRotation)
+    {
         //rotate plane
         //clamp roll , in game cockpit stop rotation at just under 90 degrees - this happens when roll rate is ~1.7
         float tempRoll = -roll;
@@ -113,7 +110,7 @@ public class RussianDials : MonoBehaviour
 
 
     public static Quaternion TurnCoordinatorNeedleTarget(float v, float mod)
-    {        
+    {
         float z = Mathf.Clamp(v, -30, 30);
         Quaternion target = Quaternion.Euler(0, 0, z);
 
@@ -125,7 +122,7 @@ public class RussianDials : MonoBehaviour
     {
         //indicates whether the aircraft is in coordinated flight, showing the slip or skid of the turn. 
         float z = ball * 550;
-        z = Mathf.Clamp(z,-19.5f, 19.5f);//test
+        z = Mathf.Clamp(z, -19.5f, 19.5f);//test
         Quaternion target = Quaternion.Euler(0, 0, z);
 
         return target;
@@ -139,7 +136,7 @@ public class RussianDials : MonoBehaviour
         //clamp to "30"
         verticalSpeed = Mathf.Clamp(verticalSpeed, -90, 270);
 
-        Quaternion target = Quaternion.Euler(0, 0,  verticalSpeed);
+        Quaternion target = Quaternion.Euler(0, 0, verticalSpeed);
 
         return target;
     }
@@ -175,7 +172,7 @@ public class RussianDials : MonoBehaviour
     }
 
 
-    public static Quaternion RPMBTarget(float rpm, float scalar, float scalar2)        
+    public static Quaternion RPMBTarget(float rpm, float scalar, float scalar2)
     {
         // -0.12275*
         //209.135
@@ -183,7 +180,7 @@ public class RussianDials : MonoBehaviour
         float r = rpm * -0.12275f + (start);
 
         //clamp low is actually high, rotation are negative
-        r = Mathf.Clamp(r, -180,  160);
+        r = Mathf.Clamp(r, -180, 160);
 
         Quaternion target = Quaternion.Euler(0, 0, r);
 
@@ -207,39 +204,19 @@ public class RussianDials : MonoBehaviour
         return target;
     }
 
-    public static Quaternion ManifoldTargetA(float manifold)
+    public static Quaternion ManifoldTargetAB(float manifold, float scalar, float scalarB)
     {
-        //km/cm2 to mm of Hg
-        manifold *= 7.35592400690826f;        
-        float m = 0;
-        if (manifold <= 300000)
-            m = 115;
-        else 
-        {
-            m = (manifold - 300000) * -0.00026f;
-            m += 115;
-        }
-      
-
-        Quaternion target = Quaternion.Euler(0, 0, m);
-
-        return target;
-    }
-
-    public static Quaternion ManifoldTargetB(float manifold, float scalar)
-    {
-        //"Yak-9 ser.1" || "Yak-9T ser.1" || "Yak-7B ser.36") - from different data source
-
         //km/cm2 to mm of Hg
         //manifold *= 7.35592400690826f;
         //manifold *= scalar;
         float m = 0;
-        if (manifold <= 30000)
+        // resting position in game
+        if (manifold <= 315)
             m = 111f;
         else
         {
-            m = (manifold - 30000) * -0.0024f;
-            m += 111f;
+            m = (manifold) * -0.25f;
+            m += 190;
         }
 
         Quaternion target = Quaternion.Euler(0, 0, m);
@@ -250,16 +227,15 @@ public class RussianDials : MonoBehaviour
     public static Quaternion ManifoldTargetC(float manifold, float scalar)
     {
         //km/cm2 to mm of Hg
-        manifold *= 7.35592400690826f;
+        //manifold *= 7.35592400690826f;
         float m = 0;
-        if (manifold <= 300000)
+        if (manifold <= 300)
             m = 135;
         else
         {
-            m = (manifold - 300000) * -0.00031f;
-            m += 135;
+            m = (manifold) * -.3f;
+            m += 225;
         }
-
 
         Quaternion target = Quaternion.Euler(0, 0, m);
 
@@ -270,7 +246,7 @@ public class RussianDials : MonoBehaviour
     {
         v = Mathf.Clamp(v, 0, 120);
         float r = v * -.8f;
-        Quaternion target = Quaternion.Euler(0, 0, r+48);
+        Quaternion target = Quaternion.Euler(0, 0, r + 48);
 
         return target;
     }
@@ -307,12 +283,8 @@ public class RussianDials : MonoBehaviour
         return target;
     }
 
-    internal static Quaternion OilTempInA(float inbound, float outbound, float scalar0, float scalar1)
+    internal static Quaternion OilTempInA(float v, float scalar0, float scalar1)
     {
-        // Calculation here - would be good to move all calcs server side
-        // RSE.RSE::CAeroplane::setDrawArguments+4ADB - E9 2F010000           - jmp RSE.RSE::CAeroplane::setDrawArguments+4C0F
-        float v = outbound - (outbound - inbound) * 0.7f;
-
         v = Mathf.Clamp(v, 0, 120);
         float r = v * -.8f;
         Quaternion target = Quaternion.Euler(0, 0, r + 48);
