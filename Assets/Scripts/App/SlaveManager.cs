@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Diagnostics;
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 public class SlaveManager : MonoBehaviour
 {
@@ -78,6 +76,7 @@ public class SlaveManager : MonoBehaviour
             }
         }
     }
+
 
     public void SpawnNewSlave()
     {
