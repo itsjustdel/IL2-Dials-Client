@@ -122,7 +122,7 @@ public class UKDials : MonoBehaviour
         return t;
     }
 
-    internal static Quaternion TurnCoordinatorNeedleTarget(float v, float mod)//bottom needle
+    internal static Quaternion TurnCoordinatorNeedleTarget(float v)//bottom needle
     {
 
         v *= -.62f; //clamped at 31 in game sp double that?

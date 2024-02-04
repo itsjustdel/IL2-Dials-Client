@@ -92,7 +92,6 @@ public class RotateNeedle : MonoBehaviour
     public float trackLength = -15.64f;
     public float trackLengthForSwitch = 200.3f;
 
-    public float turnCoordinaterNeedleMod = 1f;
     public float turnCoordinaterBallMod = 1f;
     public float turnCoordinaterMultiplier = 20f;
     public float artificialHorizonRollMod = 1f;
@@ -227,7 +226,7 @@ public class RotateNeedle : MonoBehaviour
                                                                         airplaneData, turnAndBankPitchMultiplier, turnAndBankRollMultiplier, turnAndBankPlaneXMultiplier,
                                                                         turnAndBankBallMultiplier, airplaneData.planeAttributes.country);
 
-        turnCoordinatorNeedleTarget = DialTargets.TurnCoordinatorTarget(ref turnCoordinatorBallTarget, airplaneData, turnCoordinaterNeedleMod, turnCoordinaterBallMod, airplaneData.planeAttributes.country);
+        turnCoordinatorNeedleTarget = DialTargets.TurnCoordinatorTarget(ref turnCoordinatorBallTarget, airplaneData, turnCoordinaterBallMod, airplaneData.planeAttributes.country);
 
         vsiNeedleTarget = DialTargets.VSITarget(airplaneData, airplaneData.planeAttributes.country, this);
 

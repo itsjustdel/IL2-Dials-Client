@@ -846,7 +846,7 @@ public class DialTargets : MonoBehaviour
         return vsiNeedleTarget;
     }
 
-    public static Quaternion TurnCoordinatorTarget(ref Quaternion turnCoordinatorBallTarget, AirplaneData airplaneData, float turnCoordinatorNeedleMod, float turnCoordinatorBallMod, Country country)
+    public static Quaternion TurnCoordinatorTarget(ref Quaternion turnCoordinatorBallTarget, AirplaneData airplaneData, float turnCoordinatorBallMod, Country country)
     {
         Quaternion turnCoordinatorNeedleTarget = Quaternion.identity;
 
@@ -856,7 +856,7 @@ public class DialTargets : MonoBehaviour
             case (Country.RU):
                 //RU
                 //pendulum needle
-                turnCoordinatorNeedleTarget = RussianDials.TurnCoordinatorNeedleTarget(airplaneData.turnCoordinatorNeedle, turnCoordinatorNeedleMod);
+                turnCoordinatorNeedleTarget = RussianDials.TurnCoordinatorNeedleTarget(airplaneData.turnCoordinatorNeedle);
 
                 //ball indicator                
                 turnCoordinatorBallTarget = RussianDials.TurnCoordinatorBallTarget(airplaneData.turnCoordinatorBall);
@@ -883,7 +883,7 @@ public class DialTargets : MonoBehaviour
 
             case (Country.FR):
             case (Country.UK):
-                turnCoordinatorNeedleTarget = UKDials.TurnCoordinatorNeedleTarget(airplaneData.turnCoordinatorNeedle, turnCoordinatorNeedleMod);
+                turnCoordinatorNeedleTarget = UKDials.TurnCoordinatorNeedleTarget(airplaneData.turnCoordinatorNeedle);
 
                 //second needle        
                 turnCoordinatorBallTarget = UKDials.TurnCoordinatorBallTarget(airplaneData.turnCoordinatorBall, turnCoordinatorBallMod);
