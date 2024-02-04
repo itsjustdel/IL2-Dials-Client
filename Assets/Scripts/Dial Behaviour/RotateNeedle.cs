@@ -153,11 +153,11 @@ public class RotateNeedle : MonoBehaviour
         if (germanWaterOilSwitch)
         {
             //if pressed, make smaller
-            waterTempButton.transform.localScale = new Vector3(8.5f, 8.5f, 1f);
+            waterTempButton.transform.localScale = new Vector3(1.73791f * 0.95f, 1.73791f * 0.95f, 1f);
         }
         else
         {
-            waterTempButton.transform.localScale = new Vector3(9f, 9f, 1f);
+            waterTempButton.transform.localScale = new Vector3(1.73791f, 1.73791f, 1f);//value direct from ui
         }
     }
 

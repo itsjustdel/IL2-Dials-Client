@@ -327,14 +327,7 @@ public class UKDials : MonoBehaviour
 
     internal static Quaternion WaterTempTargetA(float v, float scalar, float scalar1, AnimationCurve curve, string name)
     {
-        if (name == "Spitfire Mk.Vb" || name == "Spitfire Mk.XIV") //proba;y some other calcs going on in the game
-        {
-            v *= -1.118f;
-        }
-        else if (name == "Spitfire Mk.IXe")
-        {
-            v *= -1.1667f;
-        }
+
         //and work out percentage to use 0-1 scale for curve
         float highest = 140;
         float percentage = (Mathf.Abs(v / highest));
@@ -354,17 +347,9 @@ public class UKDials : MonoBehaviour
 
     internal static Quaternion WaterTempTargetB(float v, float scalar0, float scalar1, string name)
     {
-        if (name == "Spitfire Mk.XIV") //only one with this dial?
-        {
-            v *= -0.86f;
-        }
-        else
-        {
-            v *= -0.789f;
-        }
-        v -= -71;
-        v = Mathf.Clamp(v, -39.33f, 39.33f);
-
+        v = Mathf.Clamp(v, -40, 140);
+        v *= -.79f;
+        v -= -71.3f;
 
         return Quaternion.Euler(0, 0, v);
     }

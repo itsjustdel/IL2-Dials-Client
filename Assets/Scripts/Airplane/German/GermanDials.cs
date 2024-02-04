@@ -446,6 +446,7 @@ public class GermanDials : MonoBehaviour
         return Quaternion.Euler(0, 0, v);
     }
 
+    //unused now
     internal static Quaternion OilTempFW190(float inRad, float outRad, float scalar0, float scalar1)
     {
         float diff = (outRad - inRad);
