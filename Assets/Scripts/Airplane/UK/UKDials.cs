@@ -122,24 +122,13 @@ public class UKDials : MonoBehaviour
         return t;
     }
 
-    internal static Quaternion TurnCoordinatorNeedleTarget(float v, float mod)//bottom needle
+
+    internal static Quaternion TurnCoordinatorNeedleTarget(float v)
     {
-
-        v *= -.62f; //clamped at 31 in game sp double that?
-        Quaternion target = Quaternion.identity;
-        if (Mathf.Abs(v) < 10f)
-            target = Quaternion.Euler(0, 0, v * 2f + 180);
-        //geared
-        else if (Mathf.Abs(v) >= 10f)
-            //take in to account if v is positive or negative
-            if (v > 0)
-                target = Quaternion.Euler(0, 0, 10 + ((v)) + 180);
-            else
-                target = Quaternion.Euler(0, 0, -10 + ((v)) + 180);
-
-
-        float z = Mathf.Clamp(target.eulerAngles.z, 140, 220); //could need more work, flicks to each side at some point over 200
-        target = Quaternion.Euler(0, 0, z);
+        // ~.63 is max value in game data (on russian needle) so pi*2 perhaps - still confused with what's going on here
+        // we get the the value from 0 to 1. 0.5 is centre, range of degrees is 60 (?)
+        float z = (v - .5f) * 76f; //??// Mathf.PI * 60f; - differes fro othehr turn needles, uk has quite a diffferent dial        
+        Quaternion target = Quaternion.Euler(0, 0, z + 180);
 
         return target;
     }
