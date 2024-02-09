@@ -111,17 +111,22 @@ public class GermanDials : MonoBehaviour
     }
 
     //turn co
-
     public static Quaternion TurnCoordinatorNeedleTarget(float v, string planeType)
     {
-        if (planeType == "Hs 129 B-2")
-            v *= 0.333f;
 
-        float z = Mathf.Clamp(v, -30, 30);
-        Quaternion target = Quaternion.Euler(0, 0, z);
+        // ~.63 is max value in game data (on russian needle) so pi*2 perhaps - still confused with what's going on here
+        // we get the the value from 0 to 1. 0.5 is centre, range of degrees is 60 (?)
+        float z = (v - .5f) * Mathf.PI * 60f;
+
+        if (planeType == "Hs 129 B-2")
+            z *= 0.333f;
+
+        z = Mathf.Clamp(z, -30, 30);
+        Quaternion target = Quaternion.Euler(0, 0, -z);
 
         return target;
     }
+
 
     public static Quaternion TurnCoordinatorBallTarget(float ball, float mod)
     {

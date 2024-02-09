@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class USDials : MonoBehaviour
@@ -18,7 +15,7 @@ public class USDials : MonoBehaviour
         if (airspeed < 50)
         {
             //set to quaternion
-            return Quaternion.Euler(0, 0, airspeed*-0.3f);
+            return Quaternion.Euler(0, 0, airspeed * -0.3f);
         }
         else
         {
@@ -113,8 +110,8 @@ public class USDials : MonoBehaviour
 
         //convert to feet
         altitude *= 3.2808f;
-       // Debug.Log("feet = " + altitude);
-        Quaternion altitudeSmallTarget = Quaternion.Euler(0, 0, -(altitude *.018f));
+        // Debug.Log("feet = " + altitude);
+        Quaternion altitudeSmallTarget = Quaternion.Euler(0, 0, -(altitude * .018f));
 
         return altitudeSmallTarget;
 
@@ -168,16 +165,16 @@ public class USDials : MonoBehaviour
         //catch bad value
         if (!float.IsNaN(z) && !float.IsNegativeInfinity(z) && !float.IsPositiveInfinity(z))
         {
-            
+
             mmhgTarget = Quaternion.Euler(0, 0, z);
         }
 
         return mmhgTarget;
 
-        
+
     }
 
-    internal static Vector3 HeadingIndicatorPosition(float heading,float trackLength)
+    internal static Vector3 HeadingIndicatorPosition(float heading, float trackLength)
     {
 
         //check for Nan
@@ -192,7 +189,7 @@ public class USDials : MonoBehaviour
         Vector3 pos = Vector3.right * ratio;
         pos += Vector3.right * trackLength;
 
-       
+
 
         return pos;
     }
@@ -249,35 +246,35 @@ public class USDials : MonoBehaviour
         return target;
     }
 
-    internal static Quaternion VerticalSpeedTarget(float verticalSpeed,AnimationCurve curve)
+    internal static Quaternion VerticalSpeedTarget(float verticalSpeed, AnimationCurve curve)
     {
-       
+
         //using animation curve to define angle to spin ( component on prefab)
         //animation curve needs positive value to work so save if negative
-        bool negative = (verticalSpeed>= 0) ? false : true;
+        bool negative = (verticalSpeed >= 0) ? false : true;
 
         //metres to feet
         //verticalSpeed *= 0.3048f;
         //verticalSpeed *= 3.048f;///test
 
         //and work out percentage to use 0-1 scale for curve
-        float percentage = (Mathf.Abs(verticalSpeed/30f)); 
+        float percentage = (Mathf.Abs(verticalSpeed / 30f));
         //multiply by half a dial of spin (180 degrees)
-        float angleToSpin = curve.Evaluate(percentage) ;
-       // Debug.Log(angleToSpin);
+        float angleToSpin = curve.Evaluate(percentage);
+        // Debug.Log(angleToSpin);
         angleToSpin *= 180;
-        
+
         //put negative back?
 
-        
+
         if (negative)
             angleToSpin *= -1;
 
-        
+
 
         //offset by 90 degrees - vsi starts at 9 0'clock on the dial
-        verticalSpeed = 90f -  angleToSpin;
-        
+        verticalSpeed = 90f - angleToSpin;
+
         //set to quaternion
         Quaternion target = Quaternion.Euler(0, 0, verticalSpeed);
 
@@ -286,14 +283,11 @@ public class USDials : MonoBehaviour
 
     internal static Quaternion TurnCoordinatorNeedleTarget(float v, bool flip)
     {
-        if (flip)
-            v = -v;
-
-        if (float.IsNaN(v) || float.IsPositiveInfinity(v) || float.IsNegativeInfinity(v))
-            return Quaternion.identity;
-
-        v = Mathf.Clamp(v, -30f, 30f);        
-        Quaternion target = Quaternion.Euler(0, 0, -v);
+        // ~.63 is max value in game data (on russian needle) so pi*2 perhaps - still confused with what's going on here
+        // we get the the value from 0 to 1. 0.5 is centre, range of degrees is 60 (?)
+        float z = (v - .5f) * Mathf.PI * 60f;
+        z = Mathf.Clamp(z, -30, 30);
+        Quaternion target = Quaternion.Euler(0, 0, -z);
 
         return target;
     }
@@ -397,7 +391,7 @@ public class USDials : MonoBehaviour
         return target;
     }
 
-    
+
     internal static Quaternion ManifoldTargetA(float manifold, float scalar)
     {
         //US *28.95902519867009 inches of Hg
@@ -413,13 +407,13 @@ public class USDials : MonoBehaviour
     }
 
     internal static Quaternion ManifoldTargetC(float manifold, float scalar)
-    {       
+    {
         //US *28.95902519867009 inches of Hg
         //manifold *= 2.895902519867009f;
-        
+
         float m = 0;
         if (manifold > 10)
-            m = (manifold - 10) * -5.25f;        
+            m = (manifold - 10) * -5.25f;
 
         m += 105;
 
@@ -435,7 +429,7 @@ public class USDials : MonoBehaviour
         //P 51 
         float m = 0;
         if (engineMod == 0)
-        {         
+        {
             if (manifold > 10)
                 m = (manifold - 10) * -5.333333333f;
 
@@ -456,19 +450,19 @@ public class USDials : MonoBehaviour
     }
 
     internal static Quaternion WaterTempTargetA(float v, float scalar0, float scalar1)
-    {        
+    {
         v *= -.91f;
         v -= -91.2f;
         v = Mathf.Clamp(v, -50f, 50f);
 
-        return Quaternion.Euler(0, 0, v);        
+        return Quaternion.Euler(0, 0, v);
     }
 
     internal static Quaternion WaterTempTargetB(float v, float scalar0, float scalar1, bool v2)
     {
         v = Mathf.Clamp(v, -80f, 160f);
         if (!v2)
-        {            
+        {
             v *= -0.56f;
             v -= 247.5f;
         }
@@ -485,7 +479,7 @@ public class USDials : MonoBehaviour
         v = Mathf.Clamp(v, -80f, 160f);
         v *= -0.5f;
         v -= -19.5f;
-        
+
         return Quaternion.Euler(0, 0, v);
     }
 
@@ -500,7 +494,7 @@ public class USDials : MonoBehaviour
 
     internal static Quaternion OilTempTargetB(float v, float scalar0, float scalar1, bool v2)
     {
-        v = Mathf.Clamp(v, 20f, 120f);        
+        v = Mathf.Clamp(v, 20f, 120f);
         if (!v2)
         {
             v *= .69f;
@@ -511,7 +505,7 @@ public class USDials : MonoBehaviour
             v *= -.69f;
             v += 102.5f;
         }
-        
+
         return Quaternion.Euler(0, 0, v);
     }
 
@@ -561,7 +555,7 @@ public class USDials : MonoBehaviour
     {
         v = Mathf.Clamp(v, -70f, 150f);
         v *= -0.55f;
-        v -= -21.18f;       
+        v -= -21.18f;
 
         return Quaternion.Euler(0, 0, v);
     }
