@@ -12,7 +12,12 @@ public class PlayerPrefsHelper : MonoBehaviour
 
         //TOD add if editor string op
 
-#if UNITY_EDITOR && !UNITY_ANDROID
+#if UNITY_WEBGL
+        //use local storage?
+        return null;
+
+
+#elif UNITY_EDITOR && !UNITY_ANDROID
         string companyName = "DellyWellySoftware"; //how to get dynamically?
         string productName = "IL-2 Dials";
         Microsoft.Win32.RegistryKey registryKey;

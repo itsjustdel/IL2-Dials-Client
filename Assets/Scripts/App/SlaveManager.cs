@@ -26,7 +26,7 @@ public class SlaveManager : MonoBehaviour
     void Start()
     {
 
-#if UNITY_ANDROID
+#if UNITY_ANDROID || UNITY_WEBGL
         return;
 #endif
         string[] args = Environment.GetCommandLineArgs();

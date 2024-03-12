@@ -9,6 +9,9 @@ public class UDPClient : MonoBehaviour
 {
     //class which reads memory and sets values	
 
+
+
+
     public BuildControl buildControl;
     public AirplaneData airplaneData;
     public MenuHandler menuHandler;

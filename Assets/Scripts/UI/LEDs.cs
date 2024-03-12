@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,7 +5,8 @@ using UnityEngine.UI;
 public class LEDs : MonoBehaviour
 {
     public MenuHandler menuHandler;
-    public UDPClient udpClient;
+    //public UDPClient udpClient;
+    public Connection connection;
     public GameObject greenOn;
     public GameObject greenOff;
     public GameObject redOn;
@@ -30,7 +30,7 @@ public class LEDs : MonoBehaviour
             fadeIns[i].GetComponent<Image>().color = color;
         }
     }
-        
+
     void Update()
     {
         //intro screen, turn off all LEDS
@@ -58,9 +58,9 @@ public class LEDs : MonoBehaviour
             startFadeIn = false;
         }
 
-        if(fadeInProgress)       
+        if (fadeInProgress)
         {
-            
+
 
             //fade button and leds in            
             for (int i = 0; i < fadeIns.Count; i++)
@@ -69,7 +69,7 @@ public class LEDs : MonoBehaviour
                 color.a += fadeInSpeed * Time.deltaTime;
                 fadeIns[i].GetComponent<Image>().color = color;
 
-                
+
                 //turn flag off
                 if (color.a > 1)
                 {
@@ -80,7 +80,7 @@ public class LEDs : MonoBehaviour
         }
 
         //show lights
-        if (udpClient.connected)
+        if (connection.connected)
         {
             greenOn.SetActive(true);
             greenOff.SetActive(false);
