@@ -21,6 +21,7 @@ public class MenuHandler : MonoBehaviour
     public GameObject menuPanel;
     public GameObject displayPanel;
     public GameObject menuButton;
+    public GameObject fullSreenButton;
     public GameObject connectionPanel;
     public GameObject layoutPanel;
     public GameObject layoutButton;
@@ -247,6 +248,10 @@ public class MenuHandler : MonoBehaviour
             Color color = menuButton.GetComponent<Image>().color;
             color.a = 1f;
             menuButton.GetComponent<Image>().color = color;
+
+            color = fullSreenButton.GetComponent<Image>().color;
+            color.a = 1f;
+            fullSreenButton.GetComponent<Image>().color = color;
         }
 
         if (idleTimer > 10f)
@@ -254,6 +259,10 @@ public class MenuHandler : MonoBehaviour
             Color color = menuButton.GetComponent<Image>().color;
             color.a -= 1f * Time.deltaTime;
             menuButton.GetComponent<Image>().color = color;
+
+            color = fullSreenButton.GetComponent<Image>().color;
+            color.a -= 1f * Time.deltaTime;
+            fullSreenButton.GetComponent<Image>().color = color;
         }
     }
 
