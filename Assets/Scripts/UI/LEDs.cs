@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +10,7 @@ public class LEDs : MonoBehaviour
     public GameObject greenOff;
     public GameObject redOn;
     public GameObject redOff;
+    public GameObject fullScreen;
     public List<GameObject> fadeIns;
     public float fadeInSpeed = 1f;
 
@@ -20,7 +20,7 @@ public class LEDs : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        fadeIns = new List<GameObject>() { greenOn, greenOff, redOn, redOff, menuHandler.menuButton };
+        fadeIns = new List<GameObject>() { greenOn, greenOff, redOn, redOff, menuHandler.menuButton, fullScreen };
 
         //fade off
         for (int i = 0; i < fadeIns.Count; i++)
@@ -30,7 +30,7 @@ public class LEDs : MonoBehaviour
             fadeIns[i].GetComponent<Image>().color = color;
         }
     }
-        
+
     void Update()
     {
         //intro screen, turn off all LEDS
@@ -58,9 +58,9 @@ public class LEDs : MonoBehaviour
             startFadeIn = false;
         }
 
-        if(fadeInProgress)       
+        if (fadeInProgress)
         {
-            
+
 
             //fade button and leds in            
             for (int i = 0; i < fadeIns.Count; i++)
@@ -69,7 +69,7 @@ public class LEDs : MonoBehaviour
                 color.a += fadeInSpeed * Time.deltaTime;
                 fadeIns[i].GetComponent<Image>().color = color;
 
-                
+
                 //turn flag off
                 if (color.a > 1)
                 {

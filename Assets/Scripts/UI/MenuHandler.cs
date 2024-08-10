@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -343,6 +342,12 @@ public class MenuHandler : MonoBehaviour
         }
     }
 
+    public void FullScreenClicked()
+    {
+        // Toggle fullscreen
+        Screen.fullScreen = !Screen.fullScreen;
+    }
+
     public void IPAddressChanged()
     {
         string ipAddressText = ipTextField.GetComponent<Text>().text;
@@ -467,7 +472,7 @@ public class MenuHandler : MonoBehaviour
         //show dial controls for each dial
         TurnHandlersOn();
         TurnEyeTrayOn();
-        ShowOpenEyeButton();   
+        ShowOpenEyeButton();
 
         DeActivateCompassTouch();
     }
@@ -705,7 +710,7 @@ public class MenuHandler : MonoBehaviour
 
     public void TurnEyeTrayOn()
     {
-        eyeTray.SetActive(true);        
+        eyeTray.SetActive(true);
     }
     public void TurnEyeTrayOff()
     {
