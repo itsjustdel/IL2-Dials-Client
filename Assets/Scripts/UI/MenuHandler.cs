@@ -67,6 +67,8 @@ public class MenuHandler : MonoBehaviour
     public float trayYTarget = 100f;
     public float currentTrayY = 600;
     public bool tigerMothSelected;
+    public List<GameObject> androidHideObjects = new List<GameObject>();
+    public List<GameObject> androidAdjustObjects = new List<GameObject>();
 
     public void Start()
     {
@@ -135,6 +137,12 @@ public class MenuHandler : MonoBehaviour
         titleColor = title.GetComponent<Image>().color;
         titleColor.a = 0;
         title.GetComponent<Image>().color = titleColor;
+
+#if UNITY_ANDROID
+        HideForAndroid();
+        AdjustForAndroid();
+#endif
+
     }
 
     public void Update()
@@ -187,6 +195,24 @@ public class MenuHandler : MonoBehaviour
         IdleTimer();
     }
 
+    void HideForAndroid()
+    {
+        foreach (var item in androidHideObjects)
+        {
+            item.SetActive(false);
+        }
+    }
+
+    void AdjustForAndroid()
+    {
+        foreach (var item in androidAdjustObjects)
+        {
+            Vector3 p = item.GetComponent<RectTransform>().transform.localPosition;
+            p.y = 0;
+            item.GetComponent<RectTransform>().transform.localPosition = p;
+        }
+
+    }
 
     void AnimatePulldown()
     {
