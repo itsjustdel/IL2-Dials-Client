@@ -1004,6 +1004,32 @@ public class PlaneDataFromName : AirplaneData
                 //planeAttributes.oilTempInType = DialVariant.A;
                 break;
 
+            case "I.A.R. 80-B": // same as above? same plane name check A or B
+                planeAttributes.country = Country.GER;
+                planeAttributes.altimeter = true;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.horizonType = DialVariant.A;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.vsiType = DialVariant.A;
+                planeAttributes.rpmType = DialVariant.A;
+                //planeAttributes.manifoldType = DialVariant.A;  //need limits on server
+                //planeAttributes.waterTempType = DialVariant.A;
+                //planeAttributes.oilTempInType = DialVariant.A;
+                break;
+
+            //RSE.RSE::CCockpitInstruments::simulation+10BB - 48 8D 15 0E471600     - lea rdx,[RSE.RSE::CAeroplane_Ta_152_H1::`vftable'+438] { ("Ta 152 H1") }            
+            case "Ta 152 H1": // copy of Dora
+                planeAttributes.country = Country.GER;
+                planeAttributes.altimeter = true;
+                planeAttributes.turnAndBank = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.vsiLarge = true;
+                planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.D;
+                planeAttributes.waterTempType = DialVariant.C;
+                planeAttributes.oilTempOutType = DialVariant.C;
+                break;
 
             //Flying Circus Vol 1
             //RSE.RSE::CCockpitInstruments::simulation+3DB5 - 48 8D 15 C4481F00     - lea rdx,[RSE.RSE::CAeroplane_SPAD_XIII_C1::`vftable'+1C8] { ("SPAD XIII.C1") }
@@ -1124,6 +1150,7 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.manifoldType = DialVariant.None;
                 planeAttributes.artificialHorizon = true;
                 break;
+
 
             //RSE.RSE::CCockpitInstruments::simulation+3E85 - 48 8D 15 44751E00     - lea rdx,[RSE.RSE::CAeroplane_Pfalz_D_XII::`vftable'+1C8] { ("Pfalz D.XII") }
             case "Pfalz D.XII":
@@ -1309,6 +1336,17 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.rpmType = DialVariant.A;
                 planeAttributes.manifoldType = DialVariant.None;
                 planeAttributes.waterTempType = DialVariant.A;
+                planeAttributes.artificialHorizon = true;
+                break;
+
+            //RSE.RSE::CCockpitInstruments::simulation+410C - 48 8D 15 5DEA2300     - lea rdx,[RSE.RSE::CAeroplane_Schuckert_D_IV::`vftable'+268] { ("Schuckert D.IV") }
+            case "Schuckert D.IV":
+                planeAttributes.country = Country.GER;
+                planeAttributes.speedometerType = DialVariant.A;
+                planeAttributes.altimeter = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.None;
                 planeAttributes.artificialHorizon = true;
                 break;
 
