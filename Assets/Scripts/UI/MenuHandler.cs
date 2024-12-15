@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,6 +21,7 @@ public class MenuHandler : MonoBehaviour
     public GameObject menuPanel;
     public GameObject displayPanel;
     public GameObject menuButton;
+    public GameObject fullSreenButton;
     public GameObject connectionPanel;
     public GameObject layoutPanel;
     public GameObject layoutButton;
@@ -68,6 +68,8 @@ public class MenuHandler : MonoBehaviour
     public float trayYTarget = 100f;
     public float currentTrayY = 600;
     public bool tigerMothSelected;
+    public List<GameObject> androidHideObjects = new List<GameObject>();
+    public List<GameObject> androidAdjustObjects = new List<GameObject>();
 
     public void Start()
     {
@@ -136,6 +138,12 @@ public class MenuHandler : MonoBehaviour
         titleColor = title.GetComponent<Image>().color;
         titleColor.a = 0;
         title.GetComponent<Image>().color = titleColor;
+
+#if UNITY_ANDROID
+        HideForAndroid();
+        AdjustForAndroid();
+#endif
+
     }
 
     public void Update()
@@ -188,6 +196,24 @@ public class MenuHandler : MonoBehaviour
         IdleTimer();
     }
 
+    void HideForAndroid()
+    {
+        foreach (var item in androidHideObjects)
+        {
+            item.SetActive(false);
+        }
+    }
+
+    void AdjustForAndroid()
+    {
+        foreach (var item in androidAdjustObjects)
+        {
+            Vector3 p = item.GetComponent<RectTransform>().transform.localPosition;
+            p.y = 0;
+            item.GetComponent<RectTransform>().transform.localPosition = p;
+        }
+
+    }
 
     void AnimatePulldown()
     {
@@ -222,6 +248,10 @@ public class MenuHandler : MonoBehaviour
             Color color = menuButton.GetComponent<Image>().color;
             color.a = 1f;
             menuButton.GetComponent<Image>().color = color;
+
+            color = fullSreenButton.GetComponent<Image>().color;
+            color.a = 1f;
+            fullSreenButton.GetComponent<Image>().color = color;
         }
 
         if (idleTimer > 10f)
@@ -229,6 +259,10 @@ public class MenuHandler : MonoBehaviour
             Color color = menuButton.GetComponent<Image>().color;
             color.a -= 1f * Time.deltaTime;
             menuButton.GetComponent<Image>().color = color;
+
+            color = fullSreenButton.GetComponent<Image>().color;
+            color.a -= 1f * Time.deltaTime;
+            fullSreenButton.GetComponent<Image>().color = color;
         }
     }
 
@@ -341,6 +375,12 @@ public class MenuHandler : MonoBehaviour
             menuPanel.SetActive(true);
             blurPanel.SetActive(true);
         }
+    }
+
+    public void FullScreenClicked()
+    {
+        // Toggle fullscreen
+        Screen.fullScreen = !Screen.fullScreen;
     }
 
     public void IPAddressChanged()
@@ -467,7 +507,7 @@ public class MenuHandler : MonoBehaviour
         //show dial controls for each dial
         TurnHandlersOn();
         TurnEyeTrayOn();
-        ShowOpenEyeButton();   
+        ShowOpenEyeButton();
 
         DeActivateCompassTouch();
     }
@@ -705,7 +745,7 @@ public class MenuHandler : MonoBehaviour
 
     public void TurnEyeTrayOn()
     {
-        eyeTray.SetActive(true);        
+        eyeTray.SetActive(true);
     }
     public void TurnEyeTrayOff()
     {

@@ -29,6 +29,7 @@ public static class PlaneLists
         "Hurricane Mk.II",
         "Mosquito F.B. Mk.VI ser.2",
         "Spitfire Mk.Vb",
+        "Spitfire Mk.IXc",
         "Spitfire Mk.IXe",
         "Spitfire Mk.XIV",
         "Spitfire Mk.XIVe",
@@ -92,12 +93,14 @@ public static class PlaneLists
         "He 111 H-16",
         "Hs 129 B-2",
         "I.A.R. 80-A",
+        "I.A.R. 80-B",
         "Ju-52/3m g4e",
         "Ju-87 D3",
         "Ju-88 A4",
         "Ju-88 C6",
         "Me 262 A",
         "Me 410 A-1",
+        "Ta 152 H1",
 
         "Albatros D.Va",
         "DFW C.V",
@@ -110,7 +113,8 @@ public static class PlaneLists
         "Halberstadt CL.II D.IIIau",
         "Nieuport 28.C1",
         "Pfalz D.IIIa",
-        "Pfalz D.XII"
+        "Pfalz D.XII",
+        "Schuckert D.IV"
     };
 
     public static List<string> ItaPlanes = new List<string>()
