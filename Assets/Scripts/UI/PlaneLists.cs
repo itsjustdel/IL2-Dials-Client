@@ -11,6 +11,7 @@ public static class PlaneLists
         "Il-2 mod.1943",
         "La-5 FN ser.2",
         "La-5 ser.8",
+        "La-5 F ser.38",
         "LaGG-3 ser.29",
         "Li-2",
         "MiG-3 ser.24",
