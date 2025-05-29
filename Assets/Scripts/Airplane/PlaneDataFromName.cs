@@ -189,6 +189,20 @@ public class PlaneDataFromName : AirplaneData
                 planeAttributes.cylinderHeadType = DialVariant.A;
                 break;
 
+            //RSE.RSE::CCockpitInstruments::simulation + 1385 - 48 8D 15 543A1100 - lea rdx,[RSE.RSE::CAeroplane_La_5_F_ser_38::`vftable'+2C0] { ("La-5 F ser.38") }
+            case "La-5 F ser.38":
+                planeAttributes.country = Country.RU;
+                planeAttributes.altimeter = true;
+                planeAttributes.headingIndicator = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.vsiLarge = true;
+                planeAttributes.rpmType = DialVariant.A;
+                planeAttributes.manifoldType = DialVariant.A;
+                planeAttributes.waterTempType = DialVariant.None;
+                planeAttributes.oilTempPressureType = DialVariant.A;
+                planeAttributes.cylinderHeadType = DialVariant.A;
+                break;
+
             //RSE.RSE::CCockpitInstruments::simulation+482 - 48 8D 15 07AA1400     - lea rdx,[RSE.RSE::CAeroplane_FW_190_A3::`vftable'+2C0] { ("FW 190 A3") }
             case "FW 190 A3":
                 planeAttributes.country = Country.GER;
@@ -555,6 +569,20 @@ public class PlaneDataFromName : AirplaneData
 
             //RSE.RSE::CCockpitInstruments::simulation+DA9 - 48 8D 15 58B90E00     - lea rdx,[RSE.RSE::CAeroplane_Spitfire_Mk_IXe::`vftable'+2E8] { ("Spitfire Mk.IXe") }
             case "Spitfire Mk.IXe":
+                planeAttributes.country = Country.UK;
+                planeAttributes.altimeter = true;
+                planeAttributes.artificialHorizon = true;
+                planeAttributes.headingIndicator = true;
+                planeAttributes.vsiLarge = true;
+                planeAttributes.turnCoordinator = true;
+                planeAttributes.repeaterCompass = true;
+                planeAttributes.rpmType = DialVariant.B;
+                planeAttributes.manifoldType = DialVariant.B;
+                planeAttributes.waterTempType = DialVariant.A;
+                planeAttributes.oilTempOutType = DialVariant.A;
+                break;
+
+            case "Spitfire Mk.IXc":
                 planeAttributes.country = Country.UK;
                 planeAttributes.altimeter = true;
                 planeAttributes.artificialHorizon = true;
