@@ -12,6 +12,9 @@ public static class ConfigLoader
 {
     private static PlaneConfigRoot _cachedConfig;
     private static bool _isLoaded = false;
+    
+    // TODO: Replace with production config URL before deployment
+    // This is a placeholder URL - should point to a stable GitHub release or CDN
     private static string _configUrl = "https://github.com/user-attachments/files/25318490/plane-config.json";
     
     // Storage paths
