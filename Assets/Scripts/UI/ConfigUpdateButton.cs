@@ -1,0 +1,171 @@
+using UnityEngine;
+using UnityEngine.UI;
+using System.IO;
+
+/// <summary>
+/// Simple UI component for config update functionality
+/// Attach this to a GameObject with a Button to enable config updates
+/// </summary>
+public class ConfigUpdateButton : MonoBehaviour
+{
+    [Header("UI References (Optional - will search if not set)")]
+    public Button updateButton;
+    public Text statusText;
+    
+    [Header("Config Update Manager")]
+    public ConfigUpdateManager configUpdateManager;
+    
+    [Header("Settings")]
+    public bool showDebugInfo = true;
+    
+    private bool _isInitialized = false;
+
+    private void Start()
+    {
+        InitializeComponents();
+    }
+
+    private void InitializeComponents()
+    {
+        if (_isInitialized) return;
+
+        // Find update button if not assigned
+        if (updateButton == null)
+        {
+            updateButton = GetComponent<Button>();
+        }
+
+        // Find or create ConfigUpdateManager
+        if (configUpdateManager == null)
+        {
+            // Try to find existing manager
+            configUpdateManager = FindObjectOfType<ConfigUpdateManager>();
+            
+            // Create one if it doesn't exist
+            if (configUpdateManager == null)
+            {
+                GameObject managerObj = new GameObject("ConfigUpdateManager");
+                configUpdateManager = managerObj.AddComponent<ConfigUpdateManager>();
+                DontDestroyOnLoad(managerObj);
+                Debug.Log("[ConfigUpdateButton] Created ConfigUpdateManager");
+            }
+        }
+
+        // Set up button click handler
+        if (updateButton != null)
+        {
+            updateButton.onClick.AddListener(OnUpdateButtonClicked);
+            Debug.Log("[ConfigUpdateButton] Initialized update button");
+        }
+        else
+        {
+            Debug.LogWarning("[ConfigUpdateButton] No button found! Attach this component to a Button GameObject.");
+        }
+
+        _isInitialized = true;
+    }
+
+    private void OnUpdateButtonClicked()
+    {
+        if (configUpdateManager == null || configUpdateManager.IsUpdating())
+        {
+            UpdateStatus("Update already in progress...");
+            return;
+        }
+
+        UpdateStatus("Downloading config...");
+        
+        // Disable button during update
+        if (updateButton != null)
+        {
+            updateButton.interactable = false;
+        }
+
+        // Start update
+        configUpdateManager.UpdateConfig(OnUpdateComplete);
+    }
+
+    private void OnUpdateComplete(bool success, string message)
+    {
+        // Re-enable button
+        if (updateButton != null)
+        {
+            updateButton.interactable = true;
+        }
+
+        // Update status
+        UpdateStatus(success ? $"✓ {message}" : $"✗ {message}");
+
+        // Log result
+        if (success)
+        {
+            Debug.Log($"[ConfigUpdateButton] {message}");
+        }
+        else
+        {
+            Debug.LogWarning($"[ConfigUpdateButton] {message}");
+        }
+    }
+
+    private void UpdateStatus(string message)
+    {
+        if (statusText != null)
+        {
+            statusText.text = message;
+        }
+        
+        if (showDebugInfo)
+        {
+            Debug.Log($"[ConfigUpdateButton] {message}");
+        }
+    }
+
+    /// <summary>
+    /// Public method that can be called from Unity button events
+    /// </summary>
+    public void UpdateConfigClick()
+    {
+        if (!_isInitialized)
+        {
+            InitializeComponents();
+        }
+        OnUpdateButtonClicked();
+    }
+
+    /// <summary>
+    /// Display current config info
+    /// </summary>
+    public void ShowConfigInfo()
+    {
+        if (configUpdateManager != null)
+        {
+            string info = configUpdateManager.GetConfigInfo();
+            UpdateStatus(info);
+        }
+        else
+        {
+            UpdateStatus("Config manager not initialized");
+        }
+    }
+
+    // Editor helper - show status in inspector
+    #if UNITY_EDITOR
+    private void OnValidate()
+    {
+        // This runs in the editor when values change
+        if (Application.isPlaying && showDebugInfo)
+        {
+            string configPath = ConfigLoader.GetConfigPath();
+            if (File.Exists(configPath))
+            {
+                FileInfo fileInfo = new FileInfo(configPath);
+                Debug.Log($"[ConfigUpdateButton] Config exists: {fileInfo.Length} bytes, modified {fileInfo.LastWriteTime}");
+            }
+            else
+            {
+                Debug.Log($"[ConfigUpdateButton] No downloaded config at: {configPath}");
+            }
+        }
+    }
+    #endif
+}
