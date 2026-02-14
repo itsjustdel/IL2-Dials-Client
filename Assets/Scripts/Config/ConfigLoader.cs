@@ -13,14 +13,11 @@ public static class ConfigLoader
     private static PlaneConfigRoot _cachedConfig;
     private static bool _isLoaded = false;
     
-    // ⚠️ IMPORTANT: This URL must be updated before production deployment! ⚠️
-    // GitHub user-attachments URLs are temporary and NOT suitable for production.
-    // Replace with a stable hosting location such as:
-    // - GitHub Release asset URL (permanent)
-    // - CDN endpoint
-    // - Dedicated server endpoint
-    // Example: "https://github.com/yourusername/yourrepo/releases/latest/download/plane-config.json"
-    private static string _configUrl = "https://github.com/user-attachments/files/25318490/plane-config.json";
+    // Production config URL - GitHub Release asset
+    // Points to latest release so updates are automatic when new release is published
+    // Alternative: Use specific tag instead of "latest" for version control
+    // Specific tag example: "https://github.com/itsjustdel/IL2-Dials-Server/releases/download/test-config-file/plane-config.json"
+    private static string _configUrl = "https://github.com/itsjustdel/IL2-Dials-Server/releases/latest/download/plane-config.json";
     
     // Validate config URL on first use
     private static bool _urlValidated = false;
