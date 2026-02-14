@@ -39,21 +39,29 @@ public class ConfigUpdateButton : MonoBehaviour
         if (configUpdateManager == null)
         {
             // Try to find existing manager (including in DontDestroyOnLoad scene)
-            configUpdateManager = FindObjectOfType<ConfigUpdateManager>();
-            
-            // Create one if it doesn't exist
-            if (configUpdateManager == null)
+            // This prevents creating duplicates on scene reloads
+            var existingManagers = FindObjectsOfType<ConfigUpdateManager>();
+            if (existingManagers != null && existingManagers.Length > 0)
             {
-                GameObject managerObj = new GameObject("ConfigUpdateManager");
-                configUpdateManager = managerObj.AddComponent<ConfigUpdateManager>();
-                // Note: Making this persistent. If you reload scenes frequently,
-                // consider manually adding ConfigUpdateManager to a persistent manager object instead
-                DontDestroyOnLoad(managerObj);
-                Debug.Log("[ConfigUpdateButton] Created persistent ConfigUpdateManager");
+                configUpdateManager = existingManagers[0];
+                Debug.Log("[ConfigUpdateButton] Found existing ConfigUpdateManager");
+                
+                // Clean up any duplicates
+                for (int i = 1; i < existingManagers.Length; i++)
+                {
+                    Debug.LogWarning($"[ConfigUpdateButton] Destroying duplicate ConfigUpdateManager #{i}");
+                    Destroy(existingManagers[i].gameObject);
+                }
             }
             else
             {
-                Debug.Log("[ConfigUpdateButton] Found existing ConfigUpdateManager");
+                // Create new manager if none exists
+                GameObject managerObj = new GameObject("ConfigUpdateManager");
+                configUpdateManager = managerObj.AddComponent<ConfigUpdateManager>();
+                // Note: Making this persistent. Consider manually adding ConfigUpdateManager
+                // to a persistent manager object to avoid potential duplicates on scene reloads
+                DontDestroyOnLoad(managerObj);
+                Debug.Log("[ConfigUpdateButton] Created persistent ConfigUpdateManager");
             }
         }
 

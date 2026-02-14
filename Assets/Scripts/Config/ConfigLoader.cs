@@ -22,6 +22,9 @@ public static class ConfigLoader
     // Example: "https://github.com/yourusername/yourrepo/releases/latest/download/plane-config.json"
     private static string _configUrl = "https://github.com/user-attachments/files/25318490/plane-config.json";
     
+    // Validate config URL on first use
+    private static bool _urlValidated = false;
+    
     // Storage paths
     private static string PersistentConfigPath
     {
@@ -220,7 +223,8 @@ public static class ConfigLoader
                     checkPos--;
                 }
                 
-                // If even number of backslashes (including 0), the quote is not escaped
+                // If even number of backslashes (including 0), they escape each other (e.g., \\\\ becomes \\),
+                // leaving the quote unescaped, so it's a string terminator
                 if (backslashCount % 2 == 0)
                 {
                     inString = !inString;
@@ -311,9 +315,19 @@ public static class ConfigLoader
 
     /// <summary>
     /// Get config URL for downloading
+    /// Logs warning if still using placeholder URL
     /// </summary>
     public static string GetConfigUrl()
     {
+        // Validate URL on first access
+        if (!_urlValidated)
+        {
+            _urlValidated = true;
+            if (_configUrl.Contains("user-attachments"))
+            {
+                Debug.LogError("[ConfigLoader] ⚠️ WARNING: Using temporary GitHub user-attachments URL! This MUST be changed before production deployment. URL: " + _configUrl);
+            }
+        }
         return _configUrl;
     }
 
@@ -323,5 +337,6 @@ public static class ConfigLoader
     public static void SetConfigUrl(string url)
     {
         _configUrl = url;
+        _urlValidated = false; // Reset validation for new URL
     }
 }
