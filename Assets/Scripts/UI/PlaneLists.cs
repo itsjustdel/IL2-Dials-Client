@@ -2,7 +2,17 @@ using System.Collections.Generic;
 
 public static class PlaneLists
 {
-    public static List<string> RuPlanes = new List<string>()
+    // Cached lists - will be populated from config on first access
+    private static bool _initialized = false;
+    private static List<string> _ruPlanes;
+    private static List<string> _ukPlanes;
+    private static List<string> _frPlanes;
+    private static List<string> _usPlanes;
+    private static List<string> _gerPlanes;
+    private static List<string> _itaPlanes;
+
+    // Fallback hardcoded lists (used if config is not available)
+    private static readonly List<string> _ruPlanesFallback = new List<string>()
     {
         //note: sorting is working, no need to order here
         "I-16 type 24",
@@ -25,7 +35,7 @@ public static class PlaneLists
         "Yak-9T ser.1"
     };
 
-    public static List<string> UkPlanes = new List<string>()
+    private static readonly List<string> _ukPlanesFallback = new List<string>()
     {
         "Hurricane Mk.II",
         "Mosquito F.B. Mk.VI ser.2",
@@ -48,7 +58,7 @@ public static class PlaneLists
         "Sopwith Triplane"
     };
 
-    public static List<string> FrPlanes = new List<string>()
+    private static readonly List<string> _frPlanesFallback = new List<string>()
     {
         "Breguet type 14 B.2",
         "SPAD VII.C1 150HP",
@@ -56,7 +66,7 @@ public static class PlaneLists
         "SPAD XIII.C1"
     };
 
-    public static List<string> UsPlanes = new List<string>()
+    private static readonly List<string> _usPlanesFallback = new List<string>()
     {
         "A-20B",
         "C-47A",
@@ -70,7 +80,7 @@ public static class PlaneLists
 
     };
 
-    public static List<string> GerPlanes = new List<string>()
+    private static readonly List<string> _gerPlanesFallback = new List<string>()
     {
         "Ar 234 B-2",
         "Bf 109 E-7",
@@ -118,9 +128,105 @@ public static class PlaneLists
         "Schuckert D.IV"
     };
 
-    public static List<string> ItaPlanes = new List<string>()
+    private static readonly List<string> _itaPlanesFallback = new List<string>()
     {
         "MC 202 s8"
     };
 
+    // Initialize lists from config on first access
+    private static void Initialize()
+    {
+        if (_initialized) return;
+        
+        // Try to load from config
+        if (ConfigLoader.HasConfigData())
+        {
+            var planesByCountry = ConfigLoader.GetPlanesByCountry();
+            
+            _ruPlanes = planesByCountry.ContainsKey(Country.RU) ? planesByCountry[Country.RU] : new List<string>();
+            _ukPlanes = planesByCountry.ContainsKey(Country.UK) ? planesByCountry[Country.UK] : new List<string>();
+            _frPlanes = planesByCountry.ContainsKey(Country.FR) ? planesByCountry[Country.FR] : new List<string>();
+            _usPlanes = planesByCountry.ContainsKey(Country.US) ? planesByCountry[Country.US] : new List<string>();
+            _gerPlanes = planesByCountry.ContainsKey(Country.GER) ? planesByCountry[Country.GER] : new List<string>();
+            _itaPlanes = planesByCountry.ContainsKey(Country.ITA) ? planesByCountry[Country.ITA] : new List<string>();
+            
+            UnityEngine.Debug.Log("[PlaneLists] Initialized from config");
+        }
+        else
+        {
+            // Use fallback hardcoded lists
+            _ruPlanes = new List<string>(_ruPlanesFallback);
+            _ukPlanes = new List<string>(_ukPlanesFallback);
+            _frPlanes = new List<string>(_frPlanesFallback);
+            _usPlanes = new List<string>(_usPlanesFallback);
+            _gerPlanes = new List<string>(_gerPlanesFallback);
+            _itaPlanes = new List<string>(_itaPlanesFallback);
+            
+            UnityEngine.Debug.Log("[PlaneLists] Initialized from fallback hardcoded lists");
+        }
+        
+        _initialized = true;
+    }
+
+    // Public properties with lazy initialization
+    public static List<string> RuPlanes
+    {
+        get
+        {
+            Initialize();
+            return _ruPlanes;
+        }
+    }
+
+    public static List<string> UkPlanes
+    {
+        get
+        {
+            Initialize();
+            return _ukPlanes;
+        }
+    }
+
+    public static List<string> FrPlanes
+    {
+        get
+        {
+            Initialize();
+            return _frPlanes;
+        }
+    }
+
+    public static List<string> UsPlanes
+    {
+        get
+        {
+            Initialize();
+            return _usPlanes;
+        }
+    }
+
+    public static List<string> GerPlanes
+    {
+        get
+        {
+            Initialize();
+            return _gerPlanes;
+        }
+    }
+
+    public static List<string> ItaPlanes
+    {
+        get
+        {
+            Initialize();
+            return _itaPlanes;
+        }
+    }
+
+    // Force reload from config (useful after config update)
+    public static void Reload()
+    {
+        _initialized = false;
+        Initialize();
+    }
 }

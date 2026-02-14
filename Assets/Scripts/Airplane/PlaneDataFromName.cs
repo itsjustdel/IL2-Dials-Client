@@ -47,6 +47,14 @@ public class PlaneDataFromName : AirplaneData
 
     public static PlaneAttributes AttributesFromName(string name)
     {
+        // Try to load from config first
+        PlaneAttributes configAttributes = ConfigLoader.GetPlaneAttributes(name);
+        if (configAttributes != null)
+        {
+            return configAttributes;
+        }
+        
+        // Fallback to hardcoded data if not found in config
         PlaneAttributes planeAttributes = new PlaneAttributes();
         ///RSE.RSE::CAeroplane::getPlaneType - 40 55                 - push rbp --much nicer list -- but don't use has CAeroplane in string + wrong format
 
