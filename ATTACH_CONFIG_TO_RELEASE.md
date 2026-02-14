@@ -25,11 +25,7 @@ Two ways to attach:
 - You should see `plane-config.json` listed under "Assets"
 - File size should be shown (around 76KB)
 
-### 5. Mark as Latest Release (Important!)
-- Check the box: **"Set as the latest release"**
-- This is required for the `/latest/` URL to work
-
-### 6. Save Changes
+### 5. Save Changes
 - Click **"Update release"** button at bottom
 
 ## Testing Your URL
@@ -38,7 +34,7 @@ After attaching the file, test it works:
 
 ```bash
 # Test download
-curl -L "https://github.com/itsjustdel/IL2-Dials-Server/releases/latest/download/plane-config.json" -o test.json
+curl -L "https://github.com/itsjustdel/IL2-Dials-Server/releases/download/test-config-file/plane-config.json" -o test.json
 
 # Check it's valid JSON
 cat test.json | python -m json.tool | head -20
@@ -56,26 +52,19 @@ Expected output:
 
 When you need to update the config:
 
-### Method 1: Update Existing Release
-1. Edit your release
+### Update the Release
+1. Edit the `test-config-file` release
 2. Remove old plane-config.json
 3. Upload new plane-config.json
 4. Save changes
 5. Clients will get new config automatically!
 
-### Method 2: Create New Release (Recommended)
-1. Create new release with new tag (e.g., v1.0.1)
-2. Attach updated plane-config.json
-3. Mark as "latest release"
-4. Old releases stay accessible for history
-5. Clients automatically get latest version
-
 ## Troubleshooting
 
 ### "404 Not Found" when testing URL
 - File not attached to release
-- Release not marked as "latest"
 - Filename doesn't match exactly (case-sensitive)
+- Release tag doesn't match
 
 ### File won't upload
 - Check file size (GitHub has 2GB limit per file)
@@ -102,11 +91,6 @@ After upload, your file is permanently stored at:
 https://github.com/itsjustdel/IL2-Dials-Server/releases/download/test-config-file/plane-config.json
 ```
 
-And accessible via latest shortcut:
-```
-https://github.com/itsjustdel/IL2-Dials-Server/releases/latest/download/plane-config.json
-```
-
 ## Need Help?
 
 - Check GITHUB_RELEASE_GUIDE.md for complete documentation
@@ -116,6 +100,6 @@ https://github.com/itsjustdel/IL2-Dials-Server/releases/latest/download/plane-co
 ---
 
 **Current Status:**
-✅ Client configured to use: `https://github.com/itsjustdel/IL2-Dials-Server/releases/latest/download/plane-config.json`
+✅ Client configured to use: `https://github.com/itsjustdel/IL2-Dials-Server/releases/download/test-config-file/plane-config.json`
 
 **Next:** Attach plane-config.json to your release and test!

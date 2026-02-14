@@ -12,15 +12,7 @@ public static class ConfigLoader
 {
     private static PlaneConfigRoot _cachedConfig;
     private static bool _isLoaded = false;
-    
-    // Production config URL - GitHub Release asset
-    // Points to latest release so updates are automatic when new release is published
-    // Alternative: Use specific tag instead of "latest" for version control
-    // Specific tag example: "https://github.com/itsjustdel/IL2-Dials-Server/releases/download/test-config-file/plane-config.json"
-    private static string _configUrl = "https://github.com/itsjustdel/IL2-Dials-Server/releases/latest/download/plane-config.json";
-    
-    // Validate config URL on first use
-    private static bool _urlValidated = false;
+    private static string _configUrl = "https://github.com/itsjustdel/IL2-Dials-Server/releases/download/test-config-file/plane-config.json";
     
     // Storage paths
     private static string PersistentConfigPath
@@ -312,19 +304,9 @@ public static class ConfigLoader
 
     /// <summary>
     /// Get config URL for downloading
-    /// Logs warning if still using placeholder URL
     /// </summary>
     public static string GetConfigUrl()
     {
-        // Validate URL on first access
-        if (!_urlValidated)
-        {
-            _urlValidated = true;
-            if (_configUrl.Contains("user-attachments"))
-            {
-                Debug.LogError("[ConfigLoader] ⚠️ WARNING: Using temporary GitHub user-attachments URL! This MUST be changed before production deployment. URL: " + _configUrl);
-            }
-        }
         return _configUrl;
     }
 
@@ -334,6 +316,5 @@ public static class ConfigLoader
     public static void SetConfigUrl(string url)
     {
         _configUrl = url;
-        _urlValidated = false; // Reset validation for new URL
     }
 }

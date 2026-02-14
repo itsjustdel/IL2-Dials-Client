@@ -6,33 +6,22 @@
 
 **Config File:** plane-config.json
 
-## Stable Download URLs
+## Stable Download URL
 
-GitHub provides stable, direct download URLs for release assets. There are two URL formats:
+GitHub provides stable, direct download URLs for release assets.
 
-### Option 1: Latest Release (Recommended for Production) ✅
-
-```
-https://github.com/itsjustdel/IL2-Dials-Server/releases/latest/download/plane-config.json
-```
-
-**Advantages:**
-- ✅ Automatically points to latest release
-- ✅ Users get updates without changing client
-- ✅ Perfect for production deployments
-- ✅ Just publish new release and clients auto-update
-
-**This is now configured in ConfigLoader.cs**
-
-### Option 2: Specific Release Tag
+### Configured URL (Specific Release Tag) ✅
 
 ```
 https://github.com/itsjustdel/IL2-Dials-Server/releases/download/test-config-file/plane-config.json
 ```
 
-**Use when:**
-- Testing specific versions
-- You want version control over which config clients use
+**Configured in ConfigLoader.cs**
+
+**Advantages:**
+- ✅ Stable URL pointing to specific release
+- ✅ Version controlled configuration
+- ✅ Predictable behavior for clients
 - You need to maintain multiple config versions
 
 ## How to Update Your Release
@@ -75,10 +64,10 @@ Test your download URL works:
 
 ```bash
 # Test the URL
-curl -L "https://github.com/itsjustdel/IL2-Dials-Server/releases/latest/download/plane-config.json"
+curl -L "https://github.com/itsjustdel/IL2-Dials-Server/releases/download/test-config-file/plane-config.json"
 
 # Or save to file
-curl -L "https://github.com/itsjustdel/IL2-Dials-Server/releases/latest/download/plane-config.json" -o test-config.json
+curl -L "https://github.com/itsjustdel/IL2-Dials-Server/releases/download/test-config-file/plane-config.json" -o test-config.json
 
 # Verify it's valid JSON
 cat test-config.json | python -m json.tool | head
@@ -89,11 +78,6 @@ cat test-config.json | python -m json.tool | head
 General format:
 ```
 https://github.com/{OWNER}/{REPO}/releases/download/{TAG}/{FILENAME}
-```
-
-Latest release shortcut:
-```
-https://github.com/{OWNER}/{REPO}/releases/latest/download/{FILENAME}
 ```
 
 Your configuration:
@@ -107,6 +91,7 @@ Your configuration:
 ### 404 Not Found
 - Check the file is attached to the release
 - Verify filename matches exactly (case-sensitive)
+- Ensure release tag is `test-config-file`
 - Ensure release is published (not draft)
 
 ### Download Fails in Client
@@ -116,7 +101,7 @@ Your configuration:
 - Increase timeout if needed (ConfigUpdateManager has configurable timeout)
 
 ### Want to Use Different Release
-Change in ConfigLoader.cs line 20:
+Change in ConfigLoader.cs line 15:
 ```csharp
 private static string _configUrl = "https://github.com/itsjustdel/IL2-Dials-Server/releases/download/YOUR-TAG/plane-config.json";
 ```
@@ -149,14 +134,10 @@ private static string _configUrl = "https://github.com/itsjustdel/IL2-Dials-Serv
 The IL-2 Dials Client is now configured to use:
 
 ```
-https://github.com/itsjustdel/IL2-Dials-Server/releases/latest/download/plane-config.json
+https://github.com/itsjustdel/IL2-Dials-Server/releases/download/test-config-file/plane-config.json
 ```
 
-This means:
-- When you publish a new release with updated plane-config.json
-- Mark it as "latest release"
-- All clients will automatically download the new config when they click "Update Config"
-- No client code changes needed!
+This points to the specific `test-config-file` release for stable, version-controlled configuration.
 
 ## Need to Change URL?
 
@@ -166,4 +147,4 @@ You can change the URL at runtime:
 ConfigLoader.SetConfigUrl("https://your-new-url/plane-config.json");
 ```
 
-Or permanently in code at `Assets/Scripts/Config/ConfigLoader.cs` line 20.
+Or permanently in code at `Assets/Scripts/Config/ConfigLoader.cs` line 15.
