@@ -11,6 +11,10 @@ public class ConfigUpdateManager : MonoBehaviour
 {
     public delegate void UpdateCallback(bool success, string message);
     
+    [Header("Settings")]
+    [Tooltip("Network timeout in seconds for config download")]
+    public int networkTimeoutSeconds = 30;
+    
     private bool _isUpdating = false;
 
     /// <summary>
@@ -36,8 +40,8 @@ public class ConfigUpdateManager : MonoBehaviour
 
         using (UnityWebRequest request = UnityWebRequest.Get(url))
         {
-            // Set timeout
-            request.timeout = 30;
+            // Set timeout (configurable)
+            request.timeout = networkTimeoutSeconds;
 
             // Send request
             yield return request.SendWebRequest();

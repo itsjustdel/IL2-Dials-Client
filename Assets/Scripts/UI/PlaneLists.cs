@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 public static class PlaneLists
 {
+    // Lock object for thread safety
+    private static readonly object _lock = new object();
+    
     // Cached lists - will be populated from config on first access
     private static bool _initialized = false;
     private static List<string> _ruPlanes;
@@ -136,36 +139,40 @@ public static class PlaneLists
     // Initialize lists from config on first access
     private static void Initialize()
     {
-        if (_initialized) return;
-        
-        // Try to load from config
-        if (ConfigLoader.HasConfigData())
+        lock (_lock)
         {
-            var planesByCountry = ConfigLoader.GetPlanesByCountry();
+            // Double-check after acquiring lock
+            if (_initialized) return;
             
-            _ruPlanes = planesByCountry.ContainsKey(Country.RU) ? planesByCountry[Country.RU] : new List<string>();
-            _ukPlanes = planesByCountry.ContainsKey(Country.UK) ? planesByCountry[Country.UK] : new List<string>();
-            _frPlanes = planesByCountry.ContainsKey(Country.FR) ? planesByCountry[Country.FR] : new List<string>();
-            _usPlanes = planesByCountry.ContainsKey(Country.US) ? planesByCountry[Country.US] : new List<string>();
-            _gerPlanes = planesByCountry.ContainsKey(Country.GER) ? planesByCountry[Country.GER] : new List<string>();
-            _itaPlanes = planesByCountry.ContainsKey(Country.ITA) ? planesByCountry[Country.ITA] : new List<string>();
+            // Try to load from config
+            if (ConfigLoader.HasConfigData())
+            {
+                var planesByCountry = ConfigLoader.GetPlanesByCountry();
+                
+                _ruPlanes = planesByCountry.ContainsKey(Country.RU) ? planesByCountry[Country.RU] : new List<string>();
+                _ukPlanes = planesByCountry.ContainsKey(Country.UK) ? planesByCountry[Country.UK] : new List<string>();
+                _frPlanes = planesByCountry.ContainsKey(Country.FR) ? planesByCountry[Country.FR] : new List<string>();
+                _usPlanes = planesByCountry.ContainsKey(Country.US) ? planesByCountry[Country.US] : new List<string>();
+                _gerPlanes = planesByCountry.ContainsKey(Country.GER) ? planesByCountry[Country.GER] : new List<string>();
+                _itaPlanes = planesByCountry.ContainsKey(Country.ITA) ? planesByCountry[Country.ITA] : new List<string>();
+                
+                UnityEngine.Debug.Log("[PlaneLists] Initialized from config");
+            }
+            else
+            {
+                // Use fallback hardcoded lists
+                _ruPlanes = new List<string>(_ruPlanesFallback);
+                _ukPlanes = new List<string>(_ukPlanesFallback);
+                _frPlanes = new List<string>(_frPlanesFallback);
+                _usPlanes = new List<string>(_usPlanesFallback);
+                _gerPlanes = new List<string>(_gerPlanesFallback);
+                _itaPlanes = new List<string>(_itaPlanesFallback);
+                
+                UnityEngine.Debug.Log("[PlaneLists] Initialized from fallback hardcoded lists");
+            }
             
-            UnityEngine.Debug.Log("[PlaneLists] Initialized from config");
+            _initialized = true;
         }
-        else
-        {
-            // Use fallback hardcoded lists
-            _ruPlanes = new List<string>(_ruPlanesFallback);
-            _ukPlanes = new List<string>(_ukPlanesFallback);
-            _frPlanes = new List<string>(_frPlanesFallback);
-            _usPlanes = new List<string>(_usPlanesFallback);
-            _gerPlanes = new List<string>(_gerPlanesFallback);
-            _itaPlanes = new List<string>(_itaPlanesFallback);
-            
-            UnityEngine.Debug.Log("[PlaneLists] Initialized from fallback hardcoded lists");
-        }
-        
-        _initialized = true;
     }
 
     // Public properties with lazy initialization
@@ -224,9 +231,13 @@ public static class PlaneLists
     }
 
     // Force reload from config (useful after config update)
+    // Thread-safe implementation
     public static void Reload()
     {
-        _initialized = false;
+        lock (_lock)
+        {
+            _initialized = false;
+        }
         Initialize();
     }
 }

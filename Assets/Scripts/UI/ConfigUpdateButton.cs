@@ -38,7 +38,7 @@ public class ConfigUpdateButton : MonoBehaviour
         // Find or create ConfigUpdateManager
         if (configUpdateManager == null)
         {
-            // Try to find existing manager
+            // Try to find existing manager (including in DontDestroyOnLoad scene)
             configUpdateManager = FindObjectOfType<ConfigUpdateManager>();
             
             // Create one if it doesn't exist
@@ -46,8 +46,14 @@ public class ConfigUpdateButton : MonoBehaviour
             {
                 GameObject managerObj = new GameObject("ConfigUpdateManager");
                 configUpdateManager = managerObj.AddComponent<ConfigUpdateManager>();
+                // Note: Making this persistent. If you reload scenes frequently,
+                // consider manually adding ConfigUpdateManager to a persistent manager object instead
                 DontDestroyOnLoad(managerObj);
-                Debug.Log("[ConfigUpdateButton] Created ConfigUpdateManager");
+                Debug.Log("[ConfigUpdateButton] Created persistent ConfigUpdateManager");
+            }
+            else
+            {
+                Debug.Log("[ConfigUpdateButton] Found existing ConfigUpdateManager");
             }
         }
 

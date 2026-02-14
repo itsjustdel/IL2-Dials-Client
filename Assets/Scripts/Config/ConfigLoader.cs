@@ -13,8 +13,13 @@ public static class ConfigLoader
     private static PlaneConfigRoot _cachedConfig;
     private static bool _isLoaded = false;
     
-    // TODO: Replace with production config URL before deployment
-    // This is a placeholder URL - should point to a stable GitHub release or CDN
+    // ⚠️ IMPORTANT: This URL must be updated before production deployment! ⚠️
+    // GitHub user-attachments URLs are temporary and NOT suitable for production.
+    // Replace with a stable hosting location such as:
+    // - GitHub Release asset URL (permanent)
+    // - CDN endpoint
+    // - Dedicated server endpoint
+    // Example: "https://github.com/yourusername/yourrepo/releases/latest/download/plane-config.json"
     private static string _configUrl = "https://github.com/user-attachments/files/25318490/plane-config.json";
     
     // Storage paths
@@ -203,10 +208,23 @@ public static class ConfigLoader
         {
             char c = text[pos];
             
-            // Handle string literals
-            if (c == '"' && (pos == 0 || text[pos - 1] != '\\'))
+            // Handle string literals with proper escape sequence checking
+            if (c == '"')
             {
-                inString = !inString;
+                // Count consecutive backslashes before the quote
+                int backslashCount = 0;
+                int checkPos = pos - 1;
+                while (checkPos >= 0 && text[checkPos] == '\\')
+                {
+                    backslashCount++;
+                    checkPos--;
+                }
+                
+                // If even number of backslashes (including 0), the quote is not escaped
+                if (backslashCount % 2 == 0)
+                {
+                    inString = !inString;
+                }
             }
             else if (!inString)
             {
