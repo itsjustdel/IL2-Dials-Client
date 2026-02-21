@@ -778,6 +778,28 @@ public class MenuHandler : MonoBehaviour
         eyeTray.transform.Find("Eye Off").gameObject.SetActive(false);
     }
 
+    // Backwards-compatible alias for older scene bindings (was previously named UIHandlersToggle)
+    // Toggles the UI handlers visibility and swaps the eye icon state.
+    public void UIHandlersToggle()
+    {
+        if (eyeTray == null)
+            return;
+
+        var eyeOn = eyeTray.transform.Find("Eye On");
+        bool isOpen = (eyeOn != null && eyeOn.gameObject.activeSelf);
+
+        if (isOpen)
+        {
+            TurnHandlersOff();
+            ShowClosedEyeButton();
+        }
+        else
+        {
+            TurnHandlersOn();
+            ShowOpenEyeButton();
+        }
+    }
+
     public void EnableKeyCodePanel()
     {
         keyCodePanel.SetActive(true);
