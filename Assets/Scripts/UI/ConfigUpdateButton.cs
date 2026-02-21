@@ -153,8 +153,15 @@ public class ConfigUpdateButton : MonoBehaviour
     {
         if (configUpdateManager != null)
         {
+            // Show local info immediately
             string info = configUpdateManager.GetConfigInfo();
             UpdateStatus(info);
+
+            // Then check remote metadata and update status with a human-friendly message
+            configUpdateManager.CheckRemoteStatus((success, message) =>
+            {
+                UpdateStatus(message);
+            });
         }
         else
         {

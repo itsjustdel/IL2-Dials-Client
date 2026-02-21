@@ -73,28 +73,40 @@ public class ConfigUpdateManager : MonoBehaviour
                 yield break;
             }
 
-            // Save to persistent storage
+            // Before saving, check versions (if present) to avoid pointless overwrite
             try
             {
+                string remoteVersion = ConfigLoader.ExtractVersionFromJson(jsonData);
+                string localVersion = ConfigLoader.GetLocalConfigVersion();
+
+                if (!string.IsNullOrEmpty(remoteVersion) && !string.IsNullOrEmpty(localVersion) && remoteVersion == localVersion)
+                {
+                    string msg = $"Already up-to-date (version {localVersion})";
+                    Debug.Log($"[ConfigUpdateManager] {msg}");
+                    callback?.Invoke(true, msg);
+                    _isUpdating = false;
+                    yield break;
+                }
+
                 string configPath = ConfigLoader.GetConfigPath();
-                
+
                 // Ensure directory exists
                 string directory = Path.GetDirectoryName(configPath);
                 if (!Directory.Exists(directory))
                 {
                     Directory.CreateDirectory(directory);
                 }
-                
+
                 // Write file
                 File.WriteAllText(configPath, jsonData);
-                
+
                 Debug.Log($"[ConfigUpdateManager] Config saved to: {configPath}");
-                
+
                 // Reload config
                 ConfigLoader.ReloadConfig();
                 PlaneLists.Reload();
-                
-                string successMsg = $"Config updated successfully ({jsonData.Length} bytes)";
+
+                string successMsg = "Config updated successfully";
                 Debug.Log($"[ConfigUpdateManager] {successMsg}");
                 callback?.Invoke(true, successMsg);
             }
@@ -107,6 +119,104 @@ public class ConfigUpdateManager : MonoBehaviour
         }
 
         _isUpdating = false;
+    }
+
+    /// <summary>
+    /// Check remote config metadata (HEAD request) and compare to local file to provide a human-friendly status.
+    /// Calls callback with (success, message).
+    /// </summary>
+    public void CheckRemoteStatus(Action<bool, string> callback = null)
+    {
+        StartCoroutine(CheckRemoteStatusCoroutine(callback));
+    }
+
+    private IEnumerator CheckRemoteStatusCoroutine(Action<bool, string> callback)
+    {
+        string url = ConfigLoader.GetConfigUrl();
+
+        // Try to GET remote JSON and parse its version field
+        using (UnityWebRequest request = UnityWebRequest.Get(url))
+        {
+            request.timeout = networkTimeoutSeconds;
+            yield return request.SendWebRequest();
+
+            #if UNITY_2020_1_OR_NEWER
+            if (request.result != UnityWebRequest.Result.Success)
+            #else
+            if (request.isNetworkError || request.isHttpError)
+            #endif
+            {
+                callback?.Invoke(false, $"Failed to contact server: {request.error}");
+                yield break;
+            }
+
+            string remoteJson = request.downloadHandler.text;
+            string remoteVersion = ConfigLoader.ExtractVersionFromJson(remoteJson);
+            string localVersion = ConfigLoader.GetLocalConfigVersion();
+
+            // If no local file exists, report remote version (if any)
+            string configPath = ConfigLoader.GetConfigPath();
+            if (!File.Exists(configPath))
+            {
+                if (!string.IsNullOrEmpty(remoteVersion))
+                    callback?.Invoke(true, $"No downloaded config present (remote version: {remoteVersion})");
+                else
+                    callback?.Invoke(true, "No downloaded config present");
+                yield break;
+            }
+
+            // If both have versions, compare
+            if (!string.IsNullOrEmpty(remoteVersion) && !string.IsNullOrEmpty(localVersion))
+            {
+                if (remoteVersion == localVersion)
+                {
+                    callback?.Invoke(true, $"Config is up-to-date (version {localVersion})");
+                }
+                else
+                {
+                    callback?.Invoke(true, $"Remote version {remoteVersion} differs from local {localVersion}");
+                }
+                yield break;
+            }
+
+            // If remote has version but local doesn't
+            if (!string.IsNullOrEmpty(remoteVersion) && string.IsNullOrEmpty(localVersion))
+            {
+                callback?.Invoke(true, $"Remote version {remoteVersion} available (local has no version)");
+                yield break;
+            }
+
+            // No version info available: fallback to headers / size comparison
+            string remoteLastModified = request.GetResponseHeader("Last-Modified");
+            string remoteLength = request.GetResponseHeader("Content-Length");
+
+            FileInfo fi = new FileInfo(configPath);
+
+            if (!string.IsNullOrEmpty(remoteLastModified) && DateTime.TryParse(remoteLastModified, out DateTime remoteDt))
+            {
+                DateTime localDt = fi.LastWriteTime.ToUniversalTime();
+                if (localDt >= remoteDt.ToUniversalTime())
+                {
+                    callback?.Invoke(true, "Config is up-to-date (local newer or equal).");
+                }
+                else
+                {
+                    callback?.Invoke(true, $"Remote config newer (remote: {remoteDt:u}, local: {fi.LastWriteTime:u})");
+                }
+                yield break;
+            }
+
+            if (!string.IsNullOrEmpty(remoteLength) && long.TryParse(remoteLength, out long remoteLen))
+            {
+                if (fi.Length == remoteLen)
+                    callback?.Invoke(true, "Config appears up-to-date (matching size).");
+                else
+                    callback?.Invoke(true, $"Remote config size differs (remote: {remoteLen} bytes, local: {fi.Length} bytes)");
+                yield break;
+            }
+
+            callback?.Invoke(true, $"Local: {fi.Length} bytes, modified {fi.LastWriteTime}");
+        }
     }
 
     /// <summary>

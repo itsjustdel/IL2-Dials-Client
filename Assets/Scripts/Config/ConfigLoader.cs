@@ -12,7 +12,9 @@ public static class ConfigLoader
 {
     private static PlaneConfigRoot _cachedConfig;
     private static bool _isLoaded = false;
-    private static string _configUrl = "https://github.com/itsjustdel/IL2-Dials-Server/releases/download/test-config-file/plane-config.json";
+    private static string _configVersion = null;
+    // Use the GitHub releases "latest" download URL so the app can fetch the current release asset
+    private static string _configUrl = "https://github.com/itsjustdel/IL2-Dials-Server/releases/latest/download/plane-config.json";
     
     // Storage paths
     private static string PersistentConfigPath
@@ -93,6 +95,8 @@ public static class ConfigLoader
         // Parse JSON if we have any
         if (!string.IsNullOrEmpty(jsonText))
         {
+            // extract version if present
+            _configVersion = ExtractVersionFromJson(jsonText);
             try
             {
                 _cachedConfig = ParseConfig(jsonText);
@@ -113,6 +117,45 @@ public static class ConfigLoader
             _cachedConfig = new PlaneConfigRoot();
             _isLoaded = true;
         }
+    }
+
+    /// <summary>
+    /// Extract a top-level "version" field value from a JSON string.
+    /// Returns null if not present.
+    /// </summary>
+    public static string ExtractVersionFromJson(string jsonText)
+    {
+        if (string.IsNullOrEmpty(jsonText)) return null;
+
+        int idx = jsonText.IndexOf("\"version\"");
+        if (idx < 0) return null;
+
+        int colon = jsonText.IndexOf(':', idx);
+        if (colon < 0) return null;
+
+        int p = colon + 1;
+        // skip whitespace
+        while (p < jsonText.Length && char.IsWhiteSpace(jsonText[p])) p++;
+
+        if (p >= jsonText.Length) return null;
+
+        // if quoted string
+        if (jsonText[p] == '"')
+        {
+            int start = p + 1;
+            int end = jsonText.IndexOf('"', start);
+            if (end > start)
+                return jsonText.Substring(start, end - start);
+            return null;
+        }
+
+        // unquoted token (number etc.) - read until comma or brace
+        int endPos = p;
+        while (endPos < jsonText.Length && jsonText[endPos] != ',' && jsonText[endPos] != '}' && !char.IsWhiteSpace(jsonText[endPos])) endPos++;
+        if (endPos > p)
+            return jsonText.Substring(p, endPos - p).Trim();
+
+        return null;
     }
 
     /// <summary>
@@ -300,6 +343,35 @@ public static class ConfigLoader
     public static string GetConfigPath()
     {
         return PersistentConfigPath;
+    }
+
+    /// <summary>
+    /// Get the version string of the currently loaded config (downloaded or bundled).
+    /// Returns null if no version present.
+    /// </summary>
+    public static string GetConfigVersion()
+    {
+        if (!_isLoaded) GetConfig();
+        return _configVersion;
+    }
+
+    /// <summary>
+    /// Get the version string from the local downloaded config file without affecting in-memory cache.
+    /// Returns null if no local file or no version field present.
+    /// </summary>
+    public static string GetLocalConfigVersion()
+    {
+        try
+        {
+            string path = PersistentConfigPath;
+            if (!File.Exists(path)) return null;
+            string json = File.ReadAllText(path);
+            return ExtractVersionFromJson(json);
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     /// <summary>

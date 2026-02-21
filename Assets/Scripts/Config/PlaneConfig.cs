@@ -9,6 +9,8 @@ using System.Collections.Generic;
 [Serializable]
 public class PlaneConfigRoot
 {
+    // Optional top-level version string for the config bundle
+    public string version;
     // Parsed planes will be stored here after loading
     public Dictionary<string, PlaneConfigData> planes = new Dictionary<string, PlaneConfigData>();
 }

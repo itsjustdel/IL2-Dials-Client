@@ -209,7 +209,7 @@ public class MenuHandler : MonoBehaviour
         foreach (var item in androidAdjustObjects)
         {
             Vector3 p = item.GetComponent<RectTransform>().transform.localPosition;
-            p.y = 0;
+            p.x = 0;
             item.GetComponent<RectTransform>().transform.localPosition = p;
         }
 
