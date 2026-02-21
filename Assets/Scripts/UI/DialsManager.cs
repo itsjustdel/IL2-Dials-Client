@@ -1334,7 +1334,8 @@ public class DialsManager : MonoBehaviour
         else
             DialInTray("Repeater Compass Alternate", layout);
 
-        for (int i = 0; i < rpmObjects.Count; i++)
+        int rpmCount = Mathf.Min(rpmObjects.Count, layout.rpmPos.Count, layout.rpmScale.Count, layout.rpmInTray.Count);
+        for (int i = 0; i < rpmCount; i++)
         {
             if (rpmObjects[i].transform.parent == countryDialBoard.transform)
             {
@@ -1345,7 +1346,8 @@ public class DialsManager : MonoBehaviour
                 RPMInTray(layout, i, rpmObjects[i]);
         }
 
-        for (int i = 0; i < manifoldObjects.Count; i++)
+        int manifoldCount = Mathf.Min(manifoldObjects.Count, layout.manifoldPos.Count, layout.manifoldScale.Count, layout.manifoldInTray.Count);
+        for (int i = 0; i < manifoldCount; i++)
         {
             //if on dial board
             if (manifoldObjects[i].transform.parent == countryDialBoard.transform)
@@ -1357,7 +1359,8 @@ public class DialsManager : MonoBehaviour
                 ManifoldInTray(layout, i, manifoldObjects[i]);
         }
 
-        for (int i = 0; i < waterTempObjects.Count; i++)
+        int waterTempCount = Mathf.Min(waterTempObjects.Count, layout.waterTempPos.Count, layout.waterTempScale.Count, layout.waterTempInTray.Count);
+        for (int i = 0; i < waterTempCount; i++)
         {
             //if on dial board
             if (waterTempObjects[i].transform.parent == countryDialBoard.transform)
@@ -1369,7 +1372,8 @@ public class DialsManager : MonoBehaviour
                 WaterTempInTray(layout, i, waterTempObjects[i]);
         }
 
-        for (int i = 0; i < oilTempInObjects.Count; i++)
+        int oilTempInCount = Mathf.Min(oilTempInObjects.Count, layout.oilTempInPos.Count, layout.oilTempInScale.Count, layout.oilTempInInTray.Count);
+        for (int i = 0; i < oilTempInCount; i++)
         {
             //if on dial board
             if (oilTempInObjects[i].transform.parent == countryDialBoard.transform)
@@ -1381,7 +1385,8 @@ public class DialsManager : MonoBehaviour
                 OilTempInInTray(layout, i, oilTempInObjects[i]);
         }
 
-        for (int i = 0; i < oilTempOutObjects.Count; i++)
+        int oilTempOutCount = Mathf.Min(oilTempOutObjects.Count, layout.oilTempOutPos.Count, layout.oilTempOutScale.Count, layout.oilTempOutInTray.Count);
+        for (int i = 0; i < oilTempOutCount; i++)
         {
             //if on dial board
             if (oilTempOutObjects[i].transform.parent == countryDialBoard.transform)
@@ -1393,7 +1398,8 @@ public class DialsManager : MonoBehaviour
                 OilTempOutInTray(layout, i, oilTempOutObjects[i]);
         }
 
-        for (int i = 0; i < oilTempPressureObjects.Count; i++)
+        int oilTempPressureCount = Mathf.Min(oilTempPressureObjects.Count, layout.oilTempPressurePos.Count, layout.oilTempPressureScale.Count, layout.oilTempPressureInTray.Count);
+        for (int i = 0; i < oilTempPressureCount; i++)
         {
             //if on dial board
             if (oilTempPressureObjects[i].transform.parent == countryDialBoard.transform)
@@ -1405,7 +1411,8 @@ public class DialsManager : MonoBehaviour
                 OilTempPressureInTray(layout, i, oilTempPressureObjects[i]);
         }
 
-        for (int i = 0; i < oilTempComboObjects.Count; i++)
+        int oilTempComboCount = Mathf.Min(oilTempComboObjects.Count, layout.oilTempComboPos.Count, layout.oilTempComboScale.Count, layout.oilTempComboInTray.Count);
+        for (int i = 0; i < oilTempComboCount; i++)
         {
             //if on dial board
             if (oilTempComboObjects[i].transform.parent == countryDialBoard.transform)
@@ -1417,7 +1424,8 @@ public class DialsManager : MonoBehaviour
                 OilTempComboInTray(layout, i, oilTempComboObjects[i]);
         }
 
-        for (int i = 0; i < cylinderHeadObjects.Count; i++)
+        int cylinderHeadCount = Mathf.Min(cylinderHeadObjects.Count, layout.cylinderHeadPos.Count, layout.cylinderHeadScale.Count, layout.cylinderHeadInTray.Count);
+        for (int i = 0; i < cylinderHeadCount; i++)
         {
             //if on dial board
             if (cylinderHeadObjects[i].transform.parent == countryDialBoard.transform)
@@ -1429,7 +1437,8 @@ public class DialsManager : MonoBehaviour
                 CylinderHeadInTray(layout, i, cylinderHeadObjects[i]);
         }
 
-        for (int i = 0; i < carbTempObjects.Count; i++)
+        int carbTempCount = Mathf.Min(carbTempObjects.Count, layout.carbAirPos.Count, layout.carbAirScale.Count, layout.carbAirInTray.Count);
+        for (int i = 0; i < carbTempCount; i++)
         {
             //if on dial board
             if (carbTempObjects[i].transform.parent == countryDialBoard.transform)

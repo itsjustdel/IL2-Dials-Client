@@ -144,6 +144,16 @@ public class MenuHandler : MonoBehaviour
         AdjustForAndroid();
 #endif
 
+        // Clear config status when any button inside the menu is pressed (connection, layout, screens, close-all etc.)
+        if (menuPanel != null)
+        {
+            var menuButtons = menuPanel.GetComponentsInChildren<UnityEngine.UI.Button>(true);
+            foreach (var b in menuButtons)
+            {
+                b.onClick.AddListener(() => ConfigUpdateButton.ClearAllStatuses());
+            }
+        }
+
     }
 
     public void Update()
@@ -209,7 +219,7 @@ public class MenuHandler : MonoBehaviour
         foreach (var item in androidAdjustObjects)
         {
             Vector3 p = item.GetComponent<RectTransform>().transform.localPosition;
-            p.y = 0;
+            p.x = 0;
             item.GetComponent<RectTransform>().transform.localPosition = p;
         }
 
@@ -336,6 +346,7 @@ public class MenuHandler : MonoBehaviour
             blurPanel.SetActive(false);
             layoutWarningMessage.SetActive(false);
             planeDropdownPanelOpen = false;
+            ConfigUpdateButton.ClearAllStatuses();
         }
         else if (connectionPanel.activeInHierarchy)
         {
@@ -345,22 +356,26 @@ public class MenuHandler : MonoBehaviour
             menuPanel.SetActive(false);
             blurPanel.SetActive(false);
             layoutWarningMessage.SetActive(false);
+            ConfigUpdateButton.ClearAllStatuses();
         }
         else if (screensPanel.activeInHierarchy)
         {
             screensPanel.SetActive(false);
             blurPanel.SetActive(false);
+            ConfigUpdateButton.ClearAllStatuses();
         }
         else if (flagsPanel.activeInHierarchy)
         {
             flagsPanel.SetActive(false);
             blurPanel.SetActive(false);
+            ConfigUpdateButton.ClearAllStatuses();
         }
         else if (planeDropdownPanel.activeInHierarchy)
         {
             planeDropdownPanel.SetActive(false);
             planeDropdownPanelOpen = false;
             blurPanel.SetActive(false);
+            ConfigUpdateButton.ClearAllStatuses();
         }
         else if (layoutOpen)
         {
@@ -368,6 +383,7 @@ public class MenuHandler : MonoBehaviour
             //point to accept layout function - we can close this page from menu button or accept button
             AcceptLayoutClick();
             layoutWarningMessage.SetActive(false);
+            ConfigUpdateButton.ClearAllStatuses();
         }
         else
         {
@@ -760,6 +776,28 @@ public class MenuHandler : MonoBehaviour
     {
         eyeTray.transform.Find("Eye On").gameObject.SetActive(true);
         eyeTray.transform.Find("Eye Off").gameObject.SetActive(false);
+    }
+
+    // Backwards-compatible alias for older scene bindings (was previously named UIHandlersToggle)
+    // Toggles the UI handlers visibility and swaps the eye icon state.
+    public void UIHandlersToggle()
+    {
+        if (eyeTray == null)
+            return;
+
+        var eyeOn = eyeTray.transform.Find("Eye On");
+        bool isOpen = (eyeOn != null && eyeOn.gameObject.activeSelf);
+
+        if (isOpen)
+        {
+            TurnHandlersOff();
+            ShowClosedEyeButton();
+        }
+        else
+        {
+            TurnHandlersOn();
+            ShowOpenEyeButton();
+        }
     }
 
     public void EnableKeyCodePanel()

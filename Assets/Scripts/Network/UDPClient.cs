@@ -294,10 +294,10 @@ public class UDPClient : MonoBehaviour
             airplaneData.oilTempsIn[1] = floats[27];
             airplaneData.oilTempsIn[2] = floats[28];
             airplaneData.oilTempsIn[3] = floats[29];
-            airplaneData.cylinderHeadTemps[0] = floats[30] - 273.15f;
-            airplaneData.cylinderHeadTemps[1] = floats[31] - 273.15f;
-            airplaneData.cylinderHeadTemps[2] = floats[32] - 273.15f;
-            airplaneData.cylinderHeadTemps[3] = floats[33] - 273.15f;
+            airplaneData.cylinderHeadTemps[0] = floats[30];
+            airplaneData.cylinderHeadTemps[1] = floats[31];
+            airplaneData.cylinderHeadTemps[2] = floats[32];
+            airplaneData.cylinderHeadTemps[3] = floats[33];
 
             airplaneData.carbAirTemps[0] = floats[34]; //date in celsius in game
             airplaneData.carbAirTemps[1] = floats[35];
