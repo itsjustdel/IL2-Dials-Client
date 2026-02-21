@@ -78,7 +78,9 @@ public class ConfigUpdateManager : MonoBehaviour
             {
                 string remoteVersion = ConfigLoader.ExtractVersionFromJson(jsonData);
                 string localVersion = ConfigLoader.GetLocalConfigVersion();
+                string bundledVersion = ConfigLoader.GetBundledConfigVersion();
 
+                // If remote version equals local version, nothing to do
                 if (!string.IsNullOrEmpty(remoteVersion) && !string.IsNullOrEmpty(localVersion) && remoteVersion == localVersion)
                 {
                     string msg = $"Already up-to-date (version {localVersion})";
@@ -88,7 +90,16 @@ public class ConfigUpdateManager : MonoBehaviour
                     yield break;
                 }
 
+                // If there's no downloaded config, but remote == bundled, no need to save
                 string configPath = ConfigLoader.GetConfigPath();
+                if (!File.Exists(configPath) && !string.IsNullOrEmpty(remoteVersion) && !string.IsNullOrEmpty(bundledVersion) && remoteVersion == bundledVersion)
+                {
+                    string msg = $"Remote matches bundled version {bundledVersion} — no update required";
+                    Debug.Log($"[ConfigUpdateManager] {msg}");
+                    callback?.Invoke(true, msg);
+                    _isUpdating = false;
+                    yield break;
+                }
 
                 // Ensure directory exists
                 string directory = Path.GetDirectoryName(configPath);
@@ -153,36 +164,77 @@ public class ConfigUpdateManager : MonoBehaviour
             string remoteJson = request.downloadHandler.text;
             string remoteVersion = ConfigLoader.ExtractVersionFromJson(remoteJson);
             string localVersion = ConfigLoader.GetLocalConfigVersion();
+            string bundledVersion = ConfigLoader.GetBundledConfigVersion();
 
-            // If no local file exists, report remote version (if any)
             string configPath = ConfigLoader.GetConfigPath();
-            if (!File.Exists(configPath))
+            bool localExists = File.Exists(configPath);
+
+            if (localExists)
             {
+                // Compare remote vs local when possible
+                if (!string.IsNullOrEmpty(remoteVersion) && !string.IsNullOrEmpty(localVersion))
+                {
+                    if (remoteVersion == localVersion)
+                    {
+                        callback?.Invoke(true, $"Config is up-to-date (version {localVersion})");
+                    }
+                    else if (!string.IsNullOrEmpty(bundledVersion) && remoteVersion == bundledVersion)
+                    {
+                        callback?.Invoke(true, $"Remote matches bundled version {bundledVersion} (local differs)");
+                    }
+                    else
+                    {
+                        callback?.Invoke(true, $"Remote version {remoteVersion} differs from local {localVersion}");
+                    }
+                    yield break;
+                }
+
+                // Remote has version but local doesn't (local exists but lacks version field)
+                if (!string.IsNullOrEmpty(remoteVersion) && string.IsNullOrEmpty(localVersion))
+                {
+                    if (!string.IsNullOrEmpty(bundledVersion) && remoteVersion == bundledVersion)
+                        callback?.Invoke(true, $"Remote matches bundled version {bundledVersion} (local has no version)");
+                    else
+                        callback?.Invoke(true, $"Remote version {remoteVersion} available (local has no version)");
+                    yield break;
+                }
+            }
+            else
+            {
+                // No local downloaded config — compare remote vs bundled
+                if (!string.IsNullOrEmpty(remoteVersion) && !string.IsNullOrEmpty(bundledVersion))
+                {
+                    if (remoteVersion == bundledVersion)
+                    {
+                        callback?.Invoke(true, $"Remote matches bundled version {bundledVersion} — no update required");
+                    }
+                    else
+                    {
+                        callback?.Invoke(true, $"Remote version {remoteVersion} available (bundled: {bundledVersion})");
+                    }
+                    yield break;
+                }
+
+                if (!string.IsNullOrEmpty(remoteVersion) && string.IsNullOrEmpty(bundledVersion))
+                {
+                    callback?.Invoke(true, $"Remote version {remoteVersion} available (no bundled version present)");
+                    yield break;
+                }
+
+                if (string.IsNullOrEmpty(remoteVersion) && !string.IsNullOrEmpty(bundledVersion))
+                {
+                    callback?.Invoke(true, $"No remote version present — bundled version {bundledVersion} is in use");
+                    yield break;
+                }
+
                 if (!string.IsNullOrEmpty(remoteVersion))
+                {
                     callback?.Invoke(true, $"No downloaded config present (remote version: {remoteVersion})");
+                }
                 else
+                {
                     callback?.Invoke(true, "No downloaded config present");
-                yield break;
-            }
-
-            // If both have versions, compare
-            if (!string.IsNullOrEmpty(remoteVersion) && !string.IsNullOrEmpty(localVersion))
-            {
-                if (remoteVersion == localVersion)
-                {
-                    callback?.Invoke(true, $"Config is up-to-date (version {localVersion})");
                 }
-                else
-                {
-                    callback?.Invoke(true, $"Remote version {remoteVersion} differs from local {localVersion}");
-                }
-                yield break;
-            }
-
-            // If remote has version but local doesn't
-            if (!string.IsNullOrEmpty(remoteVersion) && string.IsNullOrEmpty(localVersion))
-            {
-                callback?.Invoke(true, $"Remote version {remoteVersion} available (local has no version)");
                 yield break;
             }
 

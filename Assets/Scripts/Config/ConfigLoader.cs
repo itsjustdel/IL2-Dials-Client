@@ -375,6 +375,24 @@ public static class ConfigLoader
     }
 
     /// <summary>
+    /// Read the bundled Resources/plane-config.json asset and return its top-level version string if present.
+    /// Returns null if no bundled asset or no version field.
+    /// </summary>
+    public static string GetBundledConfigVersion()
+    {
+        try
+        {
+            TextAsset ta = Resources.Load<TextAsset>("plane-config");
+            if (ta == null) return null;
+            return ExtractVersionFromJson(ta.text);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
     /// Get config URL for downloading
     /// </summary>
     public static string GetConfigUrl()

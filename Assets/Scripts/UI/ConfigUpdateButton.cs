@@ -189,4 +189,19 @@ public class ConfigUpdateButton : MonoBehaviour
         }
     }
     #endif
-}
+
+        /// <summary>
+        /// Clear status text on all ConfigUpdateButton instances.
+        /// Useful for hiding messages when the menu is closed or other menu buttons are pressed.
+        /// </summary>
+        public static void ClearAllStatuses()
+        {
+            var all = FindObjectsOfType<ConfigUpdateButton>();
+            foreach (var c in all)
+            {
+                if (c != null && c.statusText != null)
+                    c.statusText.text = string.Empty;
+            }
+        }
+
+    }
