@@ -13,6 +13,7 @@ public static class ConfigLoader
     private static PlaneConfigRoot _cachedConfig;
     private static bool _isLoaded = false;
     private static string _configVersion = null;
+    public static event Action OnConfigReloaded;
     // Use the GitHub releases "latest" download URL so the app can fetch the current release asset
     private static string _configUrl = "https://github.com/itsjustdel/IL2-Dials-Server/releases/latest/download/plane-config.json";
     
@@ -54,6 +55,7 @@ public static class ConfigLoader
     {
         _isLoaded = false;
         LoadConfig();
+        try { OnConfigReloaded?.Invoke(); } catch { }
     }
 
     /// <summary>
