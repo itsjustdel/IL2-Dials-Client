@@ -59,6 +59,7 @@ public class PlaneDropdown : MonoBehaviour
         switch(country)
         {
             case "RU":                
+                RuPlanes.Sort(System.StringComparer.OrdinalIgnoreCase);
                 dropdown.AddOptions(RuPlanes);
                 //if current plane, set as label for quick option
                 //if (RuPlanes.Contains(airplaneData.planeType))
@@ -67,18 +68,21 @@ public class PlaneDropdown : MonoBehaviour
                 break;
 
             case "UK":
+                UkPlanes.Sort(System.StringComparer.OrdinalIgnoreCase);
                 dropdown.AddOptions(UkPlanes);
                // if (UkPlanes.Contains(airplaneData.planeType))
                //     dropdown.value = UkPlanes.IndexOf(airplaneData.planeType);
                 break;
 
             case "US":
+                UsPlanes.Sort(System.StringComparer.OrdinalIgnoreCase);
                 dropdown.AddOptions(UsPlanes);
                // if (UsPlanes.Contains(airplaneData.planeType))
                //     dropdown.value = UsPlanes.IndexOf(airplaneData.planeType);
                 break;
 
             case "GER":
+                GerPlanes.Sort(System.StringComparer.OrdinalIgnoreCase);
                 dropdown.AddOptions(GerPlanes);
                // if (GerPlanes.Contains(airplaneData.planeType))                
                //     dropdown.value = GerPlanes.IndexOf(airplaneData.planeType);
@@ -86,12 +90,14 @@ public class PlaneDropdown : MonoBehaviour
                 break;
 
             case "ITA":
+                ItaPlanes.Sort(System.StringComparer.OrdinalIgnoreCase);
                 dropdown.AddOptions(ItaPlanes);
               //  if (ItaPlanes.Contains(airplaneData.planeType))
               //      dropdown.value = ItaPlanes.IndexOf(airplaneData.planeType);
                 break;
 
             case "FR":
+                FrPlanes.Sort(System.StringComparer.OrdinalIgnoreCase);
                 dropdown.AddOptions(FrPlanes);
                 break;
 
