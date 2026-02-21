@@ -293,14 +293,16 @@ public class LoadManager : MonoBehaviour
         }
 
 
-        for (int i = 0; i < dialsManager.rpmObjects.Count; i++)
+        int rpmCount = Mathf.Min(dialsManager.rpmObjects.Count, layout.rpmPos.Count, layout.rpmScale.Count, layout.rpmInTray.Count);
+        for (int i = 0; i < rpmCount; i++)
         {
             DialScalePosition(dialsManager.rpmObjects[i], layout.rpmPos[i], layout.rpmScale[i]);
             if (layout.rpmInTray[i])
                 AddToTrayOnLoad(dialsManager.rpmObjects[i], menuHandler);
         }
 
-        for (int i = 0; i < dialsManager.manifoldObjects.Count; i++)
+        int manifoldCount = Mathf.Min(dialsManager.manifoldObjects.Count, layout.manifoldPos.Count, layout.manifoldScale.Count, layout.manifoldInTray.Count);
+        for (int i = 0; i < manifoldCount; i++)
         {
             DialScalePosition(dialsManager.manifoldObjects[i], layout.manifoldPos[i], layout.manifoldScale[i]);
             if (layout.manifoldInTray[i])
@@ -308,49 +310,56 @@ public class LoadManager : MonoBehaviour
         }
 
 
-        for (int i = 0; i < dialsManager.waterTempObjects.Count; i++)
+        int waterTempCount = Mathf.Min(dialsManager.waterTempObjects.Count, layout.waterTempPos.Count, layout.waterTempScale.Count, layout.waterTempInTray.Count);
+        for (int i = 0; i < waterTempCount; i++)
         {
             DialScalePosition(dialsManager.waterTempObjects[i], layout.waterTempPos[i], layout.waterTempScale[i]);
             if (layout.waterTempInTray[i])
                 AddToTrayOnLoad(dialsManager.waterTempObjects[i], menuHandler);
         }
 
-        for (int i = 0; i < dialsManager.oilTempInObjects.Count; i++)
+        int oilTempInCount = Mathf.Min(dialsManager.oilTempInObjects.Count, layout.oilTempInPos.Count, layout.oilTempInScale.Count, layout.oilTempInInTray.Count);
+        for (int i = 0; i < oilTempInCount; i++)
         {
             DialScalePosition(dialsManager.oilTempInObjects[i], layout.oilTempInPos[i], layout.oilTempInScale[i]);
             if (layout.oilTempInInTray[i])
                 AddToTrayOnLoad(dialsManager.oilTempInObjects[i], menuHandler);
         }
 
-        for (int i = 0; i < dialsManager.oilTempOutObjects.Count; i++)
+        int oilTempOutCount = Mathf.Min(dialsManager.oilTempOutObjects.Count, layout.oilTempOutPos.Count, layout.oilTempOutScale.Count, layout.oilTempOutInTray.Count);
+        for (int i = 0; i < oilTempOutCount; i++)
         {
             DialScalePosition(dialsManager.oilTempOutObjects[i], layout.oilTempOutPos[i], layout.oilTempOutScale[i]);
             if (layout.oilTempOutInTray[i])
                 AddToTrayOnLoad(dialsManager.oilTempOutObjects[i], menuHandler);
         }
 
-        for (int i = 0; i < dialsManager.oilTempPressureObjects.Count; i++)
+        int oilTempPressureCount = Mathf.Min(dialsManager.oilTempPressureObjects.Count, layout.oilTempPressurePos.Count, layout.oilTempPressureScale.Count, layout.oilTempPressureInTray.Count);
+        for (int i = 0; i < oilTempPressureCount; i++)
         {
             DialScalePosition(dialsManager.oilTempPressureObjects[i], layout.oilTempPressurePos[i], layout.oilTempPressureScale[i]);
             if (layout.oilTempPressureInTray[i])
                 AddToTrayOnLoad(dialsManager.oilTempPressureObjects[i], menuHandler);
         }
 
-        for (int i = 0; i < dialsManager.oilTempComboObjects.Count; i++)
+        int oilTempComboCount = Mathf.Min(dialsManager.oilTempComboObjects.Count, layout.oilTempComboPos.Count, layout.oilTempComboScale.Count, layout.oilTempComboInTray.Count);
+        for (int i = 0; i < oilTempComboCount; i++)
         {
             DialScalePosition(dialsManager.oilTempComboObjects[i], layout.oilTempComboPos[i], layout.oilTempComboScale[i]);
             if (layout.oilTempComboInTray[i])
                 AddToTrayOnLoad(dialsManager.oilTempComboObjects[i], menuHandler);
         }
 
-        for (int i = 0; i < dialsManager.cylinderHeadObjects.Count; i++)
+        int cylinderHeadCount = Mathf.Min(dialsManager.cylinderHeadObjects.Count, layout.cylinderHeadPos.Count, layout.cylinderHeadScale.Count, layout.cylinderHeadInTray.Count);
+        for (int i = 0; i < cylinderHeadCount; i++)
         {
             DialScalePosition(dialsManager.cylinderHeadObjects[i], layout.cylinderHeadPos[i], layout.cylinderHeadScale[i]);
             if (layout.cylinderHeadInTray[i])
                 AddToTrayOnLoad(dialsManager.cylinderHeadObjects[i], menuHandler);
         }
 
-        for (int i = 0; i < dialsManager.carbTempObjects.Count; i++)
+        int carbTempCount = Mathf.Min(dialsManager.carbTempObjects.Count, layout.carbAirPos.Count, layout.carbAirScale.Count, layout.carbAirInTray.Count);
+        for (int i = 0; i < carbTempCount; i++)
         {
             DialScalePosition(dialsManager.carbTempObjects[i], layout.carbAirPos[i], layout.carbAirScale[i]);
             if (layout.carbAirInTray[i])
