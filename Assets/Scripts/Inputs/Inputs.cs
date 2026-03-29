@@ -22,7 +22,7 @@ public class Inputs : MonoBehaviour
         if (PlayerPrefs.HasKey("German oil switch keys"))
         {
             string value = PlayerPrefs.GetString("German oil switch keys");
-            string[] split = value.Split(" + ");
+            string[] split = value.Split(new string[] { " + " }, System.StringSplitOptions.None);
 
             foreach (string s in split)
             {
