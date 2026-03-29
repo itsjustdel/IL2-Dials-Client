@@ -114,16 +114,17 @@ public class MenuHandler : MonoBehaviour
             udpClient.portNumber = 11200;
 
         //apply to UI
-        //inlcude inactive with bool flag
-        ipTextField.GetComponentInParent<InputField>(true).text = udpClient.serverAddress;
-        if (udpClient.portNumber == 11200 || udpClient.portNumber == 0)
+        //include inactive with compatibility helper
+        var ipField = GetComponentInParentIncludingInactive<InputField>(ipTextField);
+        if (ipField != null) ipField.text = udpClient.serverAddress;
+
+        var portField = GetComponentInParentIncludingInactive<InputField>(portTextField);
+        if (portField != null)
         {
-            //set default port number text field to null so unity shows the greyed out placeholder text
-            portTextField.GetComponentInParent<InputField>(true).text = null;
-        }
-        else
-        {
-            portTextField.GetComponentInParent<InputField>(true).text = udpClient.portNumber.ToString();
+            if (udpClient.portNumber == 11200 || udpClient.portNumber == 0)
+                portField.text = null;
+            else
+                portField.text = udpClient.portNumber.ToString();
         }
 
         //force this false to start with, above code flags this as true because we changed a value
@@ -154,6 +155,27 @@ public class MenuHandler : MonoBehaviour
             }
         }
 
+    }
+
+    private static T GetComponentInParentIncludingInactive<T>(GameObject go) where T : Component
+    {
+        if (go == null)
+            return null;
+
+        Transform current = go.transform;
+        while (current != null)
+        {
+            T found = current.GetComponent<T>();
+            if (found != null)
+                return found;
+            current = current.parent;
+        }
+        return null;
+    }
+
+    private static T GetComponentInParentIncludingInactive<T>(Component comp) where T : Component
+    {
+        return comp == null ? null : GetComponentInParentIncludingInactive<T>(comp.gameObject);
     }
 
     public void Update()
